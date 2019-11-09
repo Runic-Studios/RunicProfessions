@@ -10,19 +10,23 @@ import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Objects;
 
 public class BSFurnaceGUI extends Workstation {
 
-    public BSFurnaceGUI() {
+    public BSFurnaceGUI(Player pl) {
+        setupWorkstation(pl);
     }
 
-    public ItemGUI openMenu(Player pl) {
+    @Override
+    public void setupWorkstation(Player pl) {
 
-        // name the menu
+        // setup the menu
+        super.setupWorkstation("&f&l" + pl.getName() + "'s &e&lFurnace");
         ItemGUI furnaceMenu = getItemGUI();
-        furnaceMenu.setName("&f&l" + pl.getName() + "'s &e&lFurnace");
+        //furnaceMenu.setName("&f&l" + pl.getName() + "'s &e&lFurnace");
 
         //set the visual items
         furnaceMenu.setOption(3, new ItemStack(Material.IRON_INGOT),
@@ -35,8 +39,9 @@ public class BSFurnaceGUI extends Workstation {
 
                 // open the forging menu
                 pl.playSound(pl.getLocation(), Sound.UI_BUTTON_CLICK, 0.5f, 1);
-                ItemGUI forge = openSmeltMenu(pl);
-                forge.open(pl);
+                this.setItemGUI(smeltingMenu(pl));
+                this.setTitle(smeltingMenu(pl).getName());
+                this.getItemGUI().open(pl);
                 event.setWillClose(false);
                 event.setWillDestroy(true);
 
@@ -49,10 +54,11 @@ public class BSFurnaceGUI extends Workstation {
             }
         });
 
-        return furnaceMenu;
+        // update our internal menu
+        this.setItemGUI(furnaceMenu);
     }
 
-    private ItemGUI openSmeltMenu(Player pl) {
+    private ItemGUI smeltingMenu(Player pl) {
 
         // grab the player's current profession level, progress toward that level
         int currentLvl = RunicProfessions.getInstance().getConfig().getInt(pl.getUniqueId() + ".info.prof.level");
@@ -82,8 +88,8 @@ public class BSFurnaceGUI extends Workstation {
 
                 // return to the first menu
                 pl.playSound(pl.getLocation(), Sound.UI_BUTTON_CLICK, 0.5f, 1);
-                ItemGUI menu = openMenu(pl);
-                menu.open(pl);
+                setupWorkstation(pl);
+                this.getItemGUI().open(pl);
                 event.setWillClose(false);
                 event.setWillDestroy(true);
 
@@ -161,13 +167,11 @@ public class BSFurnaceGUI extends Workstation {
             meta.setDisplayName(ChatColor.WHITE + dispName);
             craftedItem.setItemMeta(meta);
 
-            // check that the player has an open inventory space
-            // this method prevents items from stacking if the player crafts 5
-            if (pl.getInventory().firstEmpty() != -1) {
-                int firstEmpty = pl.getInventory().firstEmpty();
-                pl.getInventory().setItem(firstEmpty, craftedItem);
-            } else {
-                pl.getWorld().dropItem(pl.getLocation(), craftedItem);
+            // this ALLOWS furnace items to stack.
+            HashMap<Integer, ItemStack> itemsToAdd = pl.getInventory().addItem(craftedItem);
+            // drop leftover items on the floor
+            for (ItemStack leftOver : itemsToAdd.values()) {
+                pl.getWorld().dropItem(pl.getLocation(), leftOver);
             }
         }
     }

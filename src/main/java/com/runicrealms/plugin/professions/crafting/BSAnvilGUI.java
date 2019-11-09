@@ -26,7 +26,6 @@ public class BSAnvilGUI extends Workstation {
         // name the menu
         super.setupWorkstation("&f&l" + pl.getName() + "'s &e&lAnvil");
         ItemGUI blackSmithMenu = getItemGUI();
-        blackSmithMenu.setName(this.getTitle());
 
         //set the visual items
         blackSmithMenu.setOption(3, new ItemStack(Material.IRON_CHESTPLATE),
@@ -101,8 +100,6 @@ public class BSAnvilGUI extends Workstation {
                 // return to the first menu
                 pl.playSound(pl.getLocation(), Sound.UI_BUTTON_CLICK, 0.5f, 1);
                 setupWorkstation(pl);
-                //ItemGUI menu = getNewMenu(pl);
-                //menu.open(pl);
                 this.getItemGUI().open(pl);
                 event.setWillClose(false);
                 event.setWillDestroy(true);
@@ -142,7 +139,7 @@ public class BSAnvilGUI extends Workstation {
                 if (slot == 9 || slot == 18 || slot == 27) {
                     reagentAmt = 5;
                     exp = 60;
-                    // chestplates
+                    // chest
                 } else if (slot == 10 || slot == 19 || slot == 28) {
                     reagentAmt = 8;
                     exp = 96;

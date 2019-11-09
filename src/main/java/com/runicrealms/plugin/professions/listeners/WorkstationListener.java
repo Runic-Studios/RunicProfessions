@@ -131,8 +131,8 @@ public class WorkstationListener implements Listener {
                     pl.playSound(pl.getLocation(), Sound.ENTITY_BLAZE_SHOOT, 0.5f, 0.5f);
                     pl.playSound(pl.getLocation(), Sound.ITEM_BUCKET_FILL_LAVA, 0.5f, 1.0f);
                     pl.playSound(pl.getLocation(), Sound.BLOCK_LAVA_POP, 0.5f, 1.0f);
-                    BSFurnaceGUI furnaceGUI = new BSFurnaceGUI();
-                    ItemGUI fMenu = furnaceGUI.openMenu(pl);
+                    RunicProfessions.getProfManager().setPlayerWorkstation(pl, new BSFurnaceGUI(pl));
+                    ItemGUI fMenu = ((RunicProfessions.getProfManager().getPlayerWorkstation(pl))).getItemGUI();
                     fMenu.open(pl);
                 } else {
                     pl.playSound(pl.getLocation(), Sound.ENTITY_GENERIC_EXTINGUISH_FIRE, 0.5f, 1.0f);
