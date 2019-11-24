@@ -307,7 +307,7 @@ public abstract class Workstation implements Listener {
             craftedItem = AttributeUtil.addCustomStat
                     (craftedItem, "custom.manaBoost", someVar);
 
-            // item can be socketed ONCE
+            // item can be socket-ed ONCE
             craftedItem = AttributeUtil.addCustomStat(craftedItem, "custom.socketCount", 1);
 
             LoreGenerator.generateItemLore(craftedItem, ChatColor.WHITE, dispName, "");

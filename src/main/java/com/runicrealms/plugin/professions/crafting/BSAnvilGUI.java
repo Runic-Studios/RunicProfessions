@@ -118,8 +118,9 @@ public class BSAnvilGUI extends Workstation {
                 int exp = 0;
                 LinkedHashMap<Material, Integer> reqHashMap;
 
-                if (event.getSlot() < 13) {
-                    reqHashMap = chainLinkReqs;
+                // todo: make all slots go here
+                if (event.getSlot() == 9) {
+                    reqHashMap = ironBarReqs;
                 } else if (event.getSlot() == 13) {
                     reqHashMap = arrowHeadReqs;
                     reqLevel = 50;
@@ -135,9 +136,9 @@ public class BSAnvilGUI extends Workstation {
                     reqHashMap = ironBarReqs;
                 }
 
-                // helmets
+                // sharpening stone
                 if (slot == 9 || slot == 18 || slot == 27) {
-                    reagentAmt = 5;
+                    reagentAmt = 2;
                     exp = 60;
                     // chest
                 } else if (slot == 10 || slot == 19 || slot == 28) {
@@ -154,7 +155,7 @@ public class BSAnvilGUI extends Workstation {
                 }
 
                 // mail
-                if (slot == 9 || slot == 10 || slot == 11 || slot == 12) {
+                if (slot == 10 || slot == 11 || slot == 12) {
                     if (currentLvl < 30) {
                         stat = 12;
                     } else if (currentLvl < 50) {
@@ -217,13 +218,13 @@ public class BSAnvilGUI extends Workstation {
             plateStr = "50";
         }
 
-        // mail
+        // sharpening stone
         LinkedHashMap<Material, Integer> chainLinkReqs = new LinkedHashMap<>();
-        chainLinkReqs.put(Material.IRON_BARS, 999);
-        super.createMenuItem(forgeMenu, pl, 9, Material.SHEARS, "&fForged Mail Helmet", chainLinkReqs,
-                "Chain Link", 5, 60, 0, 15,
-                "&c+ " + mailStr + "❤\n&3+ " + mailStr + "✸",
-                false, true, false);
+        chainLinkReqs.put(Material.IRON_INGOT, 999); // amount is irrelevant
+        super.createMenuItem(forgeMenu, pl, 9, Material.FLINT, "&fSharpening Stone", chainLinkReqs,
+                "Iron Bar", 2, 60, 0, 0,
+                "&e&oUse this on an artifact to increase its damage!",
+                false, false, false);
         super.createMenuItem(forgeMenu, pl, 10, Material.CHAINMAIL_CHESTPLATE, "&fForged Mail Body", chainLinkReqs,
                 "Chain Link", 8, 96, 0, 0,
                 "&c+ " + mailStr + "❤\n&3+ " + mailStr + "✸",
@@ -320,30 +321,30 @@ public class BSAnvilGUI extends Workstation {
                               int currentLvl, int amt, int rate, int durability, int someVar) {
 
         // we're only gonna mess w/ the mechanics for processed leather
-        if (material != Material.FLINT && material != Material.RABBIT_FOOT && material != Material.SHIELD) {
+        //if (material != Material.FLINT && material != Material.RABBIT_FOOT && material != Material.SHIELD) {
             super.produceResult(pl, material, dispName, currentLvl, amt, rate, durability, someVar);
             return;
-        }
+        //}
 
-        for (int i = 0; i < amt; i++) {
-            ItemStack craftedItem = new ItemStack(material);
-
-            if (material == Material.FLINT) {
-                craftedItem = LegendaryManager.frostforgedArrowhead();
-            } else if (material == Material.RABBIT_FOOT) {
-                craftedItem = LegendaryManager.ambrosianPowder();
-            } else if (material == Material.SHIELD) {
-                craftedItem = LegendaryManager.frostforgedBulwark();
-            }
-
-            // check that the player has an open inventory space
-            // this method prevents items from stacking if the player crafts 5
-            if (pl.getInventory().firstEmpty() != -1) {
-                int firstEmpty = pl.getInventory().firstEmpty();
-                pl.getInventory().setItem(firstEmpty, craftedItem);
-            } else {
-                pl.getWorld().dropItem(pl.getLocation(), craftedItem);
-            }
-        }
+//        for (int i = 0; i < amt; i++) {
+//            ItemStack craftedItem = new ItemStack(material);
+//
+//            if (material == Material.FLINT) {
+//                craftedItem = LegendaryManager.frostforgedArrowhead();
+//            } else if (material == Material.RABBIT_FOOT) {
+//                craftedItem = LegendaryManager.ambrosianPowder();
+//            } else if (material == Material.SHIELD) {
+//                craftedItem = LegendaryManager.frostforgedBulwark();
+//            }
+//
+//            // check that the player has an open inventory space
+//            // this method prevents items from stacking if the player crafts 5
+//            if (pl.getInventory().firstEmpty() != -1) {
+//                int firstEmpty = pl.getInventory().firstEmpty();
+//                pl.getInventory().setItem(firstEmpty, craftedItem);
+//            } else {
+//                pl.getWorld().dropItem(pl.getLocation(), craftedItem);
+//            }
+//        }
     }
 }
