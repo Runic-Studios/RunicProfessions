@@ -1,5 +1,6 @@
 package com.runicrealms.plugin.professions.crafting;
 
+import com.runicrealms.plugin.RunicCore;
 import com.runicrealms.plugin.RunicProfessions;
 import com.runicrealms.plugin.attributes.AttributeUtil;
 import com.runicrealms.plugin.item.GUIMenu.ItemGUI;
@@ -57,7 +58,7 @@ public class JewelerGUI extends Workstation {
     private ItemGUI openBenchMenu(Player pl) {
 
         // grab the player's current profession level, progress toward that level
-        int currentLvl = RunicProfessions.getInstance().getConfig().getInt(pl.getUniqueId() + ".info.prof.level");
+        int currentLvl = RunicCore.getInstance().getConfig().getInt(pl.getUniqueId() + ".info.prof.level");
 
         // ruby
         LinkedHashMap<Material, Integer> cutRubyReqs = new LinkedHashMap<>();

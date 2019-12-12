@@ -1,5 +1,6 @@
 package com.runicrealms.plugin.professions.crafting;
 
+import com.runicrealms.plugin.RunicCore;
 import com.runicrealms.plugin.RunicProfessions;
 import com.runicrealms.plugin.attributes.AttributeUtil;
 import com.runicrealms.plugin.item.GUIMenu.ItemGUI;
@@ -71,7 +72,7 @@ public class AlchemistGUI extends Workstation {
     private ItemGUI openWheelMenu(Player pl) {
 
         // grab the player's current profession level, progress toward that level
-        int currentLvl = RunicProfessions.getInstance().getConfig().getInt(pl.getUniqueId() + ".info.prof.level");
+        int currentLvl = RunicCore.getInstance().getConfig().getInt(pl.getUniqueId() + ".info.prof.level");
 
         // health potion
         LinkedHashMap<Material, Integer> healthPotReqs = new LinkedHashMap<>();
@@ -270,7 +271,7 @@ public class AlchemistGUI extends Workstation {
                               int currentLvl, int amt, int rate, int durability, int someVar) {
 
         // grab the player's current profession level, progress toward that level
-        currentLvl = RunicProfessions.getInstance().getConfig().getInt(pl.getUniqueId() + ".info.prof.level");
+        currentLvl = RunicCore.getInstance().getConfig().getInt(pl.getUniqueId() + ".info.prof.level");
 
         if (currentLvl < 3) {
             rate = 100;

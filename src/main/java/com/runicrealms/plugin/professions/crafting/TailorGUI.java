@@ -1,5 +1,6 @@
 package com.runicrealms.plugin.professions.crafting;
 
+import com.runicrealms.plugin.RunicCore;
 import com.runicrealms.plugin.RunicProfessions;
 import com.runicrealms.plugin.attributes.AttributeUtil;
 import com.runicrealms.plugin.item.GUIMenu.ItemGUI;
@@ -60,7 +61,7 @@ public class TailorGUI extends Workstation {
     private ItemGUI openWheelMenu(Player pl) {
 
         // grab the player's current profession level, progress toward that level
-        int currentLvl = RunicProfessions.getInstance().getConfig().getInt(pl.getUniqueId() + ".info.prof.level");
+        int currentLvl = RunicCore.getInstance().getConfig().getInt(pl.getUniqueId() + ".info.prof.level");
 
         // to make processed leather
         LinkedHashMap<Material, Integer> makeClothReqs = new LinkedHashMap<>();

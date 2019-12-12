@@ -1,5 +1,6 @@
 package com.runicrealms.plugin.professions;
 
+import com.runicrealms.plugin.RunicCore;
 import com.runicrealms.plugin.RunicProfessions;
 import com.runicrealms.plugin.attributes.AttributeUtil;
 import com.runicrealms.plugin.enums.ArmorSlotEnum;
@@ -72,12 +73,12 @@ public abstract class Workstation implements Listener {
                                   boolean canUpgrade, boolean isGlowing) {
 
         // grab the player's current profession level, progress toward that level
-        int currentLvl = RunicProfessions.getInstance().getConfig().getInt(pl.getUniqueId() + ".info.prof.level");
+        int currentLvl = RunicCore.getInstance().getConfig().getInt(pl.getUniqueId() + ".info.prof.level");
 
         // determine the success rate, based on level
-        int rate = (40+currentLvl);
+        int rate = (40 + currentLvl);
         if (itemType == Material.POTION) {
-            rate = (50+currentLvl);
+            rate = (50 + currentLvl);
         }
         String rateToStr;
         if (rate < 50) {
@@ -117,29 +118,29 @@ public abstract class Workstation implements Listener {
         // if there is only one reagent in the keyset, it uses the 'itemAmt' field instead.
         int i = 0;
 
-            for (Material reagent : itemReqs.keySet()) {
-                int amt = itemReqs.get(reagent);
-                if (reqsAsList.length <= 1) {
-                    amt = itemAmt;
-                }
-                if (pl.getInventory().contains(reagent, amt)) {
-                    desc.append("&a").append(reqsAsList[i]).append("&7, &f").append(amt).append("\n");
-                } else {
-                    desc.append("&c").append(reqsAsList[i]).append("&7, &f").append(amt).append("\n");
-                }
-                i += 1;
+        for (Material reagent : itemReqs.keySet()) {
+            int amt = itemReqs.get(reagent);
+            if (reqsAsList.length <= 1) {
+                amt = itemAmt;
             }
+            if (pl.getInventory().contains(reagent, amt)) {
+                desc.append("&a").append(reqsAsList[i]).append("&7, &f").append(amt).append("\n");
+            } else {
+                desc.append("&c").append(reqsAsList[i]).append("&7, &f").append(amt).append("\n");
+            }
+            i += 1;
+        }
 
 
-            desc.append("\n&7Success Rate:\n")
-                    .append(rateToStr).append("%\n\n")
-                    .append(ChatColor.WHITE).append("Left Click ")
-                    .append(ChatColor.DARK_GRAY).append("to craft\n")
-                    .append(ChatColor.WHITE).append("Right Click ")
-                    .append(ChatColor.DARK_GRAY).append("to craft 5");
-            if (exp > 0) {
-                desc.append("\n\n&7&oRewards &f&o").append(exp).append(" &7&oExperience");
-            }
+        desc.append("\n&7Success Rate:\n")
+                .append(rateToStr).append("%\n\n")
+                .append(ChatColor.WHITE).append("Left Click ")
+                .append(ChatColor.DARK_GRAY).append("to craft\n")
+                .append(ChatColor.WHITE).append("Right Click ")
+                .append(ChatColor.DARK_GRAY).append("to craft 5");
+        if (exp > 0) {
+            desc.append("\n\n&7&oRewards &f&o").append(exp).append(" &7&oExperience");
+        }
 
         desc = new StringBuilder(ColorUtil.format(desc.toString()));
 
@@ -191,9 +192,9 @@ public abstract class Workstation implements Listener {
 
         // check that the player has the reagents
         for (Material reagent : itemReqs.keySet()) {
-            int amt = itemReqs.get(reagent)*multiplier;
+            int amt = itemReqs.get(reagent) * multiplier;
             if (itemReqs.size() <= 1) {
-                amt = itemAmt*multiplier;
+                amt = itemAmt * multiplier;
             }
             if (!pl.getInventory().contains(reagent, amt)) {
                 pl.playSound(pl.getLocation(), Sound.ENTITY_GENERIC_EXTINGUISH_FIRE, 0.5f, 1);
@@ -228,9 +229,9 @@ public abstract class Workstation implements Listener {
         RunicProfessions.getProfManager().getCurrentCrafters().add(pl);
         pl.sendMessage(ChatColor.GRAY + "Crafting...");
         for (Material reagent : itemReqs.keySet()) {
-            int amt = itemReqs.get(reagent)*multiplier;
+            int amt = itemReqs.get(reagent) * multiplier;
             if (itemReqs.size() <= 1) {
-                amt = itemAmt*multiplier;
+                amt = itemAmt * multiplier;
             }
             takeItem(pl, reagent, amt);
         }
@@ -264,7 +265,7 @@ public abstract class Workstation implements Listener {
     }
 
     protected void produceResult(Player pl, Material material, String dispName,
-                            int currentLvl, int amt, int rate, int durability, int someVar) {
+                                 int currentLvl, int amt, int rate, int durability, int someVar) {
 
         // set our minimum level
         int reqLv = 0;

@@ -1,5 +1,6 @@
 package com.runicrealms.plugin.professions.crafting;
 
+import com.runicrealms.plugin.RunicCore;
 import com.runicrealms.plugin.RunicProfessions;
 import com.runicrealms.plugin.attributes.AttributeUtil;
 import com.runicrealms.plugin.item.GUIMenu.ItemGUI;
@@ -60,7 +61,7 @@ public class LWGUI extends Workstation {
     private ItemGUI openForgeMenu(Player pl) {
 
         // grab the player's current profession level, progress toward that level
-        int currentLvl = RunicProfessions.getInstance().getConfig().getInt(pl.getUniqueId() + ".info.prof.level");
+        int currentLvl = RunicCore.getInstance().getConfig().getInt(pl.getUniqueId() + ".info.prof.level");
 
         // create three hashmaps for the reagents, set to 0 since we've only got 1 reagent
         LinkedHashMap<Material, Integer> processedReqs = new LinkedHashMap<>();
