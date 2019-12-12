@@ -1,11 +1,9 @@
 package com.runicrealms.plugin.professions.crafting;
 
 import com.runicrealms.plugin.RunicCore;
-import com.runicrealms.plugin.RunicProfessions;
 import com.runicrealms.plugin.attributes.AttributeUtil;
 import com.runicrealms.plugin.item.GUIMenu.ItemGUI;
 import com.runicrealms.plugin.item.LegendaryManager;
-import com.runicrealms.plugin.item.RunicItem;
 import com.runicrealms.plugin.professions.Workstation;
 import com.runicrealms.plugin.professions.utilities.itemutil.BlacksmithItems;
 import org.bukkit.*;
@@ -14,9 +12,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.ThreadLocalRandom;
 

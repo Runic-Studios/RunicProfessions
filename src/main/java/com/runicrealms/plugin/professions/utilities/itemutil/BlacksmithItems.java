@@ -1,13 +1,10 @@
 package com.runicrealms.plugin.professions.utilities.itemutil;
 
 import com.runicrealms.plugin.attributes.AttributeUtil;
-import com.runicrealms.plugin.item.LoreGenerator;
 import com.runicrealms.plugin.item.RunicItem;
-import net.minecraft.server.v1_13_R2.Item;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
