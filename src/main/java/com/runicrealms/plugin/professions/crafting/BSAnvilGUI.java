@@ -88,7 +88,7 @@ public class BSAnvilGUI extends Workstation {
         powderReqs.put(Material.NETHER_STAR, 1);
         powderReqs.put(Material.GOLDEN_CARROT, 1);
 
-        ItemGUI forgeMenu = super.craftingMenu(pl, 27);
+        ItemGUI forgeMenu = super.craftingMenu(pl, 36);
 
         forgeMenu.setOption(4, new ItemStack(Material.ANVIL), "&eAnvil",
                 "&fClick &7an item to start crafting!"
@@ -152,10 +152,16 @@ public class BSAnvilGUI extends Workstation {
 
     private void setupItems(ItemGUI forgeMenu, Player pl) {
 
+        // requirements used to generate lore
+        LinkedHashMap<Material, Integer> chainReqs = new LinkedHashMap<>();
+        chainReqs.put(Material.IRON_BARS, 999); // amount is irrelevant
+        LinkedHashMap<Material, Integer> ironReqs = new LinkedHashMap<>();
+        ironReqs.put(Material.IRON_INGOT, 999);
+        LinkedHashMap<Material, Integer> goldReqs = new LinkedHashMap<>();
+        goldReqs.put(Material.GOLD_INGOT, 999);
+
         // level 1
-        LinkedHashMap<Material, Integer> chainLinkReqs = new LinkedHashMap<>();
-        chainLinkReqs.put(Material.IRON_INGOT, 999); // amount is irrelevant
-        super.createMenuItem(forgeMenu, pl, 9, Material.FLINT, "&fWhetstone", chainLinkReqs,
+        super.createMenuItem(forgeMenu, pl, 9, Material.FLINT, "&fWhetstone", ironReqs,
                 "Iron Bar", 2, 40, 0, 0,
                 "&eIncrease your weapon⚔ damage by +1 for 3 min!",
                 false, false, false);
@@ -166,13 +172,15 @@ public class BSAnvilGUI extends Workstation {
         shieldReqs.put(Material.OAK_LOG, 1);
         super.createMenuItem(forgeMenu, pl, 10, Material.SHIELD, "&fOaken Shield", shieldReqs,
                 "Iron Bar\nOak Log", 999, 165, 5, 0,
-                "&f+ " +
+                "&c+ "
+                        + (int) AttributeUtil.getGenericDouble(BlacksmithItems.oakenShield(), "generic.maxHealth")
+                        + "❤\n&f+ "
                         + (int) AttributeUtil.getCustomDouble(BlacksmithItems.oakenShield(), "custom.shield")
                         + "■",
                 false, false, false);
 
         // level 10
-        super.createMenuItem(forgeMenu, pl, 11, Material.WOODEN_SWORD, "&fIron Broadsword", chainLinkReqs,
+        super.createMenuItem(forgeMenu, pl, 11, Material.WOODEN_SWORD, "&fIron Broadsword", ironReqs,
                 "Iron Bar", 5, 100, 10, 6,
                 "&c+ "
                         + (int) AttributeUtil.getCustomDouble(BlacksmithItems.ironBroadsword(), "custom.minDamage")
@@ -180,7 +188,7 @@ public class BSAnvilGUI extends Workstation {
                         + (int) AttributeUtil.getCustomDouble(BlacksmithItems.ironBroadsword(), "custom.maxDamage")
                         + "⚔",
                 false, false, false);
-        super.createMenuItem(forgeMenu, pl, 12, Material.WOODEN_AXE, "&fIron Reaver", chainLinkReqs,
+        super.createMenuItem(forgeMenu, pl, 12, Material.WOODEN_AXE, "&fIron Reaver", ironReqs,
                 "Iron Bar", 5, 100, 10, 6,
                 "&c+ "
                         + (int) AttributeUtil.getCustomDouble(BlacksmithItems.ironReaver(), "custom.minDamage")
@@ -189,12 +197,30 @@ public class BSAnvilGUI extends Workstation {
                         + "⚔",
                 false, false, false);
 
-        // legendary
-        LinkedHashMap<Material, Integer> arrowHeadReqs = new LinkedHashMap<>();
-        arrowHeadReqs.put(Material.NETHER_STAR, 1);
-        arrowHeadReqs.put(Material.IRON_INGOT, 3);
-        super.createMenuItem(forgeMenu, pl, 13, Material.FLINT, "&6Frostforged Arrowhead", arrowHeadReqs,
-                "Token of Valor\nIron Bar", 999, 0, 50, 0,
+        // level 15
+        super.createMenuItem(forgeMenu, pl, 13, Material.CHAINMAIL_BOOTS, "&fForged Mail Greaves", chainReqs,
+                "Chain Link", 4, 80, 15, 0,
+                "&c+ "
+                        + (int) AttributeUtil.getCustomDouble(BlacksmithItems.ironReaver(), "custom.minDamage")
+                        + "-"
+                        + (int) AttributeUtil.getCustomDouble(BlacksmithItems.ironReaver(), "custom.maxDamage")
+                        + "⚔",
+                false, false, false);
+        super.createMenuItem(forgeMenu, pl, 14, Material.GOLDEN_BOOTS, "&fForged Gilded Boots", goldReqs,
+                "Gold Bar", 4, 80, 15, 0,
+                "&c+ "
+                        + (int) AttributeUtil.getCustomDouble(BlacksmithItems.ironReaver(), "custom.minDamage")
+                        + "-"
+                        + (int) AttributeUtil.getCustomDouble(BlacksmithItems.ironReaver(), "custom.maxDamage")
+                        + "⚔",
+                false, false, false);
+
+        // level 50 - legendary bow
+        LinkedHashMap<Material, Integer> scorpionReqs = new LinkedHashMap<>();
+        scorpionReqs.put(Material.NETHER_STAR, 1);
+        scorpionReqs.put(Material.IRON_INGOT, 5);
+        super.createMenuItem(forgeMenu, pl, 26, Material.BOW, "&6Scorpion", scorpionReqs,
+                "Token of Valor\nIron Bar", 999, 0, 50, 7,
                 "&c+ "
                         + (int) AttributeUtil.getCustomDouble(LegendaryManager.frostforgedArrowhead(), "custom.attackDamage")
                         + "⚔\n&3+ "
