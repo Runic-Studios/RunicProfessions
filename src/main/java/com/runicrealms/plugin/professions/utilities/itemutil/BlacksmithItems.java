@@ -150,15 +150,15 @@ public class BlacksmithItems {
     // level 50 - legendary archer
     public static ItemStack scorpion() {
         return new RunicItem
-                (Material.BOW, ChatColor.GOLD, "Scorpion", 6, 50,
+                (Material.BOW, ChatColor.GOLD, "Scorpion", 7, 50,
                         0, 0, 0, 0, 0, 0,
                         0, "", 50, 50, "").getItem();
     }
 
-    // level 55 - legendary cleric
-    public static ItemStack dawnbringer() {
+    // level 55 - legendary rogue
+    public static ItemStack nightshade() {
         return new RunicItem
-                (Material.WOODEN_SHOVEL, ChatColor.GOLD, "Dawnbringer", 6, 50,
+                (Material.WOODEN_SWORD, ChatColor.GOLD, "Nightshade", 7, 50,
                         0, 0, 0, 0, 0, 0,
                         0, "", 50, 50, "").getItem();
     }

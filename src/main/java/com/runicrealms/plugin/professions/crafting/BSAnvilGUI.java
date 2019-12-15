@@ -5,6 +5,7 @@ import com.runicrealms.plugin.attributes.AttributeUtil;
 import com.runicrealms.plugin.item.GUIMenu.ItemGUI;
 import com.runicrealms.plugin.item.LegendaryManager;
 import com.runicrealms.plugin.professions.Workstation;
+import com.runicrealms.plugin.professions.utilities.MenuUtil;
 import com.runicrealms.plugin.professions.utilities.itemutil.BlacksmithItems;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
@@ -215,11 +216,42 @@ public class BSAnvilGUI extends Workstation {
                         + "⚔",
                 false, false, false);
 
+        // level 20
+        super.createMenuItem(forgeMenu, pl, 15, Material.CHAINMAIL_LEGGINGS, "&fForged Mail Greaves", chainReqs,
+                "Chain Link", 4, 80, 15, 0,
+                "&c+ "
+                        + (int) AttributeUtil.getCustomDouble(BlacksmithItems.ironReaver(), "custom.minDamage")
+                        + "-"
+                        + (int) AttributeUtil.getCustomDouble(BlacksmithItems.ironReaver(), "custom.maxDamage")
+                        + "⚔",
+                false, false, false);
+        super.createMenuItem(forgeMenu, pl, 16, Material.IRON_LEGGINGS, "&fForged Gilded Boots", goldReqs,
+                "Gold Bar", 4, 80, 15, 0, MenuUtil.itemStatsToString(BlacksmithItems.plateLegs()),
+                false, false, false);
+
         // level 50 - legendary bow
         LinkedHashMap<Material, Integer> scorpionReqs = new LinkedHashMap<>();
         scorpionReqs.put(Material.NETHER_STAR, 1);
         scorpionReqs.put(Material.IRON_INGOT, 5);
         super.createMenuItem(forgeMenu, pl, 26, Material.BOW, "&6Scorpion", scorpionReqs,
+                "Token of Valor\nIron Bar", 999, 0, 50, 7,
+                "&c+ "
+                        + (int) AttributeUtil.getCustomDouble(LegendaryManager.frostforgedArrowhead(), "custom.attackDamage")
+                        + "⚔\n&3+ "
+                        + (int) AttributeUtil.getCustomDouble(LegendaryManager.frostforgedArrowhead(), "custom.magicDamage")
+                        + "ʔ",
+                true, false, false);
+        // level 55 - legendary sword
+        super.createMenuItem(forgeMenu, pl, 27, Material.WOODEN_SWORD, "&6Nightshade", scorpionReqs,
+                "Token of Valor\nIron Bar", 999, 0, 50, 7,
+                "&c+ "
+                        + (int) AttributeUtil.getCustomDouble(LegendaryManager.frostforgedArrowhead(), "custom.attackDamage")
+                        + "⚔\n&3+ "
+                        + (int) AttributeUtil.getCustomDouble(LegendaryManager.frostforgedArrowhead(), "custom.magicDamage")
+                        + "ʔ",
+                true, false, false);
+        // level 60 - legendary axe
+        super.createMenuItem(forgeMenu, pl, 28, Material.WOODEN_AXE, "&6Warmonger", scorpionReqs,
                 "Token of Valor\nIron Bar", 999, 0, 50, 7,
                 "&c+ "
                         + (int) AttributeUtil.getCustomDouble(LegendaryManager.frostforgedArrowhead(), "custom.attackDamage")
