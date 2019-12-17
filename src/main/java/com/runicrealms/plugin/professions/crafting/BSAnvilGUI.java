@@ -75,19 +75,20 @@ public class BSAnvilGUI extends Workstation {
         LinkedHashMap<Material, Integer> ironBarReqs = new LinkedHashMap<>();
         ironBarReqs.put(Material.IRON_INGOT, 999);
 
-        // level 5
+        // oaken shield
         LinkedHashMap<Material, Integer> shieldReqs = new LinkedHashMap<>();
         shieldReqs.put(Material.IRON_INGOT, 8);
         shieldReqs.put(Material.OAK_LOG, 1);
 
-        // legendary
-        LinkedHashMap<Material, Integer> arrowHeadReqs = new LinkedHashMap<>();
-        arrowHeadReqs.put(Material.NETHER_STAR, 1);
-        arrowHeadReqs.put(Material.IRON_INGOT, 3);
+        // bastion
+        LinkedHashMap<Material, Integer> bastionReqs = new LinkedHashMap<>();
+        bastionReqs.put(Material.IRON_INGOT, 8);
+        bastionReqs.put(Material.PHANTOM_MEMBRANE, 1);
 
-        LinkedHashMap<Material, Integer> powderReqs = new LinkedHashMap<>();
-        powderReqs.put(Material.NETHER_STAR, 1);
-        powderReqs.put(Material.GOLDEN_CARROT, 1);
+        // legendary
+        LinkedHashMap<Material, Integer> legendaryReqs = new LinkedHashMap<>();
+        legendaryReqs.put(Material.IRON_INGOT, 5);
+        legendaryReqs.put(Material.NETHER_STAR, 1);
 
         ItemGUI forgeMenu = super.craftingMenu(pl, 36);
 
@@ -119,22 +120,87 @@ public class BSAnvilGUI extends Workstation {
                 int reqLevel = 0;
                 int reagentAmt = 0;
                 int exp = 0;
-                LinkedHashMap<Material, Integer> reqHashMap;
+                LinkedHashMap<Material, Integer> reqHashMap = new LinkedHashMap<>();
 
                 if (event.getSlot() == 9) {
                     reqHashMap = ironBarReqs;
+                    reagentAmt = 2;
                     exp = 40;
                 } else if (slot == 10) {
-                    reqHashMap = shieldReqs;
                     reqLevel = 5;
+                    reqHashMap = shieldReqs;
                     exp = 165;
                 } else if (slot == 11 || slot == 12) {
-                    reqHashMap = ironBarReqs;
                     reqLevel = 10;
+                    reqHashMap = ironBarReqs;
                     reagentAmt = 5;
                     exp = 100;
-                } else {
+                } else if (slot == 13) {
+                    reqLevel = 15;
+                    reqHashMap = chainLinkReqs;
+                    reagentAmt = 4;
+                    exp = 80;
+                } else if (slot == 14) {
+                    reqLevel = 15;
+                    reqHashMap = goldBarReqs;
+                    reagentAmt = 4;
+                    exp = 80;
+                } else if (slot == 15) {
+                    reqLevel = 20;
+                    reqHashMap = chainLinkReqs;
+                    reagentAmt = 7;
+                    exp = 140;
+                } else if (slot == 16) {
+                    reqLevel = 20;
                     reqHashMap = ironBarReqs;
+                    reagentAmt = 7;
+                    exp = 140;
+                } else if (slot == 17) {
+                    reqLevel = 25;
+                    reqHashMap = ironBarReqs;
+                    reagentAmt = 2;
+                    exp = 40;
+                } else if (slot == 18) {
+                    reqLevel = 30;
+                    reqHashMap = bastionReqs;
+                    exp = 310;
+                } else if (slot == 19 || slot == 20) {
+                    reqLevel = 35;
+                    reqHashMap = ironBarReqs;
+                    reagentAmt = 5;
+                    exp = 100;
+                } else if (slot == 21) {
+                    reqLevel = 40;
+                    reqHashMap = goldBarReqs;
+                    reagentAmt = 8;
+                    exp = 160;
+                } else if (slot == 22) {
+                    reqLevel = 40;
+                    reqHashMap = ironBarReqs;
+                    reagentAmt = 8;
+                    exp = 160;
+                } else if (slot == 23) {
+                    reqLevel = 45;
+                    reqHashMap = chainLinkReqs;
+                    reagentAmt = 5;
+                    exp = 100;
+                } else if (slot == 24) {
+                    reqLevel = 45;
+                    reqHashMap = ironBarReqs;
+                    reagentAmt = 5;
+                    exp = 100;
+                } else if (slot == 25) {
+                    reqLevel = 50;
+                    reqHashMap = legendaryReqs;
+                    exp = 400;
+                } else if (slot == 26) {
+                    reqLevel = 55;
+                    reqHashMap = legendaryReqs;
+                    exp = 400;
+                } else if (slot == 27) {
+                    reqLevel = 60;
+                    reqHashMap = legendaryReqs;
+                    exp = 400;
                 }
 
                 // destroy instance of inventory to prevent bugs
@@ -164,7 +230,7 @@ public class BSAnvilGUI extends Workstation {
         // level 1
         super.createMenuItem(forgeMenu, pl, 9, Material.FLINT, "&fWhetstone", ironReqs,
                 "Iron Bar", 2, 40, 0, 0,
-                "&eIncrease your weapon⚔ damage by +1 for 3 min!",
+                "&eIncrease your weapon⚔ damage by +1 for 3 min!\n",
                 false, false, false);
 
         // level 5
@@ -172,92 +238,85 @@ public class BSAnvilGUI extends Workstation {
         shieldReqs.put(Material.IRON_INGOT, 8);
         shieldReqs.put(Material.OAK_LOG, 1);
         super.createMenuItem(forgeMenu, pl, 10, Material.SHIELD, "&fOaken Shield", shieldReqs,
-                "Iron Bar\nOak Log", 999, 165, 5, 0,
-                "&c+ "
-                        + (int) AttributeUtil.getGenericDouble(BlacksmithItems.oakenShield(), "generic.maxHealth")
-                        + "❤\n&f+ "
-                        + (int) AttributeUtil.getCustomDouble(BlacksmithItems.oakenShield(), "custom.shield")
-                        + "■",
+                "Iron Bar\nOak Log", 999, 165, 5, 0, MenuUtil.itemStatsToString(BlacksmithItems.oakenShield()),
                 false, false, false);
 
         // level 10
-        super.createMenuItem(forgeMenu, pl, 11, Material.WOODEN_SWORD, "&fIron Broadsword", ironReqs,
-                "Iron Bar", 5, 100, 10, 6,
-                "&c+ "
-                        + (int) AttributeUtil.getCustomDouble(BlacksmithItems.ironBroadsword(), "custom.minDamage")
-                        + "-"
-                        + (int) AttributeUtil.getCustomDouble(BlacksmithItems.ironBroadsword(), "custom.maxDamage")
-                        + "⚔",
+        super.createMenuItem(forgeMenu, pl, 11, Material.WOODEN_SWORD, "&fForged Iron Broadsword", ironReqs,
+                "Iron Bar", 5, 100, 10, 6, MenuUtil.itemStatsToString(BlacksmithItems.ironBroadsword()),
                 false, false, false);
-        super.createMenuItem(forgeMenu, pl, 12, Material.WOODEN_AXE, "&fIron Reaver", ironReqs,
-                "Iron Bar", 5, 100, 10, 6,
-                "&c+ "
-                        + (int) AttributeUtil.getCustomDouble(BlacksmithItems.ironReaver(), "custom.minDamage")
-                        + "-"
-                        + (int) AttributeUtil.getCustomDouble(BlacksmithItems.ironReaver(), "custom.maxDamage")
-                        + "⚔",
+        super.createMenuItem(forgeMenu, pl, 12, Material.WOODEN_AXE, "&fForged Iron Reaver", ironReqs,
+                "Iron Bar", 5, 100, 10, 6, MenuUtil.itemStatsToString(BlacksmithItems.ironReaver()),
                 false, false, false);
 
         // level 15
         super.createMenuItem(forgeMenu, pl, 13, Material.CHAINMAIL_BOOTS, "&fForged Mail Greaves", chainReqs,
-                "Chain Link", 4, 80, 15, 0,
-                "&c+ "
-                        + (int) AttributeUtil.getCustomDouble(BlacksmithItems.ironReaver(), "custom.minDamage")
-                        + "-"
-                        + (int) AttributeUtil.getCustomDouble(BlacksmithItems.ironReaver(), "custom.maxDamage")
-                        + "⚔",
+                "Chain Link", 4, 80, 15, 0, MenuUtil.itemStatsToString(BlacksmithItems.mailGreaves()),
                 false, false, false);
         super.createMenuItem(forgeMenu, pl, 14, Material.GOLDEN_BOOTS, "&fForged Gilded Boots", goldReqs,
-                "Gold Bar", 4, 80, 15, 0,
-                "&c+ "
-                        + (int) AttributeUtil.getCustomDouble(BlacksmithItems.ironReaver(), "custom.minDamage")
-                        + "-"
-                        + (int) AttributeUtil.getCustomDouble(BlacksmithItems.ironReaver(), "custom.maxDamage")
-                        + "⚔",
+                "Gold Bar", 4, 80, 15, 0, MenuUtil.itemStatsToString(BlacksmithItems.gildedBoots()),
                 false, false, false);
 
         // level 20
-        super.createMenuItem(forgeMenu, pl, 15, Material.CHAINMAIL_LEGGINGS, "&fForged Mail Greaves", chainReqs,
-                "Chain Link", 4, 80, 15, 0,
-                "&c+ "
-                        + (int) AttributeUtil.getCustomDouble(BlacksmithItems.ironReaver(), "custom.minDamage")
-                        + "-"
-                        + (int) AttributeUtil.getCustomDouble(BlacksmithItems.ironReaver(), "custom.maxDamage")
-                        + "⚔",
+        super.createMenuItem(forgeMenu, pl, 15, Material.CHAINMAIL_LEGGINGS, "&fForged Mail Tassets", chainReqs,
+                "Chain Link", 7, 140, 20, 0, MenuUtil.itemStatsToString(BlacksmithItems.mailTassets()),
                 false, false, false);
-        super.createMenuItem(forgeMenu, pl, 16, Material.IRON_LEGGINGS, "&fForged Gilded Boots", goldReqs,
-                "Gold Bar", 4, 80, 15, 0, MenuUtil.itemStatsToString(BlacksmithItems.plateLegs()),
+        super.createMenuItem(forgeMenu, pl, 16, Material.IRON_LEGGINGS, "&fForged Iron Platelegs", ironReqs,
+                "Iron Bar", 7, 140, 20, 0, MenuUtil.itemStatsToString(BlacksmithItems.plateLegs()),
+                false, false, false);
+
+        // level 25
+        super.createMenuItem(forgeMenu, pl, 17, Material.FLINT, "&fSharpening Stone", ironReqs,
+                "Iron Bar", 2, 40, 0, 0,
+                "&eIncrease your weapon⚔ damage by +3 for 3 min!\n",
+                false, false, false);
+
+        // level 30
+        LinkedHashMap<Material, Integer> bastionReqs = new LinkedHashMap<>();
+        bastionReqs.put(Material.IRON_INGOT, 8);
+        bastionReqs.put(Material.PHANTOM_MEMBRANE, 1);
+        super.createMenuItem(forgeMenu, pl, 18, Material.SHIELD, "&fBastion", bastionReqs,
+                "Iron Bar\nFlag of Honor", 999, 310, 30, 0, MenuUtil.itemStatsToString(BlacksmithItems.bastion()),
+                false, false, false);
+
+        // level 35
+        super.createMenuItem(forgeMenu, pl, 19, Material.BOW, "&fForged Iron Longbow", chainReqs,
+                "Iron Bar", 5, 100, 35, 6, MenuUtil.itemStatsToString(BlacksmithItems.ironLongbow()),
+                false, false, false);
+        super.createMenuItem(forgeMenu, pl, 20, Material.WOODEN_HOE, "&fForged Iron Scepter", ironReqs,
+                "Iron Bar", 5, 100, 35, 6, MenuUtil.itemStatsToString(BlacksmithItems.ironScepter()),
+                false, false, false);
+
+        // level 40
+        super.createMenuItem(forgeMenu, pl, 21, Material.GOLDEN_CHESTPLATE, "&fForged Gilded Body", goldReqs,
+                "Gold Bar", 8, 160, 40, 0, MenuUtil.itemStatsToString(BlacksmithItems.gildedBody()),
+                false, false, false);
+        super.createMenuItem(forgeMenu, pl, 22, Material.IRON_CHESTPLATE, "&fForged Iron Platebody", ironReqs,
+                "Iron Bar", 8, 160, 40, 0, MenuUtil.itemStatsToString(BlacksmithItems.plateBody()),
+                false, false, false);
+
+        // level 45
+        super.createMenuItem(forgeMenu, pl, 23, Material.CHAINMAIL_HELMET, "&fForged Mail Helm", chainReqs,
+                "Chain Link", 5, 100, 45, 0, MenuUtil.itemStatsToString(BlacksmithItems.mailHelm()),
+                false, false, false);
+        super.createMenuItem(forgeMenu, pl, 24, Material.IRON_HELMET, "&fForged Iron Helm", ironReqs,
+                "Iron Bar", 5, 100, 45, 0, MenuUtil.itemStatsToString(BlacksmithItems.ironHelm()),
                 false, false, false);
 
         // level 50 - legendary bow
         LinkedHashMap<Material, Integer> scorpionReqs = new LinkedHashMap<>();
-        scorpionReqs.put(Material.NETHER_STAR, 1);
         scorpionReqs.put(Material.IRON_INGOT, 5);
-        super.createMenuItem(forgeMenu, pl, 26, Material.BOW, "&6Scorpion", scorpionReqs,
-                "Token of Valor\nIron Bar", 999, 0, 50, 7,
-                "&c+ "
-                        + (int) AttributeUtil.getCustomDouble(LegendaryManager.frostforgedArrowhead(), "custom.attackDamage")
-                        + "⚔\n&3+ "
-                        + (int) AttributeUtil.getCustomDouble(LegendaryManager.frostforgedArrowhead(), "custom.magicDamage")
-                        + "ʔ",
+        scorpionReqs.put(Material.NETHER_STAR, 1);
+        super.createMenuItem(forgeMenu, pl, 25, Material.BOW, "&6Scorpion", scorpionReqs,
+                "Iron Bar\nToken of Valor", 999, 400, 50, 7, MenuUtil.itemStatsToString(BlacksmithItems.scorpion()),
                 true, false, false);
         // level 55 - legendary sword
-        super.createMenuItem(forgeMenu, pl, 27, Material.WOODEN_SWORD, "&6Nightshade", scorpionReqs,
-                "Token of Valor\nIron Bar", 999, 0, 50, 7,
-                "&c+ "
-                        + (int) AttributeUtil.getCustomDouble(LegendaryManager.frostforgedArrowhead(), "custom.attackDamage")
-                        + "⚔\n&3+ "
-                        + (int) AttributeUtil.getCustomDouble(LegendaryManager.frostforgedArrowhead(), "custom.magicDamage")
-                        + "ʔ",
+        super.createMenuItem(forgeMenu, pl, 26, Material.WOODEN_SWORD, "&6Nightshade", scorpionReqs,
+                "Iron Bar\nToken of Valor", 999, 400, 55, 7, MenuUtil.itemStatsToString(BlacksmithItems.nightshade()),
                 true, false, false);
         // level 60 - legendary axe
-        super.createMenuItem(forgeMenu, pl, 28, Material.WOODEN_AXE, "&6Warmonger", scorpionReqs,
-                "Token of Valor\nIron Bar", 999, 0, 50, 7,
-                "&c+ "
-                        + (int) AttributeUtil.getCustomDouble(LegendaryManager.frostforgedArrowhead(), "custom.attackDamage")
-                        + "⚔\n&3+ "
-                        + (int) AttributeUtil.getCustomDouble(LegendaryManager.frostforgedArrowhead(), "custom.magicDamage")
-                        + "ʔ",
+        super.createMenuItem(forgeMenu, pl, 27, Material.WOODEN_AXE, "&6Warmonger", scorpionReqs,
+                "Iron Bar\nToken of Valor", 999, 400, 60, 7, MenuUtil.itemStatsToString(BlacksmithItems.warmonger()),
                 true, false, false);
     }
 
@@ -306,6 +365,51 @@ public class BSAnvilGUI extends Workstation {
                 break;
             case 12:
                 item = BlacksmithItems.ironReaver();
+                break;
+            case 13:
+                item = BlacksmithItems.mailGreaves();
+                break;
+            case 14:
+                item = BlacksmithItems.gildedBoots();
+                break;
+            case 15:
+                item = BlacksmithItems.mailTassets();
+                break;
+            case 16:
+                item = BlacksmithItems.plateLegs();
+                break;
+            case 17:
+                item = BlacksmithItems.sharpStone();
+                break;
+            case 18:
+                item = BlacksmithItems.bastion();
+                break;
+            case 19:
+                item = BlacksmithItems.ironLongbow();
+                break;
+            case 20:
+                item = BlacksmithItems.ironScepter();
+                break;
+            case 21:
+                item = BlacksmithItems.gildedBody();
+                break;
+            case 22:
+                item = BlacksmithItems.plateBody();
+                break;
+            case 23:
+                item = BlacksmithItems.mailHelm();
+                break;
+            case 24:
+                item = BlacksmithItems.ironHelm();
+                break;
+            case 25:
+                item = BlacksmithItems.scorpion();
+                break;
+            case 26:
+                item = BlacksmithItems.nightshade();
+                break;
+            case 27:
+                item = BlacksmithItems.warmonger();
                 break;
         }
         return item;

@@ -17,7 +17,6 @@ public class MenuUtil {
         int health = (int) AttributeUtil.getGenericDouble(item, "generic.maxHealth");
         if (health != 0) s = s.concat(ChatColor.RED + "+ " + health + "❤\n");
 
-
         // -------------------------------------------------------------------------------------------
         // for weapons/gemstones/custom boosts
         int minDamage = (int) AttributeUtil.getCustomDouble(item, "custom.minDamage");

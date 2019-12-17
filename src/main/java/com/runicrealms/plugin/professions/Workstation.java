@@ -104,11 +104,11 @@ public abstract class Workstation implements Listener {
         }
 
         if (currentLvl < reqLevel) {
-            desc.append("&cUnlock by reaching lv. ").append(reqLevel).append("!\n");
+            desc.append("&cReq. Lv: ").append(reqLevel).append("\n");
         }
 
         if (!itemStats.equals("")) {
-            desc.append("\n&7Item Stats:\n").append(itemStats).append("\n");
+            desc.append("\n&7Item Stats:\n").append(itemStats);//.append("\n")
         }
         desc.append("\n&7Material(s) Required:\n");
 

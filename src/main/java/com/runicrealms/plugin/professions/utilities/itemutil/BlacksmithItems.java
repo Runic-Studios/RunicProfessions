@@ -41,13 +41,13 @@ public class BlacksmithItems {
     // level 10
     public static ItemStack ironBroadsword() {
         return new RunicItem
-                (Material.WOODEN_SWORD, ChatColor.WHITE, "Iron Broadsword", 6, 10,
+                (Material.WOODEN_SWORD, ChatColor.WHITE, "Forged Iron Broadsword", 6, 10,
                         0, 0, 0, 0, 0, 0,
                         0, "", 7, 8, "").getItem();
     }
     public static ItemStack ironReaver() {
         return new RunicItem
-                (Material.WOODEN_AXE, ChatColor.WHITE, "Iron Reaver", 6, 10,
+                (Material.WOODEN_AXE, ChatColor.WHITE, "Forged Iron Reaver", 6, 10,
                         0, 0, 0, 0, 0, 0,
                         0, "", 5, 8, "").getItem();
     }
@@ -81,7 +81,7 @@ public class BlacksmithItems {
     }
 
     // level 25
-    private static final int SHARP_STONE_DAMAGE_BONUS = 1;
+    private static final int SHARP_STONE_DAMAGE_BONUS = 3;
     public static ItemStack sharpStone() {
         ItemStack sharpStone = new ItemStack(Material.FLINT);
         ItemMeta meta = sharpStone.getItemMeta();
@@ -101,20 +101,20 @@ public class BlacksmithItems {
     public static ItemStack bastion() {
         return new RunicItem
                 (Material.SHIELD, ChatColor.WHITE, "Bastion", 0, 25,
-                        2, 0, 0, 0, 0, 4,
+                        0, 0, 0, 0, 0, 4,
                         50, "offhand", 0, 0, "").getItem();
     }
 
     // level 35
     public static ItemStack ironLongbow() {
         return new RunicItem
-                (Material.BOW, ChatColor.WHITE, "Iron Longbow", 6, 35,
+                (Material.BOW, ChatColor.WHITE, "Forged Iron Longbow", 6, 35,
                         0, 0, 0, 0, 0, 0,
                         0, "", 17, 21, "").getItem();
     }
     public static ItemStack ironScepter() {
         return new RunicItem
-                (Material.WOODEN_HOE, ChatColor.WHITE, "Iron Scepter", 6, 35,
+                (Material.WOODEN_HOE, ChatColor.WHITE, "Forged Iron Scepter", 6, 35,
                         0, 0, 0, 0, 3, 0,
                         0, "", 14, 19, "").getItem();
     }
