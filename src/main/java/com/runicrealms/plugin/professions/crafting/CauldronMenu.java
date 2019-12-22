@@ -20,40 +20,34 @@ import java.util.LinkedHashMap;
 import java.util.Objects;
 import java.util.concurrent.ThreadLocalRandom;
 
-public class AlchemistGUI extends Workstation {
+public class CauldronMenu extends Workstation {
 
-    public AlchemistGUI() {
+    public CauldronMenu(Player pl) {
+        setupWorkstation(pl);
     }
 
-    public ItemGUI openMenu(Player pl) {
+    @Override
+    public void setupWorkstation(Player pl) {
 
         // name the menu
-        ItemGUI tailorMenu = getItemGUI();
-        tailorMenu.setName("&f&l" + pl.getName() + "'s &e&lCauldron");
+        super.setupWorkstation("&f&l" + pl.getName() + "'s &e&lCauldron");
+        ItemGUI baseMenu = getItemGUI();
 
         //set the visual items
-        ItemStack menuPotion = new ItemStack(Material.POTION);
-        PotionMeta pMeta = (PotionMeta) menuPotion.getItemMeta();
-        if (pMeta != null) {
-            pMeta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
-            pMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-            pMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
-            pMeta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
-            menuPotion.setItemMeta(pMeta);
-        }
-
-        tailorMenu.setOption(3, menuPotion,
-                "&fBrew Potions", "&7Brew useful potions for your journey!", 0, false);
+        baseMenu.setOption(3, new ItemStack(Material.POTION),
+                "&fBrew Potions", "&7Brew powerful and unique potions!", 0, false);
 
         // set the handler
-        tailorMenu.setHandler(event -> {
+        baseMenu.setHandler(event -> {
 
             if (event.getSlot() == 3) {
 
-                // open the crafting menu
+                // open the forging menu
                 pl.playSound(pl.getLocation(), Sound.UI_BUTTON_CLICK, 0.5f, 1);
-                ItemGUI wheel = openWheelMenu(pl);
-                wheel.open(pl);
+                this.setItemGUI(cauldronMenu(pl));
+                this.setTitle(cauldronMenu(pl).getName());
+                this.getItemGUI().open(pl);
+
                 event.setWillClose(false);
                 event.setWillDestroy(true);
 
@@ -66,10 +60,11 @@ public class AlchemistGUI extends Workstation {
             }
         });
 
-        return tailorMenu;
+        // update our internal menu
+        this.setItemGUI(baseMenu);
     }
 
-    private ItemGUI openWheelMenu(Player pl) {
+    private ItemGUI cauldronMenu(Player pl) {
 
         // grab the player's current profession level, progress toward that level
         int currentLvl = RunicCore.getInstance().getConfig().getInt(pl.getUniqueId() + ".info.prof.level");
@@ -99,22 +94,22 @@ public class AlchemistGUI extends Workstation {
         lootPotReqs.put(Material.GOLDEN_CARROT, 1);
         lootPotReqs.put(Material.PUFFERFISH, 1);
 
-        ItemGUI wheelMenu = super.craftingMenu(pl, 18);
+        ItemGUI cauldronMenu = super.craftingMenu(pl, 18);
 
-        wheelMenu.setOption(4, new ItemStack(Material.CAULDRON), "&eCauldron",
+        cauldronMenu.setOption(4, new ItemStack(Material.CAULDRON), "&eCauldron",
                 "&fClick &7an item to start crafting!"
                         + "\n&fClick &7here to return to the station", 0, false);
 
-        setupItems(wheelMenu, pl, currentLvl);
+        setupItems(cauldronMenu, pl, currentLvl);
 
-        wheelMenu.setHandler(event -> {
+        cauldronMenu.setHandler(event -> {
 
             if (event.getSlot() == 4) {
 
                 // return to the first menu
                 pl.playSound(pl.getLocation(), Sound.UI_BUTTON_CLICK, 0.5f, 1);
-                ItemGUI menu = openMenu(pl);
-                menu.open(pl);
+                setupWorkstation(pl);
+                this.getItemGUI().open(pl);
                 event.setWillClose(false);
                 event.setWillDestroy(true);
 
@@ -134,31 +129,31 @@ public class AlchemistGUI extends Workstation {
                 // health potion
                 if (slot == 9) {
                     reqHashMap = healthPotReqs;
-                    exp = 25;
+                    exp = 100;
                     if (currentLvl < 30) {
-                        dummyVar = 25;
+                        dummyVar = 35;
                     } else if (currentLvl < 50) {
-                        dummyVar = 50;
-                    } else {
                         dummyVar = 75;
+                    } else {
+                        dummyVar = 125;
                     }
                     // mana potion
                 } else if (slot == 10) {
                     reqLevel = 10;
                     reqHashMap = manaPotReqs;
-                    exp = 50;
+                    exp = 200;
                     if (currentLvl < 30) {
-                        dummyVar = 25;
+                        dummyVar = 35;
                     } else if (currentLvl < 50) {
-                        dummyVar = 50;
-                    } else {
                         dummyVar = 75;
+                    } else {
+                        dummyVar = 125;
                     }
                     // slaying potion
                 } else if (slot == 11) {
                     reqLevel = 25;
                     reqHashMap = slayPotReqs;
-                    exp = 75;
+                    exp = 240;
                     if (currentLvl < 30) {
                         dummyVar = 5;
                     } else if (currentLvl < 50) {
@@ -170,7 +165,7 @@ public class AlchemistGUI extends Workstation {
                 } else if (slot == 12) {
                     reqLevel = 40;
                     reqHashMap = lootPotReqs;
-                    exp = 100;
+                    exp = 1000;
                     if (currentLvl < 30) {
                         dummyVar = 5;
                     } else if (currentLvl < 50) {
@@ -192,7 +187,7 @@ public class AlchemistGUI extends Workstation {
             }
         });
 
-        return wheelMenu;
+        return cauldronMenu;
     }
 
     private void setupItems(ItemGUI forgeMenu, Player pl, int currentLv) {
@@ -203,20 +198,20 @@ public class AlchemistGUI extends Workstation {
         String lootingStr;
         String tierStr;
         if (currentLv < 30) {
-            healthStr = "25";
-            manaStr = "25";
+            healthStr = "35";
+            manaStr = "35";
             slayingStr = "5";
             lootingStr = "5";
             tierStr = "Minor Crafted";
         } else if (currentLv < 50) {
-            healthStr = "50";
-            manaStr = "50";
+            healthStr = "75";
+            manaStr = "75";
             slayingStr = "10";
             lootingStr = "10";
             tierStr = "Major Crafted";
         } else {
-            healthStr = "75";
-            manaStr = "75";
+            healthStr = "125";
+            manaStr = "125";
             slayingStr = "15";
             lootingStr = "15";
             tierStr = "Greater Crafted";
@@ -228,8 +223,8 @@ public class AlchemistGUI extends Workstation {
         healthPotReqs.put(Material.REDSTONE_ORE, 1);
         healthPotReqs.put(Material.SALMON, 1);
         super.createMenuItem(forgeMenu, pl, 9, Material.POTION, "&c" + tierStr + " Potion of Healing", healthPotReqs,
-                "Glass Bottle\nUncut Ruby\nSalmon", 5, 25, 0, 5,
-                "&eRestores &c" + healthStr + "❤ &eon use",
+                "Glass Bottle\nUncut Ruby\nSalmon", 5, 100, 0, 5,
+                "&eRestores &c" + healthStr + "❤ &eon use\n",
                 false, true, false);
 
         // mana potion
@@ -238,8 +233,8 @@ public class AlchemistGUI extends Workstation {
         manaPotReqs.put(Material.LAPIS_ORE, 1);
         manaPotReqs.put(Material.COD, 1);
         super.createMenuItem(forgeMenu, pl, 10, Material.POTION, "&3" + tierStr + " Potion of Mana", manaPotReqs,
-                "Glass Bottle\nUncut Sapphire\nCod", 8, 50, 0, 0,
-                "&eRestores &3" + manaStr + "✸ &eon use",
+                "Glass Bottle\nUncut Sapphire\nCod", 8, 200, 0, 0,
+                "&eRestores &3" + manaStr + "✸ &eon use\n",
                 false, true, false);
 
         // slaying potion
@@ -249,9 +244,9 @@ public class AlchemistGUI extends Workstation {
         slayPotReqs.put(Material.DIAMOND_ORE, 1);
         slayPotReqs.put(Material.TROPICAL_FISH, 1);
         super.createMenuItem(forgeMenu, pl, 11, Material.POTION, "&f" + tierStr + " Potion of Slaying", slayPotReqs,
-                "Glass Bottle\nUncut Opal\nUncut Diamond\nTropical Fish", 7, 75, 25, 0,
+                "Glass Bottle\nUncut Opal\nUncut Diamond\nTropical Fish", 7, 240, 25, 0,
                 "&eIncreases spellʔ and weapon⚔ damage" +
-                        "\n&evs. monsters by &f20% &efor &f" + lootingStr + " &eminutes",
+                        "\n&evs. monsters by &f20% &efor &f" + lootingStr + " &eminutes\n",
                 false, true, false);
 
         // looting potion
@@ -260,9 +255,9 @@ public class AlchemistGUI extends Workstation {
         lootPotReqs.put(Material.GOLDEN_CARROT, 1);
         lootPotReqs.put(Material.PUFFERFISH, 1);
         super.createMenuItem(forgeMenu, pl, 12, Material.POTION, "&6" + tierStr + " Potion of Looting", lootPotReqs,
-                "Glass Bottle\nAmbrosia Root\nPufferfish", 4, 100, 40, 0,
+                "Glass Bottle\nAmbrosia Root\nPufferfish", 4, 1000, 40, 0,
                 "&eIncreases looting chance by &f20%" +
-                        "\n&efor &f" + slayingStr + " &eminutes",
+                        "\n&efor &f" + slayingStr + " &eminutes\n",
                 false, true, false);
     }
 
@@ -276,7 +271,7 @@ public class AlchemistGUI extends Workstation {
         if (currentLvl < 3) {
             rate = 100;
         } else {
-            rate = (50 + currentLvl);
+            rate = (40 + currentLvl);
         }
 
         int failCount = 0;

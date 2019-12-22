@@ -97,9 +97,9 @@ public abstract class Workstation implements Listener {
         StringBuilder desc = new StringBuilder();
         if (canUpgrade) {
             if (currentLvl < 30) {
-                desc.append("&eNext upgrade at lv. 30!\n");
+                desc.append("&eNext upgrade: Lv. 30\n");
             } else if (currentLvl < 50) {
-                desc.append("&eNext upgrade at lv. 50!\n");
+                desc.append("&eNext Upgrade: Lv. 50\n");
             }
         }
 

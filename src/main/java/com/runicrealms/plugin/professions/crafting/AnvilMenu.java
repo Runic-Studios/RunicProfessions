@@ -17,9 +17,9 @@ import java.util.LinkedHashMap;
 import java.util.Objects;
 import java.util.concurrent.ThreadLocalRandom;
 
-public class BSAnvilGUI extends Workstation {
+public class AnvilMenu extends Workstation {
 
-    public BSAnvilGUI(Player pl) {
+    public AnvilMenu(Player pl) {
         setupWorkstation(pl);
     }
 

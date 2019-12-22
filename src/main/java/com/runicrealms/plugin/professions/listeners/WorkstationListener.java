@@ -100,7 +100,7 @@ public class WorkstationListener implements Listener {
             case "anvil":
                 if (className.equals("Blacksmith")) {
                     pl.playSound(pl.getLocation(), Sound.BLOCK_ANVIL_PLACE, 0.5f, 1.0f);
-                    RunicProfessions.getProfManager().setPlayerWorkstation(pl, new BSAnvilGUI(pl));
+                    RunicProfessions.getProfManager().setPlayerWorkstation(pl, new AnvilMenu(pl));
                     ItemGUI bMenu = ((RunicProfessions.getProfManager().getPlayerWorkstation(pl))).getItemGUI();
                     bMenu.open(pl);
                 } else {
@@ -111,9 +111,9 @@ public class WorkstationListener implements Listener {
             case "cauldron":
                 if (className.equals("Alchemist")) {
                     pl.playSound(pl.getLocation(), Sound.BLOCK_BREWING_STAND_BREW, 0.5f, 0.25f);
-                    AlchemistGUI alchemistGUI = new AlchemistGUI();
-                    ItemGUI aMenu = alchemistGUI.openMenu(pl);
-                    aMenu.open(pl);
+                    RunicProfessions.getProfManager().setPlayerWorkstation(pl, new CauldronMenu(pl));
+                    ItemGUI cMenu = ((RunicProfessions.getProfManager().getPlayerWorkstation(pl))).getItemGUI();
+                    cMenu.open(pl);
                 } else {
                     pl.playSound(pl.getLocation(), Sound.ENTITY_GENERIC_EXTINGUISH_FIRE, 0.5f, 1.0f);
                     pl.sendMessage(ChatColor.RED + "An alchemist would know how to use this.");
@@ -131,7 +131,7 @@ public class WorkstationListener implements Listener {
                     pl.playSound(pl.getLocation(), Sound.ENTITY_BLAZE_SHOOT, 0.5f, 0.5f);
                     pl.playSound(pl.getLocation(), Sound.ITEM_BUCKET_FILL_LAVA, 0.5f, 1.0f);
                     pl.playSound(pl.getLocation(), Sound.BLOCK_LAVA_POP, 0.5f, 1.0f);
-                    RunicProfessions.getProfManager().setPlayerWorkstation(pl, new BSFurnaceGUI(pl));
+                    RunicProfessions.getProfManager().setPlayerWorkstation(pl, new FurnaceMenu(pl));
                     ItemGUI fMenu = ((RunicProfessions.getProfManager().getPlayerWorkstation(pl))).getItemGUI();
                     fMenu.open(pl);
                 } else {

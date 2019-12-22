@@ -15,9 +15,9 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Objects;
 
-public class BSFurnaceGUI extends Workstation {
+public class FurnaceMenu extends Workstation {
 
-    public BSFurnaceGUI(Player pl) {
+    public FurnaceMenu(Player pl) {
         setupWorkstation(pl);
     }
 
