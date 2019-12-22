@@ -3,18 +3,18 @@ package com.runicrealms.plugin.professions.listeners;
 import com.runicrealms.plugin.RunicCore;
 import com.runicrealms.plugin.RunicProfessions;
 import com.runicrealms.plugin.attributes.AttributeUtil;
+import com.runicrealms.plugin.events.LootEvent;
 import com.runicrealms.plugin.events.SpellDamageEvent;
 import com.runicrealms.plugin.events.WeaponDamageEvent;
 import com.runicrealms.plugin.spellapi.spellutil.HealUtil;
 import com.runicrealms.plugin.utilities.ColorUtil;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -22,6 +22,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class PotionListener implements Listener {
 
@@ -70,11 +71,11 @@ public class PotionListener implements Listener {
                     @Override
                     public void run() {
                         slayers.remove(pl.getUniqueId());
+                        pl.sendMessage(ChatColor.GRAY + "Your potion of slaying has expired.");
                     }
                 }.runTaskLaterAsynchronously(RunicProfessions.getInstance(), slayingDuration*60*20L);
             }
 
-            // todo: create custom event for looting? boost it?
             if (lootingDuration > 0) {
                 looters.add(pl.getUniqueId());
                 pl.sendMessage(ColorUtil.format("&eYou've gained a &f20% &elooting bonus for &f" + lootingDuration + " &eminutes!"));
@@ -82,6 +83,7 @@ public class PotionListener implements Listener {
                     @Override
                     public void run() {
                         looters.remove(pl.getUniqueId());
+                        pl.sendMessage(ChatColor.GRAY + "Your potion of looting has expired.");
                     }
                 }.runTaskLaterAsynchronously(RunicProfessions.getInstance(), lootingDuration*60*20L);
             }
@@ -115,5 +117,28 @@ public class PotionListener implements Listener {
             extraAmt = 1;
         }
         e.setAmount(e.getAmount() + extraAmt);
+    }
+
+    @EventHandler
+    public void onLoot(LootEvent e) {
+
+        if (!looters.contains(e.getPlayer().getUniqueId())) return;
+        Player pl = e.getPlayer();
+
+        double chance = ThreadLocalRandom.current().nextDouble(0, 100);
+
+        // 20% chance for item
+        if (chance > 80) {
+            pl.playSound(pl.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 0.5f, 1.0f);
+            pl.sendMessage(ChatColor.GREEN + "You've received double loot from your potion of looting!");
+            ItemStack item = e.getItemStack();
+
+            if (pl.getInventory().firstEmpty() != -1) {
+                int firstEmpty = pl.getInventory().firstEmpty();
+                pl.getInventory().setItem(firstEmpty, item);
+            } else {
+                pl.getWorld().dropItem(pl.getLocation(), item);
+            }
+        }
     }
 }
