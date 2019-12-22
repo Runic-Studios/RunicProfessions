@@ -74,6 +74,7 @@ public class PotionListener implements Listener {
                 }.runTaskLaterAsynchronously(RunicProfessions.getInstance(), slayingDuration*60*20L);
             }
 
+            // todo: create custom event for looting? boost it?
             if (lootingDuration > 0) {
                 looters.add(pl.getUniqueId());
                 pl.sendMessage(ColorUtil.format("&eYou've gained a &f20% &elooting bonus for &f" + lootingDuration + " &eminutes!"));
