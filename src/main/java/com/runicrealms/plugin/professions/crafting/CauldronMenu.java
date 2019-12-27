@@ -184,6 +184,7 @@ public class CauldronMenu extends Workstation {
                     reqLevel = 60;
                     reqHashMap = sacredFirePotReqs;
                     exp = 0;
+                    dummyVar = 15;
                 }
 
                 // destroy instance of inventory to prevent bugs
@@ -320,7 +321,7 @@ public class CauldronMenu extends Workstation {
                         "\n&efor &f" + someVar + " &eminutes";
             } else {
                 color = Color.ORANGE;
-                desc = "\n&eYour spells have a &f20% chance to burn" +
+                desc = "\n&eYour spells have a &f20% &echance to burn" +
                         "\n&eenemies for 20 magicʔ damage for &f" + someVar +
                         "\n&eminutes";
             }

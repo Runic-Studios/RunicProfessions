@@ -8,9 +8,9 @@ import com.runicrealms.plugin.events.SpellDamageEvent;
 import com.runicrealms.plugin.events.WeaponDamageEvent;
 import com.runicrealms.plugin.spellapi.spellutil.HealUtil;
 import com.runicrealms.plugin.utilities.ColorUtil;
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.Sound;
+import com.runicrealms.plugin.utilities.HologramUtil;
+import org.bukkit.*;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -29,6 +29,7 @@ public class PotionListener implements Listener {
     private static List<UUID> slayers = new ArrayList<>();
     private static List<UUID> looters = new ArrayList<>();
     private static List<UUID> pyromaniacs = new ArrayList<>();
+    private static final int FIRE_AMT = 20;
 
     /**
      * Handles custom potions
@@ -43,7 +44,6 @@ public class PotionListener implements Listener {
             int manaAmt = (int) AttributeUtil.getCustomDouble(e.getItem(), "potion.mana");
             int slayingDuration = (int) AttributeUtil.getCustomDouble(e.getItem(), "potion.slaying");
             int lootingDuration = (int) AttributeUtil.getCustomDouble(e.getItem(), "potion.looting");
-            int fireAmt = 0;
             int fireDuration = (int) AttributeUtil.getCustomDouble(e.getItem(), "potion.fire");
 
             // remove glass bottle from inventory, main hand or offhand
@@ -123,16 +123,27 @@ public class PotionListener implements Listener {
     @EventHandler(priority = EventPriority.LOWEST)
     public void onSpellDamage(SpellDamageEvent e) {
 
-        // todo: add fire burn effect
+        if (pyromaniacs.contains(e.getPlayer().getUniqueId())) {
+            double chance = ThreadLocalRandom.current().nextDouble(0, 100);
 
-        if (!slayers.contains(e.getPlayer().getUniqueId())) return;
-
-        double percent = 0.2;
-        int extraAmt = (int) (e.getAmount() * percent);
-        if (extraAmt < 1) {
-            extraAmt = 1;
+            // 20% chance for burn
+            if (chance > 80) {
+                e.setAmount(e.getAmount() + FIRE_AMT);
+                LivingEntity victim = (LivingEntity) e.getEntity();
+                victim.getWorld().playSound(victim.getLocation(), Sound.ENTITY_GHAST_SHOOT, 0.25f, 1.25f);
+                victim.getWorld().spawnParticle(Particle.FLAME, victim.getEyeLocation(), 5, 0.5F, 0.5F, 0.5F, 0);
+            }
         }
-        e.setAmount(e.getAmount() + extraAmt);
+
+        if (slayers.contains(e.getPlayer().getUniqueId())) {
+
+            double percent = 0.2;
+            int extraAmt = (int) (e.getAmount() * percent);
+            if (extraAmt < 1) {
+                extraAmt = 1;
+            }
+            e.setAmount(e.getAmount() + extraAmt);
+        }
     }
 
     @EventHandler
