@@ -94,6 +94,12 @@ public class CauldronMenu extends Workstation {
         lootPotReqs.put(Material.GOLDEN_CARROT, 1);
         lootPotReqs.put(Material.PUFFERFISH, 1);
 
+        // sacred fire potion
+        LinkedHashMap<Material, Integer> sacredFirePotReqs = new LinkedHashMap<>();
+        sacredFirePotReqs.put(Material.GLASS_BOTTLE, 1);
+        sacredFirePotReqs.put(Material.NETHER_WART, 1);
+        sacredFirePotReqs.put(Material.PUFFERFISH, 1);
+
         ItemGUI cauldronMenu = super.craftingMenu(pl, 18);
 
         cauldronMenu.setOption(4, new ItemStack(Material.CAULDRON), "&eCauldron",
@@ -173,6 +179,11 @@ public class CauldronMenu extends Workstation {
                     } else {
                         dummyVar = 15;
                     }
+                    // fire potion
+                } else if (slot == 13) {
+                    reqLevel = 60;
+                    reqHashMap = sacredFirePotReqs;
+                    exp = 0;
                 }
 
                 // destroy instance of inventory to prevent bugs
@@ -254,11 +265,23 @@ public class CauldronMenu extends Workstation {
         lootPotReqs.put(Material.GLASS_BOTTLE, 1);
         lootPotReqs.put(Material.GOLDEN_CARROT, 1);
         lootPotReqs.put(Material.PUFFERFISH, 1);
-        super.createMenuItem(forgeMenu, pl, 12, Material.POTION, "&6" + tierStr + " Potion of Looting", lootPotReqs,
+        super.createMenuItem(forgeMenu, pl, 12, Material.POTION, "&d" + tierStr + " Potion of Looting", lootPotReqs,
                 "Glass Bottle\nAmbrosia Root\nPufferfish", 4, 600, 40, 0,
-                "&eIncreases looting chance by &f20%" +
+                "&eGrants &f20% &echance of &ndouble loot" +
                         "\n&efor &f" + slayingStr + " &eminutes\n",
                 false, true, false);
+
+        // sacred fire potion
+        LinkedHashMap<Material, Integer> firePotReqs = new LinkedHashMap<>();
+        firePotReqs.put(Material.GLASS_BOTTLE, 1);
+        firePotReqs.put(Material.NETHER_WART, 1);
+        firePotReqs.put(Material.PUFFERFISH, 1);
+        super.createMenuItem(forgeMenu, pl, 13, Material.POTION, "&6" + tierStr + " Potion of Sacred Fire", firePotReqs,
+                "Glass Bottle\nSacred Flame\nPufferfish", 4, 0, 60, 0,
+                "&eYour spells have a &f20% &echance to burn" +
+                        "\n&eenemies for &f20 &emagicʔ damage for &f" + slayingStr +
+                        "\n&eminutes\n",
+                false, false, false);
     }
 
     @Override
@@ -291,10 +314,15 @@ public class CauldronMenu extends Workstation {
                 color = Color.BLACK;
                 desc = "\n&eIncreases spellʔ and weapon⚔ damage" +
                         "\n&evs. monsters by &f20% &efor &f" + someVar + " &eminutes";
+            } else if (dispName.toLowerCase().contains("looting")) {
+                color = Color.FUCHSIA;
+                desc = "\n&eGrants &f20% &echance of &ndouble loot" +
+                        "\n&efor &f" + someVar + " &eminutes";
             } else {
                 color = Color.ORANGE;
-                desc = "\n&eIncreases looting chance by &f20%" +
-                        "\n&efor &f" + someVar + " &eminutes";
+                desc = "\n&eYour spells have a &f20% chance to burn" +
+                        "\n&eenemies for 20 magicʔ damage for &f" + someVar +
+                        "\n&eminutes";
             }
             Objects.requireNonNull(pMeta).setColor(color);
 
@@ -321,8 +349,10 @@ public class CauldronMenu extends Workstation {
                 potion = AttributeUtil.addCustomStat(potion, "potion.mana", someVar);
             } else if (dispName.toLowerCase().contains("slaying")) {
                 potion = AttributeUtil.addCustomStat(potion, "potion.slaying", someVar);
-            } else {
+            } else if (dispName.toLowerCase().contains("looting")) {
                 potion = AttributeUtil.addCustomStat(potion, "potion.looting", someVar);
+            } else {
+                potion = AttributeUtil.addCustomStat(potion, "potion.fire", someVar);
             }
             // ----------------------------------------------
 

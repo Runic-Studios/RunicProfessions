@@ -77,9 +77,7 @@ public abstract class Workstation implements Listener {
 
         // determine the success rate, based on level
         int rate = (40 + currentLvl);
-        if (itemType == Material.POTION) {
-            rate = (50 + currentLvl);
-        }
+
         String rateToStr;
         if (rate < 50) {
             rateToStr = ChatColor.RED + "" + rate;
@@ -145,7 +143,7 @@ public abstract class Workstation implements Listener {
         desc = new StringBuilder(ColorUtil.format(desc.toString()));
 
         if (itemType == Material.POTION) {
-            Color color = Color.WHITE;
+            Color color;
             if (name.toLowerCase().contains("healing")) {
                 color = Color.RED;
             } else if (name.toLowerCase().contains("mana")) {
@@ -153,6 +151,8 @@ public abstract class Workstation implements Listener {
             } else if (name.toLowerCase().contains("slaying")) {
                 color = Color.BLACK;
             } else if (name.toLowerCase().contains("looting")) {
+                color = Color.FUCHSIA;
+            } else {
                 color = Color.ORANGE;
             }
             gui.setOption(slot,

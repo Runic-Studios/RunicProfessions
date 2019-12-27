@@ -28,11 +28,11 @@ public class PotionListener implements Listener {
 
     private static List<UUID> slayers = new ArrayList<>();
     private static List<UUID> looters = new ArrayList<>();
+    private static List<UUID> pyromaniacs = new ArrayList<>();
 
     /**
      * Handles custom potions
      */
-    @SuppressWarnings("deprecation")
     @EventHandler
     public void onPotionUse(PlayerItemConsumeEvent e) {
 
@@ -43,6 +43,8 @@ public class PotionListener implements Listener {
             int manaAmt = (int) AttributeUtil.getCustomDouble(e.getItem(), "potion.mana");
             int slayingDuration = (int) AttributeUtil.getCustomDouble(e.getItem(), "potion.slaying");
             int lootingDuration = (int) AttributeUtil.getCustomDouble(e.getItem(), "potion.looting");
+            int fireAmt = 0;
+            int fireDuration = (int) AttributeUtil.getCustomDouble(e.getItem(), "potion.fire");
 
             // remove glass bottle from inventory, main hand or offhand
             new BukkitRunnable() {
@@ -78,7 +80,7 @@ public class PotionListener implements Listener {
 
             if (lootingDuration > 0) {
                 looters.add(pl.getUniqueId());
-                pl.sendMessage(ColorUtil.format("&eYou've gained a &f20% &elooting bonus for &f" + lootingDuration + " &eminutes!"));
+                pl.sendMessage(ColorUtil.format("&eYou've gained a &f20% &echance of &ndouble loot&r &efor &f" + lootingDuration + " &eminutes!"));
                 new BukkitRunnable() {
                     @Override
                     public void run() {
@@ -86,6 +88,18 @@ public class PotionListener implements Listener {
                         pl.sendMessage(ChatColor.GRAY + "Your potion of looting has expired.");
                     }
                 }.runTaskLaterAsynchronously(RunicProfessions.getInstance(), lootingDuration*60*20L);
+            }
+
+            if (fireDuration > 0) {
+                pyromaniacs.add(pl.getUniqueId());
+                pl.sendMessage(ColorUtil.format("&eYour spells now have a &f20% &echance to burn enemies &efor &f" + fireDuration + " &eminutes!"));
+                new BukkitRunnable() {
+                    @Override
+                    public void run() {
+                        pyromaniacs.remove(pl.getUniqueId());
+                        pl.sendMessage(ChatColor.GRAY + "Your potion of sacred fire has expired.");
+                    }
+                }.runTaskLaterAsynchronously(RunicProfessions.getInstance(), fireDuration*60*20L);
             }
         }
     }
@@ -108,6 +122,8 @@ public class PotionListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onSpellDamage(SpellDamageEvent e) {
+
+        // todo: add fire burn effect
 
         if (!slayers.contains(e.getPlayer().getUniqueId())) return;
 
