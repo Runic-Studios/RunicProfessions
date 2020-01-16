@@ -6,6 +6,7 @@ import com.runicrealms.plugin.attributes.AttributeUtil;
 import com.runicrealms.plugin.enums.ArmorSlotEnum;
 import com.runicrealms.plugin.item.GUIMenu.ItemGUI;
 import com.runicrealms.plugin.item.LoreGenerator;
+import com.runicrealms.plugin.item.util.ItemRemover;
 import com.runicrealms.plugin.professions.listeners.WorkstationListener;
 import com.runicrealms.plugin.professions.utilities.FloatingItemUtil;
 import com.runicrealms.plugin.professions.utilities.ProfExpUtil;
@@ -233,7 +234,7 @@ public abstract class Workstation implements Listener {
             if (itemReqs.size() <= 1) {
                 amt = itemAmt * multiplier;
             }
-            takeItem(pl, reagent, amt);
+            ItemRemover.takeItem(pl, reagent, amt);
         }
 
         // spawn item on workstation for visual
@@ -373,30 +374,5 @@ public abstract class Workstation implements Listener {
 
     public void setItemGUI(ItemGUI itemGUI) {
         this.itemGUI = itemGUI;
-    }
-
-    // todo: move to core. too important
-    public static void takeItem(Player pl, Material material, int amount) {
-
-        // todo: add gold pouch calculator
-        int to_take = amount;
-        for (ItemStack player_item : pl.getInventory().getContents()) {
-            if (player_item != null) {
-
-                if (player_item.getType() == material) {
-                    int take_next = Math.min(to_take, player_item.getAmount());
-                    remove(pl, player_item, take_next);
-                    to_take -= take_next;
-                    if (to_take <= 0) { //Reached amount. Can stop!
-                        break;
-                    }
-                }
-            }
-        }
-    }
-    private static void remove(Player p, ItemStack toR, int amount){
-        ItemStack i = toR.clone();
-        i.setAmount(amount);
-        p.getInventory().removeItem(i);
     }
 }
