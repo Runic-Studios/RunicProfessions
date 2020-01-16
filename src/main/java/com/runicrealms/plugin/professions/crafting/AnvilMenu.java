@@ -1,9 +1,7 @@
 package com.runicrealms.plugin.professions.crafting;
 
 import com.runicrealms.plugin.RunicCore;
-import com.runicrealms.plugin.attributes.AttributeUtil;
 import com.runicrealms.plugin.item.GUIMenu.ItemGUI;
-import com.runicrealms.plugin.item.LegendaryManager;
 import com.runicrealms.plugin.professions.Workstation;
 import com.runicrealms.plugin.professions.utilities.MenuUtil;
 import com.runicrealms.plugin.professions.utilities.itemutil.BlacksmithItems;
@@ -243,10 +241,10 @@ public class AnvilMenu extends Workstation {
 
         // level 10
         super.createMenuItem(forgeMenu, pl, 11, Material.WOODEN_SWORD, "&fForged Iron Broadsword", ironReqs,
-                "Iron Bar", 5, 100, 10, 6, MenuUtil.itemStatsToString(BlacksmithItems.ironBroadsword()),
+                "Iron Bar", 5, 100, 10, 7, MenuUtil.itemStatsToString(BlacksmithItems.ironBroadsword()),
                 false, false, false);
         super.createMenuItem(forgeMenu, pl, 12, Material.WOODEN_AXE, "&fForged Iron Reaver", ironReqs,
-                "Iron Bar", 5, 100, 10, 6, MenuUtil.itemStatsToString(BlacksmithItems.ironReaver()),
+                "Iron Bar", 5, 100, 10, 7, MenuUtil.itemStatsToString(BlacksmithItems.ironReaver()),
                 false, false, false);
 
         // level 15
@@ -281,10 +279,10 @@ public class AnvilMenu extends Workstation {
 
         // level 35
         super.createMenuItem(forgeMenu, pl, 19, Material.BOW, "&fForged Iron Longbow", chainReqs,
-                "Iron Bar", 5, 100, 35, 6, MenuUtil.itemStatsToString(BlacksmithItems.ironLongbow()),
+                "Iron Bar", 5, 100, 35, 7, MenuUtil.itemStatsToString(BlacksmithItems.ironLongbow()),
                 false, false, false);
         super.createMenuItem(forgeMenu, pl, 20, Material.WOODEN_HOE, "&fForged Iron Scepter", ironReqs,
-                "Iron Bar", 5, 100, 35, 6, MenuUtil.itemStatsToString(BlacksmithItems.ironScepter()),
+                "Iron Bar", 5, 100, 35, 7, MenuUtil.itemStatsToString(BlacksmithItems.ironScepter()),
                 false, false, false);
 
         // level 40
@@ -304,19 +302,19 @@ public class AnvilMenu extends Workstation {
                 false, false, false);
 
         // level 50 - legendary bow
-        LinkedHashMap<Material, Integer> scorpionReqs = new LinkedHashMap<>();
-        scorpionReqs.put(Material.IRON_INGOT, 5);
-        scorpionReqs.put(Material.NETHER_STAR, 1);
-        super.createMenuItem(forgeMenu, pl, 25, Material.BOW, "&6Scorpion", scorpionReqs,
-                "Iron Bar\nToken of Valor", 999, 400, 50, 7, MenuUtil.itemStatsToString(BlacksmithItems.scorpion()),
+        LinkedHashMap<Material, Integer> legenReqs = new LinkedHashMap<>();
+        legenReqs.put(Material.IRON_INGOT, 5);
+        legenReqs.put(Material.NETHER_STAR, 1);
+        super.createMenuItem(forgeMenu, pl, 25, Material.BOW, "&6Stormsong", legenReqs,
+                "Iron Bar\nToken of Valor", 999, 400, 50, 10, MenuUtil.itemStatsToString(BlacksmithItems.Stormsong()),
                 true, false, false);
         // level 55 - legendary sword
-        super.createMenuItem(forgeMenu, pl, 26, Material.WOODEN_SWORD, "&6Nightshade", scorpionReqs,
-                "Iron Bar\nToken of Valor", 999, 400, 55, 7, MenuUtil.itemStatsToString(BlacksmithItems.nightshade()),
+        super.createMenuItem(forgeMenu, pl, 26, Material.WOODEN_SWORD, "&6Valkyrie", legenReqs,
+                "Iron Bar\nToken of Valor", 999, 400, 55, 10, MenuUtil.itemStatsToString(BlacksmithItems.Valkyrie()),
                 true, false, false);
         // level 60 - legendary axe
-        super.createMenuItem(forgeMenu, pl, 27, Material.WOODEN_AXE, "&6Warmonger", scorpionReqs,
-                "Iron Bar\nToken of Valor", 999, 400, 60, 7, MenuUtil.itemStatsToString(BlacksmithItems.warmonger()),
+        super.createMenuItem(forgeMenu, pl, 27, Material.WOODEN_AXE, "&6The Minotaur", legenReqs,
+                "Iron Bar\nToken of Valor", 999, 400, 60, 10, MenuUtil.itemStatsToString(BlacksmithItems.theMinotaur()),
                 true, false, false);
     }
 
@@ -403,13 +401,13 @@ public class AnvilMenu extends Workstation {
                 item = BlacksmithItems.ironHelm();
                 break;
             case 25:
-                item = BlacksmithItems.scorpion();
+                item = BlacksmithItems.Stormsong();
                 break;
             case 26:
-                item = BlacksmithItems.nightshade();
+                item = BlacksmithItems.Valkyrie();
                 break;
             case 27:
-                item = BlacksmithItems.warmonger();
+                item = BlacksmithItems.theMinotaur();
                 break;
         }
         return item;
