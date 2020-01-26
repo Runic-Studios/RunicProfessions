@@ -4,6 +4,7 @@ import com.runicrealms.plugin.RunicCore;
 import com.runicrealms.plugin.RunicProfessions;
 import com.runicrealms.plugin.item.GUIMenu.ItemGUI;
 import com.runicrealms.plugin.professions.crafting.*;
+import com.runicrealms.plugin.professions.crafting.Jeweler.JewelerMenu;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.ConfigurationSection;
@@ -142,8 +143,8 @@ public class WorkstationListener implements Listener {
             case "gemcutting bench":
                 if (className.equals("Jeweler")) {
                     pl.playSound(pl.getLocation(), Sound.BLOCK_ANVIL_USE, 0.5f, 2.0f);
-                    JewelerGUI jewelerGUI = new JewelerGUI();
-                    ItemGUI jMenu = jewelerGUI.openMenu(pl);
+                    RunicProfessions.getProfManager().setPlayerWorkstation(pl, new JewelerMenu(pl));
+                    ItemGUI jMenu = ((RunicProfessions.getProfManager().getPlayerWorkstation(pl))).getItemGUI();
                     jMenu.open(pl);
                 } else {
                     pl.playSound(pl.getLocation(), Sound.ENTITY_GENERIC_EXTINGUISH_FIRE, 0.5f, 1.0f);
@@ -153,9 +154,9 @@ public class WorkstationListener implements Listener {
             case "spinning wheel":
                 if (className.equals("Tailor")) {
                     pl.playSound(pl.getLocation(), Sound.BLOCK_WET_GRASS_BREAK, 2.0f, 1.2f);
-                    TailorGUI tailorGUI = new TailorGUI();
-                    ItemGUI tMenu = tailorGUI.openMenu(pl);
-                    tMenu.open(pl);
+//                    TailorGUI tailorGUI = new TailorGUI();
+//                    ItemGUI tMenu = tailorGUI.openMenu(pl);
+//                    tMenu.open(pl);
                 } else {
                     pl.playSound(pl.getLocation(), Sound.ENTITY_GENERIC_EXTINGUISH_FIRE, 0.5f, 1.0f);
                     pl.sendMessage(ChatColor.RED + "A tailor would know how to use this.");
@@ -164,9 +165,9 @@ public class WorkstationListener implements Listener {
             case "tanning rack":
                 if (className.equals("Leatherworker")) {
                     pl.playSound(pl.getLocation(), Sound.ITEM_ARMOR_EQUIP_LEATHER, 2.0f, 0.8f);
-                    LWGUI lwGUI = new LWGUI();
-                    ItemGUI lMenu = lwGUI.openMenu(pl);
-                    lMenu.open(pl);
+//                    LWGUI lwGUI = new LWGUI();
+//                    ItemGUI lMenu = lwGUI.openMenu(pl);
+//                    lMenu.open(pl);
                 } else {
                     pl.playSound(pl.getLocation(), Sound.ENTITY_GENERIC_EXTINGUISH_FIRE, 0.5f, 1.0f);
                     pl.sendMessage(ChatColor.RED + "A leatherworker would know how to use this.");

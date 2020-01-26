@@ -9,3 +9,6 @@ commands:
   setprof:
     usage: /<commands>
     description: Give a gathering tool
+  jewelmaster:
+    usage: /<commands>
+    description: Open jewel master shop

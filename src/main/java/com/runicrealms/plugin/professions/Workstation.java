@@ -312,7 +312,7 @@ public abstract class Workstation implements Listener {
             // item can be socket-ed ONCE
             craftedItem = AttributeUtil.addCustomStat(craftedItem, "custom.socketCount", 1);
 
-            LoreGenerator.generateItemLore(craftedItem, ChatColor.WHITE, dispName, "");
+            LoreGenerator.generateItemLore(craftedItem, ChatColor.WHITE, dispName, "", false);
 
             double chance = ThreadLocalRandom.current().nextDouble(0, 100);
             if (chance <= rate) {

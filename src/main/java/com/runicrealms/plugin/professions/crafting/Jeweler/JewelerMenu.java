@@ -1,7 +1,6 @@
-package com.runicrealms.plugin.professions.crafting;
+package com.runicrealms.plugin.professions.crafting.Jeweler;
 
 import com.runicrealms.plugin.RunicCore;
-import com.runicrealms.plugin.RunicProfessions;
 import com.runicrealms.plugin.attributes.AttributeUtil;
 import com.runicrealms.plugin.item.GUIMenu.ItemGUI;
 import com.runicrealms.plugin.item.LoreGenerator;
@@ -16,16 +15,18 @@ import java.util.LinkedHashMap;
 import java.util.Objects;
 import java.util.concurrent.ThreadLocalRandom;
 
-public class JewelerGUI extends Workstation {
+public class JewelerMenu extends Workstation {
 
-    public JewelerGUI() {
+    public JewelerMenu(Player pl) {
+        setupWorkstation(pl);
     }
 
-    public ItemGUI openMenu(Player pl) {
+    @Override
+    public void setupWorkstation(Player pl) {
 
-        // name the menu
+        // setup the menu
+        super.setupWorkstation("&f&l" + pl.getName() + "'s &e&lGemcutting Bench");
         ItemGUI jewelerMenu = getItemGUI();
-        jewelerMenu.setName("&f&l" + pl.getName() + "'s &e&lGemcutting Bench");
 
         //set the visual items
         jewelerMenu.setOption(3, new ItemStack(Material.REDSTONE),
@@ -36,10 +37,12 @@ public class JewelerGUI extends Workstation {
 
             if (event.getSlot() == 3) {
 
-                // open the crafting menu
+                // open the bench menu
                 pl.playSound(pl.getLocation(), Sound.UI_BUTTON_CLICK, 0.5f, 1);
-                ItemGUI wheel = openBenchMenu(pl);
-                wheel.open(pl);
+                this.setItemGUI(benchMenu(pl));
+                this.setTitle(benchMenu(pl).getName());
+                this.getItemGUI().open(pl);
+
                 event.setWillClose(false);
                 event.setWillDestroy(true);
 
@@ -52,10 +55,11 @@ public class JewelerGUI extends Workstation {
             }
         });
 
-        return jewelerMenu;
+        // update our internal menu
+        this.setItemGUI(jewelerMenu);
     }
 
-    private ItemGUI openBenchMenu(Player pl) {
+    private ItemGUI benchMenu(Player pl) {
 
         // grab the player's current profession level, progress toward that level
         int currentLvl = RunicCore.getInstance().getConfig().getInt(pl.getUniqueId() + ".info.prof.level");
@@ -94,8 +98,8 @@ public class JewelerGUI extends Workstation {
 
                 // return to the first menu
                 pl.playSound(pl.getLocation(), Sound.UI_BUTTON_CLICK, 0.5f, 1);
-                ItemGUI menu = openMenu(pl);
-                menu.open(pl);
+                setupWorkstation(pl);
+                this.getItemGUI().open(pl);
                 event.setWillClose(false);
                 event.setWillDestroy(true);
 
@@ -271,7 +275,7 @@ public class JewelerGUI extends Workstation {
             craftedItem = addGemStat(material, craftedItem, someVar);
 
             LoreGenerator.generateItemLore(craftedItem, ChatColor.WHITE, dispName,
-                    "\n" + ChatColor.DARK_GRAY + "Use this on an item");
+                    "\n" + ChatColor.DARK_GRAY + "Use this on an item", false);
 
             if (chance <= rate) {
                 if (pl.getInventory().firstEmpty() != -1) {

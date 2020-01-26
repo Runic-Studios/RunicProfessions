@@ -63,7 +63,7 @@ public class SocketListener implements Listener {
             return;
         }
 
-        // retrive the current custom values of the two items
+        // retrieve the current custom values of the two items
         double itemHealth = AttributeUtil.getGenericDouble(socketItem, "generic.maxHealth");
         double gemHealth = AttributeUtil.getCustomDouble(heldItem, "custom.maxHealth");
         double itemMana = AttributeUtil.getCustomDouble(socketItem, "custom.manaBoost");
@@ -115,7 +115,25 @@ public class SocketListener implements Listener {
         newItem = AttributeUtil.addCustomStat(newItem, "custom.healingBoost", itemHealing + gemHealing); // emerald
         newItem = AttributeUtil.addCustomStat(newItem, "custom.magicDamage", itemMagDmg + gemMagDmg); // diamond
         newItem = AttributeUtil.addCustomStat(newItem, "required.level", reqLv); // required level
-        LoreGenerator.generateItemLore(newItem, ChatColor.WHITE, socketItemName, "");
+        LoreGenerator.generateItemLore(newItem, ChatColor.WHITE, socketItemName, "", false);
+
+        // ------------------------------------------------------------------------------------------------------------
+        // NEW: store the stats of the gems in the item for (optional) gem removal
+
+        // retrieve current stored stats
+        double storedHealth = AttributeUtil.getCustomDouble(socketItem, "gem.maxHealth");
+        double storedMana = AttributeUtil.getCustomDouble(socketItem, "gem.manaBoost");
+        double storedDmg = AttributeUtil.getCustomDouble(socketItem, "gem.attackDamage");
+        double storedHealing = AttributeUtil.getCustomDouble(socketItem, "gem.healingBoost");
+        double storedMagDmg = AttributeUtil.getCustomDouble(socketItem, "gem.magicDamage");
+
+        // store new gem stats.
+        newItem = AttributeUtil.addGenericStat(newItem, "gem.maxHealth", storedHealth + gemHealth, slot); // ruby
+        newItem = AttributeUtil.addCustomStat(newItem, "gem.manaBoost", storedMana + gemMana); // sapphire
+        newItem = AttributeUtil.addCustomStat(newItem, "gem.attackDamage", storedDmg + gemDmg); // opal
+        newItem = AttributeUtil.addCustomStat(newItem, "gem.healingBoost", storedHealing + gemHealing); // emerald
+        newItem = AttributeUtil.addCustomStat(newItem, "gem.magicDamage", storedMagDmg + gemMagDmg); // diamond
+        // ------------------------------------------------------------------------------------------------------------
 
         // remove the gemstone from inventory, update the item in inventory
         e.setCancelled(true);

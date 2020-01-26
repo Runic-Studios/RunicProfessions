@@ -3,6 +3,8 @@ package com.runicrealms.plugin;
 import com.runicrealms.plugin.professions.ProfManager;
 import com.runicrealms.plugin.professions.commands.GathertoolGive;
 import com.runicrealms.plugin.professions.commands.SetProfCMD;
+import com.runicrealms.plugin.professions.crafting.Jeweler.JewelShopListener;
+import com.runicrealms.plugin.professions.crafting.Jeweler.OpenJewelShop;
 import com.runicrealms.plugin.professions.event.StationClickEvent;
 import com.runicrealms.plugin.professions.gathering.FarmingListener;
 import com.runicrealms.plugin.professions.gathering.FishingListener;
@@ -32,9 +34,12 @@ public final class RunicProfessions extends JavaPlugin {
         getConfig().options().copyDefaults(true);
         saveConfig();
 
-        // register bank command
+        // register command
         getCommand("gathertool").setExecutor(new GathertoolGive());
         getCommand("setprof").setExecutor(new SetProfCMD());
+
+        // gem removal shop
+        getCommand("jewelmaster").setExecutor(new OpenJewelShop());
 
         this.registerEvents();
 
@@ -58,5 +63,6 @@ public final class RunicProfessions extends JavaPlugin {
         pm.registerEvents(new PotionListener(), this);
         pm.registerEvents(new CookingListener(), this);
         pm.registerEvents(new StationClickEvent(), this);
+        pm.registerEvents(new JewelShopListener(), this);
     }
 }

@@ -8,7 +8,6 @@ import com.runicrealms.plugin.events.SpellDamageEvent;
 import com.runicrealms.plugin.events.WeaponDamageEvent;
 import com.runicrealms.plugin.spellapi.spellutil.HealUtil;
 import com.runicrealms.plugin.utilities.ColorUtil;
-import com.runicrealms.plugin.utilities.HologramUtil;
 import org.bukkit.*;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -63,7 +62,7 @@ public class PotionListener implements Listener {
             }
 
             if (manaAmt > 0) {
-                RunicCore.getManaManager().addMana(pl, manaAmt);
+                RunicCore.getManaManager().addMana(pl, manaAmt, false);
             }
 
             if (slayingDuration > 0) {

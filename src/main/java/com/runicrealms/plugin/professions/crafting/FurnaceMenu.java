@@ -27,7 +27,6 @@ public class FurnaceMenu extends Workstation {
         // setup the menu
         super.setupWorkstation("&f&l" + pl.getName() + "'s &e&lFurnace");
         ItemGUI furnaceMenu = getItemGUI();
-        //furnaceMenu.setName("&f&l" + pl.getName() + "'s &e&lFurnace");
 
         //set the visual items
         furnaceMenu.setOption(3, new ItemStack(Material.IRON_INGOT),
