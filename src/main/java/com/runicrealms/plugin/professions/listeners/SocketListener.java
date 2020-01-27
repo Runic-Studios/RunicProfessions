@@ -115,7 +115,6 @@ public class SocketListener implements Listener {
         newItem = AttributeUtil.addCustomStat(newItem, "custom.healingBoost", itemHealing + gemHealing); // emerald
         newItem = AttributeUtil.addCustomStat(newItem, "custom.magicDamage", itemMagDmg + gemMagDmg); // diamond
         newItem = AttributeUtil.addCustomStat(newItem, "required.level", reqLv); // required level
-        LoreGenerator.generateItemLore(newItem, ChatColor.WHITE, socketItemName, "", false);
 
         // ------------------------------------------------------------------------------------------------------------
         // NEW: store the stats of the gems in the item for (optional) gem removal
@@ -128,12 +127,14 @@ public class SocketListener implements Listener {
         double storedMagDmg = AttributeUtil.getCustomDouble(socketItem, "gem.magicDamage");
 
         // store new gem stats.
-        newItem = AttributeUtil.addGenericStat(newItem, "gem.maxHealth", storedHealth + gemHealth, slot); // ruby
+        newItem = AttributeUtil.addCustomStat(newItem, "gem.maxHealth", storedHealth + gemHealth); // ruby
         newItem = AttributeUtil.addCustomStat(newItem, "gem.manaBoost", storedMana + gemMana); // sapphire
         newItem = AttributeUtil.addCustomStat(newItem, "gem.attackDamage", storedDmg + gemDmg); // opal
         newItem = AttributeUtil.addCustomStat(newItem, "gem.healingBoost", storedHealing + gemHealing); // emerald
         newItem = AttributeUtil.addCustomStat(newItem, "gem.magicDamage", storedMagDmg + gemMagDmg); // diamond
         // ------------------------------------------------------------------------------------------------------------
+
+        LoreGenerator.generateItemLore(newItem, ChatColor.WHITE, socketItemName, "", false);
 
         // remove the gemstone from inventory, update the item in inventory
         e.setCancelled(true);

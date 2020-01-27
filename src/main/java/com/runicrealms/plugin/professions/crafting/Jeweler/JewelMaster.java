@@ -8,9 +8,13 @@ import com.runicrealms.plugin.item.shops.Shop;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.Damageable;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.*;
 
+// todo: price checker, test on items w/ two gem slots
+// todo: gemstones don't stack
 public class JewelMaster extends Shop {
 
     private static final int PRICE = 32;
@@ -98,34 +102,47 @@ public class JewelMaster extends Shop {
         return socketCount != 0 && currentSockets != 0;
     }
 
-    private void removeGemstones(Player pl, ItemStack item) {
+    private void removeGemstones(Player pl, ItemStack oldItem) {
 
-        // retrieve current STORED stats
-        double storedHealth = AttributeUtil.getCustomDouble(item, "gem.maxHealth");
-        double storedMana = AttributeUtil.getCustomDouble(item, "gem.manaBoost");
-        double storedDmg = AttributeUtil.getCustomDouble(item, "gem.attackDamage");
-        double storedHealing = AttributeUtil.getCustomDouble(item, "gem.healingBoost");
-        double storedMagDmg = AttributeUtil.getCustomDouble(item, "gem.magicDamage");
+        // retrieve misc. info
+        String oldItemName = oldItem.getItemMeta().getDisplayName();
+        int socketCount = (int) AttributeUtil.getCustomDouble(oldItem, "custom.socketCount");
+        double reqLv = AttributeUtil.getCustomDouble(oldItem, "required.level");
 
-        // retrieve current ITEM stats
-        double itemHealth = AttributeUtil.getGenericDouble(item, "generic.maxHealth");
-        double itemMana = AttributeUtil.getCustomDouble(item, "custom.manaBoost");
-        double itemDmg = AttributeUtil.getCustomDouble(item, "custom.attackDamage");
-        double itemHealing = AttributeUtil.getCustomDouble(item, "custom.healingBoost");
-        double itemMagDmg = AttributeUtil.getCustomDouble(item, "custom.magicDamage");
+        // retrieve old STORED stats
+        double storedHealth = AttributeUtil.getCustomDouble(oldItem, "gem.maxHealth");
+        double storedMana = AttributeUtil.getCustomDouble(oldItem, "gem.manaBoost");
+        double storedDmg = AttributeUtil.getCustomDouble(oldItem, "gem.attackDamage");
+        double storedHealing = AttributeUtil.getCustomDouble(oldItem, "gem.healingBoost");
+        double storedMagDmg = AttributeUtil.getCustomDouble(oldItem, "gem.magicDamage");
 
+        // retrieve old ITEM stats
+        double itemHealth = AttributeUtil.getGenericDouble(oldItem, "generic.maxHealth");
+        double itemMana = AttributeUtil.getCustomDouble(oldItem, "custom.manaBoost");
+        double itemDmg = AttributeUtil.getCustomDouble(oldItem, "custom.attackDamage");
+        double itemHealing = AttributeUtil.getCustomDouble(oldItem, "custom.healingBoost");
+        double itemMagDmg = AttributeUtil.getCustomDouble(oldItem, "custom.magicDamage");
+
+        // create a NEW item with updated attributes, update its durability
+        ItemStack newItem = new ItemStack(oldItem.getType());
+        ItemMeta metaNew = newItem.getItemMeta();
+        ((Damageable) metaNew).setDamage(((Damageable) oldItem.getItemMeta()).getDamage());
+        newItem.setItemMeta(metaNew);
+
+        // fill 'da stats
         // subtract stored stats from item stats
-        item = AttributeUtil.addGenericStat(item, "generic.maxHealth", itemHealth - storedHealth, getSlot(item)); // ruby
-        item = AttributeUtil.addCustomStat(item, "custom.manaBoost", itemMana - storedMana); // sapphire
-        item = AttributeUtil.addCustomStat(item, "custom.attackDamage", itemDmg - storedDmg); // opal
-        item = AttributeUtil.addCustomStat(item, "custom.healingBoost", itemHealing - storedHealing); // emerald
-        item = AttributeUtil.addCustomStat(item, "custom.magicDamage", itemMagDmg - storedMagDmg); // diamond
+        newItem = AttributeUtil.addCustomStat(newItem, "custom.socketCount", socketCount);
+        newItem = AttributeUtil.addCustomStat(newItem, "required.level", reqLv); // required level
+        newItem = AttributeUtil.addGenericStat(newItem, "generic.maxHealth", itemHealth - storedHealth, getSlot(oldItem)); // ruby
+        newItem = AttributeUtil.addCustomStat(newItem, "custom.manaBoost", itemMana - storedMana); // sapphire
+        newItem = AttributeUtil.addCustomStat(newItem, "custom.attackDamage", itemDmg - storedDmg); // opal
+        newItem = AttributeUtil.addCustomStat(newItem, "custom.healingBoost", itemHealing - storedHealing); // emerald
+        newItem = AttributeUtil.addCustomStat(newItem, "custom.magicDamage", itemMagDmg - storedMagDmg); // diamond
 
         // re-make lore
-        // todo: update color using method from item scrapper (make static)
-        LoreGenerator.generateItemLore(item, ChatColor.YELLOW, item.getItemMeta().getDisplayName(), "", false);
+        LoreGenerator.generateItemLore(newItem, ChatColor.WHITE, oldItemName, "", false);
 
-        pl.getInventory().addItem(item);
+        pl.getInventory().addItem(newItem);
         pl.playSound(pl.getLocation(), Sound.BLOCK_ANVIL_USE, 0.5f, 2.0f);
         pl.sendMessage(ChatColor.GREEN + "Your item had its gemstones removed!");
     }
