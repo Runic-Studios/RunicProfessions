@@ -5,6 +5,7 @@ import com.runicrealms.plugin.enums.ArmorSlotEnum;
 import com.runicrealms.plugin.item.GUIMenu.ItemGUI;
 import com.runicrealms.plugin.item.LoreGenerator;
 import com.runicrealms.plugin.item.shops.Shop;
+import com.runicrealms.plugin.item.util.ItemRemover;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -13,8 +14,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.*;
 
-// todo: price checker, test on items w/ two gem slots
-// todo: gemstones don't stack
+// todo: test on items w/ two gem slots
 public class JewelMaster extends Shop {
 
     private static final int PRICE = 32;
@@ -37,7 +37,7 @@ public class JewelMaster extends Shop {
         //set the visual items
         jewelMenu.setOption(0, new ItemStack(Material.AIR), "", "", 0, false);
         jewelMenu.setOption(7, new ItemStack(Material.SLIME_BALL),
-                "&aRemove Gems", "&cCaution: &7Doing this will cost\n&7you &6&l" + PRICE + "G per item &7and remove all gems!", 0, false);
+                "&aRemove Gems", "&cCaution: &7Doing this will cost\n&7you &6&l" + PRICE + "G &7per item and remove\n&7all gems!", 0, false);
 
         // set the handler
         jewelMenu.setHandler(event -> {
@@ -77,6 +77,19 @@ public class JewelMaster extends Shop {
 
     private void attemptToRemoveGems(Player pl, ItemStack item) {
 
+        // check that the player has the reagents
+        if (!pl.getInventory().contains(Material.GOLD_NUGGET, PRICE)) {
+            pl.playSound(pl.getLocation(), Sound.ENTITY_GENERIC_EXTINGUISH_FIRE, 0.5f, 1);
+            pl.sendMessage(ChatColor.RED + "You don't have enough gold!");
+
+            // return stored items to player
+            if (storedItems.get(pl.getUniqueId()) == null) return;
+            for (ItemStack itemStack : storedItems.get(pl.getUniqueId())) {
+                pl.getInventory().addItem(itemStack);
+            }
+            return;
+        }
+
         if (!checkHasGemstones(item)) {
             pl.playSound(pl.getLocation(), Sound.BLOCK_FIRE_EXTINGUISH, 0.5f, 1);
             pl.sendMessage(ChatColor.RED + "This item has no socketed gemstones!");
@@ -103,6 +116,9 @@ public class JewelMaster extends Shop {
     }
 
     private void removeGemstones(Player pl, ItemStack oldItem) {
+
+        // take gold
+        ItemRemover.takeItem(pl, Material.GOLD_NUGGET, PRICE);
 
         // retrieve misc. info
         String oldItemName = oldItem.getItemMeta().getDisplayName();
