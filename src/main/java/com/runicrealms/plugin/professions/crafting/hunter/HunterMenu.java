@@ -24,14 +24,21 @@ public class HunterMenu extends Workstation {
 
         // check whether player has a task
         boolean hasTask = false;
-        if (RunicCore.getInstance().getConfig().getString(pl.getUniqueId() + ".info.prof.hunter_mob") != null) hasTask = true;
+        if (RunicCore.getInstance().getConfig().getString(pl.getUniqueId() + ".info.prof.hunter_mob") != null) {
+            hasTask = true;
+        }
 
         if (!hasTask) {
             hMenu.setOption(3, new ItemStack(Material.BOW),
-                    "&fAccept New Task", "&7Start a hunter task!\n&7Slay specific monsters in the world\n&7and earn points!", 0, false);
+                    "&fAccept New Task",
+                    "&aStart a hunter task!\n&7Slay specific monsters in\n&7the world and earn points!",
+                    0, false);
         } else {
             hMenu.setOption(3, new ItemStack(Material.ZOMBIE_HEAD),
-                    "&fGet Task Info", "&7You have a current task!\n&7Click here for information\n&7on your task!", 0, false);
+                    "&fGet Task Info", "&7Your Hunter Points: &6&l" +
+                            HunterTask.getTotalPoints(pl) +
+                            "\n&7You have a current task!\n&aClick here for information\n&aon your task!",
+                    0, false);
         }
 
         // set the handler
@@ -68,8 +75,9 @@ public class HunterMenu extends Workstation {
                     pl.playSound(pl.getLocation(), Sound.UI_BUTTON_CLICK, 0.5f, 1);
                     pl.sendMessage
                             (ChatColor.GREEN + "Your current task is to slay " +
-                                    ChatColor.WHITE + HunterTask.getMobAmount() + " " );//+
-                                    //ChatColor.GREEN + hunterTask.getMob().getInternalName() + "s!");
+                                    ChatColor.WHITE + HunterTask.getMobAmount() + " " +
+                                    ChatColor.GREEN + HunterTask.getMobName(pl) + "s.");
+                    pl.sendMessage(ChatColor.GREEN + "So far, you have slain " + ChatColor.WHITE + HunterTask.getCurrentKills(pl) + "!");
                     event.setWillClose(true);
                     event.setWillDestroy(true);
 

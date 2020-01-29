@@ -62,13 +62,30 @@ public class HunterTask {
         return RunicCore.getInstance().getConfig().getInt(pl.getUniqueId() + ".info.prof.level");
     }
 
+    public static int getCurrentKills(Player pl) {
+        return RunicCore.getInstance().getConfig().getInt(pl.getUniqueId() + ".info.prof.hunter_kills");
+    }
+
     /**
      * Add experience to the player's hunter profession
      */
-    public static void giveExperience(Player pl) {
+    public static void giveExperience(Player pl, boolean sendMsg) {
         HunterMob hunterMob = HunterMob.valueOf(RunicCore.getInstance().getConfig().getString(pl.getUniqueId() + ".info.prof.hunter_mob").toUpperCase());
         pl.sendMessage(ChatColor.GREEN + "Hunter mob slain!");
-        ProfExpUtil.giveExperience(pl, hunterMob.getExperience());
+        ProfExpUtil.giveExperience(pl, hunterMob.getExperience(), sendMsg);
+    }
+
+    public static int getEarnedPoints(Player pl) {
+        HunterMob hunterMob = HunterMob.valueOf(RunicCore.getInstance().getConfig().getString(pl.getUniqueId() + ".info.prof.hunter_mob").toUpperCase());
+        return hunterMob.getPoints();
+    }
+
+    public static String getMobName(Player pl) {
+        return RunicCore.getInstance().getConfig().getString(pl.getUniqueId() + ".info.prof.hunter_mob");
+    }
+
+    public static int getTotalPoints(Player pl) {
+        return RunicCore.getInstance().getConfig().getInt(pl.getUniqueId() + ".info.prof.hunter_points");
     }
 
     /**

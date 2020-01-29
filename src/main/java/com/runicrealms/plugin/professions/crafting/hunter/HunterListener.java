@@ -24,19 +24,27 @@ public class HunterListener implements Listener {
         String playerTask = RunicCore.getInstance().getConfig().getString(pl.getUniqueId() + ".info.prof.hunter_mob");
         if (!mobInternal.equals(playerTask)) return;
 
-        int totalKills = RunicCore.getInstance().getConfig().getInt(pl.getUniqueId() + ".info.prof.hunter_kills");
-
-        // give experience
-        HunterTask.giveExperience(pl);
+        int totalKills = HunterTask.getCurrentKills(pl);
+        boolean sendMsg = true;
 
         if (totalKills+1 < HunterTask.getMobAmount()) {
             RunicCore.getInstance().getConfig().set(pl.getUniqueId() + ".info.prof.hunter_kills", totalKills+1);
         } else {
+            sendMsg = false;
             HunterTask.givePoints(pl);
-            pl.sendMessage(ChatColor.GREEN + "You have completed your hunter task! Return to a hunting board for another task.");
+            pl.sendMessage
+                    (ChatColor.GREEN + "You have completed your hunter task and receive " +
+                            ChatColor.GOLD + ChatColor.BOLD + HunterTask.getEarnedPoints(pl) + " points!" +
+                            ChatColor.GREEN + " Return to a hunting board for another task.");
             launchFirework(pl);
+            RunicCore.getInstance().getConfig().set(pl.getUniqueId() + ".info.prof.hunter_mob", null);
             RunicCore.getInstance().getConfig().set(pl.getUniqueId() + ".info.prof.hunter_kills", null);
+            RunicCore.getInstance().saveConfig();
+            RunicCore.getInstance().reloadConfig();
         }
+
+        // give experience
+        HunterTask.giveExperience(pl, sendMsg);
     }
 
     private void launchFirework(Player pl) {

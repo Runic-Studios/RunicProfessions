@@ -16,7 +16,7 @@ public class ProfExpUtil {
 
     private static final int maxLevel = 60;
 
-    public static void giveExperience(Player pl, int expGained) {
+    public static void giveExperience(Player pl, int expGained, boolean sendMsg) {
 
         String profName = RunicCore.getInstance().getConfig().getString(pl.getUniqueId() + ".info.prof.name");
         int currentLv = RunicCore.getInstance().getConfig().getInt(pl.getUniqueId() + ".info.prof.level");
@@ -59,8 +59,10 @@ public class ProfExpUtil {
         double progress = (double) (currentExp-totalExpAtLevel) / (totalExpToLevel-totalExpAtLevel); // 60 - 55 = 5 / 75 - 55 = 20, 5 /20
         int progressRounded = (int) NumRounder.round(progress * 100);
 
-        pl.sendMessage(ChatColor.GREEN + "Profession progress towards next lv: " + progressRounded + "% "
-                + "(" + (currentExp-totalExpAtLevel) + "/" + (totalExpToLevel-totalExpAtLevel) + ")");
+        if (sendMsg) {
+            pl.sendMessage(ChatColor.GREEN + "Profession progress towards next lv: " + progressRounded + "% "
+                    + "(" + (currentExp - totalExpAtLevel) + "/" + (totalExpToLevel - totalExpAtLevel) + ")");
+        }
     }
 
 

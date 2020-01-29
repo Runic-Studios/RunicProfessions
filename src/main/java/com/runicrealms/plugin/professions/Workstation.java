@@ -252,7 +252,7 @@ public abstract class Workstation implements Listener {
                     pl.playSound(pl.getLocation(), soundDone, 0.5f, 1.0f);
                     pl.sendMessage(ChatColor.GREEN + "Done!");
                     if (exp > 0) {
-                        ProfExpUtil.giveExperience(pl, exp * multiplier);
+                        ProfExpUtil.giveExperience(pl, exp * multiplier, true);
                     }
 
                     produceResult(pl, craftedItemType, itemName, currentLvl, multiplier, rate, durability, health);
