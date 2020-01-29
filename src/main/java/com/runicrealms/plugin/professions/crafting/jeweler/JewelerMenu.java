@@ -1,4 +1,4 @@
-package com.runicrealms.plugin.professions.crafting.Jeweler;
+package com.runicrealms.plugin.professions.crafting.jeweler;
 
 import com.runicrealms.plugin.RunicCore;
 import com.runicrealms.plugin.attributes.AttributeUtil;

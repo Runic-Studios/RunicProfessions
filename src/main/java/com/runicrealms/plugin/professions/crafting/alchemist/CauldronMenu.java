@@ -1,4 +1,4 @@
-package com.runicrealms.plugin.professions.crafting;
+package com.runicrealms.plugin.professions.crafting.alchemist;
 
 import com.runicrealms.plugin.RunicCore;
 import com.runicrealms.plugin.RunicProfessions;

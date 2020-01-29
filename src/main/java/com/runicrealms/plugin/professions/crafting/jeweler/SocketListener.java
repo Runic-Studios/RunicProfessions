@@ -1,4 +1,4 @@
-package com.runicrealms.plugin.professions.listeners;
+package com.runicrealms.plugin.professions.crafting.jeweler;
 
 import com.runicrealms.plugin.item.LoreGenerator;
 import org.bukkit.ChatColor;

@@ -26,12 +26,12 @@ public class SetProfCMD implements CommandExecutor {
         String profStr = args[1].toLowerCase();
         if (!(profStr.equals("alchemist")
                 || profStr.equals("blacksmith")
-                || profStr.equals("jeweler")
-                || profStr.equals("leatherworker")
-                || profStr.equals("tailor"))) {
+                || profStr.equals("enchanter")
+                || profStr.equals("hunter")
+                || profStr.equals("jeweler"))) {
 
             sender.sendMessage(ChatColor.RED
-                    + "Available classes: alchemist, blacksmith, jeweler, leatherworker, tailor");
+                    + "Available classes: alchemist, blacksmith, enchanter, hunter, jeweler");
             return false;
         }
 
@@ -43,10 +43,17 @@ public class SetProfCMD implements CommandExecutor {
         return true;
     }
 
-    private static void setConfig(Player player, String profName) {
-        RunicCore.getInstance().getConfig().set(player.getUniqueId() + ".info.prof.name", profName);
-        RunicCore.getInstance().getConfig().set(player.getUniqueId() + ".info.prof.level", 0);
-        RunicCore.getInstance().getConfig().set(player.getUniqueId() + ".info.prof.exp", 0);
+    private static void setConfig(Player pl, String profName) {
+        RunicCore.getInstance().getConfig().set(pl.getUniqueId() + ".info.prof.name", profName);
+        RunicCore.getInstance().getConfig().set(pl.getUniqueId() + ".info.prof.level", 0);
+        RunicCore.getInstance().getConfig().set(pl.getUniqueId() + ".info.prof.exp", 0);
+
+        /*
+        Reset hunter info
+         */
+        RunicCore.getInstance().getConfig().set(pl.getUniqueId() + ".info.prof.hunter_mob", null);
+        RunicCore.getInstance().getConfig().set(pl.getUniqueId() + ".info.prof.hunter_points", null);
+
         RunicCore.getInstance().saveConfig();
         RunicCore.getInstance().reloadConfig();
     }

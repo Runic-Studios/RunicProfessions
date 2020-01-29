@@ -1,4 +1,4 @@
-package com.runicrealms.plugin.professions.crafting;
+package com.runicrealms.plugin.professions.crafting.cooking;
 
 import com.runicrealms.plugin.RunicProfessions;
 import com.runicrealms.plugin.item.GUIMenu.ItemGUI;
@@ -17,7 +17,7 @@ import java.util.LinkedHashMap;
 import java.util.Objects;
 
 @SuppressWarnings("FieldCanBeLocal")
-public class CookingGUI extends Workstation {
+public class CookingMenu extends Workstation {
 
     private static final ItemStack rabbitStew = new ItemStack(Material.RABBIT_STEW);
     private static final int RABBIT_STEW_AMT = 100;
@@ -28,7 +28,7 @@ public class CookingGUI extends Workstation {
     /**
      * Constructor to initialize custom items
      */
-    public CookingGUI(Player pl) {
+    public CookingMenu(Player pl) {
 
         this.setTitle("&f&l" + pl.getName() + "'s &e&lCooking Fire");
 

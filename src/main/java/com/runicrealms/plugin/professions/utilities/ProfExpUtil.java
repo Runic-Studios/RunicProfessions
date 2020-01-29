@@ -59,7 +59,7 @@ public class ProfExpUtil {
         double progress = (double) (currentExp-totalExpAtLevel) / (totalExpToLevel-totalExpAtLevel); // 60 - 55 = 5 / 75 - 55 = 20, 5 /20
         int progressRounded = (int) NumRounder.round(progress * 100);
 
-        pl.sendMessage(ChatColor.GREEN + "Progress towards next lv: " + progressRounded + "% "
+        pl.sendMessage(ChatColor.GREEN + "Profession progress towards next lv: " + progressRounded + "% "
                 + "(" + (currentExp-totalExpAtLevel) + "/" + (totalExpToLevel-totalExpAtLevel) + ")");
     }
 

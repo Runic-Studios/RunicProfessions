@@ -1,18 +1,20 @@
 package com.runicrealms.plugin;
 
+
 import com.runicrealms.plugin.professions.ProfManager;
 import com.runicrealms.plugin.professions.commands.GathertoolGive;
 import com.runicrealms.plugin.professions.commands.SetProfCMD;
-import com.runicrealms.plugin.professions.crafting.Jeweler.JewelShopListener;
-import com.runicrealms.plugin.professions.crafting.Jeweler.OpenJewelShop;
+import com.runicrealms.plugin.professions.crafting.alchemist.PotionListener;
+import com.runicrealms.plugin.professions.crafting.cooking.CookingListener;
+import com.runicrealms.plugin.professions.crafting.hunter.HunterListener;
+import com.runicrealms.plugin.professions.crafting.jeweler.JewelShopListener;
+import com.runicrealms.plugin.professions.crafting.jeweler.OpenJewelShop;
+import com.runicrealms.plugin.professions.crafting.jeweler.SocketListener;
 import com.runicrealms.plugin.professions.event.StationClickEvent;
 import com.runicrealms.plugin.professions.gathering.FarmingListener;
 import com.runicrealms.plugin.professions.gathering.FishingListener;
 import com.runicrealms.plugin.professions.gathering.MiningListener;
 import com.runicrealms.plugin.professions.gathering.WCListener;
-import com.runicrealms.plugin.professions.listeners.CookingListener;
-import com.runicrealms.plugin.professions.listeners.PotionListener;
-import com.runicrealms.plugin.professions.listeners.SocketListener;
 import com.runicrealms.plugin.professions.listeners.WorkstationListener;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -64,5 +66,6 @@ public final class RunicProfessions extends JavaPlugin {
         pm.registerEvents(new CookingListener(), this);
         pm.registerEvents(new StationClickEvent(), this);
         pm.registerEvents(new JewelShopListener(), this);
+        pm.registerEvents(new HunterListener(), this);
     }
 }

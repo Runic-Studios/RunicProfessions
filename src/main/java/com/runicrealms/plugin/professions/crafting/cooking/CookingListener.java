@@ -1,8 +1,7 @@
-package com.runicrealms.plugin.professions.listeners;
+package com.runicrealms.plugin.professions.crafting.cooking;
 
 import com.runicrealms.plugin.RunicCore;
 import com.runicrealms.plugin.RunicProfessions;
-import com.runicrealms.plugin.professions.crafting.CookingGUI;
 import com.runicrealms.plugin.spellapi.spellutil.HealUtil;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -18,7 +17,7 @@ public class CookingListener implements Listener {
     @EventHandler
     public void onCustomFoodEat(PlayerItemConsumeEvent e) {
         Player pl = e.getPlayer();
-        if (e.getItem().equals(CookingGUI.getRabbitStew())) {
+        if (e.getItem().equals(CookingMenu.getRabbitStew())) {
             e.setCancelled(true);
             if (RunicCore.getCombatManager().getPlayersInCombat().containsKey(pl.getUniqueId())) {
                 pl.sendMessage(ChatColor.RED + "You can't do that in combat!");
@@ -26,12 +25,12 @@ public class CookingListener implements Listener {
             }
             takeItem(pl, e.getItem());
             pl.setFoodLevel(pl.getFoodLevel() + 6);
-            healOverTime(pl, CookingGUI.getRabbitStewAmt(), CookingGUI.getStewDuration(), true);
-        } else if (e.getItem().equals(CookingGUI.getAmbrosiaStew())) {
+            healOverTime(pl, CookingMenu.getRabbitStewAmt(), CookingMenu.getStewDuration(), true);
+        } else if (e.getItem().equals(CookingMenu.getAmbrosiaStew())) {
             e.setCancelled(true);
             takeItem(pl, e.getItem());
             pl.setFoodLevel(pl.getFoodLevel() + 6);
-            healOverTime(pl, CookingGUI.getAmbrosiaStewAmt(), CookingGUI.getStewDuration(), false);
+            healOverTime(pl, CookingMenu.getAmbrosiaStewAmt(), CookingMenu.getStewDuration(), false);
         }
     }
 
