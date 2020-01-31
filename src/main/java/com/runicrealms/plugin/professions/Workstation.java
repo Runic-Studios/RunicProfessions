@@ -150,7 +150,7 @@ public abstract class Workstation implements Listener {
             } else if (name.toLowerCase().contains("mana")) {
                 color = Color.AQUA;
             } else if (name.toLowerCase().contains("slaying")) {
-                color = Color.BLACK;
+                color = Color.GREEN;
             } else if (name.toLowerCase().contains("looting")) {
                 color = Color.FUCHSIA;
             } else {
@@ -336,7 +336,7 @@ public abstract class Workstation implements Listener {
     }
 
 
-    private ItemStack potionItem(Color color, String displayName, String description) {
+    public static ItemStack potionItem(Color color, String displayName, String description) {
 
         ItemStack potion = new ItemStack(Material.POTION);
         PotionMeta pMeta = (PotionMeta) potion.getItemMeta();

@@ -12,3 +12,6 @@ commands:
   jewelmaster:
     usage: /<commands>
     description: Open jewel master shop
+  huntershop:
+    usage: /<commands>
+    description: Open hunter shop

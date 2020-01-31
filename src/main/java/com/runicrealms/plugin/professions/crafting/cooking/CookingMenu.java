@@ -1,6 +1,5 @@
 package com.runicrealms.plugin.professions.crafting.cooking;
 
-import com.runicrealms.plugin.RunicProfessions;
 import com.runicrealms.plugin.item.GUIMenu.ItemGUI;
 import com.runicrealms.plugin.professions.Workstation;
 import org.bukkit.*;
@@ -16,6 +15,8 @@ import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.Objects;
 
+// todo: can we just make this item stack static plz?
+// todo: make all food restore health/mana out of combat
 @SuppressWarnings("FieldCanBeLocal")
 public class CookingMenu extends Workstation {
 
@@ -30,9 +31,7 @@ public class CookingMenu extends Workstation {
      */
     public CookingMenu(Player pl) {
 
-        this.setTitle("&f&l" + pl.getName() + "'s &e&lCooking Fire");
-
-        //Bukkit.getPluginManager().registerEvents(this, RunicProfessions.getInstance());
+        setupWorkstation(pl);
 
         // rabbit stew
         ItemMeta rabbitStewMeta = rabbitStew.getItemMeta();
@@ -64,10 +63,11 @@ public class CookingMenu extends Workstation {
         ambrosiaStew.setItemMeta(ambrosiaStewMeta);
     }
 
-    public ItemGUI openMenu(Player pl) {
+    @Override
+    public void setupWorkstation(Player pl) {
 
         // name the menu
-        super.setupWorkstation(pl);
+        super.setupWorkstation("&f&l" + pl.getName() + "'s &e&lCooking Fire");
         ItemGUI cookingMenu = getItemGUI();
         cookingMenu.setName(this.getTitle());
 
@@ -96,7 +96,8 @@ public class CookingMenu extends Workstation {
             }
         });
 
-        return cookingMenu;
+        // update our internal menu
+        this.setItemGUI(cookingMenu);
     }
 
     private ItemGUI openCookingMenu(Player pl) {
@@ -141,8 +142,8 @@ public class CookingMenu extends Workstation {
 
                 // return to the first menu
                 pl.playSound(pl.getLocation(), Sound.UI_BUTTON_CLICK, 0.5f, 1);
-                ItemGUI menu = openMenu(pl);
-                menu.open(pl);
+                setupWorkstation(pl);
+                this.getItemGUI().open(pl);
                 event.setWillClose(false);
                 event.setWillDestroy(true);
 

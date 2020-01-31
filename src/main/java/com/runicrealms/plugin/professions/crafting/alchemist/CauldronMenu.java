@@ -34,7 +34,7 @@ public class CauldronMenu extends Workstation {
         ItemGUI baseMenu = getItemGUI();
 
         //set the visual items
-        baseMenu.setOption(3, new ItemStack(Material.POTION),
+        baseMenu.setOption(3, potionItem(Color.RED, "", ""),
                 "&fBrew Potions", "&7Brew powerful and unique potions!", 0, false);
 
         // set the handler
@@ -255,7 +255,7 @@ public class CauldronMenu extends Workstation {
         slayPotReqs.put(Material.NETHER_QUARTZ_ORE, 1);
         slayPotReqs.put(Material.DIAMOND_ORE, 1);
         slayPotReqs.put(Material.TROPICAL_FISH, 1);
-        super.createMenuItem(forgeMenu, pl, 11, Material.POTION, "&f" + tierStr + " Potion of Slaying", slayPotReqs,
+        super.createMenuItem(forgeMenu, pl, 11, Material.POTION, "&2" + tierStr + " Potion of Slaying", slayPotReqs,
                 "Glass Bottle\nUncut Opal\nUncut Diamond\nTropical Fish", 7, 120, 25, 0,
                 "&eIncreases spellʔ and weapon⚔ damage" +
                         "\n&evs. monsters by &f20% &efor &f" + lootingStr + " &eminutes\n",
@@ -312,7 +312,7 @@ public class CauldronMenu extends Workstation {
                 color = Color.AQUA;
                 desc = "\n&eRestores &3" + someVar + "✸ &eon use";
             } else if (dispName.toLowerCase().contains("slaying")) {
-                color = Color.BLACK;
+                color = Color.GREEN;
                 desc = "\n&eIncreases spellʔ and weapon⚔ damage" +
                         "\n&evs. monsters by &f20% &efor &f" + someVar + " &eminutes";
             } else if (dispName.toLowerCase().contains("looting")) {

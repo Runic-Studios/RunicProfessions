@@ -127,8 +127,8 @@ public class WorkstationListener implements Listener {
             case "cooking fire":
                 pl.playSound(pl.getLocation(), Sound.BLOCK_FURNACE_FIRE_CRACKLE, 0.5f, 0.5f);
                 pl.playSound(pl.getLocation(), Sound.ENTITY_GENERIC_EXTINGUISH_FIRE, 0.5f, 1.5f);
-                CookingMenu cookingGUI = new CookingMenu(pl);
-                ItemGUI cMenu = cookingGUI.openMenu(pl);
+                RunicProfessions.getProfManager().setPlayerWorkstation(pl, new CookingMenu(pl));
+                ItemGUI cMenu = ((RunicProfessions.getProfManager().getPlayerWorkstation(pl))).getItemGUI();
                 cMenu.open(pl);
                 break;
             case "furnace":

@@ -31,12 +31,13 @@ public class HunterMenu extends Workstation {
         if (!hasTask) {
             hMenu.setOption(3, new ItemStack(Material.BOW),
                     "&fAccept New Task",
-                    "&aStart a hunter task!\n&7Slay specific monsters in\n&7the world and earn points!",
+                    "&7Your Hunter Points: &6&l" + HunterTask.getTotalPoints(pl) +
+                            "\n&aStart a hunter task!\n&7Hunt specific monsters in the\n&7world and earn points!",
                     0, false);
         } else {
             hMenu.setOption(3, new ItemStack(Material.ZOMBIE_HEAD),
-                    "&fGet Task Info", "&7Your Hunter Points: &6&l" +
-                            HunterTask.getTotalPoints(pl) +
+                    "&fGet Task Info",
+                    "&7Your Hunter Points: &6&l" + HunterTask.getTotalPoints(pl) +
                             "\n&7You have a current task!\n&aClick here for information\n&aon your task!",
                     0, false);
         }
@@ -52,7 +53,7 @@ public class HunterMenu extends Workstation {
                     HunterTask hunterTask = new HunterTask(pl);
                     pl.playSound(pl.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 0.5f, 1.0f);
                     pl.sendMessage
-                            (ChatColor.GREEN + "Your new task is to slay " +
+                            (ChatColor.GREEN + "Your new task is to hunt " +
                                     ChatColor.WHITE + HunterTask.getMobAmount() + " " +
                                     ChatColor.GREEN + hunterTask.getMob().getInternalName() + "s!");
                     event.setWillClose(true);
@@ -66,6 +67,7 @@ public class HunterMenu extends Workstation {
                     event.setWillDestroy(true);
                 }
             });
+
         } else {
             hMenu.setHandler(event -> {
 
@@ -74,7 +76,7 @@ public class HunterMenu extends Workstation {
                     // get task info
                     pl.playSound(pl.getLocation(), Sound.UI_BUTTON_CLICK, 0.5f, 1);
                     pl.sendMessage
-                            (ChatColor.GREEN + "Your current task is to slay " +
+                            (ChatColor.GREEN + "Your current task is to hunt " +
                                     ChatColor.WHITE + HunterTask.getMobAmount() + " " +
                                     ChatColor.GREEN + HunterTask.getMobName(pl) + "s.");
                     pl.sendMessage(ChatColor.GREEN + "So far, you have slain " + ChatColor.WHITE + HunterTask.getCurrentKills(pl) + "!");
