@@ -6,10 +6,7 @@ import com.runicrealms.plugin.professions.commands.GathertoolGive;
 import com.runicrealms.plugin.professions.commands.SetProfCMD;
 import com.runicrealms.plugin.professions.crafting.alchemist.PotionListener;
 import com.runicrealms.plugin.professions.crafting.cooking.CookingListener;
-import com.runicrealms.plugin.professions.crafting.hunter.HunterListener;
-import com.runicrealms.plugin.professions.crafting.hunter.HunterShop;
-import com.runicrealms.plugin.professions.crafting.hunter.HunterShopCMD;
-import com.runicrealms.plugin.professions.crafting.hunter.HunterShopListener;
+import com.runicrealms.plugin.professions.crafting.hunter.*;
 import com.runicrealms.plugin.professions.crafting.jeweler.JewelShopListener;
 import com.runicrealms.plugin.professions.crafting.jeweler.JewelShopCMD;
 import com.runicrealms.plugin.professions.crafting.jeweler.SocketListener;
@@ -74,5 +71,6 @@ public final class RunicProfessions extends JavaPlugin {
         pm.registerEvents(new JewelShopListener(), this);
         pm.registerEvents(new HunterListener(), this);
         pm.registerEvents(new HunterShopListener(), this);
+        pm.registerEvents(new HunterItemListener(), this);
     }
 }
