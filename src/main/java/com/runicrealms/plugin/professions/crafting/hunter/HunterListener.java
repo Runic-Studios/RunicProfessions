@@ -54,4 +54,11 @@ public class HunterListener implements Listener {
         meta.addEffect(FireworkEffect.builder().with(FireworkEffect.Type.BALL_LARGE).withColor(Color.GREEN).build());
         firework.setFireworkMeta(meta);
     }
+
+    // todo:
+    // potion listener
+    // orb listener
+    // scroll listener
+    // enchant listener
+    // compass listener
 }
