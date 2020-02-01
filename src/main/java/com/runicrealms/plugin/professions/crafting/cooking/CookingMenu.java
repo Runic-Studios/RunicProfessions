@@ -15,7 +15,7 @@ import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.Objects;
 
-// todo: can we just make this item stack static plz?
+// todo: MAKE STATIC, WILL FIX ALL ISSUES
 // todo: make all food restore health/mana out of combat
 @SuppressWarnings("FieldCanBeLocal")
 public class CookingMenu extends Workstation {

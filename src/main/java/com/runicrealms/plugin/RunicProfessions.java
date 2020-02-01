@@ -71,6 +71,5 @@ public final class RunicProfessions extends JavaPlugin {
         pm.registerEvents(new JewelShopListener(), this);
         pm.registerEvents(new HunterListener(), this);
         pm.registerEvents(new HunterShopListener(), this);
-        pm.registerEvents(new HunterItemListener(), this);
     }
 }

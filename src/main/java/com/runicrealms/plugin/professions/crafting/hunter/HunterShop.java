@@ -18,6 +18,7 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.PotionMeta;
 
 import java.util.ArrayList;
@@ -28,14 +29,14 @@ public class HunterShop extends Shop {
 
     private static final int PRICE_POTION = 5;
     private static final int PRICE_BOAT = 2;
-    private static final int PRICE_ORB = 15;
+    private static final int PRICE_ORB = 1;
     private static final int PRICE_TRACKING = 50;
     private static final int PRICE_ENCHANT = 200;
     private static final int PRICE_COMPASS = 1000;
 
     private static HashSet<ItemStack> hunterItems = new HashSet<>();
 
-    public HunterShop(Player pl) {
+    HunterShop(Player pl) {
         setupShop(pl);
     }
 
@@ -53,24 +54,24 @@ public class HunterShop extends Shop {
                 0, false);
         shopMenu.setOption(9, Workstation.potionItem(Color.BLACK, "", ""),
                 "&fShadowmeld Potion",
-                "\n&eAfter standing still for 5s, you turn invisible!\n\n&7Consumable\n\n&7Price: &6&l" + PRICE_POTION + " points",
+                "\n&eAfter standing still for 5s, you turn invisible!\n\n&7Price: &6&l" + PRICE_POTION + " points",
                 0, false);
         shopMenu.setOption(10, new ItemStack(Material.OAK_BOAT),
                 "&fBoat",
                 "\n&7Price: &6&l" + PRICE_BOAT + " points", 0, false);
         shopMenu.setOption(11, scryingOrb(),
                 "&fScrying Orb",
-                "\n&eLearn the stats of a player!\n\n&7Consumable\n\n&7Price: &6&l" + PRICE_ORB + " points",
+                "\n&eLearn the stats of a player!\n\n&7Price: &6&l" + PRICE_ORB + " points",
                 0, false);
-        shopMenu.setOption(12, new ItemStack(Material.PAPER),
+        shopMenu.setOption(12, new ItemStack(Material.PURPLE_DYE),
                 "&fTracking Scroll",
-                "\n&eLearn the location of a player!\n\n&7Consumable\n\n&7Price: &6&l" + PRICE_TRACKING + " points", 0, false);
-        shopMenu.setOption(13, new ItemStack(Material.GRAY_DYE),
+                "\n&eLearn the location of a player!\n\n&7Price: &6&l" + PRICE_TRACKING + " points", 0, false);
+        shopMenu.setOption(13, new ItemStack(Material.PURPLE_DYE),
                 "&fSpeed Enchant",
-                "\n&eEnchant your armor with +1% speed!\n\n&8Soulbound\n\n&7Price: &6&l" + PRICE_ENCHANT + " points", 0, false);
+                "\n&eEnchant your armor with +1% speed!\n\n&7Price: &6&l" + PRICE_ENCHANT + " points", 0, false);
         shopMenu.setOption(14, new ItemStack(Material.COMPASS),
                 "&6Tracking Compass",
-                "\n&eLearn the location of a player!\n\n&8Soulbound\n\n&7Price: &6&l" + PRICE_COMPASS + " points", 0, false);
+                "\n&eLearn the location of a player! (Reusable)\n\n&7Price: &6&l" + PRICE_COMPASS + " points", 0, false);
 
         // set the handler
         shopMenu.setHandler(event -> {
@@ -125,8 +126,7 @@ public class HunterShop extends Shop {
         this.setItemGUI(shopMenu);
     }
 
-    // todo: listener
-    public static ItemStack shadowmeldPotion() {
+    static ItemStack shadowmeldPotion() {
 
         ItemStack potion = new ItemStack(Material.POTION);
         PotionMeta pMeta = (PotionMeta) potion.getItemMeta();
@@ -158,30 +158,66 @@ public class HunterShop extends Shop {
         return potion;
     }
 
-    // todo: listener
-    public static ItemStack scryingOrb() {
+    static ItemStack scryingOrb() {
         MythicItem mi = MythicMobs.inst().getItemManager().getItem("ScryingOrb").get();
         AbstractItemStack abstractItemStack = mi.generateItemStack(1);
         ItemStack orb = BukkitAdapter.adapt(abstractItemStack);
         return orb;
     }
 
-    // todo: listener, lore
-    public static ItemStack trackingScroll() {
-        return new ItemStack(Material.PAPER);
+    static ItemStack trackingScroll() {
+        ItemStack trackingScroll = new ItemStack(Material.PURPLE_DYE);
+        ItemMeta meta = trackingScroll.getItemMeta();
+        String desc = "\n&6&lRIGHT CLICK &aTrack" +
+                "\n&7Specify a player and learn their location!";
+        meta.setDisplayName(ColorUtil.format("&fTracking Scroll"));
+        ArrayList<String> lore = new ArrayList<>();
+        for (String s : desc.split("\n")) {
+            lore.add(ColorUtil.format(s));
+        }
+        lore.add("");
+        lore.add(ColorUtil.format("&7Consumable"));
+        meta.setLore(lore);
+        trackingScroll.setItemMeta(meta);
+        return trackingScroll;
     }
 
-    // todo: listener (4 total scrolls), lore
-    public static ItemStack enchantScroll() {
-        return new ItemStack(Material.GRAY_DYE);
+    static ItemStack enchantScroll() {
+        ItemStack trackingScroll = new ItemStack(Material.PURPLE_DYE);
+        ItemMeta meta = trackingScroll.getItemMeta();
+        String desc = "\n&a+1% Movement Speed";
+        meta.setDisplayName(ColorUtil.format("&fEnchant Scroll: Speed"));
+        ArrayList<String> lore = new ArrayList<>();
+        for (String s : desc.split("\n")) {
+            lore.add(ColorUtil.format(s));
+        }
+        lore.add("");
+        lore.add(ColorUtil.format("&7Consumable"));
+        lore.add("");
+        lore.add(ColorUtil.format("&8Use this on an item"));
+        meta.setLore(lore);
+        trackingScroll.setItemMeta(meta);
+        return trackingScroll;
     }
 
-    // todo: listener, lore
-    public static ItemStack trackingCompass() {
-        return new ItemStack(Material.COMPASS);
+    static ItemStack trackingCompass() {
+        ItemStack compass = new ItemStack(Material.COMPASS);
+        ItemMeta meta = compass.getItemMeta();
+        String desc = "\n&6&lRIGHT CLICK &aTrack" +
+                "\n&7Specify a player and learn their location!";
+        meta.setDisplayName(ColorUtil.format("&6Tracking Compass"));
+        ArrayList<String> lore = new ArrayList<>();
+        for (String s : desc.split("\n")) {
+            lore.add(ColorUtil.format(s));
+        }
+        lore.add("");
+        lore.add(ColorUtil.format("&8Soulbound"));
+        meta.setLore(lore);
+        compass.setItemMeta(meta);
+        return compass;
     }
 
-    public static void initializeHunterItems() {
+    static void initializeHunterItems() {
         hunterItems.add(shadowmeldPotion());
         hunterItems.add(scryingOrb());
         hunterItems.add(trackingScroll());
@@ -189,7 +225,7 @@ public class HunterShop extends Shop {
         hunterItems.add(trackingCompass());
     }
 
-    public static HashSet<ItemStack> getHunterItems() {
+    static HashSet<ItemStack> getHunterItems() {
         return hunterItems;
     }
 
