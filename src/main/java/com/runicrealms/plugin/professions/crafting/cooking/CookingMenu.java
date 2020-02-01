@@ -15,52 +15,15 @@ import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.Objects;
 
-// todo: MAKE STATIC, WILL FIX ALL ISSUES
-// todo: make all food restore health/mana out of combat
 @SuppressWarnings("FieldCanBeLocal")
 public class CookingMenu extends Workstation {
 
-    private static final ItemStack rabbitStew = new ItemStack(Material.RABBIT_STEW);
     private static final int RABBIT_STEW_AMT = 100;
     private static final int STEW_DURATION = 10;
-    private static final ItemStack ambrosiaStew = new ItemStack(Material.RABBIT_STEW);
     private static final int AMBROSIA_STEW_AMT = 200;
 
-    /**
-     * Constructor to initialize custom items
-     */
     public CookingMenu(Player pl) {
-
         setupWorkstation(pl);
-
-        // rabbit stew
-        ItemMeta rabbitStewMeta = rabbitStew.getItemMeta();
-        Objects.requireNonNull(rabbitStewMeta).setDisplayName(ChatColor.WHITE + "Rabbit Stew");
-        rabbitStewMeta.setLore(Arrays.asList(
-                "",
-                ChatColor.YELLOW + "Restores " + ChatColor.RED + RABBIT_STEW_AMT + "❤" + ChatColor.YELLOW + " over " + STEW_DURATION + " seconds",
-                ChatColor.GRAY + "(Must be out of combat)",
-                "",
-                ChatColor.GRAY + "Consumable"));
-        ((Damageable) rabbitStewMeta).setDamage(2);
-        rabbitStewMeta.setUnbreakable(true);
-        rabbitStewMeta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
-        rabbitStew.setItemMeta(rabbitStewMeta);
-
-        // ambrosia stew
-        ItemMeta ambrosiaStewMeta = ambrosiaStew.getItemMeta();
-        Objects.requireNonNull(ambrosiaStewMeta).setDisplayName(ChatColor.WHITE + "Ambrosia Stew");
-        ambrosiaStewMeta.setLore(Arrays.asList(
-                "",
-                ChatColor.YELLOW + "Restores " + ChatColor.RED + AMBROSIA_STEW_AMT + "❤" + ChatColor.YELLOW + " over " + STEW_DURATION + " seconds",
-                "",
-                ChatColor.GRAY + "Consumable"));
-        ambrosiaStewMeta.addEnchant(Enchantment.DURABILITY, 1, true);
-        ambrosiaStewMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-        ((Damageable) ambrosiaStewMeta).setDamage(2);
-        ambrosiaStewMeta.setUnbreakable(true);
-        ambrosiaStewMeta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
-        ambrosiaStew.setItemMeta(ambrosiaStewMeta);
     }
 
     @Override
@@ -236,11 +199,11 @@ public class CookingMenu extends Workstation {
 
             if (durability == 1) {
 
-                craftedItem = rabbitStew;
+                craftedItem = rabbitStew();
 
             } else if (durability == 2) {
 
-                craftedItem = ambrosiaStew;
+                craftedItem = ambrosiaStew();
 
             // default food
             } else {
@@ -267,11 +230,38 @@ public class CookingMenu extends Workstation {
         }
     }
 
-    public static ItemStack getRabbitStew() {
+    public static ItemStack rabbitStew() {
+        ItemStack rabbitStew = new ItemStack(Material.RABBIT_STEW);
+        ItemMeta rabbitStewMeta = rabbitStew.getItemMeta();
+        Objects.requireNonNull(rabbitStewMeta).setDisplayName(ChatColor.WHITE + "Rabbit Stew");
+        rabbitStewMeta.setLore(Arrays.asList(
+                "",
+                ChatColor.YELLOW + "Restores " + ChatColor.RED + RABBIT_STEW_AMT + "❤" + ChatColor.YELLOW + " over " + STEW_DURATION + " seconds",
+                ChatColor.GRAY + "(Must be out of combat)",
+                "",
+                ChatColor.GRAY + "Consumable"));
+        ((Damageable) rabbitStewMeta).setDamage(2);
+        rabbitStewMeta.setUnbreakable(true);
+        rabbitStewMeta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
+        rabbitStew.setItemMeta(rabbitStewMeta);
         return rabbitStew;
     }
 
-    public static ItemStack getAmbrosiaStew() {
+    public static ItemStack ambrosiaStew() {
+        ItemStack ambrosiaStew = new ItemStack(Material.RABBIT_STEW);
+        ItemMeta ambrosiaStewMeta = ambrosiaStew.getItemMeta();
+        Objects.requireNonNull(ambrosiaStewMeta).setDisplayName(ChatColor.WHITE + "Ambrosia Stew");
+        ambrosiaStewMeta.setLore(Arrays.asList(
+                "",
+                ChatColor.YELLOW + "Restores " + ChatColor.RED + AMBROSIA_STEW_AMT + "❤" + ChatColor.YELLOW + " over " + STEW_DURATION + " seconds",
+                "",
+                ChatColor.GRAY + "Consumable"));
+        ambrosiaStewMeta.addEnchant(Enchantment.DURABILITY, 1, true);
+        ambrosiaStewMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+        ((Damageable) ambrosiaStewMeta).setDamage(2);
+        ambrosiaStewMeta.setUnbreakable(true);
+        ambrosiaStewMeta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
+        ambrosiaStew.setItemMeta(ambrosiaStewMeta);
         return ambrosiaStew;
     }
 

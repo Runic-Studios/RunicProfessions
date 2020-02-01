@@ -76,7 +76,7 @@ public class HunterShop extends Shop {
         // set the handler
         shopMenu.setHandler(event -> {
 
-            if (event.getSlot() < 16) {
+            if (event.getSlot() < 15) {
 
                 event.setWillClose(false);
                 event.setWillDestroy(false);
@@ -132,8 +132,8 @@ public class HunterShop extends Shop {
         PotionMeta pMeta = (PotionMeta) potion.getItemMeta();
         String desc = "\n&eAfter standing still for 5 seconds," +
                 "\n&eyou turn invisible for 30 seconds!" +
-                "\n&eDealing or taking damage ends" +
-                "\n&ethe effect early.";
+                "\n&eDealing damage ends the effect" +
+                "\n&eearly.";
 
         Objects.requireNonNull(pMeta).setColor(Color.BLACK);
 
@@ -253,6 +253,8 @@ public class HunterShop extends Shop {
         RunicCore.getInstance().getConfig().set(pl.getUniqueId() + ".info.prof.hunter_points", HunterTask.getTotalPoints(pl)-price);
         RunicCore.getInstance().saveConfig();
         RunicCore.getInstance().reloadConfig();
+
+        pl.playSound(pl.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 0.5f, 1.0f);
         return true;
     }
 }

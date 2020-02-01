@@ -17,7 +17,7 @@ public class CookingListener implements Listener {
     @EventHandler
     public void onCustomFoodEat(PlayerItemConsumeEvent e) {
         Player pl = e.getPlayer();
-        if (e.getItem().equals(CookingMenu.getRabbitStew())) {
+        if (e.getItem().isSimilar(CookingMenu.rabbitStew())) {
             e.setCancelled(true);
             if (RunicCore.getCombatManager().getPlayersInCombat().containsKey(pl.getUniqueId())) {
                 pl.sendMessage(ChatColor.RED + "You can't do that in combat!");
@@ -26,7 +26,7 @@ public class CookingListener implements Listener {
             takeItem(pl, e.getItem());
             pl.setFoodLevel(pl.getFoodLevel() + 6);
             healOverTime(pl, CookingMenu.getRabbitStewAmt(), CookingMenu.getStewDuration(), true);
-        } else if (e.getItem().equals(CookingMenu.getAmbrosiaStew())) {
+        } else if (e.getItem().isSimilar(CookingMenu.ambrosiaStew())) {
             e.setCancelled(true);
             takeItem(pl, e.getItem());
             pl.setFoodLevel(pl.getFoodLevel() + 6);
