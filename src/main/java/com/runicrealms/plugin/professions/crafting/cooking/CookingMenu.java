@@ -43,10 +43,11 @@ public class CookingMenu extends Workstation {
 
             if (event.getSlot() == 3) {
 
-                // open the forging menu
+                // open the cooking menu
                 pl.playSound(pl.getLocation(), Sound.UI_BUTTON_CLICK, 0.5f, 1);
-                ItemGUI forge = openCookingMenu(pl);
-                forge.open(pl);
+                this.setItemGUI(cookingMenu(pl));
+                this.setTitle(cookingMenu(pl).getName());
+                this.getItemGUI().open(pl);
                 event.setWillClose(false);
                 event.setWillDestroy(true);
 
@@ -63,7 +64,7 @@ public class CookingMenu extends Workstation {
         this.setItemGUI(cookingMenu);
     }
 
-    private ItemGUI openCookingMenu(Player pl) {
+    private ItemGUI cookingMenu(Player pl) {
 
         // bread
         LinkedHashMap<Material, Integer> breadReqs = new LinkedHashMap<>();
@@ -176,7 +177,9 @@ public class CookingMenu extends Workstation {
         rabbitSteqReqs.put(Material.RABBIT, 1);
         rabbitSteqReqs.put(Material.DARK_OAK_LOG, 1);
         super.createMenuItem(forgeMenu, pl, 12, Material.RABBIT_STEW, "&fRabbit Stew", rabbitSteqReqs,
-                "Uncooked Rabbit\nDark Oak Log", 999, 0, 0, 1, "",
+                "Uncooked Rabbit\nDark Oak Log", 999, 0, 0, 1,
+                "&eRestores &c" + RABBIT_STEW_AMT + "❤ &eover " + STEW_DURATION + " seconds" +
+                        "\n&7(Must be out of combat)\n",
                 true, false, false);
 
         // ambrosia stew
@@ -185,7 +188,8 @@ public class CookingMenu extends Workstation {
         ambrosiaStewReqs.put(Material.RABBIT, 1);
         ambrosiaStewReqs.put(Material.DARK_OAK_LOG, 1);
         super.createMenuItem(forgeMenu, pl, 13, Material.RABBIT_STEW, "&fAmbrosia Stew", ambrosiaStewReqs,
-                "Ambrosia Root\nUncooked Rabbit\nDark Oak Log", 999, 0, 0, 2, "",
+                "Ambrosia Root\nUncooked Rabbit\nDark Oak Log", 999, 0, 0, 2,
+                "&eRestores &c" + AMBROSIA_STEW_AMT + "❤ &eover " + STEW_DURATION + " seconds\n",
                 true, false, true);
     }
 

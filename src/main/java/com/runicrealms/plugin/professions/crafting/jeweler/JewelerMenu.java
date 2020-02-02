@@ -223,35 +223,35 @@ public class JewelerMenu extends Workstation {
         LinkedHashMap<Material, Integer> cutRubyReqs = new LinkedHashMap<>();
         cutRubyReqs.put(Material.REDSTONE_ORE, 999);
         super.createMenuItem(forgeMenu, pl, 9, Material.REDSTONE, "&fCut Ruby", cutRubyReqs,
-                "Uncut Ruby", 1, 30, 0, 0, "&c+" + healthStr + "❤ (Health)",
+                "Uncut Ruby", 1, 30, 0, 0, "&c+" + healthStr + "❤ (Health)\n",
                 false, true, false);
 
         // sapphire (+mana)
         LinkedHashMap<Material, Integer> cutSapphireReqs = new LinkedHashMap<>();
         cutSapphireReqs.put(Material.LAPIS_ORE, 999);
         super.createMenuItem(forgeMenu, pl, 10, Material.LAPIS_LAZULI, "&fCut Sapphire", cutSapphireReqs,
-                "Uncut Sapphire", 1, 60, 0, 0, "&3+" + manaStr + "✸ (Mana)",
+                "Uncut Sapphire", 1, 60, 0, 0, "&3+" + manaStr + "✸ (Mana)\n",
                 false, true, false);
 
         // opal (+dmg)
         LinkedHashMap<Material, Integer> cutOpalReqs = new LinkedHashMap<>();
         cutOpalReqs.put(Material.NETHER_QUARTZ_ORE, 999);
         super.createMenuItem(forgeMenu, pl, 11, Material.QUARTZ, "&fCut Opal", cutOpalReqs,
-                "Uncut Opal", 1, 90, 10, 0, "&c+" + weaponStr + "⚔ (DMG)",
+                "Uncut Opal", 1, 90, 10, 0, "&c+" + weaponStr + "⚔ (DMG)\n",
                 false, true, false);
 
         // emerald (+healing)
         LinkedHashMap<Material, Integer> cutEmeraldReqs = new LinkedHashMap<>();
         cutEmeraldReqs.put(Material.EMERALD_ORE, 999);
         super.createMenuItem(forgeMenu, pl, 12, Material.EMERALD, "&fCut Emerald", cutEmeraldReqs,
-                "Uncut Emerald", 1, 120, 25, 0, "&a+" + healingStr + "✦ (Heal)",
+                "Uncut Emerald", 1, 120, 25, 0, "&a+" + healingStr + "✦ (Heal)\n",
                 false, true, false);
 
         // diamond (+spell dmg)
         LinkedHashMap<Material, Integer> cutDiamondReqs = new LinkedHashMap<>();
         cutDiamondReqs.put(Material.DIAMOND_ORE, 999);
         super.createMenuItem(forgeMenu, pl, 13, Material.DIAMOND, "&fCut Diamond", cutDiamondReqs,
-                "Uncut Diamond", 1, 150, 25, 0, "&3+" + spellStr + "ʔ (Magic)",
+                "Uncut Diamond", 1, 150, 25, 0, "&3+" + spellStr + "ʔ (Magic)\n",
                 false, true, false);
     }
 

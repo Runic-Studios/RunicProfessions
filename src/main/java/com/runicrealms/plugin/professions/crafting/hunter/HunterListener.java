@@ -14,7 +14,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
-import org.bukkit.event.player.PlayerChatEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.inventory.EquipmentSlot;
@@ -26,7 +25,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.UUID;
 
-// todo: setup scroll logic
 public class HunterListener implements Listener {
 
     private HashSet<UUID> cloakers; // for shadowmeld potion
@@ -37,7 +35,7 @@ public class HunterListener implements Listener {
      * When plugin is loaded, add hunter items to hash set for use later
      */
     public HunterListener() {
-        HunterShop.initializeHunterItems();
+        //HunterShop.initializeHunterItems();
         cloakers = new HashSet<>();
         hasDealtDamage = new HashSet<>();
         chatters = new HashMap<>();
@@ -97,9 +95,6 @@ public class HunterListener implements Listener {
         if (e.getHand() != EquipmentSlot.HAND) return;
         if (e.getAction() != Action.RIGHT_CLICK_AIR && e.getAction() != Action.RIGHT_CLICK_BLOCK) return;
 
-        // check for hunter item
-        if (!HunterShop.getHunterItems().contains(pl.getInventory().getItemInMainHand())) return;
-
         // prevent player's from using a hunter item in combat
         if (RunicCore.getCombatManager().getPlayersInCombat().containsKey(uuid)) {
             pl.sendMessage(ChatColor.RED + "You can't use that in combat!");
@@ -112,24 +107,23 @@ public class HunterListener implements Listener {
             // remove item
         } else if (pl.getInventory().getItemInMainHand().isSimilar(HunterShop.trackingScroll())) {
             pl.sendMessage(ChatColor.YELLOW + "Enter a player name in the chat.");
-            chatters.put(pl.getUniqueId(), HunterShop.trackingCompass());
+            chatters.put(pl.getUniqueId(), HunterShop.trackingScroll());
             // remove item
         } else if (pl.getInventory().getItemInMainHand().isSimilar(HunterShop.trackingCompass())) {
             pl.sendMessage(ChatColor.YELLOW + "Enter a player name in the chat.");
-            chatters.put(pl.getUniqueId(), HunterShop.scryingOrb());
+            chatters.put(pl.getUniqueId(), HunterShop.trackingCompass());
         }
     }
 
     @EventHandler
-    public void onPlayerChat(PlayerChatEvent e) {
-        Bukkit.broadcastMessage("test");
-        if (chatters.containsKey(e.getPlayer().getUniqueId())) return;
+    public void onPlayerChat(AsyncPlayerChatEvent e) {
+        if (!chatters.containsKey(e.getPlayer().getUniqueId())) return;
+        e.setCancelled(true);
         Player pl = e.getPlayer();
 
         Player toLookup;
         if (Bukkit.getPlayer(e.getMessage()) == null) {
             pl.sendMessage(ChatColor.RED + "You must enter a valid player.");
-            e.setCancelled(true);
             return;
         } else {
             toLookup = Bukkit.getPlayer(e.getMessage());
@@ -167,8 +161,8 @@ public class HunterListener implements Listener {
     private void lookupLocation(Player pl, Player toLookup) {
         String name = toLookup.getName();
         Location loc = toLookup.getLocation();
-        pl.sendMessage(ChatColor.YELLOW + name + " is in world - " + loc.getWorld());
-        pl.sendMessage(ChatColor.YELLOW + name + " can be found at: " + loc.getX() + "x, " + loc.getY() + "y, " + loc.getZ() + "z");
+        pl.sendMessage(ChatColor.YELLOW + name + " is in world - " + loc.getWorld().getName());
+        pl.sendMessage(ChatColor.YELLOW + name + " can be found at: " + (int) loc.getX() + "x, " + (int) loc.getY() + "y, " + (int) loc.getZ() + "z");
     }
 
     /**
@@ -293,4 +287,12 @@ public class HunterListener implements Listener {
         if (hasDealtDamage.contains(pl.getUniqueId())) return;
         hasDealtDamage.add(pl.getUniqueId());
     }
+
+//    public boolean isSimilar(Player pl, ItemStack item1, ItemStack item2) {
+//        ItemStack newItem1 = new ItemStack(item1);
+//        newItem1.setAmount(1);
+//        Bukkit.broadcastMessage(item1.getAmount() + "");
+//        Bukkit.broadcastMessage(item2.getAmount() + "");
+//        return newItem1.isSimilar(item2);
+//    }
 }
