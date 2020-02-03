@@ -5,6 +5,7 @@ import com.runicrealms.plugin.RunicProfessions;
 import com.runicrealms.plugin.attributes.AttributeUtil;
 import com.runicrealms.plugin.events.MobDamageEvent;
 import com.runicrealms.plugin.item.GearScanner;
+import com.runicrealms.plugin.item.util.ItemRemover;
 import io.lumine.xikage.mythicmobs.api.bukkit.events.MythicMobDeathEvent;
 import org.bukkit.*;
 import org.bukkit.entity.Firework;
@@ -35,7 +36,6 @@ public class HunterListener implements Listener {
      * When plugin is loaded, add hunter items to hash set for use later
      */
     public HunterListener() {
-        //HunterShop.initializeHunterItems();
         cloakers = new HashSet<>();
         hasDealtDamage = new HashSet<>();
         chatters = new HashMap<>();
@@ -102,13 +102,16 @@ public class HunterListener implements Listener {
         }
 
         if (pl.getInventory().getItemInMainHand().isSimilar(HunterShop.scryingOrb())) {
+            ItemRemover.takeItem(pl, HunterShop.scryingOrb(), 1);
             pl.sendMessage(ChatColor.YELLOW + "Enter a player name in the chat.");
             chatters.put(pl.getUniqueId(), HunterShop.scryingOrb());
             // remove item
         } else if (pl.getInventory().getItemInMainHand().isSimilar(HunterShop.trackingScroll())) {
+            ItemRemover.takeItem(pl, HunterShop.trackingScroll(), 1);
             pl.sendMessage(ChatColor.YELLOW + "Enter a player name in the chat.");
             chatters.put(pl.getUniqueId(), HunterShop.trackingScroll());
             // remove item
+            // todo: add cooldown
         } else if (pl.getInventory().getItemInMainHand().isSimilar(HunterShop.trackingCompass())) {
             pl.sendMessage(ChatColor.YELLOW + "Enter a player name in the chat.");
             chatters.put(pl.getUniqueId(), HunterShop.trackingCompass());
@@ -287,12 +290,4 @@ public class HunterListener implements Listener {
         if (hasDealtDamage.contains(pl.getUniqueId())) return;
         hasDealtDamage.add(pl.getUniqueId());
     }
-
-//    public boolean isSimilar(Player pl, ItemStack item1, ItemStack item2) {
-//        ItemStack newItem1 = new ItemStack(item1);
-//        newItem1.setAmount(1);
-//        Bukkit.broadcastMessage(item1.getAmount() + "");
-//        Bukkit.broadcastMessage(item2.getAmount() + "");
-//        return newItem1.isSimilar(item2);
-//    }
 }

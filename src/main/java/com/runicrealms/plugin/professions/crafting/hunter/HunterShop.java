@@ -22,7 +22,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.PotionMeta;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Objects;
 
 public class HunterShop extends Shop {
@@ -33,8 +32,6 @@ public class HunterShop extends Shop {
     private static final int PRICE_TRACKING = 50;
     private static final int PRICE_ENCHANT = 200;
     private static final int PRICE_COMPASS = 1000;
-
-    //private static HashSet<ItemStack> hunterItems = new HashSet<>();
 
     HunterShop(Player pl) {
         setupShop(pl);
@@ -216,18 +213,6 @@ public class HunterShop extends Shop {
         compass.setItemMeta(meta);
         return compass;
     }
-
-//    static void initializeHunterItems() {
-//        hunterItems.add(shadowmeldPotion());
-//        hunterItems.add(scryingOrb());
-//        hunterItems.add(trackingScroll());
-//        hunterItems.add(enchantScroll());
-//        hunterItems.add(trackingCompass());
-//    }
-
-//    static HashSet<ItemStack> getHunterItems() {
-//        return hunterItems;
-//    }
 
     /**
      * This method checks if player has required hunter points amount/inv space,

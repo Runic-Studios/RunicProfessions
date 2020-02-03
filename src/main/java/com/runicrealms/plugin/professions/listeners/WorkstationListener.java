@@ -7,6 +7,7 @@ import com.runicrealms.plugin.professions.crafting.alchemist.CauldronMenu;
 import com.runicrealms.plugin.professions.crafting.blacksmith.AnvilMenu;
 import com.runicrealms.plugin.professions.crafting.blacksmith.FurnaceMenu;
 import com.runicrealms.plugin.professions.crafting.cooking.CookingMenu;
+import com.runicrealms.plugin.professions.crafting.enchanter.EnchanterMenu;
 import com.runicrealms.plugin.professions.crafting.hunter.HunterMenu;
 import com.runicrealms.plugin.professions.crafting.jeweler.JewelerMenu;
 import org.bukkit.*;
@@ -145,14 +146,15 @@ public class WorkstationListener implements Listener {
                 }
                 break;
             case "enchanting table":
+            case "spinning wheel":
                 if (className.equals("Enchanter")) {
                     pl.playSound(pl.getLocation(), Sound.BLOCK_WET_GRASS_BREAK, 2.0f, 1.2f);
-//                    TailorGUI tailorGUI = new TailorGUI();
-//                    ItemGUI tMenu = tailorGUI.openMenu(pl);
-//                    tMenu.open(pl);
+                    RunicProfessions.getProfManager().setPlayerWorkstation(pl, new EnchanterMenu(pl));
+                    ItemGUI eMenu = ((RunicProfessions.getProfManager().getPlayerWorkstation(pl))).getItemGUI();
+                    eMenu.open(pl);
                 } else {
                     pl.playSound(pl.getLocation(), Sound.ENTITY_GENERIC_EXTINGUISH_FIRE, 0.5f, 1.0f);
-                    pl.sendMessage(ChatColor.RED + "A tailor would know how to use this.");
+                    pl.sendMessage(ChatColor.RED + "An enchanter would know how to use this.");
                 }
                 break;
             case "gemcutting bench":

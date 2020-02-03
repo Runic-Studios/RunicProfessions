@@ -107,7 +107,7 @@ public abstract class Workstation implements Listener {
         }
 
         if (!itemStats.equals("")) {
-            desc.append("\n&7Item Stats:\n").append(itemStats);//.append("\n")
+            desc.append("\n&7Item Info:\n").append(itemStats);//.append("\n")
         }
         desc.append("\n&7Material(s) Required:\n");
 
