@@ -65,29 +65,31 @@ public class EnchanterMenu extends Workstation {
         // grab the player's current profession level, progress toward that level
         int currentLvl = RunicCore.getInstance().getConfig().getInt(pl.getUniqueId() + ".info.prof.level");
 
-        // ruby
-        LinkedHashMap<Material, Integer> cutRubyReqs = new LinkedHashMap<>();
-        cutRubyReqs.put(Material.REDSTONE_ORE, 999);
+        // paper
+        LinkedHashMap<Material, Integer> paperReqs = new LinkedHashMap<>();
+        paperReqs.put(Material.STRING, 2);
 
-        // sapphire
-        LinkedHashMap<Material, Integer> cutSapphireReqs = new LinkedHashMap<>();
-        cutSapphireReqs.put(Material.LAPIS_ORE, 999);
+        // ancient powder
+        LinkedHashMap<Material, Integer> powderReqs = new LinkedHashMap<>();
+        powderReqs.put(Material.BIRCH_LOG, 1);
 
-        // emerald
-        LinkedHashMap<Material, Integer> cutEmeraldReqs = new LinkedHashMap<>();
-        cutEmeraldReqs.put(Material.EMERALD_ORE, 999);
+        // magic powder
+        LinkedHashMap<Material, Integer> magicPowderReqs = new LinkedHashMap<>();
+        magicPowderReqs.put(Material.DARK_OAK_LOG, 1);
 
-        // opal
-        LinkedHashMap<Material, Integer> cutOpalReqs = new LinkedHashMap<>();
-        cutOpalReqs.put(Material.NETHER_QUARTZ_ORE, 999);
+        // teleport scrolls
+        LinkedHashMap<Material, Integer> teleportScrollReqs = new LinkedHashMap<>();
+        teleportScrollReqs.put(Material.PAPER, 1);
+        teleportScrollReqs.put(Material.GUNPOWDER, 1);
 
-        // diamond
-        LinkedHashMap<Material, Integer> cutDiamondReqs = new LinkedHashMap<>();
-        cutDiamondReqs.put(Material.DIAMOND_ORE, 999);
+        // enchant scrolls
+        LinkedHashMap<Material, Integer> enchantScrollReqs = new LinkedHashMap<>();
+        enchantScrollReqs.put(Material.PAPER, 1);
+        enchantScrollReqs.put(Material.BLAZE_POWDER, 1);
 
         ItemGUI benchMenu = super.craftingMenu(pl, 27);
 
-        benchMenu.setOption(4, new ItemStack(Material.COBBLESTONE_STAIRS), "&eGemcutting Bench",
+        benchMenu.setOption(4, new ItemStack(Material.ENCHANTING_TABLE), "&eEnchanting Table",
                 "&fClick &7an item to start crafting!"
                         + "\n&fClick &7here to return to the station", 0, false);
 
@@ -112,69 +114,64 @@ public class EnchanterMenu extends Workstation {
                 if (meta == null) return;
 
                 int slot = event.getSlot();
-                int dummyVar = 0;
+                int dummyVar;
                 int reqLevel = 0;
                 int exp = 0;
                 LinkedHashMap<Material, Integer> reqHashMap = new LinkedHashMap<>();
 
-                // ruby
+                if (currentLvl < 30) {
+                    dummyVar = 1;
+                } else if (currentLvl < 50) {
+                    dummyVar = 2;
+                } else {
+                    dummyVar = 3;
+                }
+
+                // paper
                 if (slot == 9) {
-                    reqHashMap = cutRubyReqs;
-                    exp = 30;
-                    if (currentLvl < 30) {
-                        dummyVar = 10;
-                    } else if (currentLvl < 50) {
-                        dummyVar = 20;
-                    } else {
-                        dummyVar = 30;
-                    }
-                    // sapphire
+                    reqHashMap = paperReqs;
+                    exp = 15;
+                    // ancient powder
                 } else if (slot == 10) {
-                    reqHashMap = cutSapphireReqs;
-                    exp = 60;
-                    if (currentLvl < 30) {
-                        dummyVar = 15;
-                    } else if (currentLvl < 50) {
-                        dummyVar = 25;
-                    } else {
-                        dummyVar = 35;
-                    }
-                    // opal
+                    reqHashMap = powderReqs;
+                    exp = 10;
+                    // magic powder
                 } else if (slot == 11) {
-                    reqLevel = 10;
-                    reqHashMap = cutOpalReqs;
-                    exp = 90;
-                    if (currentLvl < 30) {
-                        dummyVar = 1;
-                    } else if (currentLvl < 50) {
-                        dummyVar = 2;
-                    } else {
-                        dummyVar = 3;
-                    }
-                    // emerald
+                    reqHashMap = magicPowderReqs;
+                    exp = 10;
+                    // azana scroll
                 } else if (slot == 12) {
-                    reqLevel = 25;
-                    reqHashMap = cutEmeraldReqs;
-                    exp = 120;
-                    if (currentLvl < 30) {
-                        dummyVar = 2;
-                    } else if (currentLvl < 50) {
-                        dummyVar = 4;
-                    } else {
-                        dummyVar = 6;
-                    }
-                    // diamond
+                    reqHashMap = teleportScrollReqs;
+                    exp = 40;
+                    // crit scroll
                 } else if (slot == 13) {
-                    reqLevel = 25;
-                    reqHashMap = cutDiamondReqs;
-                    exp = 150;
-                    if (currentLvl < 30) {
-                        dummyVar = 2;
-                    } else if (currentLvl < 50) {
-                        dummyVar = 4;
-                    } else {
-                        dummyVar = 6;
-                    }
+                    reqLevel = 10;
+                    reqHashMap = enchantScrollReqs;
+                    exp = 80;
+                    // wintervale scroll
+                } else if (slot == 14) {
+                    reqLevel = 20;
+                    reqHashMap = teleportScrollReqs;
+                    exp = 40;
+                } else if (slot == 15) {
+                    // dodge scroll
+                    reqLevel = 20;
+                    reqHashMap = enchantScrollReqs;
+                    exp = 80;
+                    // zenyth scroll
+                } else if (slot == 16) {
+                    reqLevel = 40;
+                    reqHashMap = teleportScrollReqs;
+                    exp = 40;
+                } else if (slot == 17) {
+                    // thorns scroll
+                    reqLevel = 40;
+                    reqHashMap = enchantScrollReqs;
+                    exp = 80;
+                } else if (slot == 18) {
+                    // frost's end scroll
+                    reqLevel = 60;
+                    reqHashMap = teleportScrollReqs;
                 }
 
                 // destroy instance of inventory to prevent bugs
@@ -185,7 +182,7 @@ public class EnchanterMenu extends Workstation {
                 super.startCrafting(pl, reqHashMap, 1, reqLevel, event.getCurrentItem().getType(),
                         meta.getDisplayName(), currentLvl, exp,
                         ((Damageable) meta).getDamage(), Particle.FIREWORKS_SPARK,
-                        Sound.BLOCK_ANVIL_PLACE, Sound.BLOCK_ANVIL_USE, dummyVar, mult);
+                        Sound.BLOCK_ENCHANTMENT_TABLE_USE, Sound.ENTITY_PLAYER_LEVELUP, dummyVar, mult);
             }
         });
 
@@ -194,50 +191,38 @@ public class EnchanterMenu extends Workstation {
 
     private void setupItems(ItemGUI tableMenu, Player pl, int currentLv) {
 
-        String healthStr;
-        String manaStr;
-        String healingStr;
-        String weaponStr;
-        String spellStr;
-        if (currentLv < 30) {
-            healthStr = "10";
-            manaStr = "15";
-            healingStr = "2";
-            weaponStr = "1";
-            spellStr = "2";
-        } else if (currentLv < 50) {
-            healthStr = "20";
-            manaStr = "25";
-            healingStr = "4";
-            weaponStr = "2";
-            spellStr = "4";
-        } else {
-            healthStr = "30";
-            manaStr = "35";
-            healingStr = "6";
-            weaponStr = "3";
-            spellStr = "6";
+        int critAmt = 1;
+        int dodgeAmt = 1;
+        int thornsAmt = 1;
+        if (currentLv >= 30 && currentLv < 50) {
+            critAmt = 2;
+            dodgeAmt = 2;
+            thornsAmt = 2;
+        } else if (currentLv >= 50) {
+            critAmt = 3;
+            dodgeAmt = 3;
+            thornsAmt = 3;
         }
 
         // paper
         LinkedHashMap<Material, Integer> paperReqs = new LinkedHashMap<>();
         paperReqs.put(Material.STRING, 999);
         super.createMenuItem(tableMenu, pl, 9, Material.PAPER, "&fPaper", paperReqs,
-                "String", 2, 30, 0, 0, "",
+                "String", 2, 15, 0, 0, "",
                 true, false, false);
 
         // ancient powder
         LinkedHashMap<Material, Integer> powderReqs = new LinkedHashMap<>();
         powderReqs.put(Material.BIRCH_LOG, 999);
         super.createMenuItem(tableMenu, pl, 10, Material.GUNPOWDER, "&fAncient Powder", powderReqs,
-                "Birch Log", 1, 30, 0, 0, "",
+                "Birch Log", 1, 10, 0, 0, "",
                 true, false, false);
 
         // magic powder
         LinkedHashMap<Material, Integer> magicPowderReqs = new LinkedHashMap<>();
         magicPowderReqs.put(Material.DARK_OAK_LOG, 999);
         super.createMenuItem(tableMenu, pl, 11, Material.BLAZE_POWDER, "&fMagic Powder", magicPowderReqs,
-                "Dark Oak Log", 1, 30, 0, 0, "",
+                "Dark Oak Log", 1, 10, 0, 0, "",
                 true, false, false);
 
         // azana scroll
@@ -245,7 +230,7 @@ public class EnchanterMenu extends Workstation {
         teleportScrollReqs.put(Material.PAPER, 1);
         teleportScrollReqs.put(Material.GUNPOWDER, 1);
         super.createMenuItem(tableMenu, pl, 12, Material.PURPLE_DYE, "&fTeleport Scroll: Azana", teleportScrollReqs,
-                "Paper\nAncient Powder", 2, 30, 0, 0, "&eTeleport to Azana!\n",
+                "Paper\nAncient Powder", 2, 40, 0, 0, "&eTeleport to Azana!\n",
                 false, false, false);
 
         // crit scroll
@@ -253,29 +238,29 @@ public class EnchanterMenu extends Workstation {
         enchantScrollReqs.put(Material.PAPER, 1);
         enchantScrollReqs.put(Material.BLAZE_POWDER, 1);
         super.createMenuItem(tableMenu, pl, 13, Material.PURPLE_DYE, "&fEnchant Scroll: Crit", enchantScrollReqs,
-                "Paper\nMagic Powder", 999, 60, 10, 0, "&a+1% Crit Chance\n",
+                "Paper\nMagic Powder", 999, 80, 10, 0, "&a+" + critAmt + "% Crit Chance\n",
                 false, true, false);
 
         // wintervale scroll
         // todo: req. combat lv.
         super.createMenuItem(tableMenu, pl, 14, Material.PURPLE_DYE, "&fTeleport Scroll: Wintervale", teleportScrollReqs,
-                "Paper\nAncient Powder", 1, 90, 20, 0, "&eTeleport to Wintervale!\n",
+                "Paper\nAncient Powder", 1, 40, 20, 0, "&eTeleport to Wintervale!\n",
                 false, false, false);
 
         // dodge scroll
         super.createMenuItem(tableMenu, pl, 15, Material.PURPLE_DYE, "&fEnchant Scroll: Dodge", enchantScrollReqs,
-                "Paper\nMagic Powder", 1, 120, 20, 0, "&a+1% Dodge Chance\n",
+                "Paper\nMagic Powder", 1, 80, 20, 0, "&a+" + dodgeAmt + "% Dodge Chance\n",
                 false, true, false);
 
         // zenyth scroll
         // todo: req. level
         super.createMenuItem(tableMenu, pl, 16, Material.PURPLE_DYE, "&fTeleport Scroll: Zenyth", teleportScrollReqs,
-                "Paper\nAncient Powder", 1, 150, 40, 0, "&eTeleport to Zenyth!\n",
+                "Paper\nAncient Powder", 1, 40, 40, 0, "&eTeleport to Zenyth!\n",
                 false, false, false);
 
         // thorns scroll
         super.createMenuItem(tableMenu, pl, 17, Material.PURPLE_DYE, "&fEnchant Scroll: Thorns", enchantScrollReqs,
-                "Paper\nMagic Powder", 1, 150, 40, 0, "&a+1% Thorns Chance\n",
+                "Paper\nMagic Powder", 1, 80, 40, 0, "&a+" + thornsAmt + "% Thorns Chance\n",
                 false, true, false);
 
         // todo: req. level
@@ -344,5 +329,13 @@ public class EnchanterMenu extends Workstation {
                 break;
         }
         return craftedItem;
+    }
+
+    private static ItemStack teleportScroll(String location, int reqLv) {
+        return new ItemStack(Material.STICK);
+    }
+
+    private static ItemStack enchantScroll(String enchant, int reqLv, int dummyVar) {
+        return new ItemStack(Material.STICK);
     }
 }

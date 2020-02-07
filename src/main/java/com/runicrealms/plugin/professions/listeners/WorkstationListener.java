@@ -300,6 +300,7 @@ public class WorkstationListener implements Listener {
                 || b.getType() == Material.BREWING_STAND
                 || b.getType() == Material.CAULDRON
                 || b.getType() == Material.CRAFTING_TABLE
+                || b.getType() == Material.ENCHANTING_TABLE
                 || b.getType() == Material.FURNACE) {
             e.setCancelled(true);
         }
