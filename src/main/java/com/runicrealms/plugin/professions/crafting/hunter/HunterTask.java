@@ -59,7 +59,7 @@ public class HunterTask {
      * Check player's hunter level from core config
      */
     private int checkLevel(Player pl) {
-        return RunicCore.getInstance().getConfig().getInt(pl.getUniqueId() + ".info.prof.level");
+        return RunicCore.getCacheManager().getPlayerCache(pl.getUniqueId()).getProfLevel();
     }
 
     public static int getCurrentKills(Player pl) {

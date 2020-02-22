@@ -34,8 +34,8 @@ public class BlacksmithItems {
     public static ItemStack oakenShield() {
         return new RunicItem
                 (Material.SHIELD, ChatColor.WHITE, "Oaken Shield", 0, 5,
-                        0, 0, 0, 0, 2,
-                        25, "offhand", false).getItem();
+                        25, 0, 0, 0, 0, 2,
+                        "offhand", false).getItem();
     }
 
     // level 10
@@ -56,28 +56,28 @@ public class BlacksmithItems {
     public static ItemStack mailGreaves() {
         return new RunicItem
                 (Material.CHAINMAIL_BOOTS, ChatColor.WHITE, "Forged Mail Greaves", 0, 15,
-                        0, 3, 0, 0, 0,
-                        15, "feet", false).getItem();
+                        15, 0, 3, 0, 0, 0,
+                        "feet", false).getItem();
     }
     public static ItemStack gildedBoots() {
         return new RunicItem
                 (Material.GOLDEN_BOOTS, ChatColor.WHITE, "Forged Gilded Boots", 0, 15,
-                        0, 0, 2, 0, 0,
-                        20, "feet", false).getItem();
+                        20, 0, 0, 2, 0, 0,
+                        "feet", false).getItem();
     }
 
     // level 20
     public static ItemStack mailTassets() {
         return new RunicItem
                 (Material.CHAINMAIL_LEGGINGS, ChatColor.WHITE, "Forged Mail Tassets", 0, 20,
-                        0, 2, 0, 0, 1,
-                        25, "legs", false).getItem();
+                        25, 0, 2, 0, 0, 1,
+                        "legs", false).getItem();
     }
     public static ItemStack plateLegs() {
         return new RunicItem
                 (Material.IRON_LEGGINGS, ChatColor.WHITE, "Forged Iron Platelegs", 0, 20,
-                        0, 0, 0, 0, 2,
-                        40, "legs", false).getItem();
+                        40, 0, 0, 0, 0, 2,
+                        "legs", false).getItem();
     }
 
     // level 25
@@ -101,8 +101,8 @@ public class BlacksmithItems {
     public static ItemStack bastion() {
         return new RunicItem
                 (Material.SHIELD, ChatColor.WHITE, "Bastion", 0, 25,
-                        0, 0, 0, 0, 4,
-                        50, "offhand", false).getItem();
+                        50, 0, 0, 0, 0, 4,
+                        "offhand", false).getItem();
     }
 
     // level 35
@@ -123,28 +123,28 @@ public class BlacksmithItems {
     public static ItemStack gildedBody() {
         return new RunicItem
                 (Material.GOLDEN_CHESTPLATE, ChatColor.WHITE, "Forged Gilded Body", 0, 40,
-                        0, 0, 0, 3, 0,
-                        50, "chest", false).getItem();
+                        50, 0, 0, 0, 3, 0,
+                        "chest", false).getItem();
     }
     public static ItemStack plateBody() {
         return new RunicItem
                 (Material.IRON_CHESTPLATE, ChatColor.WHITE, "Forged Iron Platebody", 0, 40,
-                        0, 0, 0, 0, 0,
-                        50, "chest", false).getItem();
+                        50, 0, 0, 0, 0, 0,
+                        "chest", false).getItem();
     }
 
     // level 45
     public static ItemStack mailHelm() {
         return new RunicItem
                 (Material.CHAINMAIL_HELMET, ChatColor.WHITE, "Forged Mail Helm", 0, 45,
-                        0, 0, 0, 3, 0,
-                        50, "head", false).getItem();
+                        50, 0, 0, 0, 3, 0,
+                        "head", false).getItem();
     }
     public static ItemStack ironHelm() {
         return new RunicItem
                 (Material.IRON_HELMET, ChatColor.WHITE, "Forged Iron Helm", 0, 45,
-                        0, 0, 0, 0, 0,
-                        50, "head", false).getItem();
+                        50, 0, 0, 0, 0, 0,
+                        "head", false).getItem();
     }
 
     // level 50 - legendary archer

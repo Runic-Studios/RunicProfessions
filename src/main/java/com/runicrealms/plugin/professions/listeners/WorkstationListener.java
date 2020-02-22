@@ -92,7 +92,7 @@ public class WorkstationListener implements Listener {
         UUID uuid = pl.getUniqueId();
 
         // determine the player's profession
-        String className = RunicCore.getInstance().getConfig().get(pl.getUniqueId() + ".info.prof.name").toString();
+        String className = RunicCore.getCacheManager().getPlayerCache(uuid).getProfName();
 
         // stop the listener if the player is already crafting
         if (RunicProfessions.getProfManager().getCurrentCrafters().contains(pl)) {

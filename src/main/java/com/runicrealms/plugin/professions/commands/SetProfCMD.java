@@ -37,16 +37,17 @@ public class SetProfCMD implements CommandExecutor {
 
         String formattedStr = profStr.substring(0, 1).toUpperCase() + profStr.substring(1);
 
-        setConfig(pl, formattedStr);
+        updateCache(pl, formattedStr);
         RunicCore.getScoreboardHandler().updatePlayerInfo(pl);
         RunicCore.getScoreboardHandler().updateSideInfo(pl);
         return true;
     }
 
-    private static void setConfig(Player pl, String profName) {
-        RunicCore.getInstance().getConfig().set(pl.getUniqueId() + ".info.prof.name", profName);
-        RunicCore.getInstance().getConfig().set(pl.getUniqueId() + ".info.prof.level", 0);
-        RunicCore.getInstance().getConfig().set(pl.getUniqueId() + ".info.prof.exp", 0);
+    private static void updateCache(Player pl, String profName) {
+
+        RunicCore.getCacheManager().getPlayerCache(pl.getUniqueId()).setProfName(profName);
+        RunicCore.getCacheManager().getPlayerCache(pl.getUniqueId()).setProfLevel(0);
+        RunicCore.getCacheManager().getPlayerCache(pl.getUniqueId()).setProfExp(0);
 
         /*
         Reset hunter info

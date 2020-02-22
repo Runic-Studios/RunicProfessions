@@ -63,7 +63,7 @@ public class EnchanterMenu extends Workstation {
     private ItemGUI tableMenu(Player pl) {
 
         // grab the player's current profession level, progress toward that level
-        int currentLvl = RunicCore.getInstance().getConfig().getInt(pl.getUniqueId() + ".info.prof.level");
+        int currentLvl = RunicCore.getCacheManager().getPlayerCache(pl.getUniqueId()).getProfLevel();
 
         // paper
         LinkedHashMap<Material, Integer> paperReqs = new LinkedHashMap<>();

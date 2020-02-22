@@ -74,7 +74,7 @@ public abstract class Workstation implements Listener {
                                   boolean canUpgrade, boolean isGlowing) {
 
         // grab the player's current profession level, progress toward that level
-        int currentLvl = RunicCore.getInstance().getConfig().getInt(pl.getUniqueId() + ".info.prof.level");
+        int currentLvl = RunicCore.getCacheManager().getPlayerCache(pl.getUniqueId()).getProfLevel();
 
         // determine the success rate, based on level
         int rate = (40 + currentLvl);

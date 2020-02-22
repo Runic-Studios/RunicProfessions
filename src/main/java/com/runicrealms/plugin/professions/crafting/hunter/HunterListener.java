@@ -145,7 +145,7 @@ public class HunterListener implements Listener {
 
     private void lookupStats(Player pl, Player toLookup) {
         int maxHealth = (int) toLookup.getMaxHealth();
-        int maxMana = RunicCore.getInstance().getConfig().getInt(toLookup.getUniqueId() + ".info.maxMana");
+        int maxMana = RunicCore.getCacheManager().getPlayerCache(toLookup.getUniqueId()).getMaxMana();
         int minDamage = GearScanner.getMinDamage(toLookup);
         int maxDamage = GearScanner.getMaxDamage(toLookup);
         int healingBonus = GearScanner.getHealingBoost(toLookup);

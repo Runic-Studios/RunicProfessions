@@ -63,7 +63,7 @@ public class JewelerMenu extends Workstation {
     private ItemGUI benchMenu(Player pl) {
 
         // grab the player's current profession level, progress toward that level
-        int currentLvl = RunicCore.getInstance().getConfig().getInt(pl.getUniqueId() + ".info.prof.level");
+        int currentLvl = RunicCore.getCacheManager().getPlayerCache(pl.getUniqueId()).getProfLevel();
 
         // ruby
         LinkedHashMap<Material, Integer> cutRubyReqs = new LinkedHashMap<>();

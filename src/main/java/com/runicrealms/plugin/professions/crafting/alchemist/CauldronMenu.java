@@ -67,7 +67,7 @@ public class CauldronMenu extends Workstation {
     private ItemGUI cauldronMenu(Player pl) {
 
         // grab the player's current profession level, progress toward that level
-        int currentLvl = RunicCore.getInstance().getConfig().getInt(pl.getUniqueId() + ".info.prof.level");
+        int currentLvl = RunicCore.getCacheManager().getPlayerCache(pl.getUniqueId()).getProfLevel();
 
         // health potion
         LinkedHashMap<Material, Integer> healthPotReqs = new LinkedHashMap<>();
@@ -290,7 +290,7 @@ public class CauldronMenu extends Workstation {
                               int currentLvl, int amt, int rate, int durability, int someVar) {
 
         // grab the player's current profession level, progress toward that level
-        currentLvl = RunicCore.getInstance().getConfig().getInt(pl.getUniqueId() + ".info.prof.level");
+        currentLvl = RunicCore.getCacheManager().getPlayerCache(pl.getUniqueId()).getProfLevel();
 
         if (currentLvl < 3) {
             rate = 100;
