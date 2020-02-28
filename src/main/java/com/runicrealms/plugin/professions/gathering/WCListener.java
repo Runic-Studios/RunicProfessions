@@ -1,15 +1,13 @@
 package com.runicrealms.plugin.professions.gathering;
 
 import com.runicrealms.plugin.attributes.AttributeUtil;
-import com.runicrealms.plugin.utilities.ChatUtils;
-import com.runicrealms.plugin.utilities.ColorUtil;
+import com.runicrealms.plugin.utilities.ActionBarUtil;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.protection.ApplicableRegionSet;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import com.sk89q.worldguard.protection.regions.RegionContainer;
 import com.sk89q.worldguard.protection.regions.RegionQuery;
-//import de.tr7zw.itemnbtapi.NBTItem;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.*;
@@ -20,7 +18,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -50,12 +47,12 @@ public class WCListener implements Listener {
 
         // grab the player, location
         Player pl = e.getPlayer();
-        Location plLoc = pl.getLocation();
+        Location blockLoc = e.getBlock().getLocation();
 
-        // grab all regions the player is standing in
+        // grab all regions the block is in
         RegionContainer container = WorldGuard.getInstance().getPlatform().getRegionContainer();
         RegionQuery query = container.createQuery();
-        ApplicableRegionSet set = query.getApplicableRegions(BukkitAdapter.adapt(plLoc));
+        ApplicableRegionSet set = query.getApplicableRegions(BukkitAdapter.adapt(blockLoc));
         Set<ProtectedRegion> regions = set.getRegions();
 
         if (regions == null) return;
@@ -219,7 +216,7 @@ public class WCListener implements Listener {
         }
 
         if (chance < (100 - successRate)) {
-            pl.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(ChatColor.RED + failMssg));
+            ActionBarUtil.sendTimedMessage(pl, "&c" + failMssg, 3);
             return;
         }
 

@@ -1,6 +1,7 @@
 package com.runicrealms.plugin.professions.gathering;
 
 import com.runicrealms.plugin.attributes.AttributeUtil;
+import com.runicrealms.plugin.utilities.ActionBarUtil;
 import com.runicrealms.plugin.utilities.CurrencyUtil;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldguard.WorldGuard;
@@ -18,12 +19,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 import com.runicrealms.plugin.utilities.HologramUtil;
-import com.runicrealms.plugin.enums.WeaponEnum;
 
 import java.io.File;
 import java.io.IOException;
@@ -47,12 +46,12 @@ public class MiningListener implements Listener {
 
         // grab the player, location
         Player pl = e.getPlayer();
-        Location plLoc = pl.getLocation();
+        Location blockLoc = e.getBlock().getLocation();
 
         // grab all regions the player is standing in
         RegionContainer container = WorldGuard.getInstance().getPlatform().getRegionContainer();
         RegionQuery query = container.createQuery();
-        ApplicableRegionSet set = query.getApplicableRegions(BukkitAdapter.adapt(plLoc));
+        ApplicableRegionSet set = query.getApplicableRegions(BukkitAdapter.adapt(blockLoc));
         Set<ProtectedRegion> regions = set.getRegions();
 
         if (regions == null) return;
@@ -221,7 +220,7 @@ public class MiningListener implements Listener {
         }
 
         if (chance < (100 - successRate)) {
-            pl.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(ChatColor.RED + failMssg));
+            ActionBarUtil.sendTimedMessage(pl, "&c" + failMssg, 3);
             return;
         }
 

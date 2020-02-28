@@ -1,6 +1,7 @@
 package com.runicrealms.plugin.professions.gathering;
 
 import com.runicrealms.plugin.attributes.AttributeUtil;
+import com.runicrealms.plugin.utilities.ActionBarUtil;
 import com.runicrealms.plugin.utilities.CurrencyUtil;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldguard.WorldGuard;
@@ -195,7 +196,7 @@ public class FarmingListener implements Listener {
         }
 
         if (chance < (100 - successRate)) {
-            pl.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(ChatColor.RED + failMssg));
+            ActionBarUtil.sendTimedMessage(pl, "&c" + failMssg, 3);
             return;
         }
 

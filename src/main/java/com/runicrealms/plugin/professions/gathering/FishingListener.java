@@ -1,8 +1,8 @@
 package com.runicrealms.plugin.professions.gathering;
 
-import com.runicrealms.plugin.RunicCore;
 import com.runicrealms.plugin.RunicProfessions;
 import com.runicrealms.plugin.attributes.AttributeUtil;
+import com.runicrealms.plugin.utilities.ActionBarUtil;
 import com.runicrealms.plugin.utilities.CurrencyUtil;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldguard.WorldGuard;
@@ -10,8 +10,6 @@ import com.sk89q.worldguard.protection.ApplicableRegionSet;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import com.sk89q.worldguard.protection.regions.RegionContainer;
 import com.sk89q.worldguard.protection.regions.RegionQuery;
-import net.md_5.bungee.api.ChatMessageType;
-import net.md_5.bungee.api.chat.TextComponent;
 import net.minecraft.server.v1_13_R2.EntityFishingHook;
 import org.bukkit.*;
 import org.bukkit.craftbukkit.v1_13_R2.entity.CraftEntity;
@@ -134,7 +132,7 @@ public class FishingListener implements Listener {
 
             // pull back fishing rod
             int currentSlot = pl.getInventory().getHeldItemSlot();
-            pl.getInventory().setHeldItemSlot(2);
+            pl.getInventory().setHeldItemSlot(0);
             new BukkitRunnable() {
                 @Override
                 public void run() {
@@ -245,7 +243,7 @@ public class FishingListener implements Listener {
         }
 
         if (chance < (100 - successRate)) {
-            pl.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(ChatColor.RED + failMssg));
+            ActionBarUtil.sendTimedMessage(pl, "&c" + failMssg, 3);
             return;
         }
 
@@ -289,7 +287,6 @@ public class FishingListener implements Listener {
      */
     @EventHandler
     public void onPlayerFish(PlayerFishEvent e) {
-
         FishHook plHook = e.getHook();
         Random rand = new Random();
         int time = rand.nextInt(25 - 5) + 5;
