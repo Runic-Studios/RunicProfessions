@@ -202,6 +202,7 @@ public class WorkstationListener implements Listener {
         if (pl.getInventory().getItemInMainHand().getType() == Material.AIR) return;
         Material heldItemType = pl.getInventory().getItemInMainHand().getType();
         if (heldItemType != Material.GREEN_WOOL) return;
+        if (e.getHand() != EquipmentSlot.HAND) return;
         if (!e.hasBlock()) return;
         Block b = e.getClickedBlock();
 
