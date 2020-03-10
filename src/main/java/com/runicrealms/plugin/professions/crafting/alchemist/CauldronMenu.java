@@ -1,7 +1,6 @@
 package com.runicrealms.plugin.professions.crafting.alchemist;
 
 import com.runicrealms.plugin.RunicCore;
-import com.runicrealms.plugin.RunicProfessions;
 import com.runicrealms.plugin.attributes.AttributeUtil;
 import com.runicrealms.plugin.item.GUIMenu.ItemGUI;
 import com.runicrealms.plugin.professions.Workstation;
@@ -280,8 +279,8 @@ public class CauldronMenu extends Workstation {
         super.createMenuItem(forgeMenu, pl, 13, Material.POTION, "&6" + tierStr + " Potion of Sacred Fire", firePotReqs,
                 "Glass Bottle\nSacred Flame\nPufferfish", 4, 0, 60, 0,
                 "&eYour spells have a &f20% &echance to burn" +
-                        "\n&eenemies for &f20 &emagicʔ damage for &f" + slayingStr +
-                        "\n&eminutes\n",
+                        "\n&eenemies for an additional &f20 &emagicʔ" +
+                        "\n&edamage for &f" + slayingStr + " &eminutes\n",
                 false, false, false);
     }
 
@@ -322,8 +321,8 @@ public class CauldronMenu extends Workstation {
             } else {
                 color = Color.ORANGE;
                 desc = "\n&eYour spells have a &f20% &echance to burn" +
-                        "\n&eenemies for 20 magicʔ damage for &f" + someVar +
-                        "\n&eminutes";
+                        "\n&eenemies for an additional 20 magicʔ" +
+                        "\n&edamage for &f" + someVar + " &eminutes";
             }
             Objects.requireNonNull(pMeta).setColor(color);
 

@@ -95,24 +95,39 @@ public class HunterListener implements Listener {
         if (e.getHand() != EquipmentSlot.HAND) return;
         if (e.getAction() != Action.RIGHT_CLICK_AIR && e.getAction() != Action.RIGHT_CLICK_BLOCK) return;
 
-        // prevent player's from using a hunter item in combat
-        if (RunicCore.getCombatManager().getPlayersInCombat().containsKey(uuid)) {
-            pl.sendMessage(ChatColor.RED + "You can't use that in combat!");
-            return;
-        }
-
         if (pl.getInventory().getItemInMainHand().isSimilar(HunterShop.scryingOrb())) {
+
+            // prevent player's from using a hunter item in combat
+            if (RunicCore.getCombatManager().getPlayersInCombat().containsKey(uuid)) {
+                pl.sendMessage(ChatColor.RED + "You can't use that in combat!");
+                return;
+            }
+
             ItemRemover.takeItem(pl, HunterShop.scryingOrb(), 1);
             pl.sendMessage(ChatColor.YELLOW + "Enter a player name in the chat.");
             chatters.put(pl.getUniqueId(), HunterShop.scryingOrb());
             // remove item
         } else if (pl.getInventory().getItemInMainHand().isSimilar(HunterShop.trackingScroll())) {
+
+            // prevent player's from using a hunter item in combat
+            if (RunicCore.getCombatManager().getPlayersInCombat().containsKey(uuid)) {
+                pl.sendMessage(ChatColor.RED + "You can't use that in combat!");
+                return;
+            }
+
             ItemRemover.takeItem(pl, HunterShop.trackingScroll(), 1);
             pl.sendMessage(ChatColor.YELLOW + "Enter a player name in the chat.");
             chatters.put(pl.getUniqueId(), HunterShop.trackingScroll());
             // remove item
             // todo: add cooldown
         } else if (pl.getInventory().getItemInMainHand().isSimilar(HunterShop.trackingCompass())) {
+
+            // prevent player's from using a hunter item in combat
+            if (RunicCore.getCombatManager().getPlayersInCombat().containsKey(uuid)) {
+                pl.sendMessage(ChatColor.RED + "You can't use that in combat!");
+                return;
+            }
+
             pl.sendMessage(ChatColor.YELLOW + "Enter a player name in the chat.");
             chatters.put(pl.getUniqueId(), HunterShop.trackingCompass());
         }

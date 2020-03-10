@@ -10,10 +10,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedHashMap;
-import java.util.Objects;
+import java.util.*;
 
 @SuppressWarnings("FieldCanBeLocal")
 public class CookingMenu extends Workstation {
@@ -223,13 +220,10 @@ public class CookingMenu extends Workstation {
                 craftedItem.setItemMeta(meta);
             }
 
-            // check that the player has an open inventory space
-            // this method prevents items from stacking if the player crafts 5
-            if (pl.getInventory().firstEmpty() != -1) {
-                int firstEmpty = pl.getInventory().firstEmpty();
-                pl.getInventory().setItem(firstEmpty, craftedItem);
-            } else {
-                pl.getWorld().dropItem(pl.getLocation(), craftedItem);
+            // add items to inventory, drop items that couldn't be added
+            HashMap<Integer, ItemStack> leftOvers = pl.getInventory().addItem(craftedItem);
+            for (ItemStack is : leftOvers.values()) {
+                pl.getWorld().dropItem(pl.getLocation(), is);
             }
         }
     }
