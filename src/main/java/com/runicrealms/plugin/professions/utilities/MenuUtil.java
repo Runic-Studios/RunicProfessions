@@ -14,7 +14,7 @@ public class MenuUtil {
         String s = "";
 
         // for armor/items
-        int health = (int) AttributeUtil.getGenericDouble(item, "generic.maxHealth");
+        int health = (int) AttributeUtil.getCustomDouble(item, "custom.maxHealth");
         if (health != 0) s = s.concat(ChatColor.RED + "+ " + health + "❤\n");
 
         // -------------------------------------------------------------------------------------------

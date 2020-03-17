@@ -133,7 +133,7 @@ public class JewelMaster extends Shop {
         double storedMagDmg = AttributeUtil.getCustomDouble(oldItem, "gem.magicDamage");
 
         // retrieve old ITEM stats
-        double itemHealth = AttributeUtil.getGenericDouble(oldItem, "generic.maxHealth");
+        double itemHealth = AttributeUtil.getCustomDouble(oldItem, "custom.maxHealth");
         double itemMana = AttributeUtil.getCustomDouble(oldItem, "custom.manaBoost");
         double itemDmg = AttributeUtil.getCustomDouble(oldItem, "custom.attackDamage");
         double itemHealing = AttributeUtil.getCustomDouble(oldItem, "custom.healingBoost");
@@ -149,7 +149,7 @@ public class JewelMaster extends Shop {
         // subtract stored stats from item stats
         newItem = AttributeUtil.addCustomStat(newItem, "custom.socketCount", socketCount);
         newItem = AttributeUtil.addCustomStat(newItem, "required.level", reqLv); // required level
-        newItem = AttributeUtil.addGenericStat(newItem, "generic.maxHealth", itemHealth - storedHealth, getSlot(oldItem)); // ruby
+        newItem = AttributeUtil.addCustomStat(newItem, "custom.maxHealth", itemHealth - storedHealth); // ruby
         newItem = AttributeUtil.addCustomStat(newItem, "custom.manaBoost", itemMana - storedMana); // sapphire
         newItem = AttributeUtil.addCustomStat(newItem, "custom.attackDamage", itemDmg - storedDmg); // opal
         newItem = AttributeUtil.addCustomStat(newItem, "custom.healingBoost", itemHealing - storedHealing); // emerald

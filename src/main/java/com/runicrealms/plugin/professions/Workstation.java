@@ -8,9 +8,9 @@ import com.runicrealms.plugin.item.GUIMenu.ItemGUI;
 import com.runicrealms.plugin.item.LoreGenerator;
 import com.runicrealms.plugin.item.util.ItemRemover;
 import com.runicrealms.plugin.professions.listeners.WorkstationListener;
-import com.runicrealms.plugin.professions.utilities.FloatingItemUtil;
 import com.runicrealms.plugin.professions.utilities.ProfExpUtil;
 import com.runicrealms.plugin.utilities.ColorUtil;
+import com.runicrealms.plugin.utilities.FloatingItemUtil;
 import org.bukkit.*;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
@@ -129,7 +129,6 @@ public abstract class Workstation implements Listener {
             }
             i += 1;
         }
-
 
         desc.append("\n&7Success Rate:\n")
                 .append(rateToStr).append("%\n\n")
@@ -285,29 +284,11 @@ public abstract class Workstation implements Listener {
             ((Damageable) Objects.requireNonNull(meta)).setDamage(durability);
             craftedItem.setItemMeta(meta);
 
-            String itemSlot = "";
             ArmorSlotEnum armorType = ArmorSlotEnum.matchSlot(craftedItem);
-            switch (armorType) {
-                case HELMET:
-                    itemSlot = "head";
-                    break;
-                case CHESTPLATE:
-                    itemSlot = "chest";
-                    break;
-                case LEGGINGS:
-                    itemSlot = "legs";
-                    break;
-                case BOOTS:
-                    itemSlot = "feet";
-                    break;
-            }
 
             craftedItem = AttributeUtil.addCustomStat(craftedItem, "required.level", reqLv);
-
-            craftedItem = AttributeUtil.addGenericStat
-                    (craftedItem, "generic.maxHealth", someVar, itemSlot);
-            craftedItem = AttributeUtil.addCustomStat
-                    (craftedItem, "custom.manaBoost", someVar);
+            craftedItem = AttributeUtil.addCustomStat(craftedItem, "custom.maxHealth", someVar);
+            craftedItem = AttributeUtil.addCustomStat(craftedItem, "custom.manaBoost", someVar);
 
             // item can be socket-ed ONCE
             craftedItem = AttributeUtil.addCustomStat(craftedItem, "custom.socketCount", 1);
@@ -318,7 +299,6 @@ public abstract class Workstation implements Listener {
             if (chance <= rate) {
                 // check that the player has an open inventory space
                 // this method prevents items from stacking if the player crafts 5
-                // todo: let players stack certain items
                 if (pl.getInventory().firstEmpty() != -1) {
                     int firstEmpty = pl.getInventory().firstEmpty();
                     pl.getInventory().setItem(firstEmpty, craftedItem);

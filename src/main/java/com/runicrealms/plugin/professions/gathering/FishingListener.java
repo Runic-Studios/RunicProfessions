@@ -4,6 +4,7 @@ import com.runicrealms.plugin.RunicProfessions;
 import com.runicrealms.plugin.attributes.AttributeUtil;
 import com.runicrealms.plugin.utilities.ActionBarUtil;
 import com.runicrealms.plugin.utilities.CurrencyUtil;
+import com.runicrealms.plugin.utilities.FloatingItemUtil;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.protection.ApplicableRegionSet;
@@ -29,7 +30,6 @@ import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
-import com.runicrealms.plugin.professions.utilities.FloatingItemUtil;
 import com.runicrealms.plugin.utilities.HologramUtil;
 
 import java.lang.reflect.Field;

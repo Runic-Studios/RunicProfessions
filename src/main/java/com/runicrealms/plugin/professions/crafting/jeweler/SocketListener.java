@@ -64,7 +64,7 @@ public class SocketListener implements Listener {
         }
 
         // retrieve the current custom values of the two items
-        double itemHealth = AttributeUtil.getGenericDouble(socketItem, "generic.maxHealth");
+        double itemHealth = AttributeUtil.getCustomDouble(socketItem, "custom.maxHealth");
         double gemHealth = AttributeUtil.getCustomDouble(heldItem, "custom.maxHealth");
         double itemMana = AttributeUtil.getCustomDouble(socketItem, "custom.manaBoost");
         double gemMana = AttributeUtil.getCustomDouble(heldItem, "custom.manaBoost");
@@ -108,8 +108,12 @@ public class SocketListener implements Listener {
                 break;
         }
 
+        if (AttributeUtil.getCustomString(socketItem, "untradeable").equals("true")) newItem = AttributeUtil.addCustomStat(newItem, "untradeable", "true");
+        if (AttributeUtil.getCustomString(socketItem, "soulbound").equals("true")) newItem = AttributeUtil.addCustomStat(newItem, "soulbound", "true");
+        newItem = AttributeUtil.addGenericStat(newItem, "generic.armor", 0, slot); // remove armor values
+
         // add 'da stats
-        newItem = AttributeUtil.addGenericStat(newItem, "generic.maxHealth", itemHealth + gemHealth, slot); // ruby
+        newItem = AttributeUtil.addCustomStat(newItem, "custom.maxHealth", itemHealth + gemHealth); // ruby
         newItem = AttributeUtil.addCustomStat(newItem, "custom.manaBoost", itemMana + gemMana); // sapphire
         newItem = AttributeUtil.addCustomStat(newItem, "custom.attackDamage", itemDmg + gemDmg); // opal
         newItem = AttributeUtil.addCustomStat(newItem, "custom.healingBoost", itemHealing + gemHealing); // emerald
