@@ -1,6 +1,7 @@
 package com.runicrealms.plugin.professions.crafting.hunter;
 
 import com.runicrealms.plugin.RunicCore;
+import com.runicrealms.plugin.RunicProfessions;
 import com.runicrealms.plugin.professions.utilities.ProfExpUtil;
 import io.lumine.xikage.mythicmobs.MythicMobs;
 import io.lumine.xikage.mythicmobs.mobs.MythicMob;
@@ -15,9 +16,13 @@ public class HunterTask {
 
     public enum HunterMob {
 
-        GOBLIN(0, 7, 5),
-        GOLEM(10, 20, 10),
-        VIKING(60, 40, 100);
+        Goblin(0, 7, 5),
+        Golem(10, 18, 10),
+        Direwolf(20, 22, 15),
+        Spinner(30, 28, 25),
+        Bug(40, 31, 30),
+        FireElemental(50, 34, 35),
+        BlackfrostBear(60, 40, 100);
 
         int level;
         int experience;
@@ -42,7 +47,7 @@ public class HunterTask {
         }
 
         public String toValue() {
-            return name().toLowerCase();
+            return name();
         }
     }
 
@@ -56,47 +61,47 @@ public class HunterTask {
     }
 
     /**
-     * Check player's hunter level from core config
+     * Check player's hunter level from player cache
      */
     private int checkLevel(Player pl) {
         return RunicCore.getCacheManager().getPlayerCache(pl.getUniqueId()).getProfLevel();
     }
 
     public static int getCurrentKills(Player pl) {
-        return RunicCore.getInstance().getConfig().getInt(pl.getUniqueId() + ".info.prof.hunter_kills");
+        return RunicProfessions.getInstance().getConfig().getInt(pl.getUniqueId() + ".info.prof.hunter_kills");
     }
 
     /**
      * Add experience to the player's hunter profession
      */
     public static void giveExperience(Player pl, boolean sendMsg) {
-        HunterMob hunterMob = HunterMob.valueOf(RunicCore.getInstance().getConfig().getString(pl.getUniqueId() + ".info.prof.hunter_mob").toUpperCase());
+        HunterMob hunterMob = HunterMob.valueOf(RunicProfessions.getInstance().getConfig().getString(pl.getUniqueId() + ".info.prof.hunter_mob"));
         pl.sendMessage(ChatColor.GREEN + "Hunter mob slain!");
         ProfExpUtil.giveExperience(pl, hunterMob.getExperience(), sendMsg);
     }
 
     public static int getEarnedPoints(Player pl) {
-        HunterMob hunterMob = HunterMob.valueOf(RunicCore.getInstance().getConfig().getString(pl.getUniqueId() + ".info.prof.hunter_mob").toUpperCase());
+        HunterMob hunterMob = HunterMob.valueOf(RunicProfessions.getInstance().getConfig().getString(pl.getUniqueId() + ".info.prof.hunter_mob"));
         return hunterMob.getPoints();
     }
 
     public static String getMobName(Player pl) {
-        return RunicCore.getInstance().getConfig().getString(pl.getUniqueId() + ".info.prof.hunter_mob");
+        return RunicProfessions.getInstance().getConfig().getString(pl.getUniqueId() + ".info.prof.hunter_mob");
     }
 
     public static int getTotalPoints(Player pl) {
-        return RunicCore.getInstance().getConfig().getInt(pl.getUniqueId() + ".info.prof.hunter_points");
+        return RunicProfessions.getInstance().getConfig().getInt(pl.getUniqueId() + ".info.prof.hunter_points");
     }
 
     /**
      * Adds to player's hunter score in config
      */
     public static void givePoints(Player pl) {
-        HunterMob hunterMob = HunterMob.valueOf(RunicCore.getInstance().getConfig().getString(pl.getUniqueId() + ".info.prof.hunter_mob").toUpperCase());
-        int current = RunicCore.getInstance().getConfig().getInt(pl.getUniqueId() + ".info.prof.hunter_points");
-        RunicCore.getInstance().getConfig().set(pl.getUniqueId() + ".info.prof.hunter_points", current+hunterMob.getPoints());
-        RunicCore.getInstance().saveConfig();
-        RunicCore.getInstance().reloadConfig();
+        HunterMob hunterMob = HunterMob.valueOf(RunicProfessions.getInstance().getConfig().getString(pl.getUniqueId() + ".info.prof.hunter_mob"));
+        int current = RunicProfessions.getInstance().getConfig().getInt(pl.getUniqueId() + ".info.prof.hunter_points");
+        RunicProfessions.getInstance().getConfig().set(pl.getUniqueId() + ".info.prof.hunter_points", current+hunterMob.getPoints());
+        RunicProfessions.getInstance().saveConfig();
+        RunicProfessions.getInstance().reloadConfig();
     }
 
     /**
@@ -122,9 +127,9 @@ public class HunterTask {
         MythicMob mythicMob = hunterMobs.get(index);
 
         // set mob as task in config
-        RunicCore.getInstance().getConfig().set(pl.getUniqueId() + ".info.prof.hunter_mob", mythicMob.getInternalName());
-        RunicCore.getInstance().saveConfig();
-        RunicCore.getInstance().reloadConfig();
+        RunicProfessions.getInstance().getConfig().set(pl.getUniqueId() + ".info.prof.hunter_mob", mythicMob.getInternalName());
+        RunicProfessions.getInstance().saveConfig();
+        RunicProfessions.getInstance().reloadConfig();
         return mythicMob;
     }
 

@@ -63,8 +63,8 @@ public class ProfExpUtil {
     }
 
 
-    private static int calculateExpectedLv(int experience) {
-        return (int) (Math.cbrt((15*(experience+25))/3)) - 5;
+    private static int calculateExpectedLv(double experience) {
+        return (int) ((Math.cbrt((15*(experience+25))/3)) - 5);
     }
 
     // 33250 at 50

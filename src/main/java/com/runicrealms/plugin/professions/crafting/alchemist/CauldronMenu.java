@@ -134,7 +134,7 @@ public class CauldronMenu extends Workstation {
                 // health potion
                 if (slot == 9) {
                     reqHashMap = healthPotReqs;
-                    exp = 50;
+                    exp = 35;
                     if (currentLvl < 30) {
                         dummyVar = 35;
                     } else if (currentLvl < 50) {
@@ -146,7 +146,7 @@ public class CauldronMenu extends Workstation {
                 } else if (slot == 10) {
                     reqLevel = 10;
                     reqHashMap = manaPotReqs;
-                    exp = 100;
+                    exp = 60;
                     if (currentLvl < 30) {
                         dummyVar = 35;
                     } else if (currentLvl < 50) {
@@ -158,7 +158,7 @@ public class CauldronMenu extends Workstation {
                 } else if (slot == 11) {
                     reqLevel = 25;
                     reqHashMap = slayPotReqs;
-                    exp = 120;
+                    exp = 90;
                     if (currentLvl < 30) {
                         dummyVar = 5;
                     } else if (currentLvl < 50) {
@@ -234,7 +234,7 @@ public class CauldronMenu extends Workstation {
         healthPotReqs.put(Material.REDSTONE_ORE, 1);
         healthPotReqs.put(Material.SALMON, 1);
         super.createMenuItem(forgeMenu, pl, 9, Material.POTION, "&c" + tierStr + " Potion of Healing", healthPotReqs,
-                "Glass Bottle\nUncut Ruby\nSalmon", 5, 50, 0, 5,
+                "Glass Bottle\nUncut Ruby\nSalmon", 5, 35, 0, 5,
                 "&eRestores &c" + healthStr + "❤ &eon use\n",
                 false, true, false);
 
@@ -244,7 +244,7 @@ public class CauldronMenu extends Workstation {
         manaPotReqs.put(Material.LAPIS_ORE, 1);
         manaPotReqs.put(Material.COD, 1);
         super.createMenuItem(forgeMenu, pl, 10, Material.POTION, "&3" + tierStr + " Potion of Mana", manaPotReqs,
-                "Glass Bottle\nUncut Sapphire\nCod", 8, 100, 0, 0,
+                "Glass Bottle\nUncut Sapphire\nCod", 8, 60, 0, 0,
                 "&eRestores &3" + manaStr + "✸ &eon use\n",
                 false, true, false);
 
@@ -255,7 +255,7 @@ public class CauldronMenu extends Workstation {
         slayPotReqs.put(Material.DIAMOND_ORE, 1);
         slayPotReqs.put(Material.TROPICAL_FISH, 1);
         super.createMenuItem(forgeMenu, pl, 11, Material.POTION, "&2" + tierStr + " Potion of Slaying", slayPotReqs,
-                "Glass Bottle\nUncut Opal\nUncut Diamond\nTropical Fish", 7, 120, 25, 0,
+                "Glass Bottle\nUncut Opal\nUncut Diamond\nTropical Fish", 7, 90, 25, 0,
                 "&eIncreases spellʔ and weapon⚔ damage" +
                         "\n&evs. monsters by &f20% &efor &f" + lootingStr + " &eminutes\n",
                 false, true, false);

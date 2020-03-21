@@ -48,26 +48,28 @@ public class HunterListener implements Listener {
         if (!(e.getKiller() instanceof Player)) return;
         Player pl = (Player) e.getKiller();
         String mobInternal = e.getMobType().getInternalName();
-        String playerTask = RunicCore.getInstance().getConfig().getString(pl.getUniqueId() + ".info.prof.hunter_mob");
+        String playerTask = RunicProfessions.getInstance().getConfig().getString(pl.getUniqueId() + ".info.prof.hunter_mob");
         if (!mobInternal.equals(playerTask)) return;
 
         int totalKills = HunterTask.getCurrentKills(pl);
         boolean sendMsg = true;
 
         if (totalKills+1 < HunterTask.getMobAmount()) {
-            RunicCore.getInstance().getConfig().set(pl.getUniqueId() + ".info.prof.hunter_kills", totalKills+1);
+            RunicProfessions.getInstance().getConfig().set(pl.getUniqueId() + ".info.prof.hunter_kills", totalKills+1);
         } else {
             sendMsg = false;
             HunterTask.givePoints(pl);
+            HunterTask.giveExperience(pl, sendMsg);
             pl.sendMessage
                     (ChatColor.GREEN + "You have completed your hunter task and receive " +
                             ChatColor.GOLD + ChatColor.BOLD + HunterTask.getEarnedPoints(pl) + " points!" +
                             ChatColor.GREEN + " Return to a hunting board for another task.");
             launchFirework(pl);
-            RunicCore.getInstance().getConfig().set(pl.getUniqueId() + ".info.prof.hunter_mob", null);
-            RunicCore.getInstance().getConfig().set(pl.getUniqueId() + ".info.prof.hunter_kills", null);
-            RunicCore.getInstance().saveConfig();
-            RunicCore.getInstance().reloadConfig();
+            RunicProfessions.getInstance().getConfig().set(pl.getUniqueId() + ".info.prof.hunter_mob", "");
+            RunicProfessions.getInstance().getConfig().set(pl.getUniqueId() + ".info.prof.hunter_kills", null);
+            RunicProfessions.getInstance().saveConfig();
+            RunicProfessions.getInstance().reloadConfig();
+            return;
         }
 
         // give experience
@@ -268,7 +270,7 @@ public class HunterListener implements Listener {
                     this.cancel();
                     cloakers.remove(pl.getUniqueId());
                     for (Player ps : Bukkit.getOnlinePlayers()) {
-                        ps.showPlayer(RunicCore.getInstance(), pl);
+                        ps.showPlayer(RunicProfessions.getInstance(), pl);
                     }
                     pl.getWorld().playSound(pl.getLocation(), Sound.ENTITY_ENDER_DRAGON_FLAP, 0.5f, 0.5f);
                     pl.getWorld().spawnParticle(Particle.REDSTONE, pl.getEyeLocation(), 25, 0.5f, 0.5f, 0.5f,

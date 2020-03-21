@@ -8,8 +8,6 @@ import com.sk89q.worldguard.protection.ApplicableRegionSet;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import com.sk89q.worldguard.protection.regions.RegionContainer;
 import com.sk89q.worldguard.protection.regions.RegionQuery;
-import net.md_5.bungee.api.ChatMessageType;
-import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -112,8 +110,8 @@ public class WCListener implements Listener {
             case BIRCH_WOOD:
                 placeHolderType = Material.BIRCH_PLANKS;
                 itemType = Material.BIRCH_LOG;
-                holoString = "+ Birch";
-                itemName = "Birch Log";
+                holoString = "+ Elder";
+                itemName = "Elder Log";
                 subPath = "LOGS";
                 break;
             case JUNGLE_WOOD:

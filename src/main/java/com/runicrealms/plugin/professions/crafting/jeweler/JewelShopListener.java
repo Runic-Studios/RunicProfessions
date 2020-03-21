@@ -1,6 +1,7 @@
 package com.runicrealms.plugin.professions.crafting.jeweler;
 
 import com.runicrealms.plugin.RunicCore;
+import com.runicrealms.plugin.RunicProfessions;
 import com.runicrealms.plugin.item.GUIMenu.ItemGUI;
 import com.runicrealms.plugin.item.GUIMenu.OptionClickEvent;
 import com.runicrealms.plugin.item.shops.Shop;
@@ -53,7 +54,7 @@ public class JewelShopListener implements Listener {
                 itemGUI.getHandler().onOptionClick(ope);
 
                 if (ope.willClose()) {
-                    Bukkit.getScheduler().scheduleSyncDelayedTask(RunicCore.getInstance(), pl::closeInventory, 1);
+                    Bukkit.getScheduler().scheduleSyncDelayedTask(RunicProfessions.getInstance(), pl::closeInventory, 1);
                 }
                 if (ope.willDestroy()) {
                     itemGUI.destroy();

@@ -1,6 +1,7 @@
 package com.runicrealms.plugin.professions.crafting.hunter;
 
 import com.runicrealms.plugin.RunicCore;
+import com.runicrealms.plugin.RunicProfessions;
 import com.runicrealms.plugin.item.GUIMenu.ItemGUI;
 import com.runicrealms.plugin.item.GUIMenu.OptionClickEvent;
 import org.bukkit.Bukkit;
@@ -48,7 +49,7 @@ public class HunterShopListener implements Listener {
                 itemGUI.getHandler().onOptionClick(ope);
 
                 if (ope.willClose()) {
-                    Bukkit.getScheduler().scheduleSyncDelayedTask(RunicCore.getInstance(), pl::closeInventory, 1);
+                    Bukkit.getScheduler().scheduleSyncDelayedTask(RunicProfessions.getInstance(), pl::closeInventory, 1);
                 }
                 if (ope.willDestroy()) {
                     itemGUI.destroy();

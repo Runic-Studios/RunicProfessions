@@ -215,7 +215,7 @@ public class EnchanterMenu extends Workstation {
         LinkedHashMap<Material, Integer> powderReqs = new LinkedHashMap<>();
         powderReqs.put(Material.BIRCH_LOG, 999);
         super.createMenuItem(tableMenu, pl, 10, Material.GUNPOWDER, "&fAncient Powder", powderReqs,
-                "Birch Log", 1, 10, 0, 0, "",
+                "Elder Log", 1, 10, 0, 0, "",
                 true, false, false);
 
         // magic powder

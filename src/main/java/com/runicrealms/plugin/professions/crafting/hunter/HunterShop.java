@@ -1,6 +1,6 @@
 package com.runicrealms.plugin.professions.crafting.hunter;
 
-import com.runicrealms.plugin.RunicCore;
+import com.runicrealms.plugin.RunicProfessions;
 import com.runicrealms.plugin.attributes.AttributeUtil;
 import com.runicrealms.plugin.item.GUIMenu.ItemGUI;
 import com.runicrealms.plugin.item.shops.Shop;
@@ -235,9 +235,9 @@ public class HunterShop extends Shop {
             return false;
         }
 
-        RunicCore.getInstance().getConfig().set(pl.getUniqueId() + ".info.prof.hunter_points", HunterTask.getTotalPoints(pl)-price);
-        RunicCore.getInstance().saveConfig();
-        RunicCore.getInstance().reloadConfig();
+        RunicProfessions.getInstance().getConfig().set(pl.getUniqueId() + ".info.prof.hunter_points", HunterTask.getTotalPoints(pl)-price);
+        RunicProfessions.getInstance().saveConfig();
+        RunicProfessions.getInstance().reloadConfig();
 
         pl.playSound(pl.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 0.5f, 1.0f);
         return true;

@@ -1,6 +1,6 @@
 package com.runicrealms.plugin.professions.crafting.hunter;
 
-import com.runicrealms.plugin.RunicCore;
+import com.runicrealms.plugin.RunicProfessions;
 import com.runicrealms.plugin.item.GUIMenu.ItemGUI;
 import com.runicrealms.plugin.professions.Workstation;
 import org.bukkit.ChatColor;
@@ -8,6 +8,8 @@ import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+
+import java.util.Objects;
 
 public class HunterMenu extends Workstation {
 
@@ -24,7 +26,8 @@ public class HunterMenu extends Workstation {
 
         // check whether player has a task
         boolean hasTask = false;
-        if (RunicCore.getInstance().getConfig().getString(pl.getUniqueId() + ".info.prof.hunter_mob") != null) {
+        if (!Objects.equals(RunicProfessions.getInstance().getConfig().getString(pl.getUniqueId() + ".info.prof.hunter_mob"), "")
+                && RunicProfessions.getInstance().getConfig().getString(pl.getUniqueId() + ".info.prof.hunter_mob") != null) {
             hasTask = true;
         }
 

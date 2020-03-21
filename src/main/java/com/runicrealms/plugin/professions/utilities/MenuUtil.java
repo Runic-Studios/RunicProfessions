@@ -13,12 +13,8 @@ public class MenuUtil {
 
         String s = "";
 
-        // for armor/items
-        int health = (int) AttributeUtil.getCustomDouble(item, "custom.maxHealth");
-        if (health != 0) s = s.concat(ChatColor.RED + "+ " + health + "❤\n");
-
         // -------------------------------------------------------------------------------------------
-        // for weapons/gemstones/custom boosts
+        // for armor/weapons/gemstones/custom boosts
         int minDamage = (int) AttributeUtil.getCustomDouble(item, "custom.minDamage");
         int maxDamage = (int) AttributeUtil.getCustomDouble(item, "custom.maxDamage");
         int customHealth = (int) AttributeUtil.getCustomDouble(item, "custom.maxHealth");

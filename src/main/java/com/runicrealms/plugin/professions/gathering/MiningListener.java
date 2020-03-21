@@ -9,8 +9,6 @@ import com.sk89q.worldguard.protection.ApplicableRegionSet;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import com.sk89q.worldguard.protection.regions.RegionContainer;
 import com.sk89q.worldguard.protection.regions.RegionQuery;
-import net.md_5.bungee.api.ChatMessageType;
-import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -140,6 +138,13 @@ public class MiningListener implements Listener {
                 itemType = Material.DIAMOND_ORE;
                 holoString = "+ Diamond";
                 itemName = "Uncut Diamond";
+                subPath = "ORES";
+                break;
+            case IRON_BLOCK:
+                placeHolderType = Material.COBBLESTONE;
+                itemType = Material.IRON_BLOCK;
+                holoString = "+ True Iron";
+                itemName = "True Iron";
                 subPath = "ORES";
                 break;
             default:

@@ -15,11 +15,11 @@ public class BlacksmithItems {
 
     // level 1
     private static final int WHETSTONE_DAMAGE_BONUS = 1;
+
     public static ItemStack whetStone() {
         ItemStack sharpStone = new ItemStack(Material.FLINT);
         ItemMeta meta = sharpStone.getItemMeta();
         List<String> lore = new ArrayList<>();
-        sharpStone = AttributeUtil.addCustomStat(sharpStone, "custom.weaponDamageBonus", WHETSTONE_DAMAGE_BONUS);
         lore.add("");
         lore.add(ChatColor.YELLOW + "Increase your weapon⚔ damage by +" + WHETSTONE_DAMAGE_BONUS + " for 3 min!");
         lore.add("");
@@ -27,6 +27,7 @@ public class BlacksmithItems {
         Objects.requireNonNull(meta).setLore(lore);
         meta.setDisplayName(ChatColor.WHITE + "Whetstone");
         sharpStone.setItemMeta(meta);
+        sharpStone = AttributeUtil.addCustomStat(sharpStone, "custom.weaponDamageBonus", WHETSTONE_DAMAGE_BONUS);
         return sharpStone;
     }
 
@@ -86,7 +87,6 @@ public class BlacksmithItems {
         ItemStack sharpStone = new ItemStack(Material.FLINT);
         ItemMeta meta = sharpStone.getItemMeta();
         List<String> lore = new ArrayList<>();
-        sharpStone = AttributeUtil.addCustomStat(sharpStone, "custom.weaponDamageBonus", WHETSTONE_DAMAGE_BONUS);
         lore.add("");
         lore.add(ChatColor.YELLOW + "Increase your weapon⚔ damage by +" + SHARP_STONE_DAMAGE_BONUS + " for 3 min!");
         lore.add("");
@@ -94,6 +94,7 @@ public class BlacksmithItems {
         Objects.requireNonNull(meta).setLore(lore);
         meta.setDisplayName(ChatColor.WHITE + "Sharpening Stone");
         sharpStone.setItemMeta(meta);
+        sharpStone = AttributeUtil.addCustomStat(sharpStone, "custom.weaponDamageBonus", SHARP_STONE_DAMAGE_BONUS);
         return sharpStone;
     }
 
@@ -152,7 +153,7 @@ public class BlacksmithItems {
         return new RunicItem
                 (Material.BOW, ChatColor.GOLD, "Stormsong", 10, 50,
                         0, 0, 0, 0, 0,
-                        50, 50, "", false).getItem();
+                        54, 58, "", false).getItem();
     }
 
     // level 55 - legendary rogue
@@ -160,7 +161,7 @@ public class BlacksmithItems {
         return new RunicItem
                 (Material.WOODEN_SWORD, ChatColor.GOLD, "Valkyrie", 10, 50,
                         0, 0, 0, 0, 0,
-                        50, 50, "", false).getItem();
+                        48, 52, "", false).getItem();
     }
 
     // level 60 - legendary warrior
@@ -168,6 +169,6 @@ public class BlacksmithItems {
         return new RunicItem
                 (Material.WOODEN_AXE, ChatColor.GOLD, "The Minotaur", 10, 50,
                         0, 0, 0, 0, 0,
-                        50, 50, "", false).getItem();
+                        45, 48, "", false).getItem();
     }
 }
