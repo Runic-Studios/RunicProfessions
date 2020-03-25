@@ -20,6 +20,6 @@ public class EnchantListener implements Listener {
 
     @EventHandler
     public void onMobDamage(MobDamageEvent e) {
-        // listen for dodge and thorns for defender
+        // listen for dodge and thorns for defender (the player)
     }
 }

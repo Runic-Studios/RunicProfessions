@@ -2,8 +2,11 @@ package com.runicrealms.plugin.professions.commands;
 
 import com.runicrealms.plugin.RunicCore;
 import com.runicrealms.plugin.RunicProfessions;
+import com.runicrealms.plugin.item.util.ItemRemover;
+import com.runicrealms.plugin.utilities.CurrencyUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -11,6 +14,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class SetProfCMD implements CommandExecutor {
+
+    private static final int PRICE = 256;
 
     public boolean onCommand(CommandSender sender, Command cmd, String lb, String[] args) {
 
@@ -43,6 +48,24 @@ public class SetProfCMD implements CommandExecutor {
             RunicCore.getScoreboardHandler().updatePlayerInfo(pl);
             RunicCore.getScoreboardHandler().updateSideInfo(pl);
             return true;
+        } else if (isAdmin.toLowerCase().equals("tutor")) {
+            if (RunicCore.getCacheManager().getPlayerCache(pl.getUniqueId()).getProfName().toLowerCase().equals("none")) {
+                updateCache(pl, formattedStr);
+                RunicCore.getScoreboardHandler().updatePlayerInfo(pl);
+                RunicCore.getScoreboardHandler().updateSideInfo(pl);
+            } else {
+                if (pl.getInventory().contains(Material.GOLD_NUGGET, PRICE)) {
+                    ItemRemover.takeItem(pl, CurrencyUtil.goldCoin(), PRICE);
+                    updateCache(pl, formattedStr);
+                    RunicCore.getScoreboardHandler().updatePlayerInfo(pl);
+                    RunicCore.getScoreboardHandler().updateSideInfo(pl);
+                    pl.playSound(pl.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 0.5f, 1.0f);
+                    pl.sendMessage(ChatColor.GREEN + "You have changed your profession!");
+                } else {
+                    pl.playSound(pl.getLocation(), Sound.BLOCK_FIRE_EXTINGUISH, 0.5f, 1.0f);
+                    pl.sendMessage(ChatColor.RED + "You do not have enough gold!");
+                }
+            }
         } else {
             if (RunicCore.getCacheManager().getPlayerCache(pl.getUniqueId()).getProfName().toLowerCase().equals("none")) {
                 updateCache(pl, formattedStr);
