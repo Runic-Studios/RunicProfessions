@@ -15,9 +15,9 @@ import java.util.*;
 @SuppressWarnings("FieldCanBeLocal")
 public class CookingMenu extends Workstation {
 
-    private static final int RABBIT_STEW_AMT = 100;
+    private static final int RABBIT_STEW_AMT = 250;
     private static final int STEW_DURATION = 10;
-    private static final int AMBROSIA_STEW_AMT = 200;
+    private static final int AMBROSIA_STEW_AMT = 250;
 
     public CookingMenu(Player pl) {
         setupWorkstation(pl);
