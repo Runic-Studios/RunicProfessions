@@ -9,8 +9,6 @@ import com.sk89q.worldguard.protection.ApplicableRegionSet;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import com.sk89q.worldguard.protection.regions.RegionContainer;
 import com.sk89q.worldguard.protection.regions.RegionQuery;
-import net.md_5.bungee.api.ChatMessageType;
-import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -89,7 +87,7 @@ public class FarmingListener implements Listener {
         Material itemType;
         String holoString;
         String itemName;
-        String desc = "Raw Material";
+        String desc;
         String subPath;
 
         switch (block.getType()) {
@@ -115,6 +113,14 @@ public class FarmingListener implements Listener {
                 itemType = Material.POTATO;
                 holoString = "+ Potato";
                 itemName = "Potato";
+                desc = "Raw Material";
+                subPath = "FARMS";
+                break;
+            case MELON:
+                placeHolderType = Material.AIR;
+                itemType = Material.MELON_SLICE;
+                holoString = "+ Melon";
+                itemName = "Melon Slice";
                 desc = "Raw Material";
                 subPath = "FARMS";
                 break;
