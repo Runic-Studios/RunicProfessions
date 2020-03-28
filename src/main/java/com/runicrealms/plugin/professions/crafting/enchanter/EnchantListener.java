@@ -41,7 +41,7 @@ public class EnchantListener implements Listener {
         Material mat = e.getPlayer().getInventory().getItemInMainHand().getType();
         if (mat != Material.PURPLE_DYE) return;
         if (AttributeUtil.getCustomString(e.getPlayer().getInventory().getItemInMainHand(),
-                "scroll.location") == null) return;
+                "scroll.location").equals("")) return;
 
         ItemStack scroll = e.getPlayer().getInventory().getItemInMainHand();
 

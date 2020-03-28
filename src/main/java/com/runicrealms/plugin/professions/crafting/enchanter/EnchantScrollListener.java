@@ -11,7 +11,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import com.runicrealms.plugin.attributes.AttributeUtil;
 
 /**
@@ -33,8 +32,6 @@ public class EnchantScrollListener implements Listener {
         Player pl = (Player) e.getWhoClicked();
         ItemStack heldScroll = e.getCursor();
         ItemStack armorToEnchant = e.getCurrentItem();
-        ItemMeta metaOld = armorToEnchant.getItemMeta();
-        //int durabOld = ((Damageable) metaOld).getDamage();
         ItemTypeEnum enchantArmorType = ItemTypeEnum.matchType(armorToEnchant);
         String enchantItemName = armorToEnchant.getItemMeta().getDisplayName();
 

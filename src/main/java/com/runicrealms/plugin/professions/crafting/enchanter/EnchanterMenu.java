@@ -263,7 +263,6 @@ public class EnchanterMenu extends Workstation {
                 false, true, false);
 
         // wintervale scroll
-        // todo: req. combat lv.
         LinkedHashMap<Material, Integer> valeScrollReqs = new LinkedHashMap<>();
         valeScrollReqs.put(Material.PAPER, 1);
         valeScrollReqs.put(Material.GUNPOWDER, 1);
@@ -278,7 +277,6 @@ public class EnchanterMenu extends Workstation {
                 false, true, false);
 
         // zenyth scroll
-        // todo: req. level
         LinkedHashMap<Material, Integer> zenythScrollReqs = new LinkedHashMap<>();
         zenythScrollReqs.put(Material.PAPER, 1);
         zenythScrollReqs.put(Material.GUNPOWDER, 1);
@@ -292,13 +290,12 @@ public class EnchanterMenu extends Workstation {
                 "Paper\nMagic Powder\nTropical Fish", 1, 80, 40, 0, "&a+" + thornsAmt + "% Thorns Chance\n",
                 false, true, false);
 
-        // todo: req. level
         // frosts end scroll
         LinkedHashMap<Material, Integer> frostScrollReqs = new LinkedHashMap<>();
         frostScrollReqs.put(Material.PAPER, 1);
         frostScrollReqs.put(Material.GUNPOWDER, 1);
         frostScrollReqs.put(Material.GOLDEN_CARROT, 1);
-        super.createMenuItem(tableMenu, pl, 18, Material.PURPLE_DYE, "&fTeleport Scroll: Frost's End", zenythScrollReqs,
+        super.createMenuItem(tableMenu, pl, 18, Material.PURPLE_DYE, "&fTeleport Scroll: Frost's End", frostScrollReqs,
                 "Paper\nAncient Powder\nAmbrosia Root", 1, 0, 60, 0, "&eTeleport to Frost's End!\n",
                 false, false, false);
     }
@@ -345,8 +342,8 @@ public class EnchanterMenu extends Workstation {
             case 9:
             case 10:
             case 11:
-                ItemStack craftedItem = new ItemStack(material);
-                ItemMeta meta = craftedItem.getItemMeta();
+                item = new ItemStack(material);
+                ItemMeta meta = item.getItemMeta();
                 ((Damageable) Objects.requireNonNull(meta)).setDamage(durability);
 
                 ArrayList<String> lore = new ArrayList<>();
@@ -354,7 +351,7 @@ public class EnchanterMenu extends Workstation {
                 lore.add(ChatColor.GRAY + "Crafting Reagent");
                 meta.setLore(lore);
                 meta.setDisplayName(ChatColor.WHITE + dispName);
-                craftedItem.setItemMeta(meta);
+                item.setItemMeta(meta);
                 break;
             case 12:
                 item = new TeleportScroll(TeleportEnum.AZANA, 0).getItem(); // azana

@@ -5,6 +5,8 @@ import com.runicrealms.plugin.attributes.AttributeUtil;
 import com.runicrealms.plugin.item.GUIMenu.ItemGUI;
 import com.runicrealms.plugin.item.shops.Shop;
 import com.runicrealms.plugin.professions.Workstation;
+import com.runicrealms.plugin.professions.crafting.enchanter.EnchantEnum;
+import com.runicrealms.plugin.professions.crafting.enchanter.EnchantScroll;
 import com.runicrealms.plugin.utilities.ColorUtil;
 import io.lumine.xikage.mythicmobs.MythicMobs;
 import io.lumine.xikage.mythicmobs.adapters.AbstractItemStack;
@@ -65,7 +67,7 @@ public class HunterShop extends Shop {
                 "\n&eLearn the location of a player!\n\n&7Price: &6&l" + PRICE_TRACKING + " points", 0, false);
         shopMenu.setOption(13, new ItemStack(Material.PURPLE_DYE),
                 "&fSpeed Enchant",
-                "\n&eEnchant your armor with +1% speed!\n\n&7Price: &6&l" + PRICE_ENCHANT + " points", 0, false);
+                "\n&eEnchant your armor with +3% speed!\n\n&7Price: &6&l" + PRICE_ENCHANT + " points", 0, false);
         shopMenu.setOption(14, new ItemStack(Material.COMPASS),
                 "&6Tracking Compass",
                 "\n&eLearn the location of a player! (Reusable)\n\n&7Price: &6&l" + PRICE_COMPASS + " points", 0, false);
@@ -101,7 +103,7 @@ public class HunterShop extends Shop {
                         break;
                     case 13:
                         if (attemptToTakeGold(pl, PRICE_ENCHANT)) {
-                            pl.getInventory().addItem(enchantScroll());
+                            pl.getInventory().addItem(new EnchantScroll(EnchantEnum.SPEED, 3, 30).getItem());
                         }
                         break;
                     case 14:
@@ -174,24 +176,6 @@ public class HunterShop extends Shop {
         }
         lore.add("");
         lore.add(ColorUtil.format("&7Consumable"));
-        meta.setLore(lore);
-        trackingScroll.setItemMeta(meta);
-        return trackingScroll;
-    }
-
-    static ItemStack enchantScroll() {
-        ItemStack trackingScroll = new ItemStack(Material.PURPLE_DYE);
-        ItemMeta meta = trackingScroll.getItemMeta();
-        String desc = "\n&a+3% Movement Speed";
-        meta.setDisplayName(ColorUtil.format("&fEnchant Scroll: Speed"));
-        ArrayList<String> lore = new ArrayList<>();
-        for (String s : desc.split("\n")) {
-            lore.add(ColorUtil.format(s));
-        }
-        lore.add("");
-        lore.add(ColorUtil.format("&7Consumable"));
-        lore.add("");
-        lore.add(ColorUtil.format("&8Use this on an item"));
         meta.setLore(lore);
         trackingScroll.setItemMeta(meta);
         return trackingScroll;
