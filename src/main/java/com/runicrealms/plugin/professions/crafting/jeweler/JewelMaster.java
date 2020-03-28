@@ -125,6 +125,7 @@ public class JewelMaster extends Shop {
         int socketCount = (int) AttributeUtil.getCustomDouble(oldItem, "custom.socketCount");
         double reqLv = AttributeUtil.getCustomDouble(oldItem, "required.level");
         String enchantment = AttributeUtil.getCustomString(oldItem, "scroll.enchantment");
+        int percent = (int) AttributeUtil.getCustomDouble(oldItem, "scroll.percent");
 
         // retrieve old STORED stats
         double storedHealth = AttributeUtil.getCustomDouble(oldItem, "gem.maxHealth");
@@ -182,7 +183,11 @@ public class JewelMaster extends Shop {
         // subtract stored stats from item stats
         newItem = AttributeUtil.addCustomStat(newItem, "custom.socketCount", socketCount);
         newItem = AttributeUtil.addCustomStat(newItem, "required.level", reqLv); // required level
-        if (!enchantment.equals("")) newItem = AttributeUtil.addCustomStat(newItem, "scroll.enchantment", enchantment);
+        if (!enchantment.equals("")) {
+            newItem = AttributeUtil.addCustomStat(newItem, "scroll.enchantment", enchantment);
+            newItem = AttributeUtil.addCustomStat(newItem, "scroll.percent", percent);
+        }
+
         newItem = AttributeUtil.addCustomStat(newItem, "custom.maxHealth", itemHealth - storedHealth); // ruby
         newItem = AttributeUtil.addCustomStat(newItem, "custom.manaBoost", itemMana - storedMana); // sapphire
         newItem = AttributeUtil.addCustomStat(newItem, "custom.attackDamage", itemDmg - storedDmg); // opal

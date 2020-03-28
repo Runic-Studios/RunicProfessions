@@ -76,6 +76,7 @@ public class SocketListener implements Listener {
         double gemMagDmg = AttributeUtil.getCustomDouble(heldItem, "custom.magicDamage");
         double reqLv = AttributeUtil.getCustomDouble(socketItem, "required.level");
         String enchantment = AttributeUtil.getCustomString(socketItem, "scroll.enchantment");
+        int percent = (int) AttributeUtil.getCustomDouble(socketItem, "scroll.percent");
 
         // create a new item with updated attributes, update its durability
         ItemStack newItem = new ItemStack(socketItemType);
@@ -120,7 +121,10 @@ public class SocketListener implements Listener {
         newItem = AttributeUtil.addCustomStat(newItem, "custom.healingBoost", itemHealing + gemHealing); // emerald
         newItem = AttributeUtil.addCustomStat(newItem, "custom.magicDamage", itemMagDmg + gemMagDmg); // diamond
         newItem = AttributeUtil.addCustomStat(newItem, "required.level", reqLv); // required level
-        if (!enchantment.equals("")) newItem = AttributeUtil.addCustomStat(newItem, "scroll.enchantment", enchantment);
+        if (!enchantment.equals("")) {
+            newItem = AttributeUtil.addCustomStat(newItem, "scroll.enchantment", enchantment);
+            newItem = AttributeUtil.addCustomStat(newItem, "scroll.percent", percent);
+        }
 
         // ------------------------------------------------------------------------------------------------------------
         // NEW: store the stats of the gems in the item for (optional) gem removal

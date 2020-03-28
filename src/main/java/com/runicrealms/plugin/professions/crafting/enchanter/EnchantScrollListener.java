@@ -62,67 +62,6 @@ public class EnchantScrollListener implements Listener {
         double amount = AttributeUtil.getCustomDouble(heldScroll, "scroll.percent");
         armorToEnchant = AttributeUtil.addCustomStat(armorToEnchant, "scroll.percent", amount);
 
-//        ItemStack newItem = new ItemStack(armorToEnchant.getType());
-//        ItemMeta metaNew = newItem.getItemMeta();
-//        ((Damageable) metaNew).setDamage(durabOld);
-//        newItem.setItemMeta(metaNew);
-//
-//        // fill the sockets
-//        newItem = AttributeUtil.addCustomStat(newItem, "custom.socketCount", socketCount);
-//        newItem = AttributeUtil.addCustomStat(newItem, "custom.currentSockets", currentSockets+1);
-//        ArmorSlotEnum itemSlot = ArmorSlotEnum.matchSlot(newItem);
-//        String slot;
-//        switch (itemSlot) {
-//            case HELMET:
-//                slot = "head";
-//                break;
-//            case CHESTPLATE:
-//                slot = "chest";
-//                break;
-//            case LEGGINGS:
-//                slot = "legs";
-//                break;
-//            case BOOTS:
-//                slot = "feet";
-//                break;
-//            case OFFHAND:
-//                slot = "offhand";
-//                break;
-//            default:
-//                slot = "mainhand";
-//                break;
-//        }
-//
-//        if (AttributeUtil.getCustomString(armorToEnchant, "untradeable").equals("true")) newItem = AttributeUtil.addCustomStat(newItem, "untradeable", "true");
-//        if (AttributeUtil.getCustomString(armorToEnchant, "soulbound").equals("true")) newItem = AttributeUtil.addCustomStat(newItem, "soulbound", "true");
-//        newItem = AttributeUtil.addGenericStat(newItem, "generic.armor", 0, slot); // remove armor values
-//
-//        // add 'da stats
-//        newItem = AttributeUtil.addCustomStat(newItem, "custom.maxHealth", itemHealth + gemHealth); // ruby
-//        newItem = AttributeUtil.addCustomStat(newItem, "custom.manaBoost", itemMana + gemMana); // sapphire
-//        newItem = AttributeUtil.addCustomStat(newItem, "custom.attackDamage", itemDmg + gemDmg); // opal
-//        newItem = AttributeUtil.addCustomStat(newItem, "custom.healingBoost", itemHealing + gemHealing); // emerald
-//        newItem = AttributeUtil.addCustomStat(newItem, "custom.magicDamage", itemMagDmg + gemMagDmg); // diamond
-//        newItem = AttributeUtil.addCustomStat(newItem, "required.level", reqLv); // required level
-//
-//        // ------------------------------------------------------------------------------------------------------------
-//        // NEW: store the stats of the gems in the item for (optional) gem removal
-//
-//        // retrieve current stored stats
-//        double storedHealth = AttributeUtil.getCustomDouble(armorToEnchant, "gem.maxHealth");
-//        double storedMana = AttributeUtil.getCustomDouble(armorToEnchant, "gem.manaBoost");
-//        double storedDmg = AttributeUtil.getCustomDouble(armorToEnchant, "gem.attackDamage");
-//        double storedHealing = AttributeUtil.getCustomDouble(armorToEnchant, "gem.healingBoost");
-//        double storedMagDmg = AttributeUtil.getCustomDouble(armorToEnchant, "gem.magicDamage");
-//
-//        // store new gem stats.
-//        newItem = AttributeUtil.addCustomStat(newItem, "gem.maxHealth", storedHealth + gemHealth); // ruby
-//        newItem = AttributeUtil.addCustomStat(newItem, "gem.manaBoost", storedMana + gemMana); // sapphire
-//        newItem = AttributeUtil.addCustomStat(newItem, "gem.attackDamage", storedDmg + gemDmg); // opal
-//        newItem = AttributeUtil.addCustomStat(newItem, "gem.healingBoost", storedHealing + gemHealing); // emerald
-//        newItem = AttributeUtil.addCustomStat(newItem, "gem.magicDamage", storedMagDmg + gemMagDmg); // diamond
-//        // ------------------------------------------------------------------------------------------------------------
-
         ChatColor tier = ChatColor.WHITE;
         if (armorToEnchant.getItemMeta().getDisplayName().contains(ChatColor.GRAY + "")) {
             tier = ChatColor.GRAY;

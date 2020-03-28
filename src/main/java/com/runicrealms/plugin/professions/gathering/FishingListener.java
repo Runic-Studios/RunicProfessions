@@ -52,6 +52,8 @@ public class FishingListener implements Listener {
     @EventHandler
     public void onFishCatch(PlayerFishEvent e) {
 
+        if (e.getHook().getLocation().getBlock().getType() != Material.WATER) return;
+
         // disable exp
         e.setExpToDrop(0);
 
