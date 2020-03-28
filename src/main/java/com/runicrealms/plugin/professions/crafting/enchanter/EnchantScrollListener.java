@@ -1,5 +1,6 @@
 package com.runicrealms.plugin.professions.crafting.enchanter;
 
+import com.runicrealms.plugin.enums.ItemTypeEnum;
 import com.runicrealms.plugin.item.LoreGenerator;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -10,20 +11,16 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 import com.runicrealms.plugin.attributes.AttributeUtil;
-import com.runicrealms.plugin.enums.ArmorSlotEnum;
 
 /**
- * This class manages the socketing of gems.
- * It checks to ensure the item has at least one open
- * gem slot.
+ * This class manages the enchantment of armor!
+ * It checks to ensure the item has not been enchanted yet
  * @author Skyfallin_
  */
 public class EnchantScrollListener implements Listener {
 
-    // ignore durability 100 (that's harvesting tools)
     @EventHandler
     public void onItemEnchant(InventoryClickEvent e) {
 
@@ -34,118 +31,122 @@ public class EnchantScrollListener implements Listener {
         if (!(e.getWhoClicked() instanceof Player)) return;
 
         Player pl = (Player) e.getWhoClicked();
-        ItemStack heldItem = e.getCursor();
-        ItemStack socketItem = e.getCurrentItem();
-        ItemMeta metaOld = socketItem.getItemMeta();
-        int durabOld = ((Damageable) metaOld).getDamage();
-        Material socketItemType = socketItem.getType();
-        String socketItemName = socketItem.getItemMeta().getDisplayName();
+        ItemStack heldScroll = e.getCursor();
+        ItemStack armorToEnchant = e.getCurrentItem();
+        ItemMeta metaOld = armorToEnchant.getItemMeta();
+        //int durabOld = ((Damageable) metaOld).getDamage();
+        ItemTypeEnum enchantArmorType = ItemTypeEnum.matchType(armorToEnchant);
+        String enchantItemName = armorToEnchant.getItemMeta().getDisplayName();
 
-        // verify that the cursor item is a gemstone
-        String isGemstone = AttributeUtil.getCustomString(heldItem, "custom.isGemstone");
-        if (!isGemstone.equals("true")) return;
-
-        switch (socketItemType) {
-            case REDSTONE:
-            case LAPIS_LAZULI:
-            case EMERALD:
-            case QUARTZ:
-            case DIAMOND:
-                return;
-        }
-
-        // verify that the item to be socketed has open slots
-        int socketCount = (int) AttributeUtil.getCustomDouble(socketItem, "custom.socketCount");
-        int currentSockets = (int) AttributeUtil.getCustomDouble(socketItem, "custom.currentSockets");
-        if (socketCount == 0 || currentSockets >= socketCount) {
-            pl.playSound(pl.getLocation(), Sound.BLOCK_FIRE_EXTINGUISH, 0.5f, 1.0f);
-            pl.sendMessage(ChatColor.RED + "This item has no available sockets.");
+        if (enchantArmorType != ItemTypeEnum.CLOTH
+                && enchantArmorType != ItemTypeEnum.LEATHER
+                && enchantArmorType != ItemTypeEnum.MAIL
+                && enchantArmorType != ItemTypeEnum.GILDED
+                && enchantArmorType != ItemTypeEnum.PLATE) {
             return;
         }
 
-        // retrieve the current custom values of the two items
-        double itemHealth = AttributeUtil.getCustomDouble(socketItem, "custom.maxHealth");
-        double gemHealth = AttributeUtil.getCustomDouble(heldItem, "custom.maxHealth");
-        double itemMana = AttributeUtil.getCustomDouble(socketItem, "custom.manaBoost");
-        double gemMana = AttributeUtil.getCustomDouble(heldItem, "custom.manaBoost");
-        double itemDmg = AttributeUtil.getCustomDouble(socketItem, "custom.attackDamage");
-        double gemDmg = AttributeUtil.getCustomDouble(heldItem, "custom.attackDamage");
-        double itemHealing = AttributeUtil.getCustomDouble(socketItem, "custom.healingBoost");
-        double gemHealing = AttributeUtil.getCustomDouble(heldItem, "custom.healingBoost");
-        double itemMagDmg = AttributeUtil.getCustomDouble(socketItem, "custom.magicDamage");
-        double gemMagDmg = AttributeUtil.getCustomDouble(heldItem, "custom.magicDamage");
-        double reqLv = AttributeUtil.getCustomDouble(socketItem, "required.level");
+        // verify that the cursor item is a gemstone
+        String isEnchantScroll = AttributeUtil.getCustomString(heldScroll, "scroll.enchantment");
+        if (isEnchantScroll.equals("")) return;
 
-        // create a new item with updated attributes, update its durability
-        ItemStack newItem = new ItemStack(socketItemType);
-        ItemMeta metaNew = newItem.getItemMeta();
-        ((Damageable) metaNew).setDamage(durabOld);
-        newItem.setItemMeta(metaNew);
+        EnchantEnum enchantment = EnchantEnum.getEnum(AttributeUtil.getCustomString(heldScroll, "scroll.enchantment"));
 
-        // fill the sockets
-        newItem = AttributeUtil.addCustomStat(newItem, "custom.socketCount", socketCount);
-        newItem = AttributeUtil.addCustomStat(newItem, "custom.currentSockets", currentSockets+1);
-        ArmorSlotEnum itemSlot = ArmorSlotEnum.matchSlot(newItem);
-        String slot;
-        switch (itemSlot) {
-            case HELMET:
-                slot = "head";
-                break;
-            case CHESTPLATE:
-                slot = "chest";
-                break;
-            case LEGGINGS:
-                slot = "legs";
-                break;
-            case BOOTS:
-                slot = "feet";
-                break;
-            case OFFHAND:
-                slot = "offhand";
-                break;
-            default:
-                slot = "mainhand";
-                break;
+        // verify that the item to be socketed has not been enchanted
+        String currentEnchant = AttributeUtil.getCustomString(armorToEnchant, "scroll.enchantment");
+        if (!currentEnchant.equals("")) {
+            pl.playSound(pl.getLocation(), Sound.BLOCK_FIRE_EXTINGUISH, 0.5f, 1.0f);
+            pl.sendMessage(ChatColor.RED + "This item has already been enchanted!");
+            return;
         }
 
-        if (AttributeUtil.getCustomString(socketItem, "untradeable").equals("true")) newItem = AttributeUtil.addCustomStat(newItem, "untradeable", "true");
-        if (AttributeUtil.getCustomString(socketItem, "soulbound").equals("true")) newItem = AttributeUtil.addCustomStat(newItem, "soulbound", "true");
-        newItem = AttributeUtil.addGenericStat(newItem, "generic.armor", 0, slot); // remove armor values
+        // create a new item with updated attributes, update its durability
+        armorToEnchant = AttributeUtil.addCustomStat(armorToEnchant, "scroll.enchantment", enchantment.getName());
+        double amount = AttributeUtil.getCustomDouble(heldScroll, "scroll.percent");
+        armorToEnchant = AttributeUtil.addCustomStat(armorToEnchant, "scroll.percent", amount);
 
-        // add 'da stats
-        newItem = AttributeUtil.addCustomStat(newItem, "custom.maxHealth", itemHealth + gemHealth); // ruby
-        newItem = AttributeUtil.addCustomStat(newItem, "custom.manaBoost", itemMana + gemMana); // sapphire
-        newItem = AttributeUtil.addCustomStat(newItem, "custom.attackDamage", itemDmg + gemDmg); // opal
-        newItem = AttributeUtil.addCustomStat(newItem, "custom.healingBoost", itemHealing + gemHealing); // emerald
-        newItem = AttributeUtil.addCustomStat(newItem, "custom.magicDamage", itemMagDmg + gemMagDmg); // diamond
-        newItem = AttributeUtil.addCustomStat(newItem, "required.level", reqLv); // required level
+//        ItemStack newItem = new ItemStack(armorToEnchant.getType());
+//        ItemMeta metaNew = newItem.getItemMeta();
+//        ((Damageable) metaNew).setDamage(durabOld);
+//        newItem.setItemMeta(metaNew);
+//
+//        // fill the sockets
+//        newItem = AttributeUtil.addCustomStat(newItem, "custom.socketCount", socketCount);
+//        newItem = AttributeUtil.addCustomStat(newItem, "custom.currentSockets", currentSockets+1);
+//        ArmorSlotEnum itemSlot = ArmorSlotEnum.matchSlot(newItem);
+//        String slot;
+//        switch (itemSlot) {
+//            case HELMET:
+//                slot = "head";
+//                break;
+//            case CHESTPLATE:
+//                slot = "chest";
+//                break;
+//            case LEGGINGS:
+//                slot = "legs";
+//                break;
+//            case BOOTS:
+//                slot = "feet";
+//                break;
+//            case OFFHAND:
+//                slot = "offhand";
+//                break;
+//            default:
+//                slot = "mainhand";
+//                break;
+//        }
+//
+//        if (AttributeUtil.getCustomString(armorToEnchant, "untradeable").equals("true")) newItem = AttributeUtil.addCustomStat(newItem, "untradeable", "true");
+//        if (AttributeUtil.getCustomString(armorToEnchant, "soulbound").equals("true")) newItem = AttributeUtil.addCustomStat(newItem, "soulbound", "true");
+//        newItem = AttributeUtil.addGenericStat(newItem, "generic.armor", 0, slot); // remove armor values
+//
+//        // add 'da stats
+//        newItem = AttributeUtil.addCustomStat(newItem, "custom.maxHealth", itemHealth + gemHealth); // ruby
+//        newItem = AttributeUtil.addCustomStat(newItem, "custom.manaBoost", itemMana + gemMana); // sapphire
+//        newItem = AttributeUtil.addCustomStat(newItem, "custom.attackDamage", itemDmg + gemDmg); // opal
+//        newItem = AttributeUtil.addCustomStat(newItem, "custom.healingBoost", itemHealing + gemHealing); // emerald
+//        newItem = AttributeUtil.addCustomStat(newItem, "custom.magicDamage", itemMagDmg + gemMagDmg); // diamond
+//        newItem = AttributeUtil.addCustomStat(newItem, "required.level", reqLv); // required level
+//
+//        // ------------------------------------------------------------------------------------------------------------
+//        // NEW: store the stats of the gems in the item for (optional) gem removal
+//
+//        // retrieve current stored stats
+//        double storedHealth = AttributeUtil.getCustomDouble(armorToEnchant, "gem.maxHealth");
+//        double storedMana = AttributeUtil.getCustomDouble(armorToEnchant, "gem.manaBoost");
+//        double storedDmg = AttributeUtil.getCustomDouble(armorToEnchant, "gem.attackDamage");
+//        double storedHealing = AttributeUtil.getCustomDouble(armorToEnchant, "gem.healingBoost");
+//        double storedMagDmg = AttributeUtil.getCustomDouble(armorToEnchant, "gem.magicDamage");
+//
+//        // store new gem stats.
+//        newItem = AttributeUtil.addCustomStat(newItem, "gem.maxHealth", storedHealth + gemHealth); // ruby
+//        newItem = AttributeUtil.addCustomStat(newItem, "gem.manaBoost", storedMana + gemMana); // sapphire
+//        newItem = AttributeUtil.addCustomStat(newItem, "gem.attackDamage", storedDmg + gemDmg); // opal
+//        newItem = AttributeUtil.addCustomStat(newItem, "gem.healingBoost", storedHealing + gemHealing); // emerald
+//        newItem = AttributeUtil.addCustomStat(newItem, "gem.magicDamage", storedMagDmg + gemMagDmg); // diamond
+//        // ------------------------------------------------------------------------------------------------------------
 
-        // ------------------------------------------------------------------------------------------------------------
-        // NEW: store the stats of the gems in the item for (optional) gem removal
+        ChatColor tier = ChatColor.WHITE;
+        if (armorToEnchant.getItemMeta().getDisplayName().contains(ChatColor.GRAY + "")) {
+            tier = ChatColor.GRAY;
+        } else if (armorToEnchant.getItemMeta().getDisplayName().contains(ChatColor.GREEN + "")) {
+            tier = ChatColor.GREEN;
+        } else if (armorToEnchant.getItemMeta().getDisplayName().contains(ChatColor.AQUA + "")) {
+            tier = ChatColor.AQUA;
+        } else if (armorToEnchant.getItemMeta().getDisplayName().contains(ChatColor.LIGHT_PURPLE + "")) {
+            tier = ChatColor.LIGHT_PURPLE;
+        } else if (armorToEnchant.getItemMeta().getDisplayName().contains(ChatColor.GOLD + "")) {
+            tier = ChatColor.GOLD;
+        }
 
-        // retrieve current stored stats
-        double storedHealth = AttributeUtil.getCustomDouble(socketItem, "gem.maxHealth");
-        double storedMana = AttributeUtil.getCustomDouble(socketItem, "gem.manaBoost");
-        double storedDmg = AttributeUtil.getCustomDouble(socketItem, "gem.attackDamage");
-        double storedHealing = AttributeUtil.getCustomDouble(socketItem, "gem.healingBoost");
-        double storedMagDmg = AttributeUtil.getCustomDouble(socketItem, "gem.magicDamage");
-
-        // store new gem stats.
-        newItem = AttributeUtil.addCustomStat(newItem, "gem.maxHealth", storedHealth + gemHealth); // ruby
-        newItem = AttributeUtil.addCustomStat(newItem, "gem.manaBoost", storedMana + gemMana); // sapphire
-        newItem = AttributeUtil.addCustomStat(newItem, "gem.attackDamage", storedDmg + gemDmg); // opal
-        newItem = AttributeUtil.addCustomStat(newItem, "gem.healingBoost", storedHealing + gemHealing); // emerald
-        newItem = AttributeUtil.addCustomStat(newItem, "gem.magicDamage", storedMagDmg + gemMagDmg); // diamond
-        // ------------------------------------------------------------------------------------------------------------
-
-        LoreGenerator.generateItemLore(newItem, ChatColor.WHITE, socketItemName, "", false);
+        LoreGenerator.generateItemLore(armorToEnchant, tier, enchantItemName, "", false);
 
         // remove the gemstone from inventory, update the item in inventory
         e.setCancelled(true);
-        e.setCurrentItem(newItem);
-        heldItem.setAmount(heldItem.getAmount()-1);
-        e.setCursor(heldItem);
+        e.setCurrentItem(armorToEnchant);
+        heldScroll.setAmount(heldScroll.getAmount()-1);
+        e.setCursor(heldScroll);
         pl.playSound(pl.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 0.5f, 0.5f);
-        pl.sendMessage(ChatColor.GREEN + "You placed your gemstone into this item's socket!");
+        pl.sendMessage(ChatColor.GREEN + "You have enchanted this item!");
     }
 }

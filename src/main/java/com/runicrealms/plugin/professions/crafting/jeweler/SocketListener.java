@@ -75,6 +75,7 @@ public class SocketListener implements Listener {
         double itemMagDmg = AttributeUtil.getCustomDouble(socketItem, "custom.magicDamage");
         double gemMagDmg = AttributeUtil.getCustomDouble(heldItem, "custom.magicDamage");
         double reqLv = AttributeUtil.getCustomDouble(socketItem, "required.level");
+        String enchantment = AttributeUtil.getCustomString(socketItem, "scroll.enchantment");
 
         // create a new item with updated attributes, update its durability
         ItemStack newItem = new ItemStack(socketItemType);
@@ -119,6 +120,7 @@ public class SocketListener implements Listener {
         newItem = AttributeUtil.addCustomStat(newItem, "custom.healingBoost", itemHealing + gemHealing); // emerald
         newItem = AttributeUtil.addCustomStat(newItem, "custom.magicDamage", itemMagDmg + gemMagDmg); // diamond
         newItem = AttributeUtil.addCustomStat(newItem, "required.level", reqLv); // required level
+        if (!enchantment.equals("")) newItem = AttributeUtil.addCustomStat(newItem, "scroll.enchantment", enchantment);
 
         // ------------------------------------------------------------------------------------------------------------
         // NEW: store the stats of the gems in the item for (optional) gem removal
@@ -138,7 +140,20 @@ public class SocketListener implements Listener {
         newItem = AttributeUtil.addCustomStat(newItem, "gem.magicDamage", storedMagDmg + gemMagDmg); // diamond
         // ------------------------------------------------------------------------------------------------------------
 
-        LoreGenerator.generateItemLore(newItem, ChatColor.WHITE, socketItemName, "", false);
+        ChatColor tier = ChatColor.WHITE;
+        if (socketItem.getItemMeta().getDisplayName().contains(ChatColor.GRAY + "")) {
+            tier = ChatColor.GRAY;
+        } else if (socketItem.getItemMeta().getDisplayName().contains(ChatColor.GREEN + "")) {
+            tier = ChatColor.GREEN;
+        } else if (socketItem.getItemMeta().getDisplayName().contains(ChatColor.AQUA + "")) {
+            tier = ChatColor.AQUA;
+        } else if (socketItem.getItemMeta().getDisplayName().contains(ChatColor.LIGHT_PURPLE + "")) {
+            tier = ChatColor.LIGHT_PURPLE;
+        } else if (socketItem.getItemMeta().getDisplayName().contains(ChatColor.GOLD + "")) {
+            tier = ChatColor.GOLD;
+        }
+
+        LoreGenerator.generateItemLore(newItem, tier, socketItemName, "", false);
 
         // remove the gemstone from inventory, update the item in inventory
         e.setCancelled(true);

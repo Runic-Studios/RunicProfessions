@@ -124,6 +124,7 @@ public class JewelMaster extends Shop {
         String oldItemName = oldItem.getItemMeta().getDisplayName();
         int socketCount = (int) AttributeUtil.getCustomDouble(oldItem, "custom.socketCount");
         double reqLv = AttributeUtil.getCustomDouble(oldItem, "required.level");
+        String enchantment = AttributeUtil.getCustomString(oldItem, "scroll.enchantment");
 
         // retrieve old STORED stats
         double storedHealth = AttributeUtil.getCustomDouble(oldItem, "gem.maxHealth");
@@ -145,18 +146,64 @@ public class JewelMaster extends Shop {
         ((Damageable) metaNew).setDamage(((Damageable) oldItem.getItemMeta()).getDamage());
         newItem.setItemMeta(metaNew);
 
+        if (AttributeUtil.getCustomString(oldItem, "untradeable").equals("true")) {
+            newItem = AttributeUtil.addCustomStat(newItem, "untradeable", "true");
+        }
+        if (AttributeUtil.getCustomString(oldItem, "soulbound").equals("true")) {
+            newItem = AttributeUtil.addCustomStat(newItem, "soulbound", "true");
+        }
+
+        ArmorSlotEnum itemSlot = ArmorSlotEnum.matchSlot(newItem);
+        String slot;
+        switch (itemSlot) {
+            case HELMET:
+                slot = "head";
+                break;
+            case CHESTPLATE:
+                slot = "chest";
+                break;
+            case LEGGINGS:
+                slot = "legs";
+                break;
+            case BOOTS:
+                slot = "feet";
+                break;
+            case OFFHAND:
+                slot = "offhand";
+                break;
+            default:
+                slot = "mainhand";
+                break;
+        }
+
+        newItem = AttributeUtil.addGenericStat(newItem, "generic.armor", 0, slot); // remove armor values
+
         // fill 'da stats
         // subtract stored stats from item stats
         newItem = AttributeUtil.addCustomStat(newItem, "custom.socketCount", socketCount);
         newItem = AttributeUtil.addCustomStat(newItem, "required.level", reqLv); // required level
+        if (!enchantment.equals("")) newItem = AttributeUtil.addCustomStat(newItem, "scroll.enchantment", enchantment);
         newItem = AttributeUtil.addCustomStat(newItem, "custom.maxHealth", itemHealth - storedHealth); // ruby
         newItem = AttributeUtil.addCustomStat(newItem, "custom.manaBoost", itemMana - storedMana); // sapphire
         newItem = AttributeUtil.addCustomStat(newItem, "custom.attackDamage", itemDmg - storedDmg); // opal
         newItem = AttributeUtil.addCustomStat(newItem, "custom.healingBoost", itemHealing - storedHealing); // emerald
         newItem = AttributeUtil.addCustomStat(newItem, "custom.magicDamage", itemMagDmg - storedMagDmg); // diamond
 
+        ChatColor tier = ChatColor.WHITE;
+        if (oldItem.getItemMeta().getDisplayName().contains(ChatColor.GRAY + "")) {
+            tier = ChatColor.GRAY;
+        } else if (oldItem.getItemMeta().getDisplayName().contains(ChatColor.GREEN + "")) {
+            tier = ChatColor.GREEN;
+        } else if (oldItem.getItemMeta().getDisplayName().contains(ChatColor.AQUA + "")) {
+            tier = ChatColor.AQUA;
+        } else if (oldItem.getItemMeta().getDisplayName().contains(ChatColor.LIGHT_PURPLE + "")) {
+            tier = ChatColor.LIGHT_PURPLE;
+        } else if (oldItem.getItemMeta().getDisplayName().contains(ChatColor.GOLD + "")) {
+            tier = ChatColor.GOLD;
+        }
+
         // re-make lore
-        LoreGenerator.generateItemLore(newItem, ChatColor.WHITE, oldItemName, "", false);
+        LoreGenerator.generateItemLore(newItem, tier, oldItemName, "", false);
 
         pl.getInventory().addItem(newItem);
         pl.playSound(pl.getLocation(), Sound.BLOCK_ANVIL_USE, 0.5f, 2.0f);

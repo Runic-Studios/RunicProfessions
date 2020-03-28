@@ -182,7 +182,7 @@ public class HunterShop extends Shop {
     static ItemStack enchantScroll() {
         ItemStack trackingScroll = new ItemStack(Material.PURPLE_DYE);
         ItemMeta meta = trackingScroll.getItemMeta();
-        String desc = "\n&a+1% Movement Speed";
+        String desc = "\n&a+3% Movement Speed";
         meta.setDisplayName(ColorUtil.format("&fEnchant Scroll: Speed"));
         ArrayList<String> lore = new ArrayList<>();
         for (String s : desc.split("\n")) {
