@@ -12,7 +12,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 
-@SuppressWarnings("deprecation")
 public class HunterShopListener implements Listener {
 
     /**
@@ -29,12 +28,12 @@ public class HunterShopListener implements Listener {
         String title = ChatColor.translateAlternateColorCodes('&', shop.getTitle());
 
         // verify custom GUI
-        if (title.equals(e.getInventory().getTitle())) {
+        if (title.equals(e.getView().getTitle())) {
 
             int slot = e.getRawSlot();
 
             // shop gui
-            if (e.getClickedInventory() != null && e.getClickedInventory().getTitle().equals(title)) {
+            if (e.getClickedInventory() != null && e.getView().getTitle().equals(title)) {
                 e.setCancelled(true);
                 e.setResult(Event.Result.DENY);
             }

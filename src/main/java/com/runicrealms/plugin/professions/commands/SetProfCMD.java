@@ -45,20 +45,14 @@ public class SetProfCMD implements CommandExecutor {
 
         if (isAdmin.toLowerCase().equals("true")) {
             updateCache(pl, formattedStr);
-            RunicCore.getScoreboardHandler().updatePlayerInfo(pl);
-            RunicCore.getScoreboardHandler().updateSideInfo(pl);
             return true;
         } else if (isAdmin.toLowerCase().equals("tutor")) {
             if (RunicCore.getCacheManager().getPlayerCache(pl.getUniqueId()).getProfName().toLowerCase().equals("none")) {
                 updateCache(pl, formattedStr);
-                RunicCore.getScoreboardHandler().updatePlayerInfo(pl);
-                RunicCore.getScoreboardHandler().updateSideInfo(pl);
             } else {
                 if (pl.getInventory().contains(Material.GOLD_NUGGET, PRICE)) {
                     ItemRemover.takeItem(pl, CurrencyUtil.goldCoin(), PRICE);
                     updateCache(pl, formattedStr);
-                    RunicCore.getScoreboardHandler().updatePlayerInfo(pl);
-                    RunicCore.getScoreboardHandler().updateSideInfo(pl);
                     pl.playSound(pl.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 0.5f, 1.0f);
                     pl.sendMessage(ChatColor.GREEN + "You have changed your profession!");
                 } else {
@@ -69,8 +63,6 @@ public class SetProfCMD implements CommandExecutor {
         } else {
             if (RunicCore.getCacheManager().getPlayerCache(pl.getUniqueId()).getProfName().toLowerCase().equals("none")) {
                 updateCache(pl, formattedStr);
-                RunicCore.getScoreboardHandler().updatePlayerInfo(pl);
-                RunicCore.getScoreboardHandler().updateSideInfo(pl);
             } else {
                 pl.playSound(pl.getLocation(), Sound.BLOCK_FIRE_EXTINGUISH, 0.5f, 1.0f);
                 pl.sendMessage(ChatColor.RED + "You have already chosen your profession! To change it, visit a profession tutor in a city.");

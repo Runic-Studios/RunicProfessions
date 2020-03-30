@@ -13,7 +13,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 
-@SuppressWarnings("deprecation")
 public class StationClickEvent implements Listener {
 
     /**
@@ -31,7 +30,7 @@ public class StationClickEvent implements Listener {
         String stationTitle = ChatColor.translateAlternateColorCodes('&', station.getTitle());
         Inventory inv = e.getInventory();
         if (checkArtifactForge(stationTitle)) inv = e.getClickedInventory();
-        if (inv != null && inv.getTitle().equals(stationTitle)) {
+        if (inv != null && e.getView().getTitle().equals(stationTitle)) {
             if (!checkArtifactForge(stationTitle)) {
                 e.setCancelled(true);
                 e.setResult(Event.Result.DENY);

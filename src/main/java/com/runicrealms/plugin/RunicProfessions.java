@@ -3,6 +3,7 @@ package com.runicrealms.plugin;
 
 import com.runicrealms.plugin.professions.ProfManager;
 import com.runicrealms.plugin.professions.commands.GathertoolGive;
+import com.runicrealms.plugin.professions.commands.ProfLevelCMD;
 import com.runicrealms.plugin.professions.commands.SetProfCMD;
 import com.runicrealms.plugin.professions.crafting.alchemist.PotionListener;
 import com.runicrealms.plugin.professions.crafting.blacksmith.StoneListener;
@@ -43,6 +44,7 @@ public final class RunicProfessions extends JavaPlugin {
         // register command
         getCommand("gathertool").setExecutor(new GathertoolGive());
         getCommand("setprof").setExecutor(new SetProfCMD());
+        getCommand("proflevel").setExecutor(new ProfLevelCMD());
 
         // gem removal shop
         getCommand("jewelmaster").setExecutor(new JewelShopCMD());

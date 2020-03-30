@@ -15,7 +15,6 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.ItemStack;
 
-@SuppressWarnings("deprecation")
 public class JewelShopListener implements Listener {
 
     /**
@@ -32,12 +31,12 @@ public class JewelShopListener implements Listener {
         String title = ChatColor.translateAlternateColorCodes('&', shop.getTitle());
 
         // verify custom GUI
-        if (title.equals(e.getInventory().getTitle())) {
+        if (title.equals(e.getView().getTitle())) {
 
             int slot = e.getRawSlot();
 
             // shop gui
-            if (e.getClickedInventory() != null && e.getClickedInventory().getTitle().equals(title)) {
+            if (e.getClickedInventory() != null && e.getView().getTitle().equals(title)) {
                 if (slot > 0) {
                     e.setCancelled(true);
                     e.setResult(Event.Result.DENY);
@@ -73,7 +72,7 @@ public class JewelShopListener implements Listener {
         if (RunicCore.getShopManager().getPlayerShop(pl) == null) return;
         Shop shop = RunicCore.getShopManager().getPlayerShop(pl);
         String title = ChatColor.translateAlternateColorCodes('&', shop.getTitle());
-        if (shop instanceof JewelMaster && title.equals(e.getInventory().getTitle())) {
+        if (shop instanceof JewelMaster && title.equals(e.getView().getTitle())) {
             for (int i = 0; i < 1; i++) {
                 if (e.getInventory().getItem(i) == null) continue;
                 ItemStack itemStack = e.getInventory().getItem(i);

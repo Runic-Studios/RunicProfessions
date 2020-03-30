@@ -16,3 +16,6 @@ commands:
   huntershop:
     usage: /<commands>
     description: Open hunter shop
+  proflevel:
+    usage: /<commands>
+    description: Open hunter shop

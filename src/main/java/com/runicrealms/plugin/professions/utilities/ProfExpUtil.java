@@ -32,7 +32,6 @@ public class ProfExpUtil {
 
             RunicCore.getCacheManager().getPlayerCache(pl.getUniqueId()).setProfLevel(calculateExpectedLv(newTotalExp));
             currentLv = RunicCore.getCacheManager().getPlayerCache(pl.getUniqueId()).getProfLevel();
-            RunicCore.getScoreboardHandler().updateSideInfo(pl);
 
             pl.playSound(pl.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 0.5f, 1.0f);
 

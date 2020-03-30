@@ -11,9 +11,9 @@ import com.sk89q.worldguard.protection.ApplicableRegionSet;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import com.sk89q.worldguard.protection.regions.RegionContainer;
 import com.sk89q.worldguard.protection.regions.RegionQuery;
-import net.minecraft.server.v1_13_R2.EntityFishingHook;
+import net.minecraft.server.v1_15_R1.EntityFishingHook;
 import org.bukkit.*;
-import org.bukkit.craftbukkit.v1_13_R2.entity.CraftEntity;
+import org.bukkit.craftbukkit.v1_15_R1.entity.CraftEntity;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Fish;
 import org.bukkit.entity.FishHook;
@@ -52,10 +52,13 @@ public class FishingListener implements Listener {
     @EventHandler
     public void onFishCatch(PlayerFishEvent e) {
 
-        if (e.getHook().getLocation().getBlock().getType() != Material.WATER) return;
-
         // disable exp
         e.setExpToDrop(0);
+
+//        if (e.getHook().getLocation().getBlock().getType() != Material.WATER) {
+//            e.setCancelled(true);
+//            return;
+//        }
 
         // grab the player, location
         Player pl = e.getPlayer();
@@ -66,7 +69,11 @@ public class FishingListener implements Listener {
         String desc = "Crafting Reagent";
 
         PlayerFishEvent.State state = e.getState();
-        if (state == PlayerFishEvent.State.CAUGHT_ENTITY || state == PlayerFishEvent.State.CAUGHT_FISH) {
+        if (state == PlayerFishEvent.State.CAUGHT_ENTITY) {
+            e.setCancelled(true);
+            return;
+        }
+        if (state == PlayerFishEvent.State.CAUGHT_FISH) {
 
             // roll to see if player succesfully fished
             // roll to see what kind of fish they will receive
@@ -296,12 +303,12 @@ public class FishingListener implements Listener {
     }
 
     private void setBiteTime(FishHook hook, int time) {
-        net.minecraft.server.v1_13_R2.EntityFishingHook hookCopy = (EntityFishingHook) ((CraftEntity) hook).getHandle();
+        net.minecraft.server.v1_15_R1.EntityFishingHook hookCopy = (EntityFishingHook) ((CraftEntity) hook).getHandle();
 
         Field fishCatchTime = null;
 
         try {
-            fishCatchTime = net.minecraft.server.v1_13_R2.EntityFishingHook.class.getDeclaredField("h");
+            fishCatchTime = net.minecraft.server.v1_15_R1.EntityFishingHook.class.getDeclaredField("h");
         } catch (NoSuchFieldException | SecurityException e) {
             e.printStackTrace();
         }
