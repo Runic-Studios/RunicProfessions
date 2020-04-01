@@ -171,9 +171,9 @@ public class EnchantListener implements Listener {
                 if (count >= WARMUP_TIME) {
                     this.cancel();
                     ItemRemover.takeItem(pl, scroll, 1);
+                    currentlyUsing.remove(pl.getUniqueId());
                     pl.teleport(TeleportEnum.getEnum(
                             (AttributeUtil.getCustomString(scroll, "scroll.location"))).getLocation());
-                    currentlyUsing.remove(pl.getUniqueId());
                     pl.playSound(pl.getLocation(), Sound.BLOCK_PORTAL_TRAVEL, 0.5f, 1.0f);
                     pl.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "You've have been teleported!");
                     return;
