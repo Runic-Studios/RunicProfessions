@@ -51,13 +51,16 @@ public class HunterTask {
         }
     }
 
-    private static final int MOB_AMOUNT = 25;
     private Player pl;
     private MythicMob mob;
 
     public HunterTask(Player pl) {
         this.pl = pl;
         this.mob = selectMob(pl);
+        Random rand = new Random();
+        RunicProfessions.getInstance().getConfig().set(pl.getUniqueId() + ".info.prof.hunter_kills_max", rand.nextInt(30 - 15) + 15); // 15-30
+        RunicProfessions.getInstance().saveConfig();
+        RunicProfessions.getInstance().reloadConfig();
     }
 
     /**
@@ -137,7 +140,7 @@ public class HunterTask {
         return mob;
     }
 
-    public static int getMobAmount() {
-        return MOB_AMOUNT;
+    public static int getMobAmount(Player pl) {
+        return RunicProfessions.getInstance().getConfig().getInt(pl.getUniqueId() + ".info.prof.hunter_kills_max");
     }
 }

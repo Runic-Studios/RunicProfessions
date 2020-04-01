@@ -54,7 +54,7 @@ public class HunterListener implements Listener {
         int totalKills = HunterTask.getCurrentKills(pl);
         boolean sendMsg = true;
 
-        if (totalKills+1 < HunterTask.getMobAmount()) {
+        if (totalKills+1 < HunterTask.getMobAmount(pl)) {
             RunicProfessions.getInstance().getConfig().set(pl.getUniqueId() + ".info.prof.hunter_kills", totalKills+1);
         } else {
             sendMsg = false;
@@ -67,6 +67,7 @@ public class HunterListener implements Listener {
             launchFirework(pl);
             RunicProfessions.getInstance().getConfig().set(pl.getUniqueId() + ".info.prof.hunter_mob", "");
             RunicProfessions.getInstance().getConfig().set(pl.getUniqueId() + ".info.prof.hunter_kills", null);
+            RunicProfessions.getInstance().getConfig().set(pl.getUniqueId() + ".info.prof.hunter_kills_max", null);
             RunicProfessions.getInstance().saveConfig();
             RunicProfessions.getInstance().reloadConfig();
             return;

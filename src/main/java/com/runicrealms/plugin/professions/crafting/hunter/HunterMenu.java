@@ -57,7 +57,7 @@ public class HunterMenu extends Workstation {
                     pl.playSound(pl.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 0.5f, 1.0f);
                     pl.sendMessage
                             (ChatColor.GREEN + "Your new task is to hunt " +
-                                    ChatColor.WHITE + HunterTask.getMobAmount() + " " +
+                                    ChatColor.WHITE + HunterTask.getMobAmount(pl) + " " +
                                     ChatColor.GREEN + hunterTask.getMob().getInternalName() + "s!");
                     event.setWillClose(true);
                     event.setWillDestroy(true);
@@ -80,7 +80,7 @@ public class HunterMenu extends Workstation {
                     pl.playSound(pl.getLocation(), Sound.UI_BUTTON_CLICK, 0.5f, 1);
                     pl.sendMessage
                             (ChatColor.GREEN + "Your current task is to hunt " +
-                                    ChatColor.WHITE + HunterTask.getMobAmount() + " " +
+                                    ChatColor.WHITE + HunterTask.getMobAmount(pl) + " " +
                                     ChatColor.GREEN + HunterTask.getMobName(pl) + "s.");
                     pl.sendMessage(ChatColor.GREEN + "So far, you have slain " + ChatColor.WHITE + HunterTask.getCurrentKills(pl) + "!");
                     event.setWillClose(true);
