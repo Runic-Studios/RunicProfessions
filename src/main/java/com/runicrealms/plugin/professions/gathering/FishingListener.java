@@ -308,7 +308,7 @@ public class FishingListener implements Listener {
         Field fishCatchTime = null;
 
         try {
-            fishCatchTime = net.minecraft.server.v1_15_R1.EntityFishingHook.class.getDeclaredField("h");
+            fishCatchTime = net.minecraft.server.v1_15_R1.EntityFishingHook.class.getDeclaredField("ap");
         } catch (NoSuchFieldException | SecurityException e) {
             e.printStackTrace();
         }
