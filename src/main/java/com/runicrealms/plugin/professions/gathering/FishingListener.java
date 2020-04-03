@@ -126,7 +126,7 @@ public class FishingListener implements Listener {
 
         // gather material
         gatherMaterial(pl, hookLoc, hookLoc.clone().add(0, 1.5, 0), itemType, holoString,
-                itemName, desc, "The fish got away!", chance, fishPath, durability);
+                itemName, desc, chance, fishPath, durability);
     }
 
     @EventHandler
@@ -202,7 +202,7 @@ public class FishingListener implements Listener {
     }
 
     private void gatherMaterial(Player pl, Location loc, Location fishLoc, Material gathered,
-                                String name, String itemName, String desc, String failMssg,
+                                String name, String itemName, String desc,
                                 double chance, Vector fishPath, int tier) {
 
         // call the fishing event
@@ -232,7 +232,7 @@ public class FishingListener implements Listener {
         }
 
         if (chance < (100 - successRate)) {
-            ActionBarUtil.sendTimedMessage(pl, "&c" + failMssg, 3);
+            ActionBarUtil.sendTimedMessage(pl, "&cThe fish got away!", 3);
             return;
         }
 

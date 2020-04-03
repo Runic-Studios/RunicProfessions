@@ -2,7 +2,6 @@ package com.runicrealms.plugin.professions.listeners;
 
 import com.runicrealms.plugin.RunicProfessions;
 import com.runicrealms.plugin.professions.event.CustomFishEvent;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
