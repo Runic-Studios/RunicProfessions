@@ -1,4 +1,4 @@
-package com.runicrealms.plugin.professions.event;
+package com.runicrealms.plugin.professions.listeners;
 
 import com.runicrealms.plugin.RunicProfessions;
 import com.runicrealms.plugin.item.GUIMenu.ItemGUI;
@@ -13,7 +13,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 
-public class StationClickEvent implements Listener {
+public class StationClickListener implements Listener {
 
     /**
      * Handles logic for the workstation menus

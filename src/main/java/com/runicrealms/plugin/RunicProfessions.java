@@ -14,7 +14,8 @@ import com.runicrealms.plugin.professions.crafting.hunter.*;
 import com.runicrealms.plugin.professions.crafting.jeweler.JewelShopListener;
 import com.runicrealms.plugin.professions.crafting.jeweler.JewelShopCMD;
 import com.runicrealms.plugin.professions.crafting.jeweler.SocketListener;
-import com.runicrealms.plugin.professions.event.StationClickEvent;
+import com.runicrealms.plugin.professions.listeners.CustomFishListener;
+import com.runicrealms.plugin.professions.listeners.StationClickListener;
 import com.runicrealms.plugin.professions.gathering.FarmingListener;
 import com.runicrealms.plugin.professions.gathering.FishingListener;
 import com.runicrealms.plugin.professions.gathering.MiningListener;
@@ -73,7 +74,7 @@ public final class RunicProfessions extends JavaPlugin {
         pm.registerEvents(new SocketListener(), this);
         pm.registerEvents(new PotionListener(), this);
         pm.registerEvents(new CookingListener(), this);
-        pm.registerEvents(new StationClickEvent(), this);
+        pm.registerEvents(new StationClickListener(), this);
         pm.registerEvents(new JewelShopListener(), this);
         pm.registerEvents(new HunterListener(), this);
         pm.registerEvents(new HunterShopListener(), this);
@@ -81,5 +82,6 @@ public final class RunicProfessions extends JavaPlugin {
         pm.registerEvents(new JoinListener(), this);
         pm.registerEvents(new EnchantListener(), this);
         pm.registerEvents(new EnchantScrollListener(), this);
+        pm.registerEvents(new CustomFishListener(), this);
     }
 }

@@ -24,7 +24,7 @@ public enum TeleportEnum {
                 return teleportEnum;
             }
         }
-        throw new IllegalArgumentException();
+        return null;
     }
 
     public String getName() {
