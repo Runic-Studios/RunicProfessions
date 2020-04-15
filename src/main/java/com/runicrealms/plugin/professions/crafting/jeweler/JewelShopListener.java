@@ -14,6 +14,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 
 public class JewelShopListener implements Listener {
 
@@ -36,10 +37,15 @@ public class JewelShopListener implements Listener {
             int slot = e.getRawSlot();
 
             // shop gui
-            if (e.getClickedInventory() != null && e.getView().getTitle().equals(title)) {
-                if (slot > 0) {
-                    e.setCancelled(true);
-                    e.setResult(Event.Result.DENY);
+            if (e.getView().getTitle().equals(title)) {
+                if (e.getClickedInventory() != null && e.getClickedInventory() instanceof PlayerInventory) {
+                    e.setCancelled(false);
+                    e.setResult(Event.Result.ALLOW);
+                } else {
+                    if (slot > 0) {
+                        e.setCancelled(true);
+                        e.setResult(Event.Result.DENY);
+                    }
                 }
             }
 
