@@ -80,6 +80,24 @@ public class BlacksmithItems {
                         40, 0, 0, 0, 0, 2,
                         "legs", false).getItem();
     }
+    public static ItemStack flailOfRetribution() {
+        return new RunicItem
+                (Material.STONE_SHOVEL, ChatColor.WHITE, "Flail of Retribution", 0, 20,
+                        0, 0, 3, 8, 0, 0,
+                        "offhand", false).getItem();
+    }
+    public static ItemStack illusionersWand() {
+        return new RunicItem
+                (Material.STONE_HOE, ChatColor.WHITE, "Illusioner's Wand", 0, 20,
+                        0, 0, 0, 0, 12, 0,
+                        "offhand", false).getItem();
+    }
+    public static ItemStack etchedDagger() {
+        return new RunicItem
+                (Material.STONE_SWORD, ChatColor.WHITE, "Etched Dagger", 0, 20,
+                        0, 0, 6, 0, 0, 0,
+                        "offhand", false).getItem();
+    }
 
     // level 25
     private static final int SHARP_STONE_DAMAGE_BONUS = 3;

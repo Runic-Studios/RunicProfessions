@@ -78,6 +78,25 @@ public class AnvilMenu extends Workstation {
         shieldReqs.put(Material.IRON_INGOT, 8);
         shieldReqs.put(Material.OAK_LOG, 1);
 
+        // flail
+        LinkedHashMap<Material, Integer> flailReqs = new LinkedHashMap<>();
+        flailReqs.put(Material.GOLD_INGOT, 5);
+        flailReqs.put(Material.IRON_INGOT, 2);
+        flailReqs.put(Material.EMERALD_ORE, 1);
+        flailReqs.put(Material.BIRCH_LOG, 2);
+
+        // wand
+        LinkedHashMap<Material, Integer> wandReqs = new LinkedHashMap<>();
+        wandReqs.put(Material.IRON_INGOT, 5);
+        wandReqs.put(Material.DIAMOND_ORE, 2);
+        wandReqs.put(Material.BIRCH_LOG, 2);
+
+        // dagger
+        LinkedHashMap<Material, Integer> daggerReqs = new LinkedHashMap<>();
+        daggerReqs.put(Material.IRON_INGOT, 2);
+        daggerReqs.put(Material.NETHER_QUARTZ_ORE, 3);
+        daggerReqs.put(Material.OAK_LOG, 2);
+
         // bastion
         LinkedHashMap<Material, Integer> bastionReqs = new LinkedHashMap<>();
         bastionReqs.put(Material.IRON_INGOT, 8);
@@ -154,48 +173,60 @@ public class AnvilMenu extends Workstation {
                     reagentAmt = 7;
                     exp = 140;
                 } else if (slot == 17) {
+                    reqLevel = 20;
+                    reqHashMap = flailReqs;
+                    exp = 140;
+                } else if (slot == 18) {
+                    reqLevel = 20;
+                    reqHashMap = wandReqs;
+                    exp = 120;
+                } else if (slot == 19) {
+                    reqLevel = 20;
+                    reqHashMap = daggerReqs;
+                    exp = 60;
+                } else if (slot == 20) {
                     reqLevel = 25;
                     reqHashMap = ironBarReqs;
                     reagentAmt = 2;
                     exp = 40;
-                } else if (slot == 18) {
+                } else if (slot == 21) {
                     reqLevel = 30;
                     reqHashMap = bastionReqs;
                     exp = 310;
-                } else if (slot == 19 || slot == 20) {
+                } else if (slot == 22 || slot == 23) {
                     reqLevel = 35;
                     reqHashMap = ironBarReqs;
                     reagentAmt = 5;
                     exp = 100;
-                } else if (slot == 21) {
+                } else if (slot == 24) {
                     reqLevel = 40;
                     reqHashMap = goldBarReqs;
                     reagentAmt = 8;
                     exp = 160;
-                } else if (slot == 22) {
+                } else if (slot == 25) {
                     reqLevel = 40;
                     reqHashMap = ironBarReqs;
                     reagentAmt = 8;
                     exp = 160;
-                } else if (slot == 23) {
+                } else if (slot == 26) {
                     reqLevel = 45;
                     reqHashMap = chainLinkReqs;
                     reagentAmt = 5;
                     exp = 100;
-                } else if (slot == 24) {
+                } else if (slot == 27) {
                     reqLevel = 45;
                     reqHashMap = ironBarReqs;
                     reagentAmt = 5;
                     exp = 100;
-                } else if (slot == 25) {
+                } else if (slot == 28) {
                     reqLevel = 50;
                     reqHashMap = legendaryReqs;
                     exp = 400;
-                } else if (slot == 26) {
+                } else if (slot == 29) {
                     reqLevel = 55;
                     reqHashMap = legendaryReqs;
                     exp = 400;
-                } else if (slot == 27) {
+                } else if (slot == 30) {
                     reqLevel = 60;
                     reqHashMap = legendaryReqs;
                     exp = 400;
@@ -263,9 +294,34 @@ public class AnvilMenu extends Workstation {
                 "Iron Bar", 7, 140, 20, 0, MenuUtil.itemStatsToString(BlacksmithItems.plateLegs()),
                 false, false, false);
 
+        LinkedHashMap<Material, Integer> flailReqs = new LinkedHashMap<>();
+        flailReqs.put(Material.GOLD_INGOT, 5);
+        flailReqs.put(Material.IRON_INGOT, 2);
+        flailReqs.put(Material.EMERALD_ORE, 1);
+        flailReqs.put(Material.BIRCH_LOG, 2);
+        super.createMenuItem(forgeMenu, pl, 17, Material.STONE_SHOVEL, "&fFlail of Retribution", flailReqs,
+                "Gold Bar\nIron Bar\nUncut Emerald\nElder Log", 999, 140, 20, 0, MenuUtil.itemStatsToString(BlacksmithItems.flailOfRetribution()),
+                false, false, false);
+
+        LinkedHashMap<Material, Integer> wandReqs = new LinkedHashMap<>();
+        wandReqs.put(Material.IRON_INGOT, 5);
+        wandReqs.put(Material.DIAMOND_ORE, 2);
+        wandReqs.put(Material.BIRCH_LOG, 2);
+        super.createMenuItem(forgeMenu, pl, 18, Material.STONE_HOE, "&fIllusioner's Wand", wandReqs,
+                "Iron Bar\nUncut Diamond\nElder Log", 999, 120, 20, 0, MenuUtil.itemStatsToString(BlacksmithItems.illusionersWand()),
+                false, false, false);
+
+        LinkedHashMap<Material, Integer> daggerReqs = new LinkedHashMap<>();
+        daggerReqs.put(Material.IRON_INGOT, 2);
+        daggerReqs.put(Material.NETHER_QUARTZ_ORE, 3);
+        daggerReqs.put(Material.OAK_LOG, 2);
+        super.createMenuItem(forgeMenu, pl, 19, Material.STONE_SWORD, "&fEtched Dagger", daggerReqs,
+                "Iron Bar\nUncut Opal\nOak Log", 999, 60, 20, 0, MenuUtil.itemStatsToString(BlacksmithItems.etchedDagger()),
+                false, false, false);
+
         // level 25
-        super.createMenuItem(forgeMenu, pl, 17, Material.FLINT, "&fSharpening Stone", ironReqs,
-                "Iron Bar", 2, 40, 0, 0,
+        super.createMenuItem(forgeMenu, pl, 20, Material.FLINT, "&fSharpening Stone", ironReqs,
+                "Iron Bar", 2, 40, 25, 0,
                 "&eIncrease your weapon⚔ damage by +3 for 3 min!\n",
                 false, false, false);
 
@@ -273,31 +329,31 @@ public class AnvilMenu extends Workstation {
         LinkedHashMap<Material, Integer> bastionReqs = new LinkedHashMap<>();
         bastionReqs.put(Material.IRON_INGOT, 8);
         bastionReqs.put(Material.PHANTOM_MEMBRANE, 1);
-        super.createMenuItem(forgeMenu, pl, 18, Material.SHIELD, "&fBastion", bastionReqs,
+        super.createMenuItem(forgeMenu, pl, 21, Material.SHIELD, "&fBastion", bastionReqs,
                 "Iron Bar\nFlag of Honor", 999, 310, 30, 0, MenuUtil.itemStatsToString(BlacksmithItems.bastion()),
                 false, false, false);
 
         // level 35
-        super.createMenuItem(forgeMenu, pl, 19, Material.BOW, "&fForged Iron Longbow", chainReqs,
+        super.createMenuItem(forgeMenu, pl, 22, Material.BOW, "&fForged Iron Longbow", chainReqs,
                 "Iron Bar", 5, 100, 35, 7, MenuUtil.itemStatsToString(BlacksmithItems.ironLongbow()),
                 false, false, false);
-        super.createMenuItem(forgeMenu, pl, 20, Material.WOODEN_HOE, "&fForged Iron Scepter", ironReqs,
+        super.createMenuItem(forgeMenu, pl, 23, Material.WOODEN_HOE, "&fForged Iron Scepter", ironReqs,
                 "Iron Bar", 5, 100, 35, 7, MenuUtil.itemStatsToString(BlacksmithItems.ironScepter()),
                 false, false, false);
 
         // level 40
-        super.createMenuItem(forgeMenu, pl, 21, Material.GOLDEN_CHESTPLATE, "&fForged Gilded Body", goldReqs,
+        super.createMenuItem(forgeMenu, pl, 24, Material.GOLDEN_CHESTPLATE, "&fForged Gilded Body", goldReqs,
                 "Gold Bar", 8, 160, 40, 0, MenuUtil.itemStatsToString(BlacksmithItems.gildedBody()),
                 false, false, false);
-        super.createMenuItem(forgeMenu, pl, 22, Material.IRON_CHESTPLATE, "&fForged Iron Platebody", ironReqs,
+        super.createMenuItem(forgeMenu, pl, 25, Material.IRON_CHESTPLATE, "&fForged Iron Platebody", ironReqs,
                 "Iron Bar", 8, 160, 40, 0, MenuUtil.itemStatsToString(BlacksmithItems.plateBody()),
                 false, false, false);
 
         // level 45
-        super.createMenuItem(forgeMenu, pl, 23, Material.CHAINMAIL_HELMET, "&fForged Mail Helm", chainReqs,
+        super.createMenuItem(forgeMenu, pl, 26, Material.CHAINMAIL_HELMET, "&fForged Mail Helm", chainReqs,
                 "Chain Link", 5, 100, 45, 0, MenuUtil.itemStatsToString(BlacksmithItems.mailHelm()),
                 false, false, false);
-        super.createMenuItem(forgeMenu, pl, 24, Material.IRON_HELMET, "&fForged Iron Helm", ironReqs,
+        super.createMenuItem(forgeMenu, pl, 27, Material.IRON_HELMET, "&fForged Iron Helm", ironReqs,
                 "Iron Bar", 5, 100, 45, 0, MenuUtil.itemStatsToString(BlacksmithItems.ironHelm()),
                 false, false, false);
 
@@ -305,15 +361,15 @@ public class AnvilMenu extends Workstation {
         LinkedHashMap<Material, Integer> legenReqs = new LinkedHashMap<>();
         legenReqs.put(Material.IRON_INGOT, 5);
         legenReqs.put(Material.NETHER_STAR, 1);
-        super.createMenuItem(forgeMenu, pl, 25, Material.BOW, "&6Stormsong", legenReqs,
+        super.createMenuItem(forgeMenu, pl, 28, Material.BOW, "&6Stormsong", legenReqs,
                 "Iron Bar\nToken of Valor", 999, 400, 50, 10, MenuUtil.itemStatsToString(BlacksmithItems.Stormsong()),
                 true, false, false);
         // level 55 - legendary sword
-        super.createMenuItem(forgeMenu, pl, 26, Material.WOODEN_SWORD, "&6Valkyrie", legenReqs,
+        super.createMenuItem(forgeMenu, pl, 29, Material.WOODEN_SWORD, "&6Valkyrie", legenReqs,
                 "Iron Bar\nToken of Valor", 999, 400, 55, 10, MenuUtil.itemStatsToString(BlacksmithItems.Valkyrie()),
                 true, false, false);
         // level 60 - legendary axe
-        super.createMenuItem(forgeMenu, pl, 27, Material.WOODEN_AXE, "&6The Minotaur", legenReqs,
+        super.createMenuItem(forgeMenu, pl, 30, Material.WOODEN_AXE, "&6The Minotaur", legenReqs,
                 "Iron Bar\nToken of Valor", 999, 400, 60, 10, MenuUtil.itemStatsToString(BlacksmithItems.theMinotaur()),
                 true, false, false);
     }
@@ -377,36 +433,45 @@ public class AnvilMenu extends Workstation {
                 item = BlacksmithItems.plateLegs();
                 break;
             case 17:
-                item = BlacksmithItems.sharpStone();
+                item = BlacksmithItems.flailOfRetribution();
                 break;
             case 18:
-                item = BlacksmithItems.bastion();
+                item = BlacksmithItems.illusionersWand();
                 break;
             case 19:
-                item = BlacksmithItems.ironLongbow();
+                item = BlacksmithItems.etchedDagger();
                 break;
             case 20:
-                item = BlacksmithItems.ironScepter();
+                item = BlacksmithItems.sharpStone();
                 break;
             case 21:
-                item = BlacksmithItems.gildedBody();
+                item = BlacksmithItems.bastion();
                 break;
             case 22:
-                item = BlacksmithItems.plateBody();
+                item = BlacksmithItems.ironLongbow();
                 break;
             case 23:
-                item = BlacksmithItems.mailHelm();
+                item = BlacksmithItems.ironScepter();
                 break;
             case 24:
-                item = BlacksmithItems.ironHelm();
+                item = BlacksmithItems.gildedBody();
                 break;
             case 25:
-                item = BlacksmithItems.Stormsong();
+                item = BlacksmithItems.plateBody();
                 break;
             case 26:
-                item = BlacksmithItems.Valkyrie();
+                item = BlacksmithItems.mailHelm();
                 break;
             case 27:
+                item = BlacksmithItems.ironHelm();
+                break;
+            case 28:
+                item = BlacksmithItems.Stormsong();
+                break;
+            case 29:
+                item = BlacksmithItems.Valkyrie();
+                break;
+            case 30:
                 item = BlacksmithItems.theMinotaur();
                 break;
         }
