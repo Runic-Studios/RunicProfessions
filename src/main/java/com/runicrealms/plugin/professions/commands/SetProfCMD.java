@@ -26,6 +26,7 @@ public class SetProfCMD implements CommandExecutor {
 
         Player pl = Bukkit.getPlayer(args[0]);
         if (pl == null) return true;
+        if (!sender.isOp()) return false;
 
         String profStr = args[1].toLowerCase();
         if (!(profStr.equals("alchemist")

@@ -20,6 +20,7 @@ public class ProfLevelCMD implements CommandExecutor {
 
         Player pl = Bukkit.getPlayer(args[0]);
         if (pl == null) return true;
+        if (!sender.isOp()) return false;
 
         int level = Integer.parseInt(args[1]);
         int exp = ProfExpUtil.calculateTotalExperience(level+1);

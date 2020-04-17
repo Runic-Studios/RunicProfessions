@@ -19,6 +19,7 @@ public class JewelShopCMD implements CommandExecutor {
         // jewelmaster (player)
         Player pl = Bukkit.getPlayer(args[0]);
         if (pl == null) return false;
+        if (!sender.isOp()) return false;
 
         pl.playSound(pl.getLocation(), Sound.UI_BUTTON_CLICK, 0.5f, 1.0f);
         RunicCore.getShopManager().setPlayerShop(pl, new JewelMaster(pl));

@@ -14,6 +14,7 @@ public class GathertoolGive implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command cmd, String lb, String[] args) {
         Player pl = Bukkit.getPlayer(args[1]);
         if (pl == null) return false;
+        if (!sender.isOp()) return false;
         String toolName = args[2];
         int tier = Integer.parseInt(args[3]);
 
