@@ -83,7 +83,7 @@ public class BlacksmithItems {
     public static ItemStack flailOfRetribution() {
         return new RunicItem
                 (Material.STONE_SHOVEL, ChatColor.WHITE, "Flail of Retribution", 0, 20,
-                        0, 0, 3, 8, 0, 0,
+                        0, 0, 2, 10, 0, 0,
                         "offhand", false).getItem();
     }
     public static ItemStack illusionersWand() {
