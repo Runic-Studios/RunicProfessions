@@ -98,6 +98,7 @@ public class HunterListener implements Listener {
         if (e.getHand() != EquipmentSlot.HAND) return;
         if (e.getAction() != Action.RIGHT_CLICK_AIR && e.getAction() != Action.RIGHT_CLICK_BLOCK) return;
 
+        // todo: scrying orb is bugged
         if (pl.getInventory().getItemInMainHand().isSimilar(HunterShop.scryingOrb())) {
 
             // prevent player's from using a hunter item in combat

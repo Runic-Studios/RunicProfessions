@@ -160,8 +160,7 @@ public class HunterShop extends Shop {
     static ItemStack scryingOrb() {
         MythicItem mi = MythicMobs.inst().getItemManager().getItem("ScryingOrb").get();
         AbstractItemStack abstractItemStack = mi.generateItemStack(1);
-        ItemStack orb = BukkitAdapter.adapt(abstractItemStack);
-        return orb;
+        return BukkitAdapter.adapt(abstractItemStack);
     }
 
     static ItemStack trackingScroll() {

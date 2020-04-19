@@ -244,7 +244,7 @@ public class CauldronMenu extends Workstation {
         manaPotReqs.put(Material.LAPIS_ORE, 1);
         manaPotReqs.put(Material.COD, 1);
         super.createMenuItem(forgeMenu, pl, 10, Material.POTION, "&3" + tierStr + " Potion of Mana", manaPotReqs,
-                "Glass Bottle\nUncut Sapphire\nCod", 8, 60, 0, 0,
+                "Glass Bottle\nUncut Sapphire\nCod", 8, 60, 10, 0,
                 "&eRestores &3" + manaStr + "✸ &eon use\n",
                 false, true, false);
 
