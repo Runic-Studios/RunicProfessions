@@ -276,7 +276,7 @@ public class JewelerMenu extends Workstation {
             craftedItem = addGemStat(material, craftedItem, someVar);
 
             LoreGenerator.generateItemLore(craftedItem, ChatColor.WHITE, dispName,
-                    "\n" + ChatColor.DARK_GRAY + "Use this on an item", false);
+                    "\n" + ChatColor.DARK_GRAY + "Use this on an item", false, "");
 
             if (chance <= rate) {
                 // add items to inventory, drop items that couldn't be added

@@ -25,7 +25,7 @@ public class TeleportScroll {
         item.setItemMeta(meta);
         item = applyStats(item);
         LoreGenerator.generateItemLore(item, ChatColor.WHITE,
-                "Teleport Scroll: " + location.getName(), "", false);
+                "Teleport Scroll: " + location.getName(), "", false, "");
         setItem(item);
     }
 

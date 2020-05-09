@@ -208,7 +208,7 @@ public class JewelMaster extends Shop {
         }
 
         // re-make lore
-        LoreGenerator.generateItemLore(newItem, tier, oldItemName, "", false);
+        LoreGenerator.generateItemLore(newItem, tier, oldItemName, "", false, "");
 
         pl.getInventory().addItem(newItem);
         pl.playSound(pl.getLocation(), Sound.BLOCK_ANVIL_USE, 0.5f, 2.0f);

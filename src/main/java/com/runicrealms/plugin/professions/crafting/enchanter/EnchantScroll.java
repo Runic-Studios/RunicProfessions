@@ -29,7 +29,7 @@ public class EnchantScroll {
         String description = enchantEnum.getDescription().replace("?", (int) percent + "");
         LoreGenerator.generateItemLore(item, ChatColor.WHITE,
                 "Enchant Scroll: " + enchantEnum.getName(),
-                description, false);
+                description, false, "");
         setItem(item);
     }
 

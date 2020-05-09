@@ -157,7 +157,7 @@ public class SocketListener implements Listener {
             tier = ChatColor.GOLD;
         }
 
-        LoreGenerator.generateItemLore(newItem, tier, socketItemName, "", false);
+        LoreGenerator.generateItemLore(newItem, tier, socketItemName, "", false, "");
 
         // remove the gemstone from inventory, update the item in inventory
         e.setCancelled(true);

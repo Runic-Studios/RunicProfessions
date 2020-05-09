@@ -2,7 +2,6 @@ package com.runicrealms.plugin.professions.crafting.enchanter;
 
 import com.runicrealms.plugin.enums.ItemTypeEnum;
 import com.runicrealms.plugin.item.LoreGenerator;
-import com.runicrealms.plugin.item.util.ItemRemover;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -76,12 +75,14 @@ public class EnchantScrollListener implements Listener {
             tier = ChatColor.GOLD;
         }
 
-        LoreGenerator.generateItemLore(armorToEnchant, tier, enchantItemName, "", false);
+        LoreGenerator.generateItemLore(armorToEnchant, tier, enchantItemName, "", false, "");
 
         // remove the gemstone from inventory, update the item in inventory
-        ItemRemover.takeItem(pl, heldScroll, 1);
+        //ItemRemover.takeItem(pl, heldScroll, 1);
         e.setCancelled(true);
         e.setCurrentItem(armorToEnchant);
+        heldScroll.setAmount(heldScroll.getAmount()-1);
+        e.setCursor(heldScroll);
         pl.playSound(pl.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 0.5f, 0.5f);
         pl.sendMessage(ChatColor.GREEN + "You have enchanted this item!");
     }
