@@ -77,6 +77,7 @@ public class SocketListener implements Listener {
         double reqLv = AttributeUtil.getCustomDouble(socketItem, "required.level");
         String enchantment = AttributeUtil.getCustomString(socketItem, "scroll.enchantment");
         int percent = (int) AttributeUtil.getCustomDouble(socketItem, "scroll.percent");
+        String tierSet = AttributeUtil.getCustomString(socketItem, "tierset");
 
         // create a new item with updated attributes, update its durability
         ItemStack newItem = new ItemStack(socketItemType);
@@ -124,6 +125,9 @@ public class SocketListener implements Listener {
         if (!enchantment.equals("")) {
             newItem = AttributeUtil.addCustomStat(newItem, "scroll.enchantment", enchantment);
             newItem = AttributeUtil.addCustomStat(newItem, "scroll.percent", percent);
+        }
+        if (!tierSet.equals("")) {
+            newItem = AttributeUtil.addCustomStat(newItem, "tierset", tierSet);
         }
 
         // ------------------------------------------------------------------------------------------------------------
