@@ -355,4 +355,15 @@ public abstract class Workstation implements Listener {
     public void setItemGUI(ItemGUI itemGUI) {
         this.itemGUI = itemGUI;
     }
+
+    /**
+     * Shorthand to get item display for profession menus
+     * @param is ItemStack to use for name
+     */
+    public String getName(ItemStack is) {
+        ItemMeta meta = is.getItemMeta();
+        if (meta == null)
+            return "";
+        return meta.getDisplayName();
+    }
 }

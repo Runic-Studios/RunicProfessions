@@ -9,9 +9,9 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 public class EnchantScroll {
 
-    private double percent;
-    private int reqLevel;
-    private EnchantEnum enchantEnum;
+    private final double percent;
+    private final int reqLevel;
+    private final EnchantEnum enchantEnum;
     private ItemStack item;
 
     public EnchantScroll(EnchantEnum enchantEnum, double percent, int reqLevel) {

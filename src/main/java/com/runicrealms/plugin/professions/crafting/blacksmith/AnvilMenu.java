@@ -102,10 +102,23 @@ public class AnvilMenu extends Workstation {
         bastionReqs.put(Material.IRON_INGOT, 8);
         bastionReqs.put(Material.PHANTOM_MEMBRANE, 1);
 
-        // legendary
+        // legendary weapons
         LinkedHashMap<Material, Integer> legendaryReqs = new LinkedHashMap<>();
         legendaryReqs.put(Material.IRON_INGOT, 5);
         legendaryReqs.put(Material.NETHER_STAR, 1);
+
+        // legendary off-hands
+        LinkedHashMap<Material, Integer> shieldReqs2 = (LinkedHashMap<Material, Integer>) shieldReqs.clone();
+        shieldReqs2.put(Material.NETHER_STAR, 3);
+
+        LinkedHashMap<Material, Integer> flailReqs2 = (LinkedHashMap<Material, Integer>) flailReqs.clone();
+        flailReqs2.put(Material.NETHER_STAR, 3);
+
+        LinkedHashMap<Material, Integer> wandReqs2 = (LinkedHashMap<Material, Integer>) wandReqs.clone();
+        wandReqs2.put(Material.NETHER_STAR, 3);
+
+        LinkedHashMap<Material, Integer> daggerReqs2 = (LinkedHashMap<Material, Integer>) daggerReqs.clone();
+        daggerReqs2.put(Material.NETHER_STAR, 3);
 
         ItemGUI forgeMenu = super.craftingMenu(pl, 36);
 
@@ -223,13 +236,29 @@ public class AnvilMenu extends Workstation {
                     reqHashMap = legendaryReqs;
                     exp = 400;
                 } else if (slot == 29) {
-                    reqLevel = 55;
+                    reqLevel = 50;
                     reqHashMap = legendaryReqs;
                     exp = 400;
                 } else if (slot == 30) {
-                    reqLevel = 60;
+                    reqLevel = 50;
                     reqHashMap = legendaryReqs;
                     exp = 400;
+                } else if (slot == 31) {
+                    reqLevel = 60;
+                    reqHashMap = shieldReqs2;
+                    exp = 0;
+                } else if (slot == 32) {
+                    reqLevel = 60;
+                    reqHashMap = flailReqs2;
+                    exp = 0;
+                } else if (slot == 33) {
+                    reqLevel = 60;
+                    reqHashMap = wandReqs2;
+                    exp = 0;
+                } else if (slot == 34) {
+                    reqLevel = 60;
+                    reqHashMap = daggerReqs2;
+                    exp = 0;
                 }
 
                 // destroy instance of inventory to prevent bugs
@@ -357,21 +386,63 @@ public class AnvilMenu extends Workstation {
                 "Iron Bar", 5, 100, 45, 0, MenuUtil.itemStatsToString(BlacksmithItems.ironHelm()),
                 false, false, false);
 
-        // level 50 - legendary bow
+        // level 50 - legendary weapons
         LinkedHashMap<Material, Integer> legenReqs = new LinkedHashMap<>();
         legenReqs.put(Material.IRON_INGOT, 5);
         legenReqs.put(Material.NETHER_STAR, 1);
         super.createMenuItem(forgeMenu, pl, 28, Material.BOW, "&6Stormsong", legenReqs,
-                "Iron Bar\nToken of Valor", 999, 400, 50, 10, MenuUtil.itemStatsToString(BlacksmithItems.Stormsong()),
+                "Iron Bar\nToken of Valor", 999, 400, 50, 10,
+                MenuUtil.itemStatsToString(BlacksmithItems.Stormsong()),
                 true, false, false);
-        // level 55 - legendary sword
         super.createMenuItem(forgeMenu, pl, 29, Material.WOODEN_SWORD, "&6Valkyrie", legenReqs,
-                "Iron Bar\nToken of Valor", 999, 400, 55, 10, MenuUtil.itemStatsToString(BlacksmithItems.Valkyrie()),
+                "Iron Bar\nToken of Valor", 999, 400, 50, 10,
+                MenuUtil.itemStatsToString(BlacksmithItems.Valkyrie()),
                 true, false, false);
-        // level 60 - legendary axe
         super.createMenuItem(forgeMenu, pl, 30, Material.WOODEN_AXE, "&6The Minotaur", legenReqs,
-                "Iron Bar\nToken of Valor", 999, 400, 60, 10, MenuUtil.itemStatsToString(BlacksmithItems.theMinotaur()),
+                "Iron Bar\nToken of Valor", 999, 400, 50, 10,
+                MenuUtil.itemStatsToString(BlacksmithItems.theMinotaur()),
                 true, false, false);
+
+        // level 60 - legendary off-hands
+        LinkedHashMap<Material, Integer> shieldReqs2 = new LinkedHashMap<>();
+        shieldReqs2.put(Material.IRON_INGOT, 8);
+        shieldReqs2.put(Material.OAK_LOG, 1);
+        shieldReqs2.put(Material.NETHER_STAR, 3);
+        super.createMenuItem(forgeMenu, pl, 31, Material.SHIELD, getName(BlacksmithItems.bulwark()), shieldReqs2,
+                "Iron Bar\nOak Log\nToken of Valor", 999, 0, 60, 0,
+                MenuUtil.itemStatsToString(BlacksmithItems.bulwark()),
+                false, false, false);
+
+        LinkedHashMap<Material, Integer> flailReqs2 = new LinkedHashMap<>();
+        flailReqs2.put(Material.GOLD_INGOT, 5);
+        flailReqs2.put(Material.IRON_INGOT, 2);
+        flailReqs2.put(Material.EMERALD_ORE, 1);
+        flailReqs2.put(Material.BIRCH_LOG, 2);
+        flailReqs2.put(Material.NETHER_STAR, 3);
+        super.createMenuItem(forgeMenu, pl, 32, Material.STONE_SHOVEL, getName(BlacksmithItems.redeemersFlail()), flailReqs2,
+                "Gold Bar\nIron Bar\nUncut Emerald\nElder Log\nToken of Valor", 999, 0, 60, 0,
+                MenuUtil.itemStatsToString(BlacksmithItems.redeemersFlail()),
+                false, false, false);
+
+        LinkedHashMap<Material, Integer> wandReqs2 = new LinkedHashMap<>();
+        wandReqs2.put(Material.IRON_INGOT, 5);
+        wandReqs2.put(Material.DIAMOND_ORE, 2);
+        wandReqs2.put(Material.BIRCH_LOG, 2);
+        wandReqs2.put(Material.NETHER_STAR, 3);
+        super.createMenuItem(forgeMenu, pl, 33, Material.STONE_HOE, getName(BlacksmithItems.icefuryWand()), wandReqs2,
+                "Iron Bar\nUncut Diamond\nElder Log\nToken of Valor", 999, 0, 60, 0,
+                MenuUtil.itemStatsToString(BlacksmithItems.icefuryWand()),
+                false, false, false);
+
+        LinkedHashMap<Material, Integer> daggerReqs2 = new LinkedHashMap<>();
+        daggerReqs2.put(Material.IRON_INGOT, 2);
+        daggerReqs2.put(Material.NETHER_QUARTZ_ORE, 3);
+        daggerReqs2.put(Material.OAK_LOG, 2);
+        daggerReqs2.put(Material.NETHER_STAR, 3);
+        super.createMenuItem(forgeMenu, pl, 34, Material.STONE_SWORD, getName(BlacksmithItems.blackSteelDirk()), daggerReqs2,
+                "Iron Bar\nUncut Opal\nOak Log\nToken of Valor", 999, 0, 60, 0,
+                MenuUtil.itemStatsToString(BlacksmithItems.blackSteelDirk()),
+                false, false, false);
     }
 
     /**
@@ -473,6 +544,18 @@ public class AnvilMenu extends Workstation {
                 break;
             case 30:
                 item = BlacksmithItems.theMinotaur();
+                break;
+            case 31:
+                item = BlacksmithItems.bulwark();
+                break;
+            case 32:
+                item = BlacksmithItems.redeemersFlail();
+                break;
+            case 33:
+                item = BlacksmithItems.icefuryWand();
+                break;
+            case 34:
+                item = BlacksmithItems.blackSteelDirk();
                 break;
         }
         return item;

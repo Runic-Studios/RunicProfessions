@@ -9,8 +9,8 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 public class TeleportScroll {
 
-    private int reqLevel;
-    private TeleportEnum location;
+    private final int reqLevel;
+    private final TeleportEnum location;
     private ItemStack item;
 
     public TeleportScroll(TeleportEnum location, int reqLevel) {

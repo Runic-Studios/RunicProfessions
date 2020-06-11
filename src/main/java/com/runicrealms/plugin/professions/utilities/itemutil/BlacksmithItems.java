@@ -166,27 +166,49 @@ public class BlacksmithItems {
                         "head", false).getItem();
     }
 
-    // level 50 - legendary archer
+    // level 50 - legendary weapons
     public static ItemStack Stormsong() {
         return new RunicItem
                 (Material.BOW, ChatColor.GOLD, "Stormsong", 10, 50,
                         0, 0, 0, 0, 0,
                         54, 58, "", false).getItem();
     }
-
-    // level 55 - legendary rogue
     public static ItemStack Valkyrie() {
         return new RunicItem
                 (Material.WOODEN_SWORD, ChatColor.GOLD, "Valkyrie", 10, 50,
                         0, 0, 0, 0, 0,
                         48, 52, "", false).getItem();
     }
-
-    // level 60 - legendary warrior
     public static ItemStack theMinotaur() {
         return new RunicItem
                 (Material.WOODEN_AXE, ChatColor.GOLD, "The Minotaur", 10, 50,
                         0, 0, 0, 0, 0,
                         45, 48, "", false).getItem();
+    }
+
+    // level 60 - legendary off-hands
+    public static ItemStack bulwark() {
+        return new RunicItem
+                (Material.SHIELD, ChatColor.GOLD, "Frost Lord's Bulwark", 0, 60,
+                        100, 0, 0, 0, 0, 8,
+                        "offhand", false).getItem();
+    }
+    public static ItemStack redeemersFlail() {
+        return new RunicItem
+                (Material.STONE_SHOVEL, ChatColor.GOLD, "Redeemer's Flail", 0, 60,
+                        0, 0, 4, 20, 0, 0,
+                        "offhand", false).getItem();
+    }
+    public static ItemStack icefuryWand() {
+        return new RunicItem
+                (Material.STONE_HOE, ChatColor.GOLD, "Icefury Wand", 0, 60,
+                        0, 0, 0, 0, 24, 0,
+                        "offhand", false).getItem();
+    }
+    public static ItemStack blackSteelDirk() {
+        return new RunicItem
+                (Material.STONE_SWORD, ChatColor.GOLD, "Black Steel Dirk", 0, 60,
+                        0, 0, 12, 0, 0, 0,
+                        "offhand", false).getItem();
     }
 }
