@@ -117,7 +117,7 @@ public class JewelerMenu extends Workstation {
                 int exp = 0;
                 LinkedHashMap<Material, Integer> reqHashMap = new LinkedHashMap<>();
 
-                // ruby
+                // ruby (health)
                 if (slot == 9) {
                     reqHashMap = cutRubyReqs;
                     exp = 25;
@@ -125,22 +125,52 @@ public class JewelerMenu extends Workstation {
                         dummyVar = 10;
                     } else if (currentLvl < 50) {
                         dummyVar = 20;
-                    } else {
+                    } else if (currentLvl < 60){
                         dummyVar = 30;
+                    } else {
+                        dummyVar = 50;
                     }
-                // sapphire
+                    // ruby (health regen)
                 } else if (slot == 10) {
+                    reqHashMap = cutRubyReqs;
+                    exp = 50;
+                    if (currentLvl < 30) {
+                        dummyVar = 1;
+                    } else if (currentLvl < 50) {
+                        dummyVar = 3;
+                    } else if (currentLvl < 60) {
+                        dummyVar = 5;
+                    } else {
+                        dummyVar = 7;
+                    }
+                // sapphire (mana)
+                } else if (slot == 11) {
                     reqHashMap = cutSapphireReqs;
                     exp = 50;
                     if (currentLvl < 30) {
                         dummyVar = 15;
                     } else if (currentLvl < 50) {
                         dummyVar = 25;
+                    } else if (currentLvl < 60) {
+                        dummyVar = 50;
                     } else {
-                        dummyVar = 35;
+                        dummyVar = 75;
+                    }
+                    // sapphire (mana regen)
+                } else if (slot == 12) {
+                    reqHashMap = cutSapphireReqs;
+                    exp = 50;
+                    if (currentLvl < 30) {
+                        dummyVar = 1;
+                    } else if (currentLvl < 50) {
+                        dummyVar = 2;
+                    } else if (currentLvl < 60) {
+                        dummyVar = 3;
+                    } else {
+                        dummyVar = 4;
                     }
                 // opal
-                } else if (slot == 11) {
+                } else if (slot == 13) {
                     reqLevel = 10;
                     reqHashMap = cutOpalReqs;
                     exp = 75;
@@ -148,11 +178,13 @@ public class JewelerMenu extends Workstation {
                         dummyVar = 1;
                     } else if (currentLvl < 50) {
                         dummyVar = 2;
-                    } else {
+                    } else if (currentLvl < 60) {
                         dummyVar = 3;
+                    } else {
+                        dummyVar = 4;
                     }
                 // emerald
-                } else if (slot == 12) {
+                } else if (slot == 14) {
                     reqLevel = 25;
                     reqHashMap = cutEmeraldReqs;
                     exp = 90;
@@ -160,11 +192,13 @@ public class JewelerMenu extends Workstation {
                         dummyVar = 2;
                     } else if (currentLvl < 50) {
                         dummyVar = 4;
-                    } else {
+                    } else if (currentLvl < 60) {
                         dummyVar = 6;
+                    } else {
+                        dummyVar = 8;
                     }
                 // diamond
-                } else if (slot == 13) {
+                } else if (slot == 15) {
                     reqLevel = 25;
                     reqHashMap = cutDiamondReqs;
                     exp = 120;
@@ -172,8 +206,10 @@ public class JewelerMenu extends Workstation {
                         dummyVar = 2;
                     } else if (currentLvl < 50) {
                         dummyVar = 4;
-                    } else {
+                    } else if (currentLvl < 60) {
                         dummyVar = 6;
+                    } else {
+                        dummyVar = 8;
                     }
                 }
 
@@ -195,28 +231,44 @@ public class JewelerMenu extends Workstation {
     private void setupItems(ItemGUI forgeMenu, Player pl, int currentLv) {
 
         String healthStr;
+        String healthRegenStr;
         String manaStr;
+        String manaRegenStr;
         String healingStr;
         String weaponStr;
         String spellStr;
         if (currentLv < 30) {
             healthStr = "10";
+            healthRegenStr = "1";
             manaStr = "15";
+            manaRegenStr = "1";
             healingStr = "2";
             weaponStr = "1";
             spellStr = "2";
         } else if (currentLv < 50) {
             healthStr = "20";
+            healthRegenStr = "3";
             manaStr = "25";
+            manaRegenStr = "2";
             healingStr = "4";
             weaponStr = "2";
             spellStr = "4";
-        } else {
+        } else if (currentLv < 60) {
             healthStr = "30";
-            manaStr = "35";
+            healthRegenStr = "5";
+            manaStr = "50";
+            manaRegenStr = "3";
             healingStr = "6";
             weaponStr = "3";
             spellStr = "6";
+        } else {
+            healthStr = "50";
+            healthRegenStr = "7";
+            manaStr = "75";
+            manaRegenStr = "4";
+            healingStr = "8";
+            weaponStr = "4";
+            spellStr = "8";
         }
 
         // ruby (+health)
@@ -225,32 +277,41 @@ public class JewelerMenu extends Workstation {
         super.createMenuItem(forgeMenu, pl, 9, Material.REDSTONE, "&fCut Ruby", cutRubyReqs,
                 "Uncut Ruby", 1, 25, 0, 0, "&c+" + healthStr + "❤ (Health)\n",
                 false, true, false);
+        // ruby (+health regen)
+        cutRubyReqs.put(Material.REDSTONE_ORE, 999);
+        super.createMenuItem(forgeMenu, pl, 10, Material.REDSTONE, "&fOrnate Ruby", cutRubyReqs,
+                "Uncut Ruby", 1, 35, 0, 0, "&c+" + healthRegenStr + "❤/s (Health Regen)\n",
+                false, true, false);
 
         // sapphire (+mana)
         LinkedHashMap<Material, Integer> cutSapphireReqs = new LinkedHashMap<>();
         cutSapphireReqs.put(Material.LAPIS_ORE, 999);
-        super.createMenuItem(forgeMenu, pl, 10, Material.LAPIS_LAZULI, "&fCut Sapphire", cutSapphireReqs,
+        super.createMenuItem(forgeMenu, pl, 11, Material.LAPIS_LAZULI, "&fCut Sapphire", cutSapphireReqs,
                 "Uncut Sapphire", 1, 50, 0, 0, "&3+" + manaStr + "✸ (Mana)\n",
+                false, true, false);
+        // sapphire (+mana)
+        super.createMenuItem(forgeMenu, pl, 12, Material.LAPIS_LAZULI, "&fOrnate Sapphire", cutSapphireReqs,
+                "Uncut Sapphire", 1, 50, 0, 0, "&3+" + manaRegenStr + "✸/s (Mana Regen)\n",
                 false, true, false);
 
         // opal (+dmg)
         LinkedHashMap<Material, Integer> cutOpalReqs = new LinkedHashMap<>();
         cutOpalReqs.put(Material.NETHER_QUARTZ_ORE, 999);
-        super.createMenuItem(forgeMenu, pl, 11, Material.QUARTZ, "&fCut Opal", cutOpalReqs,
+        super.createMenuItem(forgeMenu, pl, 13, Material.QUARTZ, "&fCut Opal", cutOpalReqs,
                 "Uncut Opal", 1, 75, 10, 0, "&c+" + weaponStr + "⚔ (DMG)\n",
                 false, true, false);
 
         // emerald (+healing)
         LinkedHashMap<Material, Integer> cutEmeraldReqs = new LinkedHashMap<>();
         cutEmeraldReqs.put(Material.EMERALD_ORE, 999);
-        super.createMenuItem(forgeMenu, pl, 12, Material.EMERALD, "&fCut Emerald", cutEmeraldReqs,
-                "Uncut Emerald", 1, 90, 25, 0, "&a+" + healingStr + "✦ (Heal)\n",
+        super.createMenuItem(forgeMenu, pl, 14, Material.EMERALD, "&fCut Emerald", cutEmeraldReqs,
+                "Uncut Emerald", 1, 90, 25, 0, "&a+" + healingStr + "✦ (Healing)\n",
                 false, true, false);
 
         // diamond (+spell dmg)
         LinkedHashMap<Material, Integer> cutDiamondReqs = new LinkedHashMap<>();
         cutDiamondReqs.put(Material.DIAMOND_ORE, 999);
-        super.createMenuItem(forgeMenu, pl, 13, Material.DIAMOND, "&fCut Diamond", cutDiamondReqs,
+        super.createMenuItem(forgeMenu, pl, 15, Material.DIAMOND, "&fCut Diamond", cutDiamondReqs,
                 "Uncut Diamond", 1, 120, 25, 0, "&3+" + spellStr + "ʔ (Magic)\n",
                 false, true, false);
     }
@@ -273,7 +334,8 @@ public class JewelerMenu extends Workstation {
             craftedItem = AttributeUtil.addCustomStat
                     (craftedItem, "custom.isGemstone", "true");
 
-            craftedItem = addGemStat(material, craftedItem, someVar);
+            craftedItem = addGemStat(GemEnum.valueOf
+                    (ChatColor.stripColor(dispName.toUpperCase().replace(" ", "_"))), craftedItem, someVar);
 
             LoreGenerator.generateItemLore(craftedItem, ChatColor.WHITE, dispName,
                     "\n" + ChatColor.DARK_GRAY + "Use this on an item", false, "");
@@ -294,24 +356,8 @@ public class JewelerMenu extends Workstation {
         pl.sendMessage(ChatColor.RED + "You fail to craft this item. [x" + failCount + "]");
     }
 
-    private ItemStack addGemStat(Material gemType, ItemStack craftedItem, int dummyVar) {
-        switch (gemType) {
-            case REDSTONE:
-                craftedItem = AttributeUtil.addCustomStat(craftedItem, "custom.maxHealth", dummyVar);
-                break;
-            case LAPIS_LAZULI:
-                craftedItem = AttributeUtil.addCustomStat(craftedItem, "custom.manaBoost", dummyVar);
-                break;
-            case EMERALD:
-                craftedItem = AttributeUtil.addCustomStat(craftedItem, "custom.healingBoost", dummyVar);
-                break;
-            case QUARTZ:
-                craftedItem = AttributeUtil.addCustomStat(craftedItem, "custom.attackDamage", dummyVar);
-                break;
-            case DIAMOND:
-                craftedItem = AttributeUtil.addCustomStat(craftedItem, "custom.magicDamage", dummyVar);
-                break;
-        }
+    private ItemStack addGemStat(GemEnum gemEnum, ItemStack craftedItem, int dummyVar) {
+        craftedItem = AttributeUtil.addCustomStat(craftedItem, gemEnum.getAttributeName(), dummyVar);
         return craftedItem;
     }
 }

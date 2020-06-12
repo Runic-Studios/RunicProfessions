@@ -18,7 +18,7 @@ import java.util.*;
 public class JewelMaster extends Shop {
 
     private static final int PRICE = 32;
-    private HashMap<UUID, List<ItemStack>> storedItems; // keep track of items stored in menu
+    private final HashMap<UUID, List<ItemStack>> storedItems; // keep track of items stored in menu
 
     public JewelMaster(Player pl) {
         setupShop(pl);
@@ -129,14 +129,18 @@ public class JewelMaster extends Shop {
 
         // retrieve old STORED stats
         double storedHealth = AttributeUtil.getCustomDouble(oldItem, "gem.maxHealth");
+        double storedHealthRegen = AttributeUtil.getCustomDouble(oldItem, "gem.healthRegen");
         double storedMana = AttributeUtil.getCustomDouble(oldItem, "gem.manaBoost");
+        double storedManaRegen = AttributeUtil.getCustomDouble(oldItem, "gem.manaRegen");
         double storedDmg = AttributeUtil.getCustomDouble(oldItem, "gem.attackDamage");
         double storedHealing = AttributeUtil.getCustomDouble(oldItem, "gem.healingBoost");
         double storedMagDmg = AttributeUtil.getCustomDouble(oldItem, "gem.magicDamage");
 
         // retrieve old ITEM stats
         double itemHealth = AttributeUtil.getCustomDouble(oldItem, "custom.maxHealth");
+        double itemHealthRegen = AttributeUtil.getCustomDouble(oldItem, "custom.healthRegen");
         double itemMana = AttributeUtil.getCustomDouble(oldItem, "custom.manaBoost");
+        double itemManaRegen = AttributeUtil.getCustomDouble(oldItem, "custom.manaRegen");
         double itemDmg = AttributeUtil.getCustomDouble(oldItem, "custom.attackDamage");
         double itemHealing = AttributeUtil.getCustomDouble(oldItem, "custom.healingBoost");
         double itemMagDmg = AttributeUtil.getCustomDouble(oldItem, "custom.magicDamage");
@@ -188,8 +192,10 @@ public class JewelMaster extends Shop {
             newItem = AttributeUtil.addCustomStat(newItem, "scroll.percent", percent);
         }
 
-        newItem = AttributeUtil.addCustomStat(newItem, "custom.maxHealth", itemHealth - storedHealth); // ruby
-        newItem = AttributeUtil.addCustomStat(newItem, "custom.manaBoost", itemMana - storedMana); // sapphire
+        newItem = AttributeUtil.addCustomStat(newItem, "custom.maxHealth", itemHealth - storedHealth); // ruby (health)
+        newItem = AttributeUtil.addCustomStat(newItem, "custom.healthRegen", itemHealthRegen - storedHealthRegen); // ruby (regen)
+        newItem = AttributeUtil.addCustomStat(newItem, "custom.manaBoost", itemMana - storedMana); // sapphire (mana)
+        newItem = AttributeUtil.addCustomStat(newItem, "custom.manaRegen", itemManaRegen - storedManaRegen); // sapphire (regen)
         newItem = AttributeUtil.addCustomStat(newItem, "custom.attackDamage", itemDmg - storedDmg); // opal
         newItem = AttributeUtil.addCustomStat(newItem, "custom.healingBoost", itemHealing - storedHealing); // emerald
         newItem = AttributeUtil.addCustomStat(newItem, "custom.magicDamage", itemMagDmg - storedMagDmg); // diamond

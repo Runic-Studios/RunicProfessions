@@ -25,14 +25,15 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class PotionListener implements Listener {
 
-    private static List<UUID> slayers = new ArrayList<>();
-    private static List<UUID> looters = new ArrayList<>();
-    private static List<UUID> pyromaniacs = new ArrayList<>();
+    private static final List<UUID> slayers = new ArrayList<>();
+    private static final List<UUID> looters = new ArrayList<>();
+    private static final List<UUID> pyromaniacs = new ArrayList<>();
     private static final int FIRE_AMT = 20;
 
     /**
      * Handles custom potions
      */
+    // todo: fix which item it consumes. make them instant-consume?
     @EventHandler
     public void onPotionUse(PlayerItemConsumeEvent e) {
 
@@ -62,7 +63,7 @@ public class PotionListener implements Listener {
             }
 
             if (manaAmt > 0) {
-                RunicCore.getManaManager().addMana(pl, manaAmt, false);
+                RunicCore.getRegenManager().addMana(pl, manaAmt, false);
             }
 
             if (slayingDuration > 0) {

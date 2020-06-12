@@ -13,6 +13,7 @@ import com.runicrealms.plugin.professions.crafting.enchanter.EnchantScrollListen
 import com.runicrealms.plugin.professions.crafting.hunter.*;
 import com.runicrealms.plugin.professions.crafting.jeweler.JewelShopListener;
 import com.runicrealms.plugin.professions.crafting.jeweler.JewelShopCMD;
+import com.runicrealms.plugin.professions.crafting.jeweler.RegenListener;
 import com.runicrealms.plugin.professions.crafting.jeweler.SocketListener;
 import com.runicrealms.plugin.professions.listeners.CustomFishListener;
 import com.runicrealms.plugin.professions.listeners.StationClickListener;
@@ -30,8 +31,12 @@ public final class RunicProfessions extends JavaPlugin {
     private static RunicProfessions plugin;
     private static ProfManager profManager;
 
-    public static RunicProfessions getInstance() { return plugin; }
-    public static ProfManager getProfManager() { return profManager; }
+    public static RunicProfessions getInstance() {
+        return plugin;
+    }
+    public static ProfManager getProfManager() {
+        return profManager;
+    }
 
     @Override
     public void onEnable() {
@@ -83,5 +88,6 @@ public final class RunicProfessions extends JavaPlugin {
         pm.registerEvents(new EnchantListener(), this);
         pm.registerEvents(new EnchantScrollListener(), this);
         pm.registerEvents(new CustomFishListener(), this);
+        pm.registerEvents(new RegenListener(), this);
     }
 }

@@ -66,8 +66,16 @@ public class SocketListener implements Listener {
         // retrieve the current custom values of the two items
         double itemHealth = AttributeUtil.getCustomDouble(socketItem, "custom.maxHealth");
         double gemHealth = AttributeUtil.getCustomDouble(heldItem, "custom.maxHealth");
+
+        double itemHealthRegen = AttributeUtil.getCustomDouble(socketItem, "custom.healthRegen");
+        double gemHealthRegen = AttributeUtil.getCustomDouble(heldItem, "custom.healthRegen");
+
         double itemMana = AttributeUtil.getCustomDouble(socketItem, "custom.manaBoost");
         double gemMana = AttributeUtil.getCustomDouble(heldItem, "custom.manaBoost");
+
+        double itemManaRegen = AttributeUtil.getCustomDouble(socketItem, "custom.manaRegen");
+        double gemManaRegen = AttributeUtil.getCustomDouble(heldItem, "custom.manaRegen");
+
         double itemDmg = AttributeUtil.getCustomDouble(socketItem, "custom.attackDamage");
         double gemDmg = AttributeUtil.getCustomDouble(heldItem, "custom.attackDamage");
         double itemHealing = AttributeUtil.getCustomDouble(socketItem, "custom.healingBoost");
@@ -116,8 +124,10 @@ public class SocketListener implements Listener {
         newItem = AttributeUtil.addGenericStat(newItem, "generic.armor", 0, slot); // remove armor values
 
         // add 'da stats
-        newItem = AttributeUtil.addCustomStat(newItem, "custom.maxHealth", itemHealth + gemHealth); // ruby
-        newItem = AttributeUtil.addCustomStat(newItem, "custom.manaBoost", itemMana + gemMana); // sapphire
+        newItem = AttributeUtil.addCustomStat(newItem, "custom.maxHealth", itemHealth + gemHealth); // ruby (health)
+        newItem = AttributeUtil.addCustomStat(newItem, "custom.healthRegen", itemHealthRegen + gemHealthRegen); // ruby (regen)
+        newItem = AttributeUtil.addCustomStat(newItem, "custom.manaBoost", itemMana + gemMana); // sapphire (mana)
+        newItem = AttributeUtil.addCustomStat(newItem, "custom.manaRegen", itemManaRegen + gemManaRegen); // sapphire (regen)
         newItem = AttributeUtil.addCustomStat(newItem, "custom.attackDamage", itemDmg + gemDmg); // opal
         newItem = AttributeUtil.addCustomStat(newItem, "custom.healingBoost", itemHealing + gemHealing); // emerald
         newItem = AttributeUtil.addCustomStat(newItem, "custom.magicDamage", itemMagDmg + gemMagDmg); // diamond
@@ -135,14 +145,18 @@ public class SocketListener implements Listener {
 
         // retrieve current stored stats
         double storedHealth = AttributeUtil.getCustomDouble(socketItem, "gem.maxHealth");
+        double storedHealthRegen = AttributeUtil.getCustomDouble(socketItem, "gem.healthRegen");
         double storedMana = AttributeUtil.getCustomDouble(socketItem, "gem.manaBoost");
+        double storedManaRegen = AttributeUtil.getCustomDouble(socketItem, "gem.manaRegen");
         double storedDmg = AttributeUtil.getCustomDouble(socketItem, "gem.attackDamage");
         double storedHealing = AttributeUtil.getCustomDouble(socketItem, "gem.healingBoost");
         double storedMagDmg = AttributeUtil.getCustomDouble(socketItem, "gem.magicDamage");
 
         // store new gem stats.
-        newItem = AttributeUtil.addCustomStat(newItem, "gem.maxHealth", storedHealth + gemHealth); // ruby
-        newItem = AttributeUtil.addCustomStat(newItem, "gem.manaBoost", storedMana + gemMana); // sapphire
+        newItem = AttributeUtil.addCustomStat(newItem, "gem.maxHealth", storedHealth + gemHealth); // ruby (health)
+        newItem = AttributeUtil.addCustomStat(newItem, "gem.healthRegen", storedHealthRegen + gemHealthRegen); // ruby (regen)
+        newItem = AttributeUtil.addCustomStat(newItem, "gem.manaBoost", storedMana + gemMana); // sapphire (mana)
+        newItem = AttributeUtil.addCustomStat(newItem, "gem.manaBoost", storedManaRegen + gemManaRegen); // sapphire (regen)
         newItem = AttributeUtil.addCustomStat(newItem, "gem.attackDamage", storedDmg + gemDmg); // opal
         newItem = AttributeUtil.addCustomStat(newItem, "gem.healingBoost", storedHealing + gemHealing); // emerald
         newItem = AttributeUtil.addCustomStat(newItem, "gem.magicDamage", storedMagDmg + gemMagDmg); // diamond
