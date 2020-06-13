@@ -99,6 +99,8 @@ public abstract class Workstation implements Listener {
                 desc.append("&eNext upgrade: Lv. 30\n");
             } else if (currentLvl < 50) {
                 desc.append("&eNext Upgrade: Lv. 50\n");
+            } else if (currentLvl < 60) {
+                desc.append("&eNext Upgrade: Lv. 60\n");
             }
         }
 

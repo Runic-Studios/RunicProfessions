@@ -126,6 +126,8 @@ public class JewelMaster extends Shop {
         double reqLv = AttributeUtil.getCustomDouble(oldItem, "required.level");
         String enchantment = AttributeUtil.getCustomString(oldItem, "scroll.enchantment");
         int percent = (int) AttributeUtil.getCustomDouble(oldItem, "scroll.percent");
+        String tierSet = AttributeUtil.getCustomString(oldItem, "tierset");
+        // todo: just read and copy all custom stats
 
         // retrieve old STORED stats
         double storedHealth = AttributeUtil.getCustomDouble(oldItem, "gem.maxHealth");
@@ -191,6 +193,7 @@ public class JewelMaster extends Shop {
             newItem = AttributeUtil.addCustomStat(newItem, "scroll.enchantment", enchantment);
             newItem = AttributeUtil.addCustomStat(newItem, "scroll.percent", percent);
         }
+        newItem = AttributeUtil.addCustomStat(newItem, "tierset", tierSet);
 
         newItem = AttributeUtil.addCustomStat(newItem, "custom.maxHealth", itemHealth - storedHealth); // ruby (health)
         newItem = AttributeUtil.addCustomStat(newItem, "custom.healthRegen", itemHealthRegen - storedHealthRegen); // ruby (regen)

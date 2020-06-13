@@ -14,7 +14,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerItemConsumeEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -35,10 +35,12 @@ public class PotionListener implements Listener {
      */
     // todo: fix which item it consumes. make them instant-consume?
     @EventHandler
-    public void onPotionUse(PlayerItemConsumeEvent e) {
+    public void onPotionUse(PlayerInteractEvent e) {
 
+        if (e.getItem() == null) return;
         if (e.getItem().getType() == Material.POTION) {
 
+            ItemStack item = e.getItem();
             Player pl = e.getPlayer();
             int healAmt = (int) AttributeUtil.getCustomDouble(e.getItem(), "potion.healing");
             int manaAmt = (int) AttributeUtil.getCustomDouble(e.getItem(), "potion.mana");
@@ -46,17 +48,19 @@ public class PotionListener implements Listener {
             int lootingDuration = (int) AttributeUtil.getCustomDouble(e.getItem(), "potion.looting");
             int fireDuration = (int) AttributeUtil.getCustomDouble(e.getItem(), "potion.fire");
 
-            // remove glass bottle from inventory, main hand or offhand
-            new BukkitRunnable() {
-                @Override
-                public void run() {
-                    if (pl.getInventory().getItemInOffHand().getType() == Material.GLASS_BOTTLE) {
-                        pl.getInventory().setItemInOffHand(new ItemStack(Material.AIR));
-                    } else {
-                        pl.getInventory().setItemInMainHand(new ItemStack(Material.AIR));
-                    }
-                }
-            }.runTaskLaterAsynchronously(RunicProfessions.getInstance(), 1L);
+            pl.getInventory().remove(item);
+
+//            // remove glass bottle from inventory, main hand or offhand
+//            new BukkitRunnable() {
+//                @Override
+//                public void run() {
+//                    if (pl.getInventory().getItemInOffHand().getType() == Material.GLASS_BOTTLE) {
+//                        pl.getInventory().setItemInOffHand(new ItemStack(Material.AIR));
+//                    } else {
+//                        pl.getInventory().setItemInMainHand(new ItemStack(Material.AIR));
+//                    }
+//                }
+//            }.runTaskLaterAsynchronously(RunicProfessions.getInstance(), 1L);
 
             if (healAmt > 0) {
                 HealUtil.healPlayer(healAmt, pl, pl, false, false, false);

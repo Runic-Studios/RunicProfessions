@@ -156,7 +156,7 @@ public class SocketListener implements Listener {
         newItem = AttributeUtil.addCustomStat(newItem, "gem.maxHealth", storedHealth + gemHealth); // ruby (health)
         newItem = AttributeUtil.addCustomStat(newItem, "gem.healthRegen", storedHealthRegen + gemHealthRegen); // ruby (regen)
         newItem = AttributeUtil.addCustomStat(newItem, "gem.manaBoost", storedMana + gemMana); // sapphire (mana)
-        newItem = AttributeUtil.addCustomStat(newItem, "gem.manaBoost", storedManaRegen + gemManaRegen); // sapphire (regen)
+        newItem = AttributeUtil.addCustomStat(newItem, "gem.manaRegen", storedManaRegen + gemManaRegen); // sapphire (regen)
         newItem = AttributeUtil.addCustomStat(newItem, "gem.attackDamage", storedDmg + gemDmg); // opal
         newItem = AttributeUtil.addCustomStat(newItem, "gem.healingBoost", storedHealing + gemHealing); // emerald
         newItem = AttributeUtil.addCustomStat(newItem, "gem.magicDamage", storedMagDmg + gemMagDmg); // diamond
