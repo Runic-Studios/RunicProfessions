@@ -28,8 +28,8 @@ public class EnchantListener implements Listener {
 
     private static final double CRIT_MODIFIER = 1.5;
     private static final double MOVE_CONSTANT = 0.6;
-    private static int WARMUP_TIME = 5;
-    private HashMap<UUID, BukkitTask> currentlyUsing = new HashMap<>();
+    private static final int WARMUP_TIME = 5;
+    private final HashMap<UUID, BukkitTask> currentlyUsing = new HashMap<>();
 
     @EventHandler
     public void onTeleportScrollUse(PlayerInteractEvent e) {
@@ -59,15 +59,18 @@ public class EnchantListener implements Listener {
     public void onSpellDamage(SpellDamageEvent e) {
         // listen for crit if attacker has crit, dodge and thorns for defender
         if (applyCrit(e.getPlayer())) {
+            e.getPlayer().spawnParticle(Particle.CRIT, ((LivingEntity) e.getEntity()).getEyeLocation(), 25, 0.75f, 0.5f, 0.75f, 0);
             e.setAmount((int) (e.getAmount()*CRIT_MODIFIER));
         }
         if (e.getEntity() instanceof Player) {
             Player victim = (Player) e.getEntity();
             if (applyDodge(victim)) {
+                victim.spawnParticle(Particle.CLOUD, victim.getEyeLocation(), 25, 0.75f, 0.5f, 0.75f, 0);
                 e.setCancelled(true);
                 return;
             }
             if (applyThorns(victim)) {
+                victim.spawnParticle(Particle.CRIT_MAGIC, victim.getEyeLocation(), 25, 0.75f, 0.5f, 0.75f, 0);
                 DamageUtil.damageEntitySpell(e.getAmount(), victim, e.getPlayer(), 100);
             }
         }
@@ -77,15 +80,18 @@ public class EnchantListener implements Listener {
     public void onWeaponDamage(WeaponDamageEvent e) {
         // listen for crit if attacker has crit, dodge and thorns for defender (if defender is player)
         if (applyCrit(e.getPlayer())) {
+            e.getPlayer().spawnParticle(Particle.CRIT, ((LivingEntity) e.getEntity()).getEyeLocation(), 25, 0.75f, 0.5f, 0.75f, 0);
             e.setAmount((int) (e.getAmount()*CRIT_MODIFIER));
         }
         if (e.getEntity() instanceof Player) {
             Player victim = (Player) e.getEntity();
             if (applyDodge(victim)) {
+                victim.spawnParticle(Particle.CLOUD, victim.getEyeLocation(), 25, 0.75f, 0.5f, 0.75f, 0);
                 e.setCancelled(true);
                 return;
             }
             if (applyThorns(victim)) {
+                victim.spawnParticle(Particle.CRIT_MAGIC, victim.getEyeLocation(), 25, 0.75f, 0.5f, 0.75f, 0);
                 DamageUtil.damageEntitySpell(e.getAmount(), e.getPlayer(), victim, 100);
             }
         }
@@ -98,10 +104,12 @@ public class EnchantListener implements Listener {
         if (e.getVictim() instanceof Player) {
             Player victim = (Player) e.getVictim();
             if (applyDodge(victim)) {
+                victim.spawnParticle(Particle.CLOUD, victim.getEyeLocation(), 25, 0.75f, 0.5f, 0.75f, 0);
                 e.setCancelled(true);
                 return;
             }
             if (applyThorns(victim)) {
+                victim.spawnParticle(Particle.CRIT_MAGIC, victim.getEyeLocation(), 25, 0.75f, 0.5f, 0.75f, 0);
                 DamageUtil.damageEntitySpell(e.getAmount(), (LivingEntity) e.getDamager(), victim, 100);
             }
         }

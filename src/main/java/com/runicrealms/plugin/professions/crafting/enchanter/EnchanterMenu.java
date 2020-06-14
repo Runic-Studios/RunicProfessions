@@ -94,6 +94,12 @@ public class EnchanterMenu extends Workstation {
         zenythScroll.put(Material.GUNPOWDER, 1);
         zenythScroll.put(Material.NETHER_QUARTZ_ORE, 1);
 
+        // party scroll
+        LinkedHashMap<Material, Integer> partyScroll = new LinkedHashMap<>();
+        partyScroll.put(Material.PAPER, 1);
+        partyScroll.put(Material.GUNPOWDER, 1);
+        partyScroll.put(Material.PINK_TULIP, 1);
+
         // frost's end scroll
         LinkedHashMap<Material, Integer> frostsEndScroll = new LinkedHashMap<>();
         frostsEndScroll.put(Material.PAPER, 1);
@@ -133,18 +139,9 @@ public class EnchanterMenu extends Workstation {
                 if (meta == null) return;
 
                 int slot = event.getSlot();
-                int dummyVar;
                 int reqLevel = 0;
                 int exp = 0;
                 LinkedHashMap<Material, Integer> reqHashMap = new LinkedHashMap<>();
-
-                if (currentLvl < 30) {
-                    dummyVar = 1;
-                } else if (currentLvl < 50) {
-                    dummyVar = 2;
-                } else {
-                    dummyVar = 3;
-                }
 
                 // paper
                 if (slot == 9) {
@@ -188,6 +185,10 @@ public class EnchanterMenu extends Workstation {
                     reqHashMap = enchantScrollReqs;
                     exp = 80;
                 } else if (slot == 18) {
+                    reqLevel = 50;
+                    exp = 100;
+                    reqHashMap = partyScroll;
+                } else if (slot == 19) {
                     // frost's end scroll
                     reqLevel = 60;
                     reqHashMap = frostsEndScroll;
@@ -217,10 +218,14 @@ public class EnchanterMenu extends Workstation {
             critAmt = 2;
             dodgeAmt = 2;
             thornsAmt = 2;
-        } else if (currentLv >= 50) {
+        } else if (currentLv >= 50 && currentLv < 60) {
             critAmt = 3;
             dodgeAmt = 3;
             thornsAmt = 3;
+        } else if (currentLv >= 60) {
+            critAmt = 4;
+            dodgeAmt = 4;
+            thornsAmt = 4;
         }
 
         // paper
@@ -290,12 +295,21 @@ public class EnchanterMenu extends Workstation {
                 "Paper\nMagic Powder\nTropical Fish", 1, 80, 40, 0, "&a+" + thornsAmt + "% Thorns Chance\n",
                 false, true, false);
 
+        // party scroll
+        LinkedHashMap<Material, Integer> partyScrollReqs = new LinkedHashMap<>();
+        partyScrollReqs.put(Material.PAPER, 1);
+        partyScrollReqs.put(Material.GUNPOWDER, 1);
+        partyScrollReqs.put(Material.PINK_TULIP, 1);
+        super.createMenuItem(tableMenu, pl, 18, Material.PURPLE_DYE, "&fParty Summon Scroll", partyScrollReqs,
+                "Paper\nAncient Powder\nLavender", 1, 100, 50, 0, "&eSummon your party to you!\n",
+                false, false, false);
+
         // frosts end scroll
         LinkedHashMap<Material, Integer> frostScrollReqs = new LinkedHashMap<>();
         frostScrollReqs.put(Material.PAPER, 1);
         frostScrollReqs.put(Material.GUNPOWDER, 1);
         frostScrollReqs.put(Material.GOLDEN_CARROT, 1);
-        super.createMenuItem(tableMenu, pl, 18, Material.PURPLE_DYE, "&fTeleport Scroll: Frost's End", frostScrollReqs,
+        super.createMenuItem(tableMenu, pl, 19, Material.PURPLE_DYE, "&fTeleport Scroll: Frost's End", frostScrollReqs,
                 "Paper\nAncient Powder\nAmbrosia Root", 1, 0, 60, 0, "&eTeleport to Frost's End!\n",
                 false, false, false);
     }
@@ -372,6 +386,9 @@ public class EnchanterMenu extends Workstation {
                 item = new EnchantScroll(EnchantEnum.THORNS, percent, 50).getItem(); // thorns
                 break;
             case 18:
+
+                break;
+            case 19:
                 item = new TeleportScroll(TeleportEnum.FROSTS_END, 60).getItem(); // frost's end
                 break;
         }

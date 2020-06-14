@@ -136,11 +136,13 @@ public class CauldronMenu extends Workstation {
                     reqHashMap = healthPotReqs;
                     exp = 35;
                     if (currentLvl < 30) {
-                        dummyVar = 35;
+                        dummyVar = 50;
                     } else if (currentLvl < 50) {
-                        dummyVar = 75;
+                        dummyVar = 100;
+                    } else if (currentLvl < 60) {
+                        dummyVar = 200;
                     } else {
-                        dummyVar = 125;
+                        dummyVar = 350;
                     }
                     // mana potion
                 } else if (slot == 10) {
@@ -148,11 +150,13 @@ public class CauldronMenu extends Workstation {
                     reqHashMap = manaPotReqs;
                     exp = 60;
                     if (currentLvl < 30) {
-                        dummyVar = 35;
+                        dummyVar = 50;
                     } else if (currentLvl < 50) {
-                        dummyVar = 75;
+                        dummyVar = 100;
+                    } else if (currentLvl < 60) {
+                        dummyVar = 200;
                     } else {
-                        dummyVar = 125;
+                        dummyVar = 350;
                     }
                     // slaying potion
                 } else if (slot == 11) {
@@ -163,8 +167,10 @@ public class CauldronMenu extends Workstation {
                         dummyVar = 5;
                     } else if (currentLvl < 50) {
                         dummyVar = 10;
-                    } else {
+                    } else if (currentLvl < 60) {
                         dummyVar = 15;
+                    } else {
+                        dummyVar = 20;
                     }
                     // looting potion
                 } else if (slot == 12) {
@@ -175,15 +181,17 @@ public class CauldronMenu extends Workstation {
                         dummyVar = 5;
                     } else if (currentLvl < 50) {
                         dummyVar = 10;
-                    } else {
+                    } else if (currentLvl < 60) {
                         dummyVar = 15;
+                    } else {
+                        dummyVar = 20;
                     }
                     // fire potion
                 } else if (slot == 13) {
                     reqLevel = 60;
                     reqHashMap = sacredFirePotReqs;
                     exp = 0;
-                    dummyVar = 15;
+                    dummyVar = 20;
                 }
 
                 // destroy instance of inventory to prevent bugs
@@ -209,22 +217,28 @@ public class CauldronMenu extends Workstation {
         String lootingStr;
         String tierStr;
         if (currentLv < 30) {
-            healthStr = "35";
-            manaStr = "35";
+            healthStr = "50";
+            manaStr = "50";
             slayingStr = "5";
             lootingStr = "5";
-            tierStr = "Minor Crafted";
+            tierStr = "Lesser Crafted";
         } else if (currentLv < 50) {
-            healthStr = "75";
-            manaStr = "75";
+            healthStr = "100";
+            manaStr = "100";
             slayingStr = "10";
             lootingStr = "10";
-            tierStr = "Major Crafted";
-        } else {
-            healthStr = "125";
-            manaStr = "125";
+            tierStr = "Minor Crafted";
+        } else if (currentLv < 60) {
+            healthStr = "200";
+            manaStr = "200";
             slayingStr = "15";
             lootingStr = "15";
+            tierStr = "Major Crafted";
+        } else {
+            healthStr = "350";
+            manaStr = "350";
+            slayingStr = "20";
+            lootingStr = "20";
             tierStr = "Greater Crafted";
         }
 

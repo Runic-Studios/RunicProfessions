@@ -6,6 +6,7 @@ import com.runicrealms.plugin.attributes.AttributeUtil;
 import com.runicrealms.plugin.events.LootEvent;
 import com.runicrealms.plugin.events.SpellDamageEvent;
 import com.runicrealms.plugin.events.WeaponDamageEvent;
+import com.runicrealms.plugin.item.util.ItemRemover;
 import com.runicrealms.plugin.spellapi.spellutil.HealUtil;
 import com.runicrealms.plugin.utilities.ColorUtil;
 import org.bukkit.*;
@@ -23,6 +24,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
+// todo: POTION COOLDOWNS
 public class PotionListener implements Listener {
 
     private static final List<UUID> slayers = new ArrayList<>();
@@ -33,7 +35,6 @@ public class PotionListener implements Listener {
     /**
      * Handles custom potions
      */
-    // todo: fix which item it consumes. make them instant-consume?
     @EventHandler
     public void onPotionUse(PlayerInteractEvent e) {
 
@@ -48,19 +49,8 @@ public class PotionListener implements Listener {
             int lootingDuration = (int) AttributeUtil.getCustomDouble(e.getItem(), "potion.looting");
             int fireDuration = (int) AttributeUtil.getCustomDouble(e.getItem(), "potion.fire");
 
-            pl.getInventory().remove(item);
-
-//            // remove glass bottle from inventory, main hand or offhand
-//            new BukkitRunnable() {
-//                @Override
-//                public void run() {
-//                    if (pl.getInventory().getItemInOffHand().getType() == Material.GLASS_BOTTLE) {
-//                        pl.getInventory().setItemInOffHand(new ItemStack(Material.AIR));
-//                    } else {
-//                        pl.getInventory().setItemInMainHand(new ItemStack(Material.AIR));
-//                    }
-//                }
-//            }.runTaskLaterAsynchronously(RunicProfessions.getInstance(), 1L);
+            ItemRemover.takeItem(pl, item, 1);
+            pl.playSound(pl.getLocation(), Sound.ENTITY_GENERIC_DRINK, 0.5f, 1.0f);
 
             if (healAmt > 0) {
                 HealUtil.healPlayer(healAmt, pl, pl, false, false, false);

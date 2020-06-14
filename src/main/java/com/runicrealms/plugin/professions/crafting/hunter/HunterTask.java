@@ -51,8 +51,8 @@ public class HunterTask {
         }
     }
 
-    private Player pl;
-    private MythicMob mob;
+    private final Player pl;
+    private final MythicMob mob;
 
     public HunterTask(Player pl) {
         this.pl = pl;
