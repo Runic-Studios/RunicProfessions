@@ -43,7 +43,7 @@ import java.util.concurrent.ThreadLocalRandom;
 @SuppressWarnings("FieldCanBeLocal")
 public class FishingListener implements Listener {
 
-    private double nuggetRate = 5.0;
+    private final double nuggetRate = 5.0;
 
     @EventHandler
     public void onFishCatch(PlayerFishEvent e) {

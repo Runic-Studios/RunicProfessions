@@ -9,10 +9,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Objects;
+import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class EnchanterMenu extends Workstation {
@@ -386,12 +383,27 @@ public class EnchanterMenu extends Workstation {
                 item = new EnchantScroll(EnchantEnum.THORNS, percent, 50).getItem(); // thorns
                 break;
             case 18:
-
+                item = partySummonScroll();
                 break;
             case 19:
                 item = new TeleportScroll(TeleportEnum.FROSTS_END, 60).getItem(); // frost's end
                 break;
         }
+        return item;
+    }
+
+    public static ItemStack partySummonScroll() {
+        ItemStack item = new ItemStack(Material.PURPLE_DYE);
+        ItemMeta meta = item.getItemMeta();
+        Objects.requireNonNull(meta).setDisplayName(ChatColor.WHITE + "Party Summon Scroll");
+        meta.setLore(Arrays.asList(
+                "",
+                ChatColor.GOLD + "" + ChatColor.BOLD + "RIGHT CLICK " + ChatColor.GREEN + "Summon Party",
+                ChatColor.GRAY + "Summon your party to you!",
+                "",
+                ChatColor.WHITE + "Crafted",
+                ChatColor.GRAY + "Consumable"));
+        item.setItemMeta(meta);
         return item;
     }
 }

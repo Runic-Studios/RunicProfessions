@@ -14,7 +14,7 @@ public class CustomFishListener implements Listener {
     /*
     Lets do this so players cannot game the system
      */
-    private HashSet<Player> currentFishers;
+    private final HashSet<Player> currentFishers;
 
     public CustomFishListener() {
         currentFishers = new HashSet<>();

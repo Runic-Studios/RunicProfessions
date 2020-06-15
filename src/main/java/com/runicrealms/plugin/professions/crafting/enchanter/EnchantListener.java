@@ -40,6 +40,18 @@ public class EnchantListener implements Listener {
 
         Material mat = e.getPlayer().getInventory().getItemInMainHand().getType();
         if (mat != Material.PURPLE_DYE) return;
+
+        // summoning scroll
+        if (e.getPlayer().getInventory().getItemInMainHand().equals(EnchanterMenu.partySummonScroll())) {
+            if (RunicCore.getPartyManager().getPlayerParty(e.getPlayer()) == null) {
+                e.getPlayer().playSound(e.getPlayer().getLocation(), Sound.ENTITY_GENERIC_EXTINGUISH_FIRE, 0.5f, 1.0f);
+                e.getPlayer().sendMessage(ChatColor.RED + "You must be in a party to use this scroll!");
+            } else {
+                currentlyUsing.put(e.getPlayer().getUniqueId(), warmupScroll(e.getPlayer(), e.getPlayer().getInventory().getItemInMainHand()));
+            }
+            return;
+        }
+
         if (AttributeUtil.getCustomString(e.getPlayer().getInventory().getItemInMainHand(),
                 "scroll.location").equals("")) return;
 
@@ -180,11 +192,23 @@ public class EnchantListener implements Listener {
                     this.cancel();
                     ItemRemover.takeItem(pl, scroll, 1);
                     currentlyUsing.remove(pl.getUniqueId());
-                    pl.teleport(TeleportEnum.getEnum(
-                            (AttributeUtil.getCustomString(scroll, "scroll.location"))).getLocation());
-                    pl.playSound(pl.getLocation(), Sound.BLOCK_PORTAL_TRAVEL, 0.5f, 1.0f);
-                    pl.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "You've have been teleported!");
-                    return;
+                    if (scroll.equals(EnchanterMenu.partySummonScroll())
+                            && RunicCore.getPartyManager().getPlayerParty(pl) != null) {
+
+                        for (Player mem : RunicCore.getPartyManager().getPlayerParty(pl).getMembersWithLeader()) {
+                            mem.teleport(currLocation);
+                            mem.playSound(pl.getLocation(), Sound.BLOCK_PORTAL_TRAVEL, 0.5f, 1.0f);
+                            mem.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "You've been party summoned!");
+                            return;
+                        }
+
+                    } else {
+                        pl.teleport(TeleportEnum.getEnum(
+                                (AttributeUtil.getCustomString(scroll, "scroll.location"))).getLocation());
+                        pl.playSound(pl.getLocation(), Sound.BLOCK_PORTAL_TRAVEL, 0.5f, 1.0f);
+                        pl.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "You've have been teleported!");
+                        return;
+                    }
                 }
 
                 pl.getWorld().spawnParticle(Particle.REDSTONE, pl.getLocation().add(0,1,0),
