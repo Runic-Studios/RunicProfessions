@@ -16,9 +16,8 @@ import java.util.*;
 public class ProfManager {
 
     // globals
-    private RunicProfessions plugin = RunicProfessions.getInstance();
-    private HashMap<Player, Workstation> workstations;
-    private ArrayList<Player> currentCrafters;
+    private final HashMap<Player, Workstation> workstations;
+    private final ArrayList<Player> currentCrafters;
 
     // constructor
     public ProfManager() {
@@ -37,7 +36,7 @@ public class ProfManager {
                 regenLogs();
                 regenOres();
             }
-        }.runTaskTimer(this.plugin, 20, 600);
+        }.runTaskTimer(RunicProfessions.getInstance(), 20, 600);
     }
 
     // grabs a list of locations and materials from file, sets blocks to that material
@@ -48,7 +47,8 @@ public class ProfManager {
         FileConfiguration blockLocations = YamlConfiguration.loadConfiguration(regenBlocks);
         ConfigurationSection logs = blockLocations.getConfigurationSection("Alterra.FARMS");
 
-        if (regenBlock(logs)) return;
+        if (regenBlock(logs, "Alterra"))
+            return;
 
         // clear the data, update the file
         blockLocations.set("Alterra.NEXT_ID_FARMS", 0);
@@ -66,7 +66,8 @@ public class ProfManager {
         FileConfiguration blockLocations = YamlConfiguration.loadConfiguration(regenBlocks);
         ConfigurationSection logs = blockLocations.getConfigurationSection("Alterra.LOGS");
 
-        if (regenBlock(logs)) return;
+        if (regenBlock(logs, "Alterra"))
+            return;
 
         // clear the data, update the file
         blockLocations.set("Alterra.NEXT_ID_LOGS", 0);
@@ -83,13 +84,22 @@ public class ProfManager {
         File regenBlocks = new File(Bukkit.getServer().getPluginManager().getPlugin("RunicProfessions").getDataFolder(),
                 "regen_blocks.yml");
         FileConfiguration blockLocations = YamlConfiguration.loadConfiguration(regenBlocks);
-        ConfigurationSection ores = blockLocations.getConfigurationSection("Alterra.ORES");
+        ConfigurationSection alterraOres = blockLocations.getConfigurationSection("Alterra.ORES");
 
-        if (regenBlock(ores)) return;
+        if (regenBlock(alterraOres, "Alterra")) {
+            // clear the data, update the file
+            blockLocations.set("Alterra.NEXT_ID_ORES", 0);
+            blockLocations.set("Alterra.ORES", null);
+        }
 
-        // clear the data, update the file
-        blockLocations.set("Alterra.NEXT_ID_ORES", 0);
-        blockLocations.set("Alterra.ORES", null);
+        ConfigurationSection dungeonsOres = blockLocations.getConfigurationSection("dungeons.ORES");
+
+        if (regenBlock(dungeonsOres, "dungeons")) {
+            // clear the data, update the file
+            blockLocations.set("dungeons.NEXT_ID_ORES", 0);
+            blockLocations.set("dungeons.ORES", null);
+        }
+
         try {
             blockLocations.save(regenBlocks);
         } catch (IOException ex) {
@@ -97,15 +107,15 @@ public class ProfManager {
         }
     }
 
-    private boolean regenBlock(ConfigurationSection configSection) {
-        if (configSection == null) return true;
-
+    private boolean regenBlock(ConfigurationSection configSection, String world) {
+        if (configSection == null)
+            return false;
         for (String id : configSection.getKeys(false)) {
             Material material = Material.getMaterial(configSection.get(id + ".type").toString());
             double x = configSection.getDouble(id + ".x");
             double y = configSection.getDouble(id + ".y");
             double z = configSection.getDouble(id + ".z");
-            Location loc = new Location(Bukkit.getWorld("Alterra"), x, y, z);
+            Location loc = new Location(Bukkit.getWorld(world), x, y, z);
             loc.getBlock().setType(material);
             Material type = loc.getBlock().getType();
             // make the crops fully grown
@@ -117,7 +127,7 @@ public class ProfManager {
             loc.getBlock().getWorld().spawnParticle(Particle.VILLAGER_HAPPY,
                     loc.getBlock().getLocation().add(0.5, 0, 0.5), 25, 0.5, 0.5, 0.5, 0.01);
         }
-        return false;
+        return true;
     }
 
     public ArrayList<Player> getCurrentCrafters() {

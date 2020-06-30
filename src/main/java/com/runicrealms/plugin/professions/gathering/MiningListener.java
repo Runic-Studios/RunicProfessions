@@ -25,6 +25,7 @@ import com.runicrealms.plugin.utilities.HologramUtil;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
@@ -233,10 +234,10 @@ public class MiningListener implements Listener {
         if (loc.clone().add(0, 1.5, 0).getBlock().getType() == Material.AIR) {
             HologramUtil.createStaticHologram(pl, loc, ChatColor.GREEN + "" + ChatColor.BOLD + name, 0, 2, 0);
         }
-        if (pl.getInventory().firstEmpty() != -1) {
-            pl.getInventory().addItem(gatheredItem(gathered, itemName, desc));
-        } else {
-            pl.getWorld().dropItem(pl.getLocation(), gatheredItem(gathered, itemName, desc));
+
+        HashMap<Integer, ItemStack> leftOver = pl.getInventory().addItem(gatheredItem(gathered, itemName, desc));
+        for (ItemStack is : leftOver.values()) {
+            pl.getWorld().dropItem(pl.getLocation(), is);
         }
 
         // give the player a coin
