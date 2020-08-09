@@ -14,24 +14,17 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 public class CookingListener implements Listener {
 
+    /*
+    Controls custom food items
+     */
     @EventHandler
     public void onCustomFoodEat(PlayerItemConsumeEvent e) {
         Player pl = e.getPlayer();
-        if (e.getItem().isSimilar(CookingMenu.rabbitStew())) {
-            e.setCancelled(true);
-            if (RunicCore.getCombatManager().getPlayersInCombat().containsKey(pl.getUniqueId())) {
-                pl.sendMessage(ChatColor.RED + "You can't do that in combat!");
-                return;
-            }
-            takeItem(pl, e.getItem());
-            pl.setFoodLevel(pl.getFoodLevel() + 6);
-            healOverTime(pl, CookingMenu.getRabbitStewAmt(), CookingMenu.getStewDuration(), true);
-        } else if (e.getItem().isSimilar(CookingMenu.ambrosiaStew())) {
-            e.setCancelled(true);
-            takeItem(pl, e.getItem());
-            pl.setFoodLevel(pl.getFoodLevel() + 6);
-            healOverTime(pl, CookingMenu.getAmbrosiaStewAmt(), CookingMenu.getStewDuration(), false);
-        }
+        if (!e.getItem().isSimilar(CookingMenu.ambrosiaStew())) return;
+        e.setCancelled(true);
+        takeItem(pl, e.getItem());
+        pl.setFoodLevel(pl.getFoodLevel() + 6);
+        healOverTime(pl, CookingMenu.getAmbrosiaStewAmt(), CookingMenu.getStewDuration(), false);
     }
 
     /**

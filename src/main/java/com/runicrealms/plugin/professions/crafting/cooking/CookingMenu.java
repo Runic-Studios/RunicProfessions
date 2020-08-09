@@ -15,9 +15,8 @@ import java.util.*;
 @SuppressWarnings("FieldCanBeLocal")
 public class CookingMenu extends Workstation {
 
-    private static final int RABBIT_STEW_AMT = 250;
     private static final int STEW_DURATION = 10;
-    private static final int AMBROSIA_STEW_AMT = 250;
+    private static final int AMBROSIA_STEW_AMT = 350;
 
     public CookingMenu(Player pl) {
         setupWorkstation(pl);
@@ -78,11 +77,6 @@ public class CookingMenu extends Workstation {
         salmonReqs.put(Material.SALMON, 1);
         salmonReqs.put(Material.OAK_LOG, 1);
 
-        // rabbit stew
-        LinkedHashMap<Material, Integer> rabbitStewReqs = new LinkedHashMap<>();
-        rabbitStewReqs.put(Material.RABBIT, 1);
-        rabbitStewReqs.put(Material.DARK_OAK_LOG, 1);
-
         // ambrosia stew
         LinkedHashMap<Material, Integer> ambrosiaStewReqs = new LinkedHashMap<>();
         ambrosiaStewReqs.put(Material.GOLDEN_CARROT, 1);
@@ -119,8 +113,6 @@ public class CookingMenu extends Workstation {
                 } else if (event.getSlot() == 11) {
                     reqs = salmonReqs;
                 } else if (event.getSlot() == 12) {
-                    reqs = rabbitStewReqs;
-                } else if (event.getSlot() == 13) {
                     reqs = ambrosiaStewReqs;
                 }
 
@@ -169,22 +161,12 @@ public class CookingMenu extends Workstation {
                 "Salmon\nOak Log", 999, 0, 0, 0, "",
                 true, false, false);
 
-        // rabbit stew
-        LinkedHashMap<Material, Integer> rabbitSteqReqs = new LinkedHashMap<>();
-        rabbitSteqReqs.put(Material.RABBIT, 1);
-        rabbitSteqReqs.put(Material.DARK_OAK_LOG, 1);
-        super.createMenuItem(forgeMenu, pl, 12, Material.RABBIT_STEW, "&fRabbit Stew", rabbitSteqReqs,
-                "Uncooked Rabbit\nDark Oak Log", 999, 0, 0, 1,
-                "&eRestores &c" + RABBIT_STEW_AMT + "❤ &eover " + STEW_DURATION + " seconds" +
-                        "\n&7(Must be out of combat)\n",
-                true, false, false);
-
         // ambrosia stew
         LinkedHashMap<Material, Integer> ambrosiaStewReqs = new LinkedHashMap<>();
         ambrosiaStewReqs.put(Material.GOLDEN_CARROT, 1);
         ambrosiaStewReqs.put(Material.RABBIT, 1);
         ambrosiaStewReqs.put(Material.DARK_OAK_LOG, 1);
-        super.createMenuItem(forgeMenu, pl, 13, Material.RABBIT_STEW, "&fAmbrosia Stew", ambrosiaStewReqs,
+        super.createMenuItem(forgeMenu, pl, 12, Material.RABBIT_STEW, "&fAmbrosia Stew", ambrosiaStewReqs,
                 "Ambrosia Root\nUncooked Rabbit\nDark Oak Log", 999, 0, 0, 2,
                 "&eRestores &c" + AMBROSIA_STEW_AMT + "❤ &eover " + STEW_DURATION + " seconds\n",
                 true, false, true);
@@ -198,11 +180,7 @@ public class CookingMenu extends Workstation {
 
             ItemStack craftedItem = new ItemStack(material);
 
-            if (durability == 1) {
-
-                craftedItem = rabbitStew();
-
-            } else if (durability == 2) {
+            if (durability == 2) {
 
                 craftedItem = ambrosiaStew();
 
@@ -228,23 +206,6 @@ public class CookingMenu extends Workstation {
         }
     }
 
-    public static ItemStack rabbitStew() {
-        ItemStack rabbitStew = new ItemStack(Material.RABBIT_STEW);
-        ItemMeta rabbitStewMeta = rabbitStew.getItemMeta();
-        Objects.requireNonNull(rabbitStewMeta).setDisplayName(ChatColor.WHITE + "Rabbit Stew");
-        rabbitStewMeta.setLore(Arrays.asList(
-                "",
-                ChatColor.YELLOW + "Restores " + ChatColor.RED + RABBIT_STEW_AMT + "❤" + ChatColor.YELLOW + " over " + STEW_DURATION + " seconds",
-                ChatColor.GRAY + "(Must be out of combat)",
-                "",
-                ChatColor.GRAY + "Consumable"));
-        ((Damageable) rabbitStewMeta).setDamage(2);
-        rabbitStewMeta.setUnbreakable(true);
-        rabbitStewMeta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
-        rabbitStew.setItemMeta(rabbitStewMeta);
-        return rabbitStew;
-    }
-
     public static ItemStack ambrosiaStew() {
         ItemStack ambrosiaStew = new ItemStack(Material.RABBIT_STEW);
         ItemMeta ambrosiaStewMeta = ambrosiaStew.getItemMeta();
@@ -261,10 +222,6 @@ public class CookingMenu extends Workstation {
         ambrosiaStewMeta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
         ambrosiaStew.setItemMeta(ambrosiaStewMeta);
         return ambrosiaStew;
-    }
-
-    public static int getRabbitStewAmt() {
-        return RABBIT_STEW_AMT;
     }
 
     public static int getAmbrosiaStewAmt() {
