@@ -1,7 +1,7 @@
 package com.runicrealms.plugin.professions.gathering;
 
+import com.runicrealms.plugin.RunicProfessions;
 import com.runicrealms.plugin.attributes.AttributeUtil;
-import com.runicrealms.plugin.utilities.ActionBarUtil;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.protection.ApplicableRegionSet;
@@ -10,8 +10,6 @@ import com.sk89q.worldguard.protection.regions.RegionContainer;
 import com.sk89q.worldguard.protection.regions.RegionQuery;
 import org.bukkit.*;
 import org.bukkit.block.Block;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -19,26 +17,18 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
-import com.runicrealms.plugin.utilities.CurrencyUtil;
-import com.runicrealms.plugin.utilities.HologramUtil;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 
-/**
- * Listener for Woodcutting (Gathering Profesion)
+/*
+ * Listener for Woodcutting (Gathering Profession)
  * adds blocks material type and coordinates to yml file
  * for the ProfManager to respawn at intervals, checks name of
  * WG region for "grove" to perform tasks
  */
-@SuppressWarnings("FieldCanBeLocal")
 public class WCListener implements Listener {
-
-    private double coinRate = 5.0;
 
     @EventHandler
     public void onResourceBreak(BlockBreakEvent e) {
@@ -80,16 +70,11 @@ public class WCListener implements Listener {
         Location loc = block.getLocation().add(0.5, 0, 0.5);
         Material oldType = block.getType();
 
-        File regenBlocks = new File(Bukkit.getServer().getPluginManager().getPlugin("RunicProfessions").getDataFolder(),
-                "regen_blocks.yml");
-        FileConfiguration blockLocations = YamlConfiguration.loadConfiguration(regenBlocks);
-
         Material placeHolderType;
         Material itemType;
         String holoString;
         String itemName;
         String desc = "Raw Material";
-        String subPath;
 
         switch (block.getType()) {
             // woodcutting
@@ -98,42 +83,36 @@ public class WCListener implements Listener {
                 itemType = Material.OAK_LOG;
                 holoString = "+ Oak";
                 itemName = "Oak Log";
-                subPath = "LOGS";
                 break;
             case SPRUCE_WOOD:
                 placeHolderType = Material.SPRUCE_PLANKS;
                 itemType = Material.SPRUCE_LOG;
                 holoString = "+ Spruce";
                 itemName = "Spruce Log";
-                subPath = "LOGS";
                 break;
             case BIRCH_WOOD:
                 placeHolderType = Material.BIRCH_PLANKS;
                 itemType = Material.BIRCH_LOG;
                 holoString = "+ Elder";
                 itemName = "Elder Log";
-                subPath = "LOGS";
                 break;
             case JUNGLE_WOOD:
                 placeHolderType = Material.JUNGLE_PLANKS;
                 itemType = Material.JUNGLE_LOG;
                 holoString = "+ Jungle";
                 itemName = "Jungle Log";
-                subPath = "LOGS";
                 break;
             case ACACIA_WOOD:
                 placeHolderType = Material.ACACIA_PLANKS;
                 itemType = Material.ACACIA_LOG;
                 holoString = "+ Acacia";
                 itemName = "Acacia Log";
-                subPath = "LOGS";
                 break;
             case DARK_OAK_WOOD:
                 placeHolderType = Material.DARK_OAK_PLANKS;
                 itemType = Material.DARK_OAK_LOG;
                 holoString = "+ Dark Oak";
                 itemName = "Dark Oak Log";
-                subPath = "LOGS";
                 break;
             default:
                 return;
@@ -180,92 +159,9 @@ public class WCListener implements Listener {
         }
 
         // gather the material
-        gatherMaterial(pl, loc, block,
+        GatheringUtil.gatherMaterial(pl, loc, block,
                 placeHolderType, itemType, holoString, itemName, desc,
                 "You fail to gather any resources.", chance, durability);
-        saveBlockLocation(regenBlocks, blockLocations, subPath, block, oldType);
-    }
-
-
-    private void gatherMaterial(Player pl, Location loc, Block b,
-                                Material placeholder, Material gathered, String name, String itemName, String desc,
-                                String failMssg, double chance, int tier) {
-
-        b.setType(placeholder);
-
-        double successRate;
-        switch (tier) {
-            case 5:
-                successRate = 75;
-                break;
-            case 4:
-                successRate = 62.5;
-                break;
-            case 3:
-                successRate = 50;
-                break;
-            case 2:
-                successRate = 37.5;
-                break;
-            case 1:
-            default:
-                successRate = 25;
-                break;
-        }
-
-        if (chance < (100 - successRate)) {
-            ActionBarUtil.sendTimedMessage(pl, "&c" + failMssg, 3);
-            return;
-        }
-
-        // give the player the gathered item
-        if (loc.clone().add(0, 1.5, 0).getBlock().getType() == Material.AIR) {
-            HologramUtil.createStaticHologram(pl, loc, ChatColor.GREEN + "" + ChatColor.BOLD + name, 0, 2, 0);
-        }
-        if (pl.getInventory().firstEmpty() != -1) {
-            pl.getInventory().addItem(gatheredItem(gathered, itemName, desc));
-        } else {
-            pl.getWorld().dropItem(pl.getLocation(), gatheredItem(gathered, itemName, desc));
-        }
-
-        // give the player a coin
-        if (chance >= (100 - this.coinRate)) {
-            b.getWorld().playSound(loc, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 0.5f, 2.0f);
-            HologramUtil.createStaticHologram(pl, loc, ChatColor.GOLD + "" + ChatColor.BOLD + "+ Coin", 0, 1.25, 0);
-            if (pl.getInventory().firstEmpty() != -1) {
-                pl.getInventory().addItem(CurrencyUtil.goldCoin());
-            } else {
-                pl.getWorld().dropItem(pl.getLocation(), CurrencyUtil.goldCoin());
-            }
-        }
-    }
-    private ItemStack gatheredItem(Material material, String itemName, String desc) {
-        ItemStack item = new ItemStack(material);
-        ItemMeta meta = item.getItemMeta();
-        ArrayList<String> lore = new ArrayList<>();
-        meta.setDisplayName(ChatColor.WHITE + itemName);
-        lore.add(ChatColor.GRAY + desc);
-        meta.setLore(lore);
-        item.setItemMeta(meta);
-        return item;
-    }
-
-    private void saveBlockLocation(File file, FileConfiguration fileConfig, String subPath, Block b, Material oldType) {
-
-        int firstAvailableID = fileConfig.getInt(b.getWorld().getName() + ".NEXT_ID_" + subPath);
-
-        fileConfig.set(b.getWorld().getName() + "." + subPath + "." + firstAvailableID + ".type", oldType.toString());
-        fileConfig.set(b.getWorld().getName() + "." + subPath + "." + firstAvailableID + ".x", b.getLocation().getBlockX());
-        fileConfig.set(b.getWorld().getName() + "." + subPath + "." + firstAvailableID + ".y", b.getLocation().getBlockY());
-        fileConfig.set(b.getWorld().getName() + "." + subPath + "." + firstAvailableID + ".z", b.getLocation().getBlockZ());
-
-        fileConfig.set(b.getWorld().getName() + ".NEXT_ID_" + subPath, firstAvailableID+1);
-
-        // save data file
-        try {
-            fileConfig.save(file);
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
+        RunicProfessions.getProfManager().getBlocksToRestore().put(block.getLocation(), oldType);
     }
 }

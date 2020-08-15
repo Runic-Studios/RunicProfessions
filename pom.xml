@@ -136,6 +136,14 @@
             <scope>system</scope>
             <systemPath>${project.basedir}/lib/RunicCore-1.15.2.jar</systemPath>
         </dependency>
+        <!-- Runic Restart -->
+        <dependency>
+            <groupId>com.runicrealms.runicrestart.Plugin</groupId>
+            <artifactId>RunicRestart</artifactId>
+            <version>1.0</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/RunicRestart.jar</systemPath>
+        </dependency>
         <!-- WorldGuard API -->
         <dependency>
             <groupId>com.sk89q.worldguard</groupId>
