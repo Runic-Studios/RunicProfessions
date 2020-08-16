@@ -15,24 +15,35 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
 // todo: POTION COOLDOWNS
 public class PotionListener implements Listener {
 
+    private static final Set<UUID> npcClickers = new HashSet<>();
     private static final List<UUID> slayers = new ArrayList<>();
     private static final List<UUID> looters = new ArrayList<>();
     private static final List<UUID> pyromaniacs = new ArrayList<>();
     private static final int FIRE_AMT = 20;
 
-    /**
+    /*
+    This disables potion drinking if a player is talking to an NPC
+     */
+    @EventHandler
+    public void onNPCInteract(PlayerInteractEntityEvent e) {
+        if (!e.getRightClicked().hasMetadata("NPC")) return;
+        npcClickers.add(e.getPlayer().getUniqueId());
+        Bukkit.getScheduler().scheduleAsyncDelayedTask(RunicProfessions.getInstance(),
+                () -> npcClickers.remove(e.getPlayer().getUniqueId()), 20L);
+    }
+
+    /*
      * Handles custom potions
      */
     @EventHandler
@@ -41,6 +52,7 @@ public class PotionListener implements Listener {
         if (e.getItem() == null) return;
         if (e.getItem().getType() == Material.POTION) {
 
+            if (npcClickers.contains(e.getPlayer().getUniqueId())) return; // for quest interactions
             ItemStack item = e.getItem();
             Player pl = e.getPlayer();
             int healAmt = (int) AttributeUtil.getCustomDouble(e.getItem(), "potion.healing");
