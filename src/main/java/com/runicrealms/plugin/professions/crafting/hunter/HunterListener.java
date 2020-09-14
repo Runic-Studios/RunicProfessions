@@ -2,6 +2,7 @@ package com.runicrealms.plugin.professions.crafting.hunter;
 
 import com.runicrealms.plugin.RunicCore;
 import com.runicrealms.plugin.RunicProfessions;
+import com.runicrealms.plugin.api.RunicCoreAPI;
 import com.runicrealms.plugin.attributes.AttributeUtil;
 import com.runicrealms.plugin.events.MobDamageEvent;
 import com.runicrealms.plugin.item.GearScanner;
@@ -164,7 +165,7 @@ public class HunterListener implements Listener {
 
     private void lookupStats(Player pl, Player toLookup) {
         int maxHealth = (int) toLookup.getMaxHealth();
-        int maxMana = RunicCore.getCacheManager().getPlayerCache(toLookup.getUniqueId()).getMaxMana();
+        int maxMana = RunicCoreAPI.getPlayerCache(toLookup).getMaxMana();
         int minDamage = GearScanner.getMinDamage(toLookup);
         int maxDamage = GearScanner.getMaxDamage(toLookup);
         int healingBonus = GearScanner.getHealingBoost(toLookup);

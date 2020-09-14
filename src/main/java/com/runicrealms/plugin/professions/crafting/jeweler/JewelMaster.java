@@ -137,6 +137,7 @@ public class JewelMaster extends Shop {
         double storedDmg = AttributeUtil.getCustomDouble(oldItem, "gem.attackDamage");
         double storedHealing = AttributeUtil.getCustomDouble(oldItem, "gem.healingBoost");
         double storedMagDmg = AttributeUtil.getCustomDouble(oldItem, "gem.magicDamage");
+        double storedShield = AttributeUtil.getCustomDouble(oldItem, "gem.shield");
 
         // retrieve old ITEM stats
         double itemHealth = AttributeUtil.getCustomDouble(oldItem, "custom.maxHealth");
@@ -146,6 +147,7 @@ public class JewelMaster extends Shop {
         double itemDmg = AttributeUtil.getCustomDouble(oldItem, "custom.attackDamage");
         double itemHealing = AttributeUtil.getCustomDouble(oldItem, "custom.healingBoost");
         double itemMagDmg = AttributeUtil.getCustomDouble(oldItem, "custom.magicDamage");
+        double itemShield = AttributeUtil.getCustomDouble(oldItem, "custom.shield");
 
         // create a NEW item with updated attributes, update its durability
         ItemStack newItem = new ItemStack(oldItem.getType());
@@ -202,6 +204,7 @@ public class JewelMaster extends Shop {
         newItem = AttributeUtil.addCustomStat(newItem, "custom.attackDamage", itemDmg - storedDmg); // opal
         newItem = AttributeUtil.addCustomStat(newItem, "custom.healingBoost", itemHealing - storedHealing); // emerald
         newItem = AttributeUtil.addCustomStat(newItem, "custom.magicDamage", itemMagDmg - storedMagDmg); // diamond
+        newItem = AttributeUtil.addCustomStat(newItem, "custom.shield", itemShield - storedShield); // tier sets, shields
 
         ChatColor tier = ChatColor.WHITE;
         if (oldItem.getItemMeta().getDisplayName().contains(ChatColor.GRAY + "")) {

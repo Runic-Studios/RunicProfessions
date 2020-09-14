@@ -82,6 +82,8 @@ public class SocketListener implements Listener {
         double gemHealing = AttributeUtil.getCustomDouble(heldItem, "custom.healingBoost");
         double itemMagDmg = AttributeUtil.getCustomDouble(socketItem, "custom.magicDamage");
         double gemMagDmg = AttributeUtil.getCustomDouble(heldItem, "custom.magicDamage");
+        double itemShield = AttributeUtil.getCustomDouble(socketItem, "custom.shield");
+        double gemShield = AttributeUtil.getCustomDouble(heldItem, "custom.shield");
         double reqLv = AttributeUtil.getCustomDouble(socketItem, "required.level");
         String enchantment = AttributeUtil.getCustomString(socketItem, "scroll.enchantment");
         int percent = (int) AttributeUtil.getCustomDouble(socketItem, "scroll.percent");
@@ -131,6 +133,7 @@ public class SocketListener implements Listener {
         newItem = AttributeUtil.addCustomStat(newItem, "custom.attackDamage", itemDmg + gemDmg); // opal
         newItem = AttributeUtil.addCustomStat(newItem, "custom.healingBoost", itemHealing + gemHealing); // emerald
         newItem = AttributeUtil.addCustomStat(newItem, "custom.magicDamage", itemMagDmg + gemMagDmg); // diamond
+        newItem = AttributeUtil.addCustomStat(newItem, "custom.shield", itemShield + gemShield); // tier sets, shields
         newItem = AttributeUtil.addCustomStat(newItem, "required.level", reqLv); // required level
         if (!enchantment.equals("")) {
             newItem = AttributeUtil.addCustomStat(newItem, "scroll.enchantment", enchantment);
@@ -151,6 +154,7 @@ public class SocketListener implements Listener {
         double storedDmg = AttributeUtil.getCustomDouble(socketItem, "gem.attackDamage");
         double storedHealing = AttributeUtil.getCustomDouble(socketItem, "gem.healingBoost");
         double storedMagDmg = AttributeUtil.getCustomDouble(socketItem, "gem.magicDamage");
+        double storedShield = AttributeUtil.getCustomDouble(socketItem, "gem.shield");
 
         // store new gem stats.
         newItem = AttributeUtil.addCustomStat(newItem, "gem.maxHealth", storedHealth + gemHealth); // ruby (health)
@@ -160,6 +164,7 @@ public class SocketListener implements Listener {
         newItem = AttributeUtil.addCustomStat(newItem, "gem.attackDamage", storedDmg + gemDmg); // opal
         newItem = AttributeUtil.addCustomStat(newItem, "gem.healingBoost", storedHealing + gemHealing); // emerald
         newItem = AttributeUtil.addCustomStat(newItem, "gem.magicDamage", storedMagDmg + gemMagDmg); // diamond
+        newItem = AttributeUtil.addCustomStat(newItem, "gem.shield", storedShield + gemShield); // tier sets, shields
         // ------------------------------------------------------------------------------------------------------------
 
         ChatColor tier = ChatColor.WHITE;

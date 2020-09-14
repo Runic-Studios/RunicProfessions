@@ -1,9 +1,10 @@
 package com.runicrealms.plugin.professions.utilities;
 
+import com.runicrealms.plugin.api.RunicCoreAPI;
+import com.runicrealms.plugin.player.cache.PlayerCache;
 import org.bukkit.ChatColor;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
-import com.runicrealms.plugin.RunicCore;
 import com.runicrealms.plugin.utilities.NumRounder;
 
 /**
@@ -18,20 +19,21 @@ public class ProfExpUtil {
 
     public static void giveExperience(Player pl, int expGained, boolean sendMsg) {
 
-        String profName = RunicCore.getCacheManager().getPlayerCache(pl.getUniqueId()).getProfName();
-        int currentLv = RunicCore.getCacheManager().getPlayerCache(pl.getUniqueId()).getProfLevel();
-        int currentExp = RunicCore.getCacheManager().getPlayerCache(pl.getUniqueId()).getProfExp();
+        PlayerCache playerCache = RunicCoreAPI.getPlayerCache(pl);
+        String profName = playerCache.getProfName();
+        int currentLv = playerCache.getProfLevel();
+        int currentExp = playerCache.getProfExp();
 
         if (currentLv >= maxLevel) return;
 
-        RunicCore.getCacheManager().getPlayerCache(pl.getUniqueId()).setProfExp(currentExp + expGained);
+        playerCache.setProfExp(currentExp + expGained);
 
-        int newTotalExp = RunicCore.getCacheManager().getPlayerCache(pl.getUniqueId()).getProfExp();
+        int newTotalExp = playerCache.getProfExp();
 
         if (calculateExpectedLv(newTotalExp) != currentLv) {
 
-            RunicCore.getCacheManager().getPlayerCache(pl.getUniqueId()).setProfLevel(calculateExpectedLv(newTotalExp));
-            currentLv = RunicCore.getCacheManager().getPlayerCache(pl.getUniqueId()).getProfLevel();
+            playerCache.setProfLevel(calculateExpectedLv(newTotalExp));
+            currentLv = playerCache.getProfLevel();
 
             pl.playSound(pl.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 0.5f, 1.0f);
 
@@ -48,7 +50,7 @@ public class ProfExpUtil {
         }
 
         // calculate the player's progress towards the next level
-        currentExp = RunicCore.getCacheManager().getPlayerCache(pl.getUniqueId()).getProfExp();
+        currentExp = playerCache.getProfExp();
         int totalExpAtLevel = calculateTotalExperience(currentLv);
         int totalExpToLevel = calculateTotalExperience(currentLv+1);
 

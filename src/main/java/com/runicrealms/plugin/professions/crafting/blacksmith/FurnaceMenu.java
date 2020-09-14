@@ -2,6 +2,7 @@ package com.runicrealms.plugin.professions.crafting.blacksmith;
 
 import com.runicrealms.plugin.RunicCore;
 import com.runicrealms.plugin.RunicProfessions;
+import com.runicrealms.plugin.api.RunicCoreAPI;
 import com.runicrealms.plugin.item.GUIMenu.ItemGUI;
 import com.runicrealms.plugin.professions.Workstation;
 import org.bukkit.*;
@@ -61,7 +62,7 @@ public class FurnaceMenu extends Workstation {
     private ItemGUI smeltingMenu(Player pl) {
 
         // grab the player's current profession level, progress toward that level
-        int currentLvl = RunicCore.getCacheManager().getPlayerCache(pl.getUniqueId()).getProfLevel();
+        int currentLvl = RunicCoreAPI.getPlayerCache(pl).getProfLevel();
 
         // create three hashmaps for the reagents, set to 0 since we've only got 1 reagent
         LinkedHashMap<Material, Integer> chainLinkReqs = new LinkedHashMap<>();

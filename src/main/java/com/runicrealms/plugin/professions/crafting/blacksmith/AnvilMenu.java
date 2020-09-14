@@ -1,6 +1,6 @@
 package com.runicrealms.plugin.professions.crafting.blacksmith;
 
-import com.runicrealms.plugin.RunicCore;
+import com.runicrealms.plugin.api.RunicCoreAPI;
 import com.runicrealms.plugin.item.GUIMenu.ItemGUI;
 import com.runicrealms.plugin.professions.Workstation;
 import com.runicrealms.plugin.professions.utilities.MenuUtil;
@@ -62,7 +62,7 @@ public class AnvilMenu extends Workstation {
     private ItemGUI forgeMenu(Player pl) {
 
         // grab the player's current profession level, progress toward that level
-        int currentLvl = RunicCore.getCacheManager().getPlayerCache(pl.getUniqueId()).getProfLevel();
+        int currentLvl = RunicCoreAPI.getPlayerCache(pl).getProfLevel();
 
         // create three hash maps for the reagents, set to 0 since we've only got 1 reagent
         // level 1

@@ -1,8 +1,9 @@
 package com.runicrealms.plugin.professions.commands;
 
-import com.runicrealms.plugin.RunicCore;
 import com.runicrealms.plugin.RunicProfessions;
+import com.runicrealms.plugin.api.RunicCoreAPI;
 import com.runicrealms.plugin.item.util.ItemRemover;
+import com.runicrealms.plugin.player.cache.PlayerCache;
 import com.runicrealms.plugin.utilities.CurrencyUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -48,7 +49,7 @@ public class SetProfCMD implements CommandExecutor {
             updateCache(pl, formattedStr);
             return true;
         } else if (isAdmin.toLowerCase().equals("tutor")) {
-            if (RunicCore.getCacheManager().getPlayerCache(pl.getUniqueId()).getProfName().toLowerCase().equals("none")) {
+            if (RunicCoreAPI.getPlayerCache(pl).getProfName().toLowerCase().equals("none")) {
                 updateCache(pl, formattedStr);
             } else {
                 if (pl.getInventory().contains(Material.GOLD_NUGGET, PRICE)) {
@@ -62,7 +63,7 @@ public class SetProfCMD implements CommandExecutor {
                 }
             }
         } else {
-            if (RunicCore.getCacheManager().getPlayerCache(pl.getUniqueId()).getProfName().toLowerCase().equals("none")) {
+            if (RunicCoreAPI.getPlayerCache(pl).getProfName().toLowerCase().equals("none")) {
                 updateCache(pl, formattedStr);
             } else {
                 pl.playSound(pl.getLocation(), Sound.BLOCK_FIRE_EXTINGUISH, 0.5f, 1.0f);
@@ -74,9 +75,10 @@ public class SetProfCMD implements CommandExecutor {
 
     private static void updateCache(Player pl, String profName) {
 
-        RunicCore.getCacheManager().getPlayerCache(pl.getUniqueId()).setProfName(profName);
-        RunicCore.getCacheManager().getPlayerCache(pl.getUniqueId()).setProfLevel(0);
-        RunicCore.getCacheManager().getPlayerCache(pl.getUniqueId()).setProfExp(0);
+        PlayerCache playerCache = RunicCoreAPI.getPlayerCache(pl);
+        playerCache.setProfName(profName);
+        playerCache.setProfLevel(0);
+        playerCache.setProfExp(0);
 
         /*
         Reset hunter info

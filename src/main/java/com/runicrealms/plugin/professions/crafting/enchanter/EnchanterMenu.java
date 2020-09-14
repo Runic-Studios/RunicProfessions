@@ -1,6 +1,6 @@
 package com.runicrealms.plugin.professions.crafting.enchanter;
 
-import com.runicrealms.plugin.RunicCore;
+import com.runicrealms.plugin.api.RunicCoreAPI;
 import com.runicrealms.plugin.item.GUIMenu.ItemGUI;
 import com.runicrealms.plugin.professions.Workstation;
 import org.bukkit.*;
@@ -59,7 +59,7 @@ public class EnchanterMenu extends Workstation {
     private ItemGUI tableMenu(Player pl) {
 
         // grab the player's current profession level, progress toward that level
-        int currentLvl = RunicCore.getCacheManager().getPlayerCache(pl.getUniqueId()).getProfLevel();
+        int currentLvl = RunicCoreAPI.getPlayerCache(pl).getProfLevel();
 
         // paper
         LinkedHashMap<Material, Integer> paperReqs = new LinkedHashMap<>();
@@ -341,7 +341,7 @@ public class EnchanterMenu extends Workstation {
     private ItemStack determineItem(Player pl, int slot, Material material, String dispName, int durability) {
         ItemStack item = new ItemStack(Material.STICK);
         int percent;
-        int profLv = RunicCore.getCacheManager().getPlayerCache(pl.getUniqueId()).getProfLevel();
+        int profLv = RunicCoreAPI.getPlayerCache(pl).getProfLevel();
         if (profLv < 30) {
             percent = 1;
         } else if (profLv < 50) {
