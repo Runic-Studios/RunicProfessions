@@ -1,6 +1,7 @@
 package com.runicrealms.plugin.professions.commands;
 
 import com.runicrealms.plugin.RunicCore;
+import com.runicrealms.plugin.api.RunicCoreAPI;
 import com.runicrealms.plugin.professions.utilities.ProfExpUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -25,10 +26,10 @@ public class ProfLevelCMD implements CommandExecutor {
         int level = Integer.parseInt(args[1]);
         int exp = ProfExpUtil.calculateTotalExperience(level+1);
 
-        RunicCore.getCacheManager().getPlayerCache(pl.getUniqueId()).setProfExp(0);
+        RunicCoreAPI.getPlayerCache(pl).setProfExp(0);
         ProfExpUtil.giveExperience(pl, exp, false);
-        RunicCore.getCacheManager().getPlayerCache(pl.getUniqueId()).setProfLevel(level);
-        RunicCore.getCacheManager().getPlayerCache(pl.getUniqueId()).setProfExp(exp);
+        RunicCoreAPI.getPlayerCache(pl).setProfLevel(level);
+        RunicCoreAPI.getPlayerCache(pl).setProfExp(exp);
 
         return true;
     }

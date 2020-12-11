@@ -2,6 +2,7 @@ package com.runicrealms.plugin.professions.crafting.hunter;
 
 import com.runicrealms.plugin.RunicCore;
 import com.runicrealms.plugin.RunicProfessions;
+import com.runicrealms.plugin.api.RunicCoreAPI;
 import com.runicrealms.plugin.professions.utilities.ProfExpUtil;
 import io.lumine.xikage.mythicmobs.MythicMobs;
 import io.lumine.xikage.mythicmobs.mobs.MythicMob;
@@ -67,7 +68,7 @@ public class HunterTask {
      * Check player's hunter level from player cache
      */
     private int checkLevel(Player pl) {
-        return RunicCore.getCacheManager().getPlayerCache(pl.getUniqueId()).getProfLevel();
+        return RunicCoreAPI.getPlayerCache(pl).getProfLevel();
     }
 
     public static int getCurrentKills(Player pl) {

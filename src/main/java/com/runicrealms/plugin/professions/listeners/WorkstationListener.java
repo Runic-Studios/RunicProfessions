@@ -2,6 +2,7 @@ package com.runicrealms.plugin.professions.listeners;
 
 import com.runicrealms.plugin.RunicCore;
 import com.runicrealms.plugin.RunicProfessions;
+import com.runicrealms.plugin.api.RunicCoreAPI;
 import com.runicrealms.plugin.item.GUIMenu.ItemGUI;
 import com.runicrealms.plugin.professions.crafting.alchemist.CauldronMenu;
 import com.runicrealms.plugin.professions.crafting.blacksmith.AnvilMenu;
@@ -92,7 +93,7 @@ public class WorkstationListener implements Listener {
         UUID uuid = pl.getUniqueId();
 
         // determine the player's profession
-        String className = RunicCore.getCacheManager().getPlayerCache(uuid).getProfName();
+        String className = RunicCoreAPI.getPlayerCache(pl).getProfName();
 
         // stop the listener if the player is already crafting
         if (RunicProfessions.getProfManager().getCurrentCrafters().contains(pl)) {

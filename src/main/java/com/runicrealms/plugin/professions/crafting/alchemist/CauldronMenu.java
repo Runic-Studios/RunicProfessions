@@ -1,6 +1,7 @@
 package com.runicrealms.plugin.professions.crafting.alchemist;
 
 import com.runicrealms.plugin.RunicCore;
+import com.runicrealms.plugin.api.RunicCoreAPI;
 import com.runicrealms.plugin.attributes.AttributeUtil;
 import com.runicrealms.plugin.item.GUIMenu.ItemGUI;
 import com.runicrealms.plugin.professions.Workstation;
@@ -66,7 +67,7 @@ public class CauldronMenu extends Workstation {
     private ItemGUI cauldronMenu(Player pl) {
 
         // grab the player's current profession level, progress toward that level
-        int currentLvl = RunicCore.getCacheManager().getPlayerCache(pl.getUniqueId()).getProfLevel();
+        int currentLvl = RunicCoreAPI.getPlayerCache(pl).getProfLevel();
 
         // health potion
         LinkedHashMap<Material, Integer> healthPotReqs = new LinkedHashMap<>();
@@ -303,7 +304,7 @@ public class CauldronMenu extends Workstation {
                               int currentLvl, int amt, int rate, int durability, int someVar) {
 
         // grab the player's current profession level, progress toward that level
-        currentLvl = RunicCore.getCacheManager().getPlayerCache(pl.getUniqueId()).getProfLevel();
+        currentLvl = RunicCoreAPI.getPlayerCache(pl).getProfLevel();
 
         if (currentLvl < 3) {
             rate = 100;

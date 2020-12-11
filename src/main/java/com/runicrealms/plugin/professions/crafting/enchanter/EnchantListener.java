@@ -1,6 +1,7 @@
 package com.runicrealms.plugin.professions.crafting.enchanter;
 
 import com.runicrealms.plugin.RunicCore;
+import com.runicrealms.plugin.api.RunicCoreAPI;
 import com.runicrealms.plugin.attributes.AttributeUtil;
 import com.runicrealms.plugin.events.MobDamageEvent;
 import com.runicrealms.plugin.events.SpellDamageEvent;
@@ -58,7 +59,7 @@ public class EnchantListener implements Listener {
         ItemStack scroll = e.getPlayer().getInventory().getItemInMainHand();
 
         int reqLevel = (int) AttributeUtil.getCustomDouble(scroll, "required.level");
-        if (RunicCore.getCacheManager().getPlayerCache(e.getPlayer().getUniqueId()).getClassLevel() < reqLevel) {
+        if (RunicCoreAPI.getPlayerCache(e.getPlayer()).getClassLevel() < reqLevel) {
             e.getPlayer().playSound(e.getPlayer().getLocation(), Sound.BLOCK_FIRE_EXTINGUISH, 0.5f, 1.0f);
             e.getPlayer().sendMessage(ChatColor.RED + "Your level is too low to use this!");
             return;

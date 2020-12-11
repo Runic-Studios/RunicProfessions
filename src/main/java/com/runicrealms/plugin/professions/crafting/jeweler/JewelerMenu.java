@@ -1,6 +1,7 @@
 package com.runicrealms.plugin.professions.crafting.jeweler;
 
 import com.runicrealms.plugin.RunicCore;
+import com.runicrealms.plugin.api.RunicCoreAPI;
 import com.runicrealms.plugin.attributes.AttributeUtil;
 import com.runicrealms.plugin.item.GUIMenu.ItemGUI;
 import com.runicrealms.plugin.item.LoreGenerator;
@@ -63,7 +64,7 @@ public class JewelerMenu extends Workstation {
     private ItemGUI benchMenu(Player pl) {
 
         // grab the player's current profession level, progress toward that level
-        int currentLvl = RunicCore.getCacheManager().getPlayerCache(pl.getUniqueId()).getProfLevel();
+        int currentLvl = RunicCoreAPI.getPlayerCache(pl).getProfLevel();
 
         // ruby
         LinkedHashMap<Material, Integer> cutRubyReqs = new LinkedHashMap<>();

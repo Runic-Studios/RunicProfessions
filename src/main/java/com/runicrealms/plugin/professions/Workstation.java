@@ -2,6 +2,7 @@ package com.runicrealms.plugin.professions;
 
 import com.runicrealms.plugin.RunicCore;
 import com.runicrealms.plugin.RunicProfessions;
+import com.runicrealms.plugin.api.RunicCoreAPI;
 import com.runicrealms.plugin.attributes.AttributeUtil;
 import com.runicrealms.plugin.enums.ArmorSlotEnum;
 import com.runicrealms.plugin.item.GUIMenu.ItemGUI;
@@ -74,7 +75,7 @@ public abstract class Workstation implements Listener {
                                   boolean canUpgrade, boolean isGlowing) {
 
         // grab the player's current profession level, progress toward that level
-        int currentLvl = RunicCore.getCacheManager().getPlayerCache(pl.getUniqueId()).getProfLevel();
+        int currentLvl = RunicCoreAPI.getPlayerCache(pl).getProfLevel();
 
         // determine the success rate, based on level
         int rate = (40 + currentLvl);
