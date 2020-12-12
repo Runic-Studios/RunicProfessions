@@ -1,5 +1,6 @@
 package com.runicrealms.plugin.professions.crafting.alchemist;
 
+import com.runicrealms.plugin.RunicCore;
 import com.runicrealms.plugin.api.RunicCoreAPI;
 import com.runicrealms.plugin.attributes.AttributeUtil;
 import com.runicrealms.plugin.item.GUIMenu.ItemGUI;

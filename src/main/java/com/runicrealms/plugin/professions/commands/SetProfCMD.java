@@ -1,9 +1,9 @@
 package com.runicrealms.plugin.professions.commands;
 
+import com.runicrealms.plugin.RunicCore;
 import com.runicrealms.plugin.RunicProfessions;
 import com.runicrealms.plugin.api.RunicCoreAPI;
 import com.runicrealms.plugin.item.util.ItemRemover;
-import com.runicrealms.plugin.player.cache.PlayerCache;
 import com.runicrealms.plugin.utilities.CurrencyUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -75,10 +75,9 @@ public class SetProfCMD implements CommandExecutor {
 
     private static void updateCache(Player pl, String profName) {
 
-        PlayerCache playerCache = RunicCoreAPI.getPlayerCache(pl);
-        playerCache.setProfName(profName);
-        playerCache.setProfLevel(0);
-        playerCache.setProfExp(0);
+        RunicCoreAPI.getPlayerCache(pl).setProfName(profName);
+        RunicCoreAPI.getPlayerCache(pl).setProfLevel(0);
+        RunicCoreAPI.getPlayerCache(pl).setProfExp(0);
 
         /*
         Reset hunter info

@@ -11,9 +11,9 @@ import com.sk89q.worldguard.protection.ApplicableRegionSet;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import com.sk89q.worldguard.protection.regions.RegionContainer;
 import com.sk89q.worldguard.protection.regions.RegionQuery;
-import net.minecraft.server.v1_15_R1.EntityFishingHook;
+import net.minecraft.server.v1_16_R3.EntityFishingHook;
 import org.bukkit.*;
-import org.bukkit.craftbukkit.v1_15_R1.entity.CraftEntity;
+import org.bukkit.craftbukkit.v1_16_R3.entity.CraftEntity;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Fish;
 import org.bukkit.entity.FishHook;
@@ -282,12 +282,12 @@ public class FishingListener implements Listener {
     }
 
     private void setBiteTime(FishHook hook, int time) {
-        net.minecraft.server.v1_15_R1.EntityFishingHook hookCopy = (EntityFishingHook) ((CraftEntity) hook).getHandle();
+        net.minecraft.server.v1_16_R3.EntityFishingHook hookCopy = (EntityFishingHook) ((CraftEntity) hook).getHandle();
 
         Field fishCatchTime = null;
 
         try {
-            fishCatchTime = net.minecraft.server.v1_15_R1.EntityFishingHook.class.getDeclaredField("ap");
+            fishCatchTime = net.minecraft.server.v1_16_R3.EntityFishingHook.class.getDeclaredField("ah");
         } catch (NoSuchFieldException | SecurityException e) {
             e.printStackTrace();
         }

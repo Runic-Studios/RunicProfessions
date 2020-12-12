@@ -6,7 +6,7 @@
 
     <groupId>com.runicrealms.plugin</groupId>
     <artifactId>RunicProfessions</artifactId>
-    <version>1.15.2</version>
+    <version>1.16.4</version>
     <packaging>jar</packaging>
 
     <name>RunicProfessions</name>
@@ -102,16 +102,16 @@
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot-api</artifactId>
-            <version>1.15.2-R0.1-SNAPSHOT</version>
+            <version>1.16.4-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <!-- CraftBukkit -->
         <dependency>
             <groupId>org.bukkit</groupId>
             <artifactId>craftbukkit</artifactId>
-            <version>1.15.2</version>
+            <version>1.16.4</version>
             <scope>system</scope>
-            <systemPath>${project.basedir}/lib/craftbukkit-1.15.2.jar</systemPath>
+            <systemPath>${project.basedir}/lib/craftbukkit-1.16.4.jar</systemPath>
         </dependency>
         <!-- MythicMobs -->
         <dependency>
@@ -125,7 +125,7 @@
         <dependency>
             <groupId>com.destroystokyo.paper</groupId>
             <artifactId>paper-api</artifactId>
-            <version>1.15.2-R0.1-SNAPSHOT</version>
+            <version>1.16.4-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <!-- RunicCore -->

@@ -1,5 +1,6 @@
 package com.runicrealms.plugin.professions.commands;
 
+import com.runicrealms.plugin.RunicCore;
 import com.runicrealms.plugin.api.RunicCoreAPI;
 import com.runicrealms.plugin.professions.utilities.ProfExpUtil;
 import org.bukkit.Bukkit;

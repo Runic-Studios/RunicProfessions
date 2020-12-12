@@ -1,10 +1,10 @@
 package com.runicrealms.plugin.professions.utilities;
 
 import com.runicrealms.plugin.api.RunicCoreAPI;
-import com.runicrealms.plugin.player.cache.PlayerCache;
 import org.bukkit.ChatColor;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
+import com.runicrealms.plugin.RunicCore;
 import com.runicrealms.plugin.utilities.NumRounder;
 
 /**
@@ -19,21 +19,20 @@ public class ProfExpUtil {
 
     public static void giveExperience(Player pl, int expGained, boolean sendMsg) {
 
-        PlayerCache playerCache = RunicCoreAPI.getPlayerCache(pl);
-        String profName = playerCache.getProfName();
-        int currentLv = playerCache.getProfLevel();
-        int currentExp = playerCache.getProfExp();
+        String profName = RunicCoreAPI.getPlayerCache(pl).getProfName();
+        int currentLv = RunicCoreAPI.getPlayerCache(pl).getProfLevel();
+        int currentExp = RunicCoreAPI.getPlayerCache(pl).getProfExp();
 
         if (currentLv >= maxLevel) return;
 
-        playerCache.setProfExp(currentExp + expGained);
+        RunicCoreAPI.getPlayerCache(pl).setProfExp(currentExp + expGained);
 
-        int newTotalExp = playerCache.getProfExp();
+        int newTotalExp = RunicCoreAPI.getPlayerCache(pl).getProfExp();
 
         if (calculateExpectedLv(newTotalExp) != currentLv) {
 
-            playerCache.setProfLevel(calculateExpectedLv(newTotalExp));
-            currentLv = playerCache.getProfLevel();
+            RunicCoreAPI.getPlayerCache(pl).setProfLevel(calculateExpectedLv(newTotalExp));
+            currentLv = RunicCoreAPI.getPlayerCache(pl).getProfLevel();
 
             pl.playSound(pl.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 0.5f, 1.0f);
 
@@ -50,7 +49,7 @@ public class ProfExpUtil {
         }
 
         // calculate the player's progress towards the next level
-        currentExp = playerCache.getProfExp();
+        currentExp = RunicCoreAPI.getPlayerCache(pl).getProfExp();
         int totalExpAtLevel = calculateTotalExperience(currentLv);
         int totalExpToLevel = calculateTotalExperience(currentLv+1);
 

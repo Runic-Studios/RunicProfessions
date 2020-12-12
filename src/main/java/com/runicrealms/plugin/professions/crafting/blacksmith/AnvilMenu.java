@@ -1,5 +1,6 @@
 package com.runicrealms.plugin.professions.crafting.blacksmith;
 
+import com.runicrealms.plugin.RunicCore;
 import com.runicrealms.plugin.api.RunicCoreAPI;
 import com.runicrealms.plugin.item.GUIMenu.ItemGUI;
 import com.runicrealms.plugin.professions.Workstation;

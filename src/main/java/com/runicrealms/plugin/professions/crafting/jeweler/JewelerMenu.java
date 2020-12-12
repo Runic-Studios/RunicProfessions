@@ -1,5 +1,6 @@
 package com.runicrealms.plugin.professions.crafting.jeweler;
 
+import com.runicrealms.plugin.RunicCore;
 import com.runicrealms.plugin.api.RunicCoreAPI;
 import com.runicrealms.plugin.attributes.AttributeUtil;
 import com.runicrealms.plugin.item.GUIMenu.ItemGUI;
@@ -296,7 +297,7 @@ public class JewelerMenu extends Workstation {
         LinkedHashMap<Material, Integer> ornateRubyReqs = (LinkedHashMap<Material, Integer>) cutRubyReqs.clone();
         ornateRubyReqs.put(Material.RED_TULIP, 1);
         super.createMenuItem(forgeMenu, pl, 10, Material.REDSTONE, "&fOrnate Ruby", ornateRubyReqs,
-                "Uncut Ruby\nAnimal Hide\nHibiscus", 1, 35, 0, 0, "&c+" + healthRegenStr + "❤/t (Health Regen)\n",
+                "Uncut Ruby\nAnimal Hide\nHibiscus", 1, 35, 0, 0, "&c+" + healthRegenStr + "❤/s (Health Regen)\n",
                 false, true, false);
 
         // sapphire (+mana)
@@ -310,7 +311,7 @@ public class JewelerMenu extends Workstation {
         LinkedHashMap<Material, Integer> ornateSapphireReqs = (LinkedHashMap<Material, Integer>) cutSapphireReqs.clone();
         ornateSapphireReqs.put(Material.AZURE_BLUET, 1);
         super.createMenuItem(forgeMenu, pl, 12, Material.LAPIS_LAZULI, "&fOrnate Sapphire", ornateSapphireReqs,
-                "Uncut Sapphire\nAnimal Hide\nValerian", 1, 65, 0, 0, "&3+" + manaRegenStr + "✸/t (Mana Regen)\n",
+                "Uncut Sapphire\nAnimal Hide\nValerian", 1, 65, 0, 0, "&3+" + manaRegenStr + "✸/s (Mana Regen)\n",
                 false, true, false);
 
         // opal (+dmg)
