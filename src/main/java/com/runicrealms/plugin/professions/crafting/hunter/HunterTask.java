@@ -1,38 +1,47 @@
 package com.runicrealms.plugin.professions.crafting.hunter;
 
-import com.runicrealms.plugin.RunicCore;
 import com.runicrealms.plugin.RunicProfessions;
 import com.runicrealms.plugin.api.RunicCoreAPI;
 import com.runicrealms.plugin.professions.utilities.ProfExpUtil;
+import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldguard.WorldGuard;
+import com.sk89q.worldguard.protection.ApplicableRegionSet;
 import io.lumine.xikage.mythicmobs.MythicMobs;
 import io.lumine.xikage.mythicmobs.mobs.MythicMob;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class HunterTask {
 
+    //maybe will have use in future...
+    public static final List<String> REGIONS = Arrays.asList("azana", "koldore", "whaletown", "hilstead", "wintervale", "dead_mans_rest", "isfodar", "tireneas", "zenyth", "naheen", "nazmora", "frosts_end");
+
     public enum HunterMob {
 
-        Goblin(0, 7, 5),
-        Golem(10, 18, 10),
-        Direwolf(20, 22, 15),
-        Spinner(30, 28, 25),
-        Bug(40, 31, 30),
-        FireElemental(50, 34, 35),
-        BlackfrostBear(60, 40, 100);
+        GOBLIN(0, 7, 5, "azana"),
+        GOLEM(10, 18, 10, "koldore"),
+        DIREWOLF(20, 22, 15, "hilstead", "wintervale"),
+        SPINNER(30, 28, 25, "isfodar", "tireneas"),
+        BUG(40, 31, 30, "zenyth", "naheen"),
+        FIRE_ELEMENTAL(50, 34, 35, "zenyth", "naheen", "nazmora"),
+        BLACKFROST_BEAR(60, 40, 100, "frosts_end");
 
-        int level;
-        int experience;
-        int points;
+        private final int level;
+        private final int experience;
+        private final int points;
+        private final List<String> regions;
 
-        HunterMob(int level, int exp, int points) {
+        HunterMob(int level, int exp, int points, String... regions) {
             this.level = level;
             this.experience = exp;
             this.points = points;
+            this.regions = Arrays.asList(regions);
         }
 
         public int getExperience() {
@@ -47,8 +56,8 @@ public class HunterTask {
             return points;
         }
 
-        public String toValue() {
-            return name();
+        public List<String> getRegions() {
+            return this.regions;
         }
     }
 
@@ -58,7 +67,7 @@ public class HunterTask {
     public HunterTask(Player pl) {
         this.pl = pl;
         this.mob = selectMob(pl);
-        Random rand = new Random();
+        Random rand = ThreadLocalRandom.current();
         RunicProfessions.getInstance().getConfig().set(pl.getUniqueId() + ".info.prof.hunter_kills_max", rand.nextInt(30 - 15) + 15); // 15-30
         RunicProfessions.getInstance().saveConfig();
         RunicProfessions.getInstance().reloadConfig();
@@ -114,19 +123,26 @@ public class HunterTask {
      * level against mobs level. Writes that task to config.
      */
     private MythicMob selectMob(Player pl) {
-
         // declare a temporary HashSet to pick a random mob
         List<MythicMob> hunterMobs = new ArrayList<>();
+        List<String> names = this.getRegions(pl);
 
-        // filter-out mobs above the player's hunter level
-        int playLv = checkLevel(pl);
+        // filter-out mobs above the player's hunter level and region
+        int playLv = this.checkLevel(pl);
         for (HunterMob mob : HunterMob.values()) {
             int mobLv = mob.getLevel();
-            if (mobLv > playLv) continue;
-            hunterMobs.add(MythicMobs.inst().getMobManager().getMythicMob(mob.toValue()));
+            if (mobLv > playLv) {
+                continue;
+            }
+
+            if (!this.containsRegion(mob, names)) {
+                continue;
+            }
+
+            hunterMobs.add(MythicMobs.inst().getMobManager().getMythicMob(mob.name()));
         }
 
-        Random rand = new Random();
+        Random rand = ThreadLocalRandom.current();
         int index = rand.nextInt(hunterMobs.size());
         MythicMob mythicMob = hunterMobs.get(index);
 
@@ -143,5 +159,23 @@ public class HunterTask {
 
     public static int getMobAmount(Player pl) {
         return RunicProfessions.getInstance().getConfig().getInt(pl.getUniqueId() + ".info.prof.hunter_kills_max");
+    }
+
+    private List<String> getRegions(Player player) {
+        ApplicableRegionSet regions = WorldGuard.getInstance().getPlatform().getRegionContainer().createQuery().getApplicableRegions(BukkitAdapter.adapt(player.getLocation()));
+        List<String> names = new ArrayList<>();
+
+        regions.forEach(region -> names.add(region.getId()));
+
+        return names;
+    }
+
+    private boolean containsRegion(HunterMob mob, List<String> names) {
+        for (String name : names) {
+            if (mob.getRegions().contains(name)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

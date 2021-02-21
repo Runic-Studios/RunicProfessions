@@ -11,11 +11,6 @@
 
     <name>RunicProfessions</name>
 
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <fileOutput>${user.home}/Desktop/FTR Server Assets/~ Local Server/plugins</fileOutput>
-    </properties>
-
     <build>
         <defaultGoal>clean package</defaultGoal>
         <plugins>
@@ -111,15 +106,15 @@
             <artifactId>craftbukkit</artifactId>
             <version>1.16.4</version>
             <scope>system</scope>
-            <systemPath>${project.basedir}/lib/craftbukkit-1.16.4.jar</systemPath>
+            <systemPath>${project.basedir}/../lib/craftbukkit-1.16.4.jar</systemPath>
         </dependency>
         <!-- MythicMobs -->
         <dependency>
             <groupId>net.elseland.xikage</groupId>
             <artifactId>mythicmobs</artifactId>
-            <version>4.9.0</version>
+            <version>4.11.0</version>
             <scope>system</scope>
-            <systemPath>${project.basedir}/lib/MythicMobs-4.9.0.jar</systemPath>
+            <systemPath>${project.basedir}/../lib/MythicMobs-4.11.0.jar</systemPath>
         </dependency>
         <!-- Paper -->
         <dependency>
@@ -132,9 +127,9 @@
         <dependency>
             <groupId>com.runicrealms.plugin</groupId>
             <artifactId>RunicCore</artifactId>
-            <version>1.15.2</version>
+            <version>1.16.4</version>
             <scope>system</scope>
-            <systemPath>${project.basedir}/lib/RunicCore-1.15.2.jar</systemPath>
+            <systemPath>${project.basedir}/../lib/RunicCore-1.16.4.jar</systemPath>
         </dependency>
         <!-- WorldGuard API -->
         <dependency>

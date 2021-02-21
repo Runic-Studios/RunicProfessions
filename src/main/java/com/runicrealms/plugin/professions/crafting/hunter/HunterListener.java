@@ -4,6 +4,9 @@ import com.runicrealms.plugin.RunicCore;
 import com.runicrealms.plugin.RunicProfessions;
 import com.runicrealms.plugin.api.RunicCoreAPI;
 import com.runicrealms.plugin.attributes.AttributeUtil;
+import com.runicrealms.plugin.character.api.CharacterLoadEvent;
+import com.runicrealms.plugin.database.event.CacheSaveEvent;
+import com.runicrealms.plugin.database.event.CacheSaveReason;
 import com.runicrealms.plugin.events.MobDamageEvent;
 import com.runicrealms.plugin.item.GearScanner;
 import com.runicrealms.plugin.item.util.ItemRemover;
@@ -25,9 +28,12 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.UUID;
 
 public class HunterListener implements Listener {
+
+    private final Map<UUID, HunterPlayer> players;
 
     private HashSet<UUID> cloakers; // for shadowmeld potion
     private HashSet<UUID> hasDealtDamage; // for shadowmeld potion
@@ -37,9 +43,37 @@ public class HunterListener implements Listener {
      * When plugin is loaded, add hunter items to hash set for use later
      */
     public HunterListener() {
+        this.players = new HashMap<>();
+
         cloakers = new HashSet<>();
         hasDealtDamage = new HashSet<>();
         chatters = new HashMap<>();
+    }
+
+    @EventHandler
+    public void onCharacterLoad(CharacterLoadEvent event) {
+        if (!event.getPlayerCache().getProfName().equals("Hunter")) {
+            return;
+        }
+
+        Player player = event.getPlayer();
+
+        this.players.put(player.getUniqueId(), new HunterPlayer(player));
+    }
+
+    @EventHandler
+    public void onCacheSave(CacheSaveEvent event) {
+        UUID uuid = event.getPlayer().getUniqueId();
+
+        if (!this.players.containsKey(uuid)) {
+            return;
+        }
+
+        this.players.get(uuid).save();
+
+        if (event.cacheSaveReason() == CacheSaveReason.LOGOUT) {
+            this.players.remove(uuid);
+        }
     }
 
     @EventHandler
