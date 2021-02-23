@@ -9,19 +9,22 @@ public class HunterPlayer {
     private final Player player;
     private int hunterPoints;
     private int hunterKills;
+    private int maxHunterKills;
     private HunterTask.HunterMob task;
 
     public HunterPlayer(Player player) {
         this.player = player;
         this.hunterPoints = 0;
         this.hunterKills = 0;
+        this.maxHunterKills = 0;
         this.task = null;
     }
 
-    public HunterPlayer(Player player, int hunterPoints, int hunterKills, HunterTask.HunterMob task) {
+    public HunterPlayer(Player player, int hunterPoints, int hunterKills, int maxHunterKills, HunterTask.HunterMob task) {
         this.player = player;
         this.hunterPoints = hunterPoints;
         this.hunterKills = hunterKills;
+        this.maxHunterKills = maxHunterKills;
         this.task = task;
     }
 
@@ -35,15 +38,24 @@ public class HunterPlayer {
 
         config.set(this.formatData("hunter_points"), this.hunterPoints);
         config.set(this.formatData("hunter_kills"), this.hunterKills);
-        //hunter max kills???
+        config.set(this.formatData("hunter_kills_max"), this.maxHunterKills);
 
         if (write) {
             plugin.saveConfig();
         }
     }
 
+    public void newTask() {
+        if (this.task != null) {
+            return;
+        }
+
+        //gen new task
+    }
+
     public void resetTask() {
         this.hunterKills = 0;
+        this.maxHunterKills = 0;
         this.task = null;
     }
 
@@ -71,6 +83,10 @@ public class HunterPlayer {
 
     public int getHunterKills() {
         return this.hunterKills;
+    }
+
+    public int getMaxHunterKills() {
+        return this.maxHunterKills;
     }
 
     public HunterTask.HunterMob getTask() {

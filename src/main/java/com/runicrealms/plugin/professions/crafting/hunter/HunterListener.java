@@ -58,6 +58,8 @@ public class HunterListener implements Listener {
 
         Player player = event.getPlayer();
 
+        //check if player has preexisting data and if so parse it
+
         this.players.put(player.getUniqueId(), new HunterPlayer(player));
     }
 
