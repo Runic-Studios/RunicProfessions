@@ -69,7 +69,7 @@ public class HunterListener implements Listener {
             return;
         }
 
-        this.players.get(uuid).save();
+        this.players.get(uuid).save(true);
 
         if (event.cacheSaveReason() == CacheSaveReason.LOGOUT) {
             this.players.remove(uuid);
