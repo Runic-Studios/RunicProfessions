@@ -11,17 +11,17 @@ import com.runicrealms.plugin.professions.crafting.cooking.CookingListener;
 import com.runicrealms.plugin.professions.crafting.enchanter.EnchantListener;
 import com.runicrealms.plugin.professions.crafting.enchanter.EnchantScrollListener;
 import com.runicrealms.plugin.professions.crafting.hunter.*;
-import com.runicrealms.plugin.professions.crafting.jeweler.JewelShopListener;
 import com.runicrealms.plugin.professions.crafting.jeweler.JewelShopCMD;
+import com.runicrealms.plugin.professions.crafting.jeweler.JewelShopListener;
 import com.runicrealms.plugin.professions.crafting.jeweler.RegenListener;
 import com.runicrealms.plugin.professions.crafting.jeweler.SocketListener;
-import com.runicrealms.plugin.professions.listeners.CustomFishListener;
-import com.runicrealms.plugin.professions.listeners.StationClickListener;
 import com.runicrealms.plugin.professions.gathering.FarmingListener;
 import com.runicrealms.plugin.professions.gathering.FishingListener;
 import com.runicrealms.plugin.professions.gathering.MiningListener;
 import com.runicrealms.plugin.professions.gathering.WCListener;
+import com.runicrealms.plugin.professions.listeners.CustomFishListener;
 import com.runicrealms.plugin.professions.listeners.JoinListener;
+import com.runicrealms.plugin.professions.listeners.StationClickListener;
 import com.runicrealms.plugin.professions.listeners.WorkstationListener;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -30,6 +30,8 @@ public final class RunicProfessions extends JavaPlugin {
 
     private static RunicProfessions plugin;
     private static ProfManager profManager;
+    private static HunterCache hunterCache;
+    private static NewHunterShop hunterShop;
 
     public static RunicProfessions getInstance() {
         return plugin;
@@ -37,12 +39,20 @@ public final class RunicProfessions extends JavaPlugin {
     public static ProfManager getProfManager() {
         return profManager;
     }
+    public static HunterCache getHunterCache() {
+        return hunterCache;
+    }
+    public static NewHunterShop getHunterShop() {
+        return hunterShop;
+    }
 
     @Override
     public void onEnable() {
 
         plugin = this;
         profManager = new ProfManager();
+        hunterCache = new HunterCache();
+        hunterShop = new NewHunterShop();
 
         getConfig().options().copyDefaults(true);
         saveConfig();

@@ -122,6 +122,7 @@ public class HunterTask {
      * Checks only mythicmobs with 'hunter' faction, and checks player's hunter
      * level against mobs level. Writes that task to config.
      */
+    //IS NO LONGER USED, MOVED TO HunterPlayer.java!!!
     private MythicMob selectMob(Player pl) {
         // declare a temporary HashSet to pick a random mob
         List<MythicMob> hunterMobs = new ArrayList<>();

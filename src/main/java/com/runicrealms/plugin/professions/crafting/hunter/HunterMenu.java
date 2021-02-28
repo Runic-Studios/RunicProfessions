@@ -52,13 +52,7 @@ public class HunterMenu extends Workstation {
                 if (event.getSlot() == 3) {
 
                     // accept a task if they don't have one
-                    pl.playSound(pl.getLocation(), Sound.UI_BUTTON_CLICK, 0.5f, 1);
-                    HunterTask hunterTask = new HunterTask(pl);
-                    pl.playSound(pl.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 0.5f, 1.0f);
-                    pl.sendMessage
-                            (ChatColor.GREEN + "Your new task is to hunt " +
-                                    ChatColor.WHITE + HunterTask.getMobAmount(pl) + " " +
-                                    ChatColor.GREEN + hunterTask.getMob().getInternalName() + "s!");
+                    RunicProfessions.getHunterCache().getPlayers().get(pl.getUniqueId()).newTask();
                     event.setWillClose(true);
                     event.setWillDestroy(true);
 

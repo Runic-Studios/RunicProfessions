@@ -12,6 +12,7 @@ import com.runicrealms.plugin.item.GearScanner;
 import com.runicrealms.plugin.item.util.ItemRemover;
 import io.lumine.xikage.mythicmobs.api.bukkit.events.MythicMobDeathEvent;
 import org.bukkit.*;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -24,6 +25,7 @@ import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.FireworkMeta;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.HashMap;
@@ -32,9 +34,6 @@ import java.util.Map;
 import java.util.UUID;
 
 public class HunterListener implements Listener {
-
-    private final Map<UUID, HunterPlayer> players;
-
     private HashSet<UUID> cloakers; // for shadowmeld potion
     private HashSet<UUID> hasDealtDamage; // for shadowmeld potion
     private HashMap<UUID, ItemStack> chatters; // for listening to player chat
@@ -43,11 +42,12 @@ public class HunterListener implements Listener {
      * When plugin is loaded, add hunter items to hash set for use later
      */
     public HunterListener() {
-        this.players = new HashMap<>();
-
         cloakers = new HashSet<>();
         hasDealtDamage = new HashSet<>();
         chatters = new HashMap<>();
+
+        Plugin plugin = RunicProfessions.getInstance();
+        Bukkit.getScheduler().runTaskTimerAsynchronously(plugin, plugin::saveConfig, 0L, 1200L);
     }
 
     @EventHandler
@@ -58,23 +58,34 @@ public class HunterListener implements Listener {
 
         Player player = event.getPlayer();
 
-        //check if player has preexisting data and if so parse it
+        FileConfiguration config = RunicProfessions.getInstance().getConfig();
 
-        this.players.put(player.getUniqueId(), new HunterPlayer(player));
+        if (!config.getConfigurationSection(player.getUniqueId().toString() + ".info.prof").getKeys(false).isEmpty()) {
+            UUID uuid = player.getUniqueId();
+            int hunterPoints = config.getInt(HunterPlayer.formatData(uuid, "hunter_points"));
+            int hunterKills = config.getInt(HunterPlayer.formatData(uuid, "hunter_kills"));
+            int maxHunterKills = config.getInt(HunterPlayer.formatData(uuid, "hunter_kills_max"));
+            String mobName = config.getString(HunterPlayer.formatData(uuid, "hunter_mob"));
+            HunterTask.HunterMob mob = (!mobName.equals("null")) ? HunterTask.HunterMob.valueOf(mobName) : null;
+
+            RunicProfessions.getHunterCache().getPlayers().put(player.getUniqueId(), new HunterPlayer(player, hunterPoints, hunterKills, maxHunterKills, mob));
+        } else {
+            RunicProfessions.getHunterCache().getPlayers().put(player.getUniqueId(), new HunterPlayer(player));
+        }
     }
 
     @EventHandler
     public void onCacheSave(CacheSaveEvent event) {
         UUID uuid = event.getPlayer().getUniqueId();
 
-        if (!this.players.containsKey(uuid)) {
+        if (!RunicProfessions.getHunterCache().getPlayers().containsKey(uuid)) {
             return;
         }
 
-        this.players.get(uuid).save(true);
+        RunicProfessions.getHunterCache().getPlayers().get(uuid).save(false);
 
         if (event.cacheSaveReason() == CacheSaveReason.LOGOUT) {
-            this.players.remove(uuid);
+            RunicProfessions.getHunterCache().getPlayers().remove(uuid);
         }
     }
 
@@ -88,38 +99,9 @@ public class HunterListener implements Listener {
         String playerTask = RunicProfessions.getInstance().getConfig().getString(pl.getUniqueId() + ".info.prof.hunter_mob");
         if (!mobInternal.equals(playerTask)) return;
 
-        int totalKills = HunterTask.getCurrentKills(pl);
-        boolean sendMsg = true;
-
-        if (totalKills+1 < HunterTask.getMobAmount(pl)) {
-            RunicProfessions.getInstance().getConfig().set(pl.getUniqueId() + ".info.prof.hunter_kills", totalKills+1);
-        } else {
-            sendMsg = false;
-            HunterTask.givePoints(pl);
-            HunterTask.giveExperience(pl, sendMsg);
-            pl.sendMessage
-                    (ChatColor.GREEN + "You have completed your hunter task and receive " +
-                            ChatColor.GOLD + ChatColor.BOLD + HunterTask.getEarnedPoints(pl) + " points!" +
-                            ChatColor.GREEN + " Return to a hunting board for another task.");
-            launchFirework(pl);
-            RunicProfessions.getInstance().getConfig().set(pl.getUniqueId() + ".info.prof.hunter_mob", "");
-            RunicProfessions.getInstance().getConfig().set(pl.getUniqueId() + ".info.prof.hunter_kills", null);
-            RunicProfessions.getInstance().getConfig().set(pl.getUniqueId() + ".info.prof.hunter_kills_max", null);
-            RunicProfessions.getInstance().saveConfig();
-            RunicProfessions.getInstance().reloadConfig();
-            return;
+        if (!RunicProfessions.getHunterCache().getPlayers().get(pl.getUniqueId()).addKill()) {
+            HunterTask.giveExperience(pl, true);
         }
-
-        // give experience
-        HunterTask.giveExperience(pl, sendMsg);
-    }
-
-    private void launchFirework(Player pl) {
-        Firework firework = pl.getWorld().spawn(pl.getEyeLocation(), Firework.class);
-        FireworkMeta meta = firework.getFireworkMeta();
-        meta.setPower(0);
-        meta.addEffect(FireworkEffect.builder().with(FireworkEffect.Type.BALL_LARGE).withColor(Color.GREEN).build());
-        firework.setFireworkMeta(meta);
     }
 
     @EventHandler
