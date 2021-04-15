@@ -46,10 +46,11 @@ public class HunterShop extends Shop {
         super.setupShop("&eHunter Shop", 18);
 
         ItemGUI shopMenu = getItemGUI();
+        HunterPlayer player = RunicProfessions.getHunterCache().getPlayers().get(pl.getUniqueId());
 
         shopMenu.setOption(4, new ItemStack(Material.BOW),
                 "&eHunter Shop",
-                "&7You have &6&l" + HunterTask.getTotalPoints(pl) + " hunter points!",
+                "&7You have &6&l" + player.getHunterPoints() + " hunter points!",
                 0, false);
         shopMenu.setOption(9, Workstation.potionItem(Color.BLACK, "", ""),
                 "&fShadowmeld Potion",
@@ -210,17 +211,15 @@ public class HunterShop extends Shop {
             return false;
         }
 
-        int currentPoints = HunterTask.getTotalPoints(pl);
+        HunterPlayer player = RunicProfessions.getHunterCache().getPlayers().get(pl.getUniqueId());
 
-        if (currentPoints < price) {
+        if (player.getHunterPoints() < price) {
             pl.playSound(pl.getLocation(), Sound.ENTITY_GENERIC_EXTINGUISH_FIRE, 0.5f, 1.0f);
             pl.sendMessage(ChatColor.RED + "You don't have enough hunter points!");
             return false;
         }
 
-        RunicProfessions.getInstance().getConfig().set(pl.getUniqueId() + ".info.prof.hunter_points", HunterTask.getTotalPoints(pl)-price);
-        RunicProfessions.getInstance().saveConfig();
-        RunicProfessions.getInstance().reloadConfig();
+        player.setHunterPoints(player.getHunterPoints() - price);
 
         pl.playSound(pl.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 0.5f, 1.0f);
         return true;

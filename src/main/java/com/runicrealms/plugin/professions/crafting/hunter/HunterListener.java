@@ -13,7 +13,6 @@ import com.runicrealms.plugin.item.util.ItemRemover;
 import io.lumine.xikage.mythicmobs.api.bukkit.events.MythicMobDeathEvent;
 import org.bukkit.*;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -24,19 +23,17 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.UUID;
 
 public class HunterListener implements Listener {
-    private HashSet<UUID> cloakers; // for shadowmeld potion
-    private HashSet<UUID> hasDealtDamage; // for shadowmeld potion
-    private HashMap<UUID, ItemStack> chatters; // for listening to player chat
+    private final HashSet<UUID> cloakers; // for shadowmeld potion
+    private final HashSet<UUID> hasDealtDamage; // for shadowmeld potion
+    private final HashMap<UUID, ItemStack> chatters; // for listening to player chat
 
     /**
      * When plugin is loaded, add hunter items to hash set for use later
@@ -66,7 +63,7 @@ public class HunterListener implements Listener {
             int hunterKills = config.getInt(HunterPlayer.formatData(uuid, "hunter_kills"));
             int maxHunterKills = config.getInt(HunterPlayer.formatData(uuid, "hunter_kills_max"));
             String mobName = config.getString(HunterPlayer.formatData(uuid, "hunter_mob"));
-            HunterTask.HunterMob mob = (!mobName.equals("null")) ? HunterTask.HunterMob.valueOf(mobName) : null;
+            TaskMobs mob = (!mobName.equals("null")) ? TaskMobs.valueOf(mobName) : null;
 
             RunicProfessions.getHunterCache().getPlayers().put(player.getUniqueId(), new HunterPlayer(player, hunterPoints, hunterKills, maxHunterKills, mob));
         } else {
@@ -82,7 +79,7 @@ public class HunterListener implements Listener {
             return;
         }
 
-        RunicProfessions.getHunterCache().getPlayers().get(uuid).save(false);
+        RunicProfessions.getHunterCache().getPlayers().get(uuid).save();
 
         if (event.cacheSaveReason() == CacheSaveReason.LOGOUT) {
             RunicProfessions.getHunterCache().getPlayers().remove(uuid);
@@ -96,12 +93,10 @@ public class HunterListener implements Listener {
         if (!(e.getKiller() instanceof Player)) return;
         Player pl = (Player) e.getKiller();
         String mobInternal = e.getMobType().getInternalName();
-        String playerTask = RunicProfessions.getInstance().getConfig().getString(pl.getUniqueId() + ".info.prof.hunter_mob");
-        if (!mobInternal.equals(playerTask)) return;
+        HunterPlayer player = RunicProfessions.getHunterCache().getPlayers().get(pl.getUniqueId());
+        if (!mobInternal.equals(player.getTask().name())) return;
 
-        if (!RunicProfessions.getHunterCache().getPlayers().get(pl.getUniqueId()).addKill()) {
-            HunterTask.giveExperience(pl, true);
-        }
+        player.addKill();
     }
 
     @EventHandler
@@ -236,6 +231,7 @@ public class HunterListener implements Listener {
     }
 
     private static final double MOVE_CONSTANT = 0.6;
+
     private void shadowmeld(Player pl) {
         double timer_initX = Math.round(pl.getLocation().getX() * MOVE_CONSTANT);
         double timer_initY = Math.round(pl.getLocation().getY() * MOVE_CONSTANT);
@@ -243,6 +239,7 @@ public class HunterListener implements Listener {
 
         new BukkitRunnable() {
             int count = 0;
+
             @Override
             public void run() {
 
@@ -272,12 +269,12 @@ public class HunterListener implements Listener {
                     return;
                 }
 
-                pl.getWorld().spawnParticle(Particle.REDSTONE, pl.getLocation().add(0,1,0),
+                pl.getWorld().spawnParticle(Particle.REDSTONE, pl.getLocation().add(0, 1, 0),
                         10, 0.5f, 0.5f, 0.5f, new Particle.DustOptions(Color.GRAY, 1));
 
                 pl.sendMessage(ChatColor.GRAY + "Fading into shadow... "
-                        + ChatColor.WHITE + ChatColor.BOLD + (5-count) + "s");
-                count = count+1;
+                        + ChatColor.WHITE + ChatColor.BOLD + (5 - count) + "s");
+                count = count + 1;
 
             }
         }.runTaskTimer(RunicProfessions.getInstance(), 0, 20);
@@ -285,6 +282,7 @@ public class HunterListener implements Listener {
         // reappear after duration or upon dealing damage. can't be tracked async :(
         new BukkitRunnable() {
             int count = 0;
+
             @Override
             public void run() {
                 if (count >= 30 || hasDealtDamage.contains(pl.getUniqueId())) {

@@ -10,7 +10,10 @@ import com.runicrealms.plugin.professions.crafting.blacksmith.StoneListener;
 import com.runicrealms.plugin.professions.crafting.cooking.CookingListener;
 import com.runicrealms.plugin.professions.crafting.enchanter.EnchantListener;
 import com.runicrealms.plugin.professions.crafting.enchanter.EnchantScrollListener;
-import com.runicrealms.plugin.professions.crafting.hunter.*;
+import com.runicrealms.plugin.professions.crafting.hunter.HunterCache;
+import com.runicrealms.plugin.professions.crafting.hunter.HunterListener;
+import com.runicrealms.plugin.professions.crafting.hunter.HunterShopCMD;
+import com.runicrealms.plugin.professions.crafting.hunter.HunterShopListener;
 import com.runicrealms.plugin.professions.crafting.jeweler.JewelShopCMD;
 import com.runicrealms.plugin.professions.crafting.jeweler.JewelShopListener;
 import com.runicrealms.plugin.professions.crafting.jeweler.RegenListener;
@@ -31,7 +34,6 @@ public final class RunicProfessions extends JavaPlugin {
     private static RunicProfessions plugin;
     private static ProfManager profManager;
     private static HunterCache hunterCache;
-    private static NewHunterShop hunterShop;
 
     public static RunicProfessions getInstance() {
         return plugin;
@@ -42,9 +44,6 @@ public final class RunicProfessions extends JavaPlugin {
     public static HunterCache getHunterCache() {
         return hunterCache;
     }
-    public static NewHunterShop getHunterShop() {
-        return hunterShop;
-    }
 
     @Override
     public void onEnable() {
@@ -52,7 +51,6 @@ public final class RunicProfessions extends JavaPlugin {
         plugin = this;
         profManager = new ProfManager();
         hunterCache = new HunterCache();
-        hunterShop = new NewHunterShop();
 
         getConfig().options().copyDefaults(true);
         saveConfig();

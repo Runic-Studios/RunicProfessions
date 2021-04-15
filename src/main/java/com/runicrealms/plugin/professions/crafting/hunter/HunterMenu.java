@@ -9,8 +9,6 @@ import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.Objects;
-
 public class HunterMenu extends Workstation {
 
     public HunterMenu(Player pl) {
@@ -23,24 +21,21 @@ public class HunterMenu extends Workstation {
         // name the menu
         super.setupWorkstation("&f&l" + pl.getName() + "'s &e&lHunting Board");
         ItemGUI hMenu = getItemGUI();
+        HunterPlayer player = RunicProfessions.getHunterCache().getPlayers().get(pl.getUniqueId());
 
         // check whether player has a task
-        boolean hasTask = false;
-        if (!Objects.equals(RunicProfessions.getInstance().getConfig().getString(pl.getUniqueId() + ".info.prof.hunter_mob"), "")
-                && RunicProfessions.getInstance().getConfig().getString(pl.getUniqueId() + ".info.prof.hunter_mob") != null) {
-            hasTask = true;
-        }
+        boolean hasTask = player.getTask() != null;
 
         if (!hasTask) {
             hMenu.setOption(3, new ItemStack(Material.BOW),
                     "&fAccept New Task",
-                    "&7Your Hunter Points: &6&l" + HunterTask.getTotalPoints(pl) +
+                    "&7Your Hunter Points: &6&l" + player.getHunterPoints() +
                             "\n&aStart a hunter task!\n&7Hunt specific monsters in the\n&7world and earn points!",
                     0, false);
         } else {
             hMenu.setOption(3, new ItemStack(Material.ZOMBIE_HEAD),
                     "&fGet Task Info",
-                    "&7Your Hunter Points: &6&l" + HunterTask.getTotalPoints(pl) +
+                    "&7Your Hunter Points: &6&l" + player.getHunterPoints() +
                             "\n&7You have a current task!\n&aClick here for information\n&aon your task!",
                     0, false);
         }
@@ -74,9 +69,9 @@ public class HunterMenu extends Workstation {
                     pl.playSound(pl.getLocation(), Sound.UI_BUTTON_CLICK, 0.5f, 1);
                     pl.sendMessage
                             (ChatColor.GREEN + "Your current task is to hunt " +
-                                    ChatColor.WHITE + HunterTask.getMobAmount(pl) + " " +
-                                    ChatColor.GREEN + HunterTask.getMobName(pl) + "s.");
-                    pl.sendMessage(ChatColor.GREEN + "So far, you have slain " + ChatColor.WHITE + HunterTask.getCurrentKills(pl) + "!");
+                                    ChatColor.WHITE + player.getMaxHunterKills() + " " +
+                                    ChatColor.GREEN + player.getTask().getName() + "s.");
+                    pl.sendMessage(ChatColor.GREEN + "So far, you have slain " + ChatColor.WHITE + player.getHunterKills() + "!");
                     event.setWillClose(true);
                     event.setWillDestroy(true);
 

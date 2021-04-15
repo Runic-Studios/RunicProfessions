@@ -2,6 +2,8 @@ package com.runicrealms.plugin.professions.crafting.hunter;
 
 import com.runicrealms.plugin.RunicProfessions;
 import com.runicrealms.plugin.api.RunicCoreAPI;
+import com.runicrealms.plugin.professions.utilities.ProfExpUtil;
+import com.runicrealms.plugin.utilities.ColorUtil;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.protection.ApplicableRegionSet;
@@ -25,7 +27,7 @@ public class HunterPlayer {
     private int hunterPoints;
     private int hunterKills;
     private int maxHunterKills;
-    private HunterTask.HunterMob task;
+    private TaskMobs task;
 
     public HunterPlayer(Player player) {
         this.player = player;
@@ -35,7 +37,7 @@ public class HunterPlayer {
         this.task = null;
     }
 
-    public HunterPlayer(Player player, int hunterPoints, int hunterKills, int maxHunterKills, HunterTask.HunterMob task) {
+    public HunterPlayer(Player player, int hunterPoints, int hunterKills, int maxHunterKills, TaskMobs task) {
         this.player = player;
         this.hunterPoints = hunterPoints;
         this.hunterKills = hunterKills;
@@ -43,7 +45,7 @@ public class HunterPlayer {
         this.task = task;
     }
 
-    public void save(boolean write) {
+    public void save() {
         Plugin plugin = RunicProfessions.getInstance();
         FileConfiguration config = plugin.getConfig();
 
@@ -56,10 +58,6 @@ public class HunterPlayer {
         config.set(this.formatData("hunter_points"), this.hunterPoints);
         config.set(this.formatData("hunter_kills"), this.hunterKills);
         config.set(this.formatData("hunter_kills_max"), this.maxHunterKills);
-
-        if (write) {
-            plugin.saveConfig();
-        }
     }
 
     public void newTask() {
@@ -76,27 +74,30 @@ public class HunterPlayer {
         this.task = null;
     }
 
-    public boolean addKill() {
+    public void addKill() {
         if (this.task == null) {
-            return false;
+            return;
         }
+
+        this.player.sendMessage(ColorUtil.format("&r&aHunter mob slain!"));
+
+        ProfExpUtil.giveExperience(this.player, this.task.getExperience(), true);
 
         this.hunterKills++;
 
         if (this.hunterKills < this.maxHunterKills) {
-            return false;
+            return;
         }
 
         this.hunterPoints += this.task.getPoints();
 
-        HunterTask.giveExperience(this.player, false);
         this.player.sendMessage
                 (ChatColor.GREEN + "You have completed your hunter task and receive " +
-                        ChatColor.GOLD + ChatColor.BOLD + HunterTask.getEarnedPoints(this.player) + " points!" +
+                        ChatColor.GOLD + ChatColor.BOLD + this.task.getPoints() + " points!" +
                         ChatColor.GREEN + " Return to a hunting board for another task.");
         this.launchFirework(this.player);
-        this.save(true);
-        return true;
+        this.save();
+        this.resetTask();
     }
 
     public Player getPlayer() {
@@ -119,11 +120,11 @@ public class HunterPlayer {
         return this.maxHunterKills;
     }
 
-    public HunterTask.HunterMob getTask() {
+    public TaskMobs getTask() {
         return this.task;
     }
 
-    public void setTask(HunterTask.HunterMob task) {
+    public void setTask(TaskMobs task) {
         this.task = task;
     }
 
@@ -139,13 +140,13 @@ public class HunterPlayer {
         firework.setFireworkMeta(meta);
     }
 
-    private HunterTask.HunterMob getRandomMob() {
-        List<HunterTask.HunterMob> hunterMobs = new ArrayList<>();
+    private void getRandomMob() {
+        List<TaskMobs> hunterMobs = new ArrayList<>();
         List<String> names = this.getRegions();
 
         // filter-out mobs above the player's hunter level and region
         int playLv = RunicCoreAPI.getPlayerCache(this.player).getProfLevel();
-        for (HunterTask.HunterMob mob : HunterTask.HunterMob.values()) {
+        for (TaskMobs mob : TaskMobs.values()) {
             int mobLv = mob.getLevel();
             if (mobLv > playLv) {
                 continue;
@@ -160,11 +161,11 @@ public class HunterPlayer {
 
         Random rand = ThreadLocalRandom.current();
         int index = rand.nextInt(hunterMobs.size());
-        HunterTask.HunterMob mob = hunterMobs.get(index);
+        TaskMobs mob = hunterMobs.get(index);
 
-        // set mob as task in config
         this.setTask(mob);
-        return mob;
+
+        this.player.sendMessage(ColorUtil.format("&r&aYour target is: " + this.task.getName()));
     }
 
     private List<String> getRegions() {
@@ -176,7 +177,7 @@ public class HunterPlayer {
         return names;
     }
 
-    private boolean containsRegion(HunterTask.HunterMob mob, List<String> names) {
+    private boolean containsRegion(TaskMobs mob, List<String> names) {
         for (String name : names) {
             if (mob.getRegions().contains(name)) {
                 return true;
