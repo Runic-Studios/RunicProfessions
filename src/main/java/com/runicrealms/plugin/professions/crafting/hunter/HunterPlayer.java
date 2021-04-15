@@ -87,7 +87,8 @@ public class HunterPlayer {
             return false;
         }
 
-        HunterTask.givePoints(this.player);
+        this.hunterPoints += this.task.getPoints();
+
         HunterTask.giveExperience(this.player, false);
         this.player.sendMessage
                 (ChatColor.GREEN + "You have completed your hunter task and receive " +
