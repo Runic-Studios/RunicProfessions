@@ -15,6 +15,7 @@ import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.plugin.Plugin;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,7 +66,7 @@ public class HunterPlayer {
             return;
         }
 
-        this.getRandomMob();
+        this.chooseNewRandomMob();
     }
 
     public void resetTask() {
@@ -120,12 +121,15 @@ public class HunterPlayer {
         return this.maxHunterKills;
     }
 
+    @Nullable
     public TaskMobs getTask() {
         return this.task;
     }
 
-    public void setTask(TaskMobs task) {
+    public void setTask(TaskMobs task, int hunterKills, int maxHunterKills) {
         this.task = task;
+        this.hunterKills = hunterKills;
+        this.maxHunterKills = maxHunterKills;
     }
 
     private String formatData(String field) {
@@ -140,7 +144,7 @@ public class HunterPlayer {
         firework.setFireworkMeta(meta);
     }
 
-    private void getRandomMob() {
+    private void chooseNewRandomMob() {
         List<TaskMobs> hunterMobs = new ArrayList<>();
         List<String> names = this.getRegions();
 
@@ -159,13 +163,14 @@ public class HunterPlayer {
             hunterMobs.add(mob);
         }
 
-        Random rand = ThreadLocalRandom.current();
+        ThreadLocalRandom rand = ThreadLocalRandom.current();
         int index = rand.nextInt(hunterMobs.size());
         TaskMobs mob = hunterMobs.get(index);
 
-        this.setTask(mob);
+        this.setTask(mob, 0, rand.nextInt(15, 30));
 
-        this.player.sendMessage(ColorUtil.format("&r&aYour target is: " + this.task.getName()));
+        this.player.sendMessage(ColorUtil.format("&r&aYour target is: &r&f" + this.task.getName()));
+        this.player.sendMessage(ColorUtil.format("&r&aPlease defeat it &r&f" + this.maxHunterKills + " &r&atimes"));
     }
 
     private List<String> getRegions() {

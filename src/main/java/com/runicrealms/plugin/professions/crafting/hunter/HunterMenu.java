@@ -3,7 +3,7 @@ package com.runicrealms.plugin.professions.crafting.hunter;
 import com.runicrealms.plugin.RunicProfessions;
 import com.runicrealms.plugin.item.GUIMenu.ItemGUI;
 import com.runicrealms.plugin.professions.Workstation;
-import org.bukkit.ChatColor;
+import com.runicrealms.plugin.utilities.ColorUtil;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -67,11 +67,8 @@ public class HunterMenu extends Workstation {
 
                     // get task info
                     pl.playSound(pl.getLocation(), Sound.UI_BUTTON_CLICK, 0.5f, 1);
-                    pl.sendMessage
-                            (ChatColor.GREEN + "Your current task is to hunt " +
-                                    ChatColor.WHITE + player.getMaxHunterKills() + " " +
-                                    ChatColor.GREEN + player.getTask().getName() + "s.");
-                    pl.sendMessage(ChatColor.GREEN + "So far, you have slain " + ChatColor.WHITE + player.getHunterKills() + "!");
+                    pl.sendMessage(ColorUtil.format("&r&aYour current task is to hunt &r&f" + player.getMaxHunterKills() + " " + player.getTask().getName() + "&r&as"));
+                    pl.sendMessage(ColorUtil.format("&r&aSo far, you have slain &r&f" + player.getHunterKills() + "&r&a!"));
                     event.setWillClose(true);
                     event.setWillDestroy(true);
 

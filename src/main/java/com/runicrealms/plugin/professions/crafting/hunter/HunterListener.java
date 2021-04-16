@@ -63,7 +63,13 @@ public class HunterListener implements Listener {
             int hunterKills = config.getInt(HunterPlayer.formatData(uuid, "hunter_kills"));
             int maxHunterKills = config.getInt(HunterPlayer.formatData(uuid, "hunter_kills_max"));
             String mobName = config.getString(HunterPlayer.formatData(uuid, "hunter_mob"));
-            TaskMobs mob = (!mobName.equals("null")) ? TaskMobs.valueOf(mobName) : null;
+            TaskMobs mob;
+
+            if (mobName == null) {
+                mob = null;
+            } else {
+                mob = (!mobName.equals("null")) ? TaskMobs.valueOf(mobName.toUpperCase()) : null;
+            }
 
             RunicProfessions.getHunterCache().getPlayers().put(player.getUniqueId(), new HunterPlayer(player, hunterPoints, hunterKills, maxHunterKills, mob));
         } else {
@@ -88,13 +94,27 @@ public class HunterListener implements Listener {
 
     @EventHandler
     public void onHunterMobDeath(MythicMobDeathEvent e) {
-
         // verify that a hunter is on-task
-        if (!(e.getKiller() instanceof Player)) return;
+        if (!(e.getKiller() instanceof Player)) {
+            return;
+        }
+
         Player pl = (Player) e.getKiller();
+
+        if (!RunicProfessions.getHunterCache().getPlayers().containsKey(pl.getUniqueId())) {
+            return;
+        }
+
         String mobInternal = e.getMobType().getInternalName();
         HunterPlayer player = RunicProfessions.getHunterCache().getPlayers().get(pl.getUniqueId());
-        if (!mobInternal.equals(player.getTask().name())) return;
+
+        if (player.getTask() == null) {
+            return;
+        }
+
+        if (!mobInternal.equals(player.getTask().getInternalName())) {
+            return;
+        }
 
         player.addKill();
     }

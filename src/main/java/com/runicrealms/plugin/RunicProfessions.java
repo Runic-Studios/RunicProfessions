@@ -73,6 +73,7 @@ public final class RunicProfessions extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        plugin.saveConfig();
         plugin = null;
         profManager = null;
     }
