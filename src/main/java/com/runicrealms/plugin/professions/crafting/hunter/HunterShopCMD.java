@@ -12,7 +12,7 @@ import org.bukkit.entity.Player;
 public class HunterShopCMD implements CommandExecutor {
 
     /**
-     * Opens the artifact forge for the given player
+     * Opens the hunter shop for the given player
      */
     public boolean onCommand(CommandSender sender, Command cmd, String lb, String[] args) {
 

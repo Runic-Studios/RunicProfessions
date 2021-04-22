@@ -1,10 +1,12 @@
 package com.runicrealms.plugin.professions.crafting.enchanter;
 
-import com.runicrealms.plugin.RunicCore;
 import com.runicrealms.plugin.api.RunicCoreAPI;
 import com.runicrealms.plugin.item.GUIMenu.ItemGUI;
 import com.runicrealms.plugin.professions.Workstation;
-import org.bukkit.*;
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.Particle;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
@@ -13,9 +15,9 @@ import org.bukkit.inventory.meta.ItemMeta;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
-public class EnchanterMenu extends Workstation {
+public class EnchantingTableMenu extends Workstation {
 
-    public EnchanterMenu(Player pl) {
+    public EnchantingTableMenu(Player pl) {
         setupWorkstation(pl);
     }
 
@@ -24,14 +26,14 @@ public class EnchanterMenu extends Workstation {
 
         // setup the menu
         super.setupWorkstation("&f&l" + pl.getName() + "'s &e&lEnchanting Table");
-        ItemGUI jewelerMenu = getItemGUI();
+        ItemGUI enchanterMenu = getItemGUI();
 
         //set the visual items
-        jewelerMenu.setOption(3, new ItemStack(Material.PURPLE_DYE),
-                "&fEnchant Scrolls", "&7Create scrolls and enchant items!", 0, false);
+        enchanterMenu.setOption(3, new ItemStack(Material.PURPLE_DYE),
+                "&fTeleportation Scrolls & Rituals", "&7Create teleportation scrolls and craft rituals!", 0, false);
 
         // set the handler
-        jewelerMenu.setHandler(event -> {
+        enchanterMenu.setHandler(event -> {
 
             if (event.getSlot() == 3) {
 
@@ -54,7 +56,7 @@ public class EnchanterMenu extends Workstation {
         });
 
         // update our internal menu
-        this.setItemGUI(jewelerMenu);
+        this.setItemGUI(enchanterMenu);
     }
 
     private ItemGUI tableMenu(Player pl) {
@@ -104,12 +106,6 @@ public class EnchanterMenu extends Workstation {
         frostsEndScroll.put(Material.GUNPOWDER, 1);
         frostsEndScroll.put(Material.GOLDEN_CARROT, 1);
 
-        // enchant scrolls
-        LinkedHashMap<Material, Integer> enchantScrollReqs = new LinkedHashMap<>();
-        enchantScrollReqs.put(Material.PAPER, 1);
-        enchantScrollReqs.put(Material.BLAZE_POWDER, 1);
-        enchantScrollReqs.put(Material.TROPICAL_FISH, 1);
-
         ItemGUI benchMenu = super.craftingMenu(pl, 27);
 
         benchMenu.setOption(4, new ItemStack(Material.ENCHANTING_TABLE), "&eEnchanting Table",
@@ -141,52 +137,37 @@ public class EnchanterMenu extends Workstation {
                 int exp = 0;
                 LinkedHashMap<Material, Integer> reqHashMap = new LinkedHashMap<>();
 
-                // paper
                 if (slot == 9) {
+                    // paper
                     reqHashMap = paperReqs;
                     exp = 15;
-                    // ancient powder
                 } else if (slot == 10) {
+                    // ancient powder
                     reqHashMap = powderReqs;
                     exp = 10;
-                    // magic powder
                 } else if (slot == 11) {
+                    // magic powder
                     reqHashMap = magicPowderReqs;
                     exp = 10;
-                    // azana scroll
                 } else if (slot == 12) {
+                    // azana scroll
                     reqHashMap = azanaScroll;
                     exp = 40;
-                    // crit scroll
                 } else if (slot == 13) {
-                    reqLevel = 10;
-                    reqHashMap = enchantScrollReqs;
-                    exp = 80;
                     // wintervale scroll
-                } else if (slot == 14) {
                     reqLevel = 20;
                     reqHashMap = wintervaleScroll;
                     exp = 40;
-                } else if (slot == 15) {
-                    // dodge scroll
-                    reqLevel = 20;
-                    reqHashMap = enchantScrollReqs;
-                    exp = 80;
+                } else if (slot == 14) {
                     // zenyth scroll
-                } else if (slot == 16) {
                     reqLevel = 40;
                     reqHashMap = zenythScroll;
                     exp = 40;
-                } else if (slot == 17) {
-                    // thorns scroll
-                    reqLevel = 40;
-                    reqHashMap = enchantScrollReqs;
-                    exp = 80;
-                } else if (slot == 18) {
+                } else if (slot == 15) {
                     reqLevel = 50;
                     exp = 100;
                     reqHashMap = partyScroll;
-                } else if (slot == 19) {
+                } else if (slot == 16) {
                     // frost's end scroll
                     reqLevel = 60;
                     reqHashMap = frostsEndScroll;
@@ -208,24 +189,6 @@ public class EnchanterMenu extends Workstation {
     }
 
     private void setupItems(ItemGUI tableMenu, Player pl, int currentLv) {
-
-        int critAmt = 1;
-        int dodgeAmt = 1;
-        int thornsAmt = 1;
-        if (currentLv >= 30 && currentLv < 50) {
-            critAmt = 2;
-            dodgeAmt = 2;
-            thornsAmt = 2;
-        } else if (currentLv >= 50 && currentLv < 60) {
-            critAmt = 3;
-            dodgeAmt = 3;
-            thornsAmt = 3;
-        } else if (currentLv >= 60) {
-            critAmt = 4;
-            dodgeAmt = 4;
-            thornsAmt = 4;
-        }
-
         // paper
         LinkedHashMap<Material, Integer> paperReqs = new LinkedHashMap<>();
         paperReqs.put(Material.STRING, 999);
@@ -256,49 +219,30 @@ public class EnchanterMenu extends Workstation {
                 "Paper\nAncient Powder\nUncut Ruby", 2, 40, 0, 0, "&eTeleport to Azana!\n",
                 false, false, false);
 
-        // crit scroll
-        LinkedHashMap<Material, Integer> enchantScrollReqs = new LinkedHashMap<>();
-        enchantScrollReqs.put(Material.PAPER, 1);
-        enchantScrollReqs.put(Material.BLAZE_POWDER, 1);
-        enchantScrollReqs.put(Material.TROPICAL_FISH, 1);
-        super.createMenuItem(tableMenu, pl, 13, Material.PURPLE_DYE, "&fEnchant Scroll: Crit", enchantScrollReqs,
-                "Paper\nMagic Powder\nTropical Fish", 999, 80, 10, 0, "&a+" + critAmt + "% Crit Chance\n",
-                false, true, false);
-
         // wintervale scroll
         LinkedHashMap<Material, Integer> valeScrollReqs = new LinkedHashMap<>();
         valeScrollReqs.put(Material.PAPER, 1);
         valeScrollReqs.put(Material.GUNPOWDER, 1);
         valeScrollReqs.put(Material.DIAMOND_ORE, 1);
-        super.createMenuItem(tableMenu, pl, 14, Material.PURPLE_DYE, "&fTeleport Scroll: Wintervale", valeScrollReqs,
+        super.createMenuItem(tableMenu, pl, 13, Material.PURPLE_DYE, "&fTeleport Scroll: Wintervale", valeScrollReqs,
                 "Paper\nAncient Powder\nUncut Diamond", 1, 40, 20, 0, "&eTeleport to Wintervale!\n",
                 false, false, false);
-
-        // dodge scroll
-        super.createMenuItem(tableMenu, pl, 15, Material.PURPLE_DYE, "&fEnchant Scroll: Dodge", enchantScrollReqs,
-                "Paper\nMagic Powder\nTropical Fish", 1, 80, 20, 0, "&a+" + dodgeAmt + "% Dodge Chance\n",
-                false, true, false);
 
         // zenyth scroll
         LinkedHashMap<Material, Integer> zenythScrollReqs = new LinkedHashMap<>();
         zenythScrollReqs.put(Material.PAPER, 1);
         zenythScrollReqs.put(Material.GUNPOWDER, 1);
         zenythScrollReqs.put(Material.NETHER_QUARTZ_ORE, 1);
-        super.createMenuItem(tableMenu, pl, 16, Material.PURPLE_DYE, "&fTeleport Scroll: Zenyth", zenythScrollReqs,
+        super.createMenuItem(tableMenu, pl, 14, Material.PURPLE_DYE, "&fTeleport Scroll: Zenyth", zenythScrollReqs,
                 "Paper\nAncient Powder\nUncut Opal", 1, 40, 40, 0, "&eTeleport to Zenyth!\n",
                 false, false, false);
-
-        // thorns scroll
-        super.createMenuItem(tableMenu, pl, 17, Material.PURPLE_DYE, "&fEnchant Scroll: Thorns", enchantScrollReqs,
-                "Paper\nMagic Powder\nTropical Fish", 1, 80, 40, 0, "&a+" + thornsAmt + "% Thorns Chance\n",
-                false, true, false);
 
         // party scroll
         LinkedHashMap<Material, Integer> partyScrollReqs = new LinkedHashMap<>();
         partyScrollReqs.put(Material.PAPER, 1);
         partyScrollReqs.put(Material.GUNPOWDER, 1);
         partyScrollReqs.put(Material.PINK_TULIP, 1);
-        super.createMenuItem(tableMenu, pl, 18, Material.PURPLE_DYE, "&fParty Summon Scroll", partyScrollReqs,
+        super.createMenuItem(tableMenu, pl, 15, Material.PURPLE_DYE, "&fParty Summon Scroll", partyScrollReqs,
                 "Paper\nAncient Powder\nLavender", 1, 100, 50, 0, "&eSummon your party to you!\n",
                 false, false, false);
 
@@ -307,7 +251,7 @@ public class EnchanterMenu extends Workstation {
         frostScrollReqs.put(Material.PAPER, 1);
         frostScrollReqs.put(Material.GUNPOWDER, 1);
         frostScrollReqs.put(Material.GOLDEN_CARROT, 1);
-        super.createMenuItem(tableMenu, pl, 19, Material.PURPLE_DYE, "&fTeleport Scroll: Frost's End", frostScrollReqs,
+        super.createMenuItem(tableMenu, pl, 16, Material.PURPLE_DYE, "&fTeleport Scroll: Frost's End", frostScrollReqs,
                 "Paper\nAncient Powder\nAmbrosia Root", 1, 0, 60, 0, "&eTeleport to Frost's End!\n",
                 false, false, false);
     }
@@ -368,20 +312,11 @@ public class EnchanterMenu extends Workstation {
             case 12:
                 item = new TeleportScroll(TeleportEnum.AZANA, 0).getItem(); // azana
                 break;
-            case 13:
-                item = new EnchantScroll(EnchantEnum.CRIT, percent, 10).getItem(); // crit
-                break;
             case 14:
                 item = new TeleportScroll(TeleportEnum.WINTERVALE, 20).getItem(); // wintervale
                 break;
-            case 15:
-                item = new EnchantScroll(EnchantEnum.DODGE, percent, 30).getItem(); // dodge
-                break;
             case 16:
                 item = new TeleportScroll(TeleportEnum.ZENYTH, 40).getItem(); // zenyth
-                break;
-            case 17:
-                item = new EnchantScroll(EnchantEnum.THORNS, percent, 50).getItem(); // thorns
                 break;
             case 18:
                 item = partySummonScroll();

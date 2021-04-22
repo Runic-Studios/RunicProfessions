@@ -9,19 +9,21 @@ import com.runicrealms.plugin.professions.crafting.alchemist.PotionListener;
 import com.runicrealms.plugin.professions.crafting.blacksmith.StoneListener;
 import com.runicrealms.plugin.professions.crafting.cooking.CookingListener;
 import com.runicrealms.plugin.professions.crafting.enchanter.EnchantListener;
-import com.runicrealms.plugin.professions.crafting.enchanter.EnchantScrollListener;
-import com.runicrealms.plugin.professions.crafting.hunter.*;
-import com.runicrealms.plugin.professions.crafting.jeweler.JewelShopListener;
+import com.runicrealms.plugin.professions.crafting.hunter.HunterCache;
+import com.runicrealms.plugin.professions.crafting.hunter.HunterListener;
+import com.runicrealms.plugin.professions.crafting.hunter.HunterShopCMD;
+import com.runicrealms.plugin.professions.crafting.hunter.HunterShopListener;
 import com.runicrealms.plugin.professions.crafting.jeweler.JewelShopCMD;
+import com.runicrealms.plugin.professions.crafting.jeweler.JewelShopListener;
 import com.runicrealms.plugin.professions.crafting.jeweler.RegenListener;
 import com.runicrealms.plugin.professions.crafting.jeweler.SocketListener;
-import com.runicrealms.plugin.professions.listeners.CustomFishListener;
-import com.runicrealms.plugin.professions.listeners.StationClickListener;
 import com.runicrealms.plugin.professions.gathering.FarmingListener;
 import com.runicrealms.plugin.professions.gathering.FishingListener;
 import com.runicrealms.plugin.professions.gathering.MiningListener;
 import com.runicrealms.plugin.professions.gathering.WCListener;
+import com.runicrealms.plugin.professions.listeners.CustomFishListener;
 import com.runicrealms.plugin.professions.listeners.JoinListener;
+import com.runicrealms.plugin.professions.listeners.StationClickListener;
 import com.runicrealms.plugin.professions.listeners.WorkstationListener;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -30,6 +32,7 @@ public final class RunicProfessions extends JavaPlugin {
 
     private static RunicProfessions plugin;
     private static ProfManager profManager;
+    private static HunterCache hunterCache;
 
     public static RunicProfessions getInstance() {
         return plugin;
@@ -37,12 +40,16 @@ public final class RunicProfessions extends JavaPlugin {
     public static ProfManager getProfManager() {
         return profManager;
     }
+    public static HunterCache getHunterCache() {
+        return hunterCache;
+    }
 
     @Override
     public void onEnable() {
 
         plugin = this;
         profManager = new ProfManager();
+        hunterCache = new HunterCache();
 
         getConfig().options().copyDefaults(true);
         saveConfig();
@@ -65,6 +72,7 @@ public final class RunicProfessions extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        plugin.saveConfig();
         plugin = null;
         profManager = null;
     }
@@ -86,7 +94,6 @@ public final class RunicProfessions extends JavaPlugin {
         pm.registerEvents(new StoneListener(), this);
         pm.registerEvents(new JoinListener(), this);
         pm.registerEvents(new EnchantListener(), this);
-        pm.registerEvents(new EnchantScrollListener(), this);
         pm.registerEvents(new CustomFishListener(), this);
         pm.registerEvents(new RegenListener(), this);
     }

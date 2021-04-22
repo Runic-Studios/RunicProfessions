@@ -7,7 +7,8 @@ import com.runicrealms.plugin.professions.crafting.alchemist.CauldronMenu;
 import com.runicrealms.plugin.professions.crafting.blacksmith.AnvilMenu;
 import com.runicrealms.plugin.professions.crafting.blacksmith.FurnaceMenu;
 import com.runicrealms.plugin.professions.crafting.cooking.CookingMenu;
-import com.runicrealms.plugin.professions.crafting.enchanter.EnchanterMenu;
+import com.runicrealms.plugin.professions.crafting.enchanter.EnchantingTableMenu;
+import com.runicrealms.plugin.professions.crafting.enchanter.ShrineMenu;
 import com.runicrealms.plugin.professions.crafting.hunter.HunterMenu;
 import com.runicrealms.plugin.professions.crafting.jeweler.JewelerMenu;
 import org.bukkit.*;
@@ -37,6 +38,7 @@ public class WorkstationListener implements Listener {
      * This class communicates with the 'workstations.yml' data file
      * to manage all five profession workstations and bring up their respective GUIS/
      * play their respective sounds
+     *
      * @author Skyfallin_
      */
     @EventHandler
@@ -73,7 +75,7 @@ public class WorkstationListener implements Listener {
             double savedZ = stationLocs.getDouble(stationID + ".z");
 
             // if this particular location is saved, check what kind of workstation it is
-            if (world == savedWorld && x == savedX && y == savedY && z == savedZ){
+            if (world == savedWorld && x == savedX && y == savedY && z == savedZ) {
                 String savedStation = stationLocs.getString(stationID + ".type");
                 if (savedStation == null) return;
                 stationType = savedStation;
@@ -149,7 +151,7 @@ public class WorkstationListener implements Listener {
             case "spinning wheel":
                 if (className.equals("Enchanter")) {
                     pl.playSound(pl.getLocation(), Sound.BLOCK_WET_GRASS_BREAK, 2.0f, 1.2f);
-                    RunicProfessions.getProfManager().setPlayerWorkstation(pl, new EnchanterMenu(pl));
+                    RunicProfessions.getProfManager().setPlayerWorkstation(pl, new EnchantingTableMenu(pl));
                     ItemGUI eMenu = ((RunicProfessions.getProfManager().getPlayerWorkstation(pl))).getItemGUI();
                     eMenu.open(pl);
                 } else {
@@ -180,6 +182,14 @@ public class WorkstationListener implements Listener {
                     pl.sendMessage(ChatColor.RED + "A hunter would know how to use this.");
                 }
                 break;
+            case "shrine":
+                if (className.equals("Enchanter")) {
+                    //play sound
+                    RunicProfessions.getProfManager().setPlayerWorkstation(pl, new ShrineMenu(pl));
+                    ItemGUI eMenu = ((RunicProfessions.getProfManager().getPlayerWorkstation(pl))).getItemGUI();
+                    eMenu.open(pl);
+                }
+                break;
         }
 
         // add station location to the hashmap for item display purposes
@@ -193,6 +203,7 @@ public class WorkstationListener implements Listener {
      * The event then listens for the player's chat response, and adds the block to the file accordingly.
      */
     private ArrayList<UUID> chatters = new ArrayList<>();
+
     @EventHandler
     public void onLocationAdd(PlayerInteractEvent e) {
 
@@ -223,12 +234,12 @@ public class WorkstationListener implements Listener {
             stationConfig.set("Workstations.NEXT_ID", 0);
         }
         int nextID = stationConfig.getInt("Workstations.NEXT_ID");
-        stationConfig.set("Workstations.Locations." + nextID + ".world" , b.getWorld().getName());
+        stationConfig.set("Workstations.Locations." + nextID + ".world", b.getWorld().getName());
         stationConfig.set("Workstations.Locations." + nextID + ".x", b.getLocation().getBlockX());
         stationConfig.set("Workstations.Locations." + nextID + ".y", b.getLocation().getBlockY());
         stationConfig.set("Workstations.Locations." + nextID + ".z", b.getLocation().getBlockZ());
         pl.sendMessage(ChatColor.GREEN + "Workstation saved! Now please specify the type of this workstation:\n"
-                + "Anvil, cauldron, cooking fire, furnace, gemcutting bench, enchanting table, or hunting board?");
+                + "Anvil, cauldron, cooking fire, furnace, gemcutting bench, enchanting table, shrine, or hunting board?");
         chatters.add(pl.getUniqueId());
 
         // save data file
@@ -256,7 +267,8 @@ public class WorkstationListener implements Listener {
                     || stationType.equals("furnace")
                     || stationType.equals("gemcutting bench")
                     || stationType.equals("enchanting table")
-                    || stationType.equals("hunting board"))) {
+                    || stationType.equals("hunting board")
+                    || stationType.equals("shrine"))) {
                 pl.sendMessage(ChatColor.RED + "Please specify a correct input.");
                 return;
             }
@@ -272,7 +284,7 @@ public class WorkstationListener implements Listener {
             int nextID = stationConfig.getInt("Workstations.NEXT_ID");
 
             stationConfig.set("Workstations.Locations." + nextID + ".type", stationType);
-            stationConfig.set("Workstations.NEXT_ID", nextID+1);
+            stationConfig.set("Workstations.NEXT_ID", nextID + 1);
             pl.sendMessage(ChatColor.GREEN + "Workstation type set to: " + ChatColor.YELLOW + stationType);
             chatters.remove(pl.getUniqueId());
 
@@ -303,7 +315,8 @@ public class WorkstationListener implements Listener {
                 || b.getType() == Material.CAULDRON
                 || b.getType() == Material.CRAFTING_TABLE
                 || b.getType() == Material.ENCHANTING_TABLE
-                || b.getType() == Material.FURNACE) {
+                || b.getType() == Material.FURNACE
+                || b.getType() == Material.LECTERN) {
             e.setCancelled(true);
         }
     }
