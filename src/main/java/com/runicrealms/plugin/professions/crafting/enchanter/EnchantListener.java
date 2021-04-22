@@ -3,14 +3,8 @@ package com.runicrealms.plugin.professions.crafting.enchanter;
 import com.runicrealms.plugin.RunicCore;
 import com.runicrealms.plugin.api.RunicCoreAPI;
 import com.runicrealms.plugin.attributes.AttributeUtil;
-import com.runicrealms.plugin.events.MobDamageEvent;
-import com.runicrealms.plugin.events.SpellDamageEvent;
-import com.runicrealms.plugin.events.WeaponDamageEvent;
-import com.runicrealms.plugin.item.GearScanner;
 import com.runicrealms.plugin.item.util.ItemRemover;
-import com.runicrealms.plugin.utilities.DamageUtil;
 import org.bukkit.*;
-import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -22,12 +16,9 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
 import java.util.HashMap;
-import java.util.Random;
 import java.util.UUID;
 
 public class EnchantListener implements Listener {
-
-    private static final double CRIT_MODIFIER = 1.5;
     private static final double MOVE_CONSTANT = 0.6;
     private static final int WARMUP_TIME = 5;
     private final HashMap<UUID, BukkitTask> currentlyUsing = new HashMap<>();
@@ -43,7 +34,7 @@ public class EnchantListener implements Listener {
         if (mat != Material.PURPLE_DYE) return;
 
         // summoning scroll
-        if (e.getPlayer().getInventory().getItemInMainHand().equals(EnchanterMenu.partySummonScroll())) {
+        if (e.getPlayer().getInventory().getItemInMainHand().equals(EnchantingTableMenu.partySummonScroll())) {
             if (RunicCore.getPartyManager().getPlayerParty(e.getPlayer()) == null) {
                 e.getPlayer().playSound(e.getPlayer().getLocation(), Sound.ENTITY_GENERIC_EXTINGUISH_FIRE, 0.5f, 1.0f);
                 e.getPlayer().sendMessage(ChatColor.RED + "You must be in a party to use this scroll!");
@@ -66,99 +57,6 @@ public class EnchantListener implements Listener {
         }
 
         currentlyUsing.put(e.getPlayer().getUniqueId(), warmupScroll(e.getPlayer(), scroll));
-    }
-
-    @EventHandler
-    public void onSpellDamage(SpellDamageEvent e) {
-        // listen for crit if attacker has crit, dodge and thorns for defender
-        if (applyCrit(e.getPlayer())) {
-            e.getPlayer().spawnParticle(Particle.CRIT, ((LivingEntity) e.getEntity()).getEyeLocation(), 25, 0.75f, 0.5f, 0.75f, 0);
-            e.setAmount((int) (e.getAmount()*CRIT_MODIFIER));
-        }
-        if (e.getEntity() instanceof Player) {
-            Player victim = (Player) e.getEntity();
-            if (applyDodge(victim)) {
-                victim.spawnParticle(Particle.CLOUD, victim.getEyeLocation(), 25, 0.75f, 0.5f, 0.75f, 0);
-                e.setCancelled(true);
-                return;
-            }
-            if (applyThorns(victim)) {
-                victim.spawnParticle(Particle.CRIT_MAGIC, victim.getEyeLocation(), 25, 0.75f, 0.5f, 0.75f, 0);
-                DamageUtil.damageEntitySpell(e.getAmount(), victim, e.getPlayer(), 100);
-            }
-        }
-    }
-
-    @EventHandler
-    public void onWeaponDamage(WeaponDamageEvent e) {
-        // listen for crit if attacker has crit, dodge and thorns for defender (if defender is player)
-        if (applyCrit(e.getPlayer())) {
-            e.getPlayer().spawnParticle(Particle.CRIT, ((LivingEntity) e.getEntity()).getEyeLocation(), 25, 0.75f, 0.5f, 0.75f, 0);
-            e.setAmount((int) (e.getAmount()*CRIT_MODIFIER));
-        }
-        if (e.getEntity() instanceof Player) {
-            Player victim = (Player) e.getEntity();
-            if (applyDodge(victim)) {
-                victim.spawnParticle(Particle.CLOUD, victim.getEyeLocation(), 25, 0.75f, 0.5f, 0.75f, 0);
-                e.setCancelled(true);
-                return;
-            }
-            if (applyThorns(victim)) {
-                victim.spawnParticle(Particle.CRIT_MAGIC, victim.getEyeLocation(), 25, 0.75f, 0.5f, 0.75f, 0);
-                DamageUtil.damageEntitySpell(e.getAmount(), e.getPlayer(), victim, 100);
-            }
-        }
-    }
-
-
-    @EventHandler
-    public void onMobDamage(MobDamageEvent e) {
-        // listen for dodge and thorns for defender (the player)
-        if (e.getVictim() instanceof Player) {
-            Player victim = (Player) e.getVictim();
-            if (applyDodge(victim)) {
-                victim.spawnParticle(Particle.CLOUD, victim.getEyeLocation(), 25, 0.75f, 0.5f, 0.75f, 0);
-                e.setCancelled(true);
-                return;
-            }
-            if (applyThorns(victim)) {
-                victim.spawnParticle(Particle.CRIT_MAGIC, victim.getEyeLocation(), 25, 0.75f, 0.5f, 0.75f, 0);
-                DamageUtil.damageEntitySpell(e.getAmount(), (LivingEntity) e.getDamager(), victim, 100);
-            }
-        }
-    }
-
-    private boolean applyCrit(Player pl) {
-        int critChance = GearScanner.getCritEnchant(pl);
-        if (critChance > 0) {
-            Random rand = new Random();
-            int roll = rand.nextInt(100) + 1;
-            return roll <= critChance;
-        } else {
-            return false;
-        }
-    }
-
-    private boolean applyDodge(Player pl) {
-        int dodgeChance = GearScanner.getDodgeEnchant(pl);
-        if (dodgeChance > 0) {
-            Random rand = new Random();
-            int roll = rand.nextInt(100) + 1;
-            return roll <= dodgeChance;
-        } else {
-            return false;
-        }
-    }
-
-    private boolean applyThorns(Player pl) {
-        int thornsChance = GearScanner.getThornsEnchant(pl);
-        if (thornsChance > 0) {
-            Random rand = new Random();
-            int roll = rand.nextInt(100) + 1;
-            return roll <= thornsChance;
-        } else {
-            return false;
-        }
     }
 
     private BukkitTask warmupScroll(Player pl, ItemStack scroll) {
@@ -193,7 +91,7 @@ public class EnchantListener implements Listener {
                     this.cancel();
                     ItemRemover.takeItem(pl, scroll, 1);
                     currentlyUsing.remove(pl.getUniqueId());
-                    if (scroll.equals(EnchanterMenu.partySummonScroll())
+                    if (scroll.equals(EnchantingTableMenu.partySummonScroll())
                             && RunicCore.getPartyManager().getPlayerParty(pl) != null) {
 
                         for (Player mem : RunicCore.getPartyManager().getPlayerParty(pl).getMembersWithLeader()) {

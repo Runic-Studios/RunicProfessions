@@ -5,8 +5,6 @@ import com.runicrealms.plugin.attributes.AttributeUtil;
 import com.runicrealms.plugin.item.GUIMenu.ItemGUI;
 import com.runicrealms.plugin.item.shops.Shop;
 import com.runicrealms.plugin.professions.Workstation;
-import com.runicrealms.plugin.professions.crafting.enchanter.EnchantEnum;
-import com.runicrealms.plugin.professions.crafting.enchanter.EnchantScroll;
 import com.runicrealms.plugin.utilities.ColorUtil;
 import io.lumine.xikage.mythicmobs.MythicMobs;
 import io.lumine.xikage.mythicmobs.adapters.AbstractItemStack;
@@ -32,7 +30,6 @@ public class HunterShop extends Shop {
     private static final int PRICE_BOAT = 2;
     private static final int PRICE_ORB = 1;
     private static final int PRICE_TRACKING = 50;
-    private static final int PRICE_ENCHANT = 200;
     private static final int PRICE_COMPASS = 1000;
 
     HunterShop(Player pl) {
@@ -66,10 +63,7 @@ public class HunterShop extends Shop {
         shopMenu.setOption(12, new ItemStack(Material.PURPLE_DYE),
                 "&fTracking Scroll",
                 "\n&eLearn the location of a player!\n\n&7Price: &6&l" + PRICE_TRACKING + " points", 0, false);
-        shopMenu.setOption(13, new ItemStack(Material.PURPLE_DYE),
-                "&fSpeed Enchant",
-                "\n&eEnchant your armor with +3% speed!\n\n&7Price: &6&l" + PRICE_ENCHANT + " points", 0, false);
-        shopMenu.setOption(14, new ItemStack(Material.COMPASS),
+        shopMenu.setOption(13, new ItemStack(Material.COMPASS),
                 "&6Tracking Compass",
                 "\n&eLearn the location of a player! (Reusable)\n\n&7Price: &6&l" + PRICE_COMPASS + " points", 0, false);
 
@@ -103,11 +97,6 @@ public class HunterShop extends Shop {
                         }
                         break;
                     case 13:
-                        if (attemptToTakeGold(pl, PRICE_ENCHANT)) {
-                            pl.getInventory().addItem(new EnchantScroll(EnchantEnum.SPEED, 3, 30).getItem());
-                        }
-                        break;
-                    case 14:
                         if (attemptToTakeGold(pl, PRICE_COMPASS)) {
                             pl.getInventory().addItem(trackingCompass());
                         }
