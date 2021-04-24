@@ -22,7 +22,6 @@ import com.runicrealms.plugin.professions.gathering.FishingListener;
 import com.runicrealms.plugin.professions.gathering.MiningListener;
 import com.runicrealms.plugin.professions.gathering.WCListener;
 import com.runicrealms.plugin.professions.listeners.CustomFishListener;
-import com.runicrealms.plugin.professions.listeners.JoinListener;
 import com.runicrealms.plugin.professions.listeners.StationClickListener;
 import com.runicrealms.plugin.professions.listeners.WorkstationListener;
 import org.bukkit.plugin.PluginManager;
@@ -46,13 +45,9 @@ public final class RunicProfessions extends JavaPlugin {
 
     @Override
     public void onEnable() {
-
         plugin = this;
         profManager = new ProfManager();
         hunterCache = new HunterCache();
-
-        getConfig().options().copyDefaults(true);
-        saveConfig();
 
         // register command
         getCommand("gathertool").setExecutor(new GathertoolGive());
@@ -92,7 +87,6 @@ public final class RunicProfessions extends JavaPlugin {
         pm.registerEvents(new HunterListener(), this);
         pm.registerEvents(new HunterShopListener(), this);
         pm.registerEvents(new StoneListener(), this);
-        pm.registerEvents(new JoinListener(), this);
         pm.registerEvents(new EnchantListener(), this);
         pm.registerEvents(new CustomFishListener(), this);
         pm.registerEvents(new RegenListener(), this);

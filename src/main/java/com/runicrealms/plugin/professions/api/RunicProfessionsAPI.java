@@ -3,6 +3,10 @@ package com.runicrealms.plugin.professions.api;
 import com.runicrealms.plugin.ProfessionEnum;
 import com.runicrealms.plugin.RunicProfessions;
 import com.runicrealms.plugin.api.RunicCoreAPI;
+import com.runicrealms.plugin.database.PlayerMongoData;
+import com.runicrealms.plugin.database.PlayerMongoDataSection;
+import com.runicrealms.plugin.player.cache.PlayerCache;
+import com.runicrealms.plugin.professions.crafting.hunter.HunterPlayer;
 import com.runicrealms.plugin.professions.event.ProfessionChangeEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -15,20 +19,27 @@ public class RunicProfessionsAPI {
      * @param profession the new profession
      */
     public static void changePlayerProfession(Player player, ProfessionEnum profession) {
-
-        ProfessionChangeEvent e = new ProfessionChangeEvent(player, profession);
-        Bukkit.getServer().getPluginManager().callEvent(e);
-        if (e.isCancelled()) return;
+        PlayerCache playerCache = RunicCoreAPI.getPlayerCache(player);
 
         // reset profession, level, exp
-        RunicCoreAPI.getPlayerCache(player).setProfName(profession.getName());
-        RunicCoreAPI.getPlayerCache(player).setProfLevel(0);
-        RunicCoreAPI.getPlayerCache(player).setProfExp(0);
+        playerCache.setProfName(profession.getName());
+        playerCache.setProfLevel(0);
+        playerCache.setProfExp(0);
+        
+        HunterPlayer hunter = RunicProfessions.getHunterCache().getPlayers().remove(player.getUniqueId());
 
-        // reset hunter info
-        RunicProfessions.getInstance().getConfig().set(player.getUniqueId() + ".info.prof.hunter_mob", null);
-        RunicProfessions.getInstance().getConfig().set(player.getUniqueId() + ".info.prof.hunter_points", null);
-        RunicProfessions.getInstance().saveConfig();
-        RunicProfessions.getInstance().reloadConfig();
+        if (hunter != null) {
+            PlayerMongoData playerData = (PlayerMongoData) playerCache.getMongoData();
+            int slot = playerCache.getCharacterSlot();
+            PlayerMongoDataSection data = playerData.getCharacter(slot);
+
+            data.remove(HunterPlayer.formatData(slot, "hunter_mob"));
+            data.remove(HunterPlayer.formatData(slot, "hunter_points"));
+            data.remove(HunterPlayer.formatData(slot, "hunter_kills"));
+            data.remove(HunterPlayer.formatData(slot, "hunter_kills_max"));
+        }
+
+        ProfessionChangeEvent event = new ProfessionChangeEvent(player, profession);
+        Bukkit.getServer().getPluginManager().callEvent(event);
     }
 }

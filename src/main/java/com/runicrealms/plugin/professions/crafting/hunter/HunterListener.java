@@ -1,18 +1,22 @@
 package com.runicrealms.plugin.professions.crafting.hunter;
 
+import com.runicrealms.plugin.ProfessionEnum;
 import com.runicrealms.plugin.RunicCore;
 import com.runicrealms.plugin.RunicProfessions;
 import com.runicrealms.plugin.api.RunicCoreAPI;
 import com.runicrealms.plugin.attributes.AttributeUtil;
 import com.runicrealms.plugin.character.api.CharacterLoadEvent;
+import com.runicrealms.plugin.database.PlayerMongoData;
+import com.runicrealms.plugin.database.PlayerMongoDataSection;
 import com.runicrealms.plugin.database.event.CacheSaveEvent;
 import com.runicrealms.plugin.database.event.CacheSaveReason;
 import com.runicrealms.plugin.events.MobDamageEvent;
 import com.runicrealms.plugin.item.GearScanner;
 import com.runicrealms.plugin.item.util.ItemRemover;
+import com.runicrealms.plugin.player.cache.PlayerCache;
+import com.runicrealms.plugin.professions.event.ProfessionChangeEvent;
 import io.lumine.xikage.mythicmobs.api.bukkit.events.MythicMobDeathEvent;
 import org.bukkit.*;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -23,11 +27,11 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.UUID;
 
 public class HunterListener implements Listener {
@@ -42,9 +46,6 @@ public class HunterListener implements Listener {
         cloakers = new HashSet<>();
         hasDealtDamage = new HashSet<>();
         chatters = new HashMap<>();
-
-        Plugin plugin = RunicProfessions.getInstance();
-        Bukkit.getScheduler().runTaskTimerAsynchronously(plugin, plugin::saveConfig, 0L, 1200L);
     }
 
     @EventHandler
@@ -53,42 +54,29 @@ public class HunterListener implements Listener {
             return;
         }
 
-        Player player = event.getPlayer();
-
-        FileConfiguration config = RunicProfessions.getInstance().getConfig();
-
-        if (!config.getConfigurationSection(player.getUniqueId().toString() + ".info.prof").getKeys(false).isEmpty()) {
-            UUID uuid = player.getUniqueId();
-            int hunterPoints = config.getInt(HunterPlayer.formatData(uuid, "hunter_points"));
-            int hunterKills = config.getInt(HunterPlayer.formatData(uuid, "hunter_kills"));
-            int maxHunterKills = config.getInt(HunterPlayer.formatData(uuid, "hunter_kills_max"));
-            String mobName = config.getString(HunterPlayer.formatData(uuid, "hunter_mob"));
-            TaskMobs mob;
-
-            if (mobName == null) {
-                mob = null;
-            } else {
-                mob = (!mobName.equals("null")) ? TaskMobs.valueOf(mobName.toUpperCase()) : null;
-            }
-
-            RunicProfessions.getHunterCache().getPlayers().put(player.getUniqueId(), new HunterPlayer(player, hunterPoints, hunterKills, maxHunterKills, mob));
-        } else {
-            RunicProfessions.getHunterCache().getPlayers().put(player.getUniqueId(), new HunterPlayer(player));
-        }
+        this.registerHunter(event.getPlayer());
     }
 
     @EventHandler
     public void onCacheSave(CacheSaveEvent event) {
+        Map<UUID, HunterPlayer> hunters = RunicProfessions.getHunterCache().getPlayers();
         UUID uuid = event.getPlayer().getUniqueId();
 
-        if (!RunicProfessions.getHunterCache().getPlayers().containsKey(uuid)) {
+        if (!hunters.containsKey(uuid)) {
             return;
         }
 
-        RunicProfessions.getHunterCache().getPlayers().get(uuid).save();
+        hunters.get(uuid).save(event.getMongoData());
 
         if (event.cacheSaveReason() == CacheSaveReason.LOGOUT) {
-            RunicProfessions.getHunterCache().getPlayers().remove(uuid);
+            hunters.remove(uuid);
+        }
+    }
+
+    @EventHandler
+    public void onProfessionChange(ProfessionChangeEvent event) {
+        if (event.getProfession() == ProfessionEnum.HUNTER) {
+            this.registerHunter(event.getPlayer());
         }
     }
 
@@ -345,5 +333,59 @@ public class HunterListener implements Listener {
         if (!cloakers.contains(pl.getUniqueId())) return;
         if (hasDealtDamage.contains(pl.getUniqueId())) return;
         hasDealtDamage.add(pl.getUniqueId());
+    }
+
+    /**
+     * A method used to register a player into the hunter cache
+     *
+     * @param player the player about to be registered
+     */
+    private void registerHunter(Player player) {
+        PlayerCache playerCache = RunicCoreAPI.getPlayerCache(player);
+        int slot = playerCache.getCharacterSlot();
+        PlayerMongoData playerData = (PlayerMongoData) playerCache.getMongoData();
+        PlayerMongoDataSection data = playerData.getCharacter(slot);
+        UUID uuid = player.getUniqueId();
+
+        int hunterPoints;
+        int hunterKills;
+        int maxHunterKills;
+        TaskMobs mob;
+
+        String hunterPointsKey = HunterPlayer.formatData(slot, "hunter_points");
+        if (data.has(hunterPointsKey)) {
+            hunterPoints = data.get(hunterPointsKey, Integer.class);
+        } else {
+            hunterPoints = 0;
+        }
+
+        String hunterKillsKey = HunterPlayer.formatData(slot, "hunter_kills");
+        if (data.has(hunterKillsKey)) {
+            hunterKills = data.get(hunterKillsKey, Integer.class);
+        } else {
+            hunterKills = 0;
+        }
+
+
+        String hunterMaxKillsKey = HunterPlayer.formatData(slot, "hunter_kills");
+        if (data.has(hunterMaxKillsKey)) {
+            maxHunterKills = data.get(hunterMaxKillsKey, Integer.class);
+        } else {
+            maxHunterKills = 0;
+        }
+
+        String hunterMobKey = HunterPlayer.formatData(slot, "hunter_mob");
+        if (data.has(hunterMobKey)) {
+            String mobName = data.get(hunterMobKey, String.class);
+            if (mobName != null) {
+                mob = (!mobName.equals("null")) ? TaskMobs.valueOf(mobName) : null;
+            } else {
+                mob = null;
+            }
+        } else {
+            mob = null;
+        }
+
+        RunicProfessions.getHunterCache().getPlayers().put(uuid, new HunterPlayer(player, hunterPoints, hunterKills, maxHunterKills, mob));
     }
 }

@@ -1,7 +1,9 @@
 package com.runicrealms.plugin.professions.crafting.hunter;
 
-import com.runicrealms.plugin.RunicProfessions;
 import com.runicrealms.plugin.api.RunicCoreAPI;
+import com.runicrealms.plugin.database.PlayerMongoData;
+import com.runicrealms.plugin.database.PlayerMongoDataSection;
+import com.runicrealms.plugin.player.cache.PlayerCache;
 import com.runicrealms.plugin.professions.utilities.ProfExpUtil;
 import com.runicrealms.plugin.utilities.ColorUtil;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
@@ -10,55 +12,45 @@ import com.sk89q.worldguard.protection.ApplicableRegionSet;
 import org.bukkit.ChatColor;
 import org.bukkit.Color;
 import org.bukkit.FireworkEffect;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.meta.FireworkMeta;
-import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
-import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class HunterPlayer {
     private final Player player;
+    private final PlayerCache playerCache;
     private int hunterPoints;
     private int hunterKills;
     private int maxHunterKills;
     private TaskMobs task;
 
-    public HunterPlayer(Player player) {
-        this.player = player;
-        this.hunterPoints = 0;
-        this.hunterKills = 0;
-        this.maxHunterKills = 0;
-        this.task = null;
-    }
-
     public HunterPlayer(Player player, int hunterPoints, int hunterKills, int maxHunterKills, TaskMobs task) {
         this.player = player;
+        this.playerCache = RunicCoreAPI.getPlayerCache(player);
         this.hunterPoints = hunterPoints;
         this.hunterKills = hunterKills;
         this.maxHunterKills = maxHunterKills;
         this.task = task;
     }
 
-    public void save() {
-        Plugin plugin = RunicProfessions.getInstance();
-        FileConfiguration config = plugin.getConfig();
+    public void save(PlayerMongoData playerData) {
+        int slot = this.playerCache.getCharacterSlot();
+        PlayerMongoDataSection data = playerData.getCharacter(slot);
 
         if (this.task != null) {
-            config.set(this.formatData("hunter_mob"), this.task.name());
+            data.set(formatData(slot, "hunter_mob"), this.task.name());
         } else {
-            config.set(this.formatData("hunter_mob"), "null");
+            data.set(formatData(slot, "hunter_mob"), "null");
         }
 
-        config.set(this.formatData("hunter_points"), this.hunterPoints);
-        config.set(this.formatData("hunter_kills"), this.hunterKills);
-        config.set(this.formatData("hunter_kills_max"), this.maxHunterKills);
+        data.set(formatData(slot, "hunter_points"), this.hunterPoints);
+        data.set(formatData(slot, "hunter_kills"), this.hunterKills);
+        data.set(formatData(slot, "hunter_kills_max"), this.maxHunterKills);
     }
 
     public void newTask() {
@@ -97,12 +89,15 @@ public class HunterPlayer {
                         ChatColor.GOLD + ChatColor.BOLD + this.task.getPoints() + " points!" +
                         ChatColor.GREEN + " Return to a hunting board for another task.");
         this.launchFirework(this.player);
-        this.save();
         this.resetTask();
     }
 
     public Player getPlayer() {
         return this.player;
+    }
+
+    public PlayerCache getPlayerCache() {
+        return this.playerCache;
     }
 
     public int getHunterPoints() {
@@ -132,10 +127,6 @@ public class HunterPlayer {
         this.maxHunterKills = maxHunterKills;
     }
 
-    private String formatData(String field) {
-        return HunterPlayer.formatData(this.player.getUniqueId(), field);
-    }
-
     private void launchFirework(Player pl) {
         Firework firework = pl.getWorld().spawn(pl.getEyeLocation(), Firework.class);
         FireworkMeta meta = firework.getFireworkMeta();
@@ -149,7 +140,7 @@ public class HunterPlayer {
         List<String> names = this.getRegions();
 
         // filter-out mobs above the player's hunter level and region
-        int playLv = RunicCoreAPI.getPlayerCache(this.player).getProfLevel();
+        int playLv = this.playerCache.getProfLevel();
         for (TaskMobs mob : TaskMobs.values()) {
             int mobLv = mob.getLevel();
             if (mobLv > playLv) {
@@ -161,6 +152,12 @@ public class HunterPlayer {
             }
 
             hunterMobs.add(mob);
+        }
+
+        if (hunterMobs.isEmpty()) {
+            this.player.closeInventory();
+            this.player.sendMessage(ColorUtil.format("&r&cYou are not high enough level to accept any tasks from this area!"));
+            return;
         }
 
         ThreadLocalRandom rand = ThreadLocalRandom.current();
@@ -191,7 +188,7 @@ public class HunterPlayer {
         return false;
     }
 
-    public static String formatData(UUID uuid, String field) {
-        return uuid.toString() + ".info.prof." + field;
+    public static String formatData(int slot, String field) {
+        return slot + ".prof." + field;
     }
 }

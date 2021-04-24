@@ -9,8 +9,8 @@ public enum TaskMobs {
     DIREWOLF(20, 22, 15, "Direwolf", "hilstead", "wintervale"),
     SPINNER(30, 28, 25, "Spinner", "isfodar", "tireneas"),
     BUG(40, 31, 30, "Bug", "zenyth", "naheen"),
-    FIRE_ELEMENTAL(50, 34, 35, "FireElemental", "zenyth", "naheen", "nazmora"); //,
-    //BLACKFROST_BEAR(60, 40, 100, "BlackfrostBear", "frosts_end");
+    FIRE_ELEMENTAL(50, 34, 35, "FireElemental", "zenyth", "naheen", "nazmora"),
+    BLACKFROST_BEAR(60, 40, 100, "BlackfrostBear", "frosts_end"); //remember to add hunter board to frosts end
 
     private final String name;
     private final int level;
