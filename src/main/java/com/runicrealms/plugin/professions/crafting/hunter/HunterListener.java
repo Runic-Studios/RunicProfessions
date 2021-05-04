@@ -189,17 +189,17 @@ public class HunterListener implements Listener {
         int maxMana = RunicCoreAPI.getPlayerCache(pl).getMaxMana();
         int minDamage = GearScanner.getMinDamage(toLookup);
         int maxDamage = GearScanner.getMaxDamage(toLookup);
-        int healingBonus = GearScanner.getHealingBoost(toLookup);
-        int magicBonus = GearScanner.getMagicBoost(toLookup);
-        int shield = GearScanner.getShieldAmt(toLookup);
+//        int healingBonus = GearScanner.getHealingBoost(toLookup);
+//        int magicBonus = GearScanner.getMagicBoost(toLookup);
+//        int shield = GearScanner.getShieldAmt(toLookup);
         pl.sendMessage
                 (ChatColor.translateAlternateColorCodes('&', "&e" + toLookup.getName() + "'s Character Stats:" +
                         "\n&c❤ (Health) &etotal: " + maxHealth +
                         "\n&3✸ (Mana) &etotal: " + maxMana +
-                        "\n&c⚔ (DMG) &ebonus: " + minDamage + "-" + maxDamage +
-                        "\n&a✦ (Heal) &ebonus: " + healingBonus +
-                        "\n&3ʔ (Magic) &ebonus: " + magicBonus +
-                        "\n&f■ (Shield) &ebonus: " + shield));
+                        "\n&c⚔ (DMG) &ebonus: " + minDamage + "-" + maxDamage));
+//                        "\n&a✦ (Heal) &ebonus: " + healingBonus +
+//                        "\n&3ʔ (Magic) &ebonus: " + magicBonus +
+//                        "\n&f■ (Shield) &ebonus: " + shield));
     }
 
     private void lookupLocation(Player pl, Player toLookup) {
