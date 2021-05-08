@@ -37,6 +37,7 @@ public class RunicProfessionsAPI {
             data.remove(HunterPlayer.formatData(slot, "hunter_mob"));
             data.remove(HunterPlayer.formatData(slot, "hunter_kills"));
             data.remove(HunterPlayer.formatData(slot, "hunter_kills_max"));
+            data.save();
         }
 
         ProfessionChangeEvent event = new ProfessionChangeEvent(player, profession);

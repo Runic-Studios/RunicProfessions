@@ -43,14 +43,14 @@ public class HunterPlayer {
         PlayerMongoDataSection data = playerData.getCharacter(slot);
 
         if (this.task != null) {
-            data.set(formatData(slot, "hunter_mob"), this.task.name());
+            data.set("prof.hunter_mob", this.task.name());
         } else {
-            data.set(formatData(slot, "hunter_mob"), "null");
+            data.set("prof.hunter_mob", "null");
         }
 
-        data.set(formatData(slot, "hunter_points"), this.hunterPoints);
-        data.set(formatData(slot, "hunter_kills"), this.hunterKills);
-        data.set(formatData(slot, "hunter_kills_max"), this.maxHunterKills);
+        data.set("prof.hunter_points", this.hunterPoints);
+        data.set("prof.hunter_kills", this.hunterKills);
+        data.set("prof.hunter_kills_max", this.maxHunterKills);
     }
 
     public void newTask() {
