@@ -38,6 +38,11 @@ public class HunterPlayer {
         this.task = task;
     }
 
+    /**
+     * ALWAYS ONLY CALL ON CACHE SAVE EVENT
+     *
+     * @param playerData the player data
+     */
     public void save(PlayerMongoData playerData) {
         int slot = this.playerCache.getCharacterSlot();
         PlayerMongoDataSection data = playerData.getCharacter(slot);

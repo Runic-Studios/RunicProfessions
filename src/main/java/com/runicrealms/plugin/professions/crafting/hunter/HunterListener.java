@@ -352,14 +352,14 @@ public class HunterListener implements Listener {
         int maxHunterKills;
         TaskMobs mob;
 
-        String hunterPointsKey = HunterPlayer.formatData(slot, "hunter_points");
+        String hunterPointsKey = "prof.hunter_points";
         if (data.has(hunterPointsKey)) {
             hunterPoints = data.get(hunterPointsKey, Integer.class);
         } else {
             hunterPoints = 0;
         }
 
-        String hunterKillsKey = HunterPlayer.formatData(slot, "hunter_kills");
+        String hunterKillsKey = "prof.hunter_kills";
         if (data.has(hunterKillsKey)) {
             hunterKills = data.get(hunterKillsKey, Integer.class);
         } else {
@@ -367,14 +367,14 @@ public class HunterListener implements Listener {
         }
 
 
-        String hunterMaxKillsKey = HunterPlayer.formatData(slot, "hunter_kills");
+        String hunterMaxKillsKey = "prof.hunter_kills_max";
         if (data.has(hunterMaxKillsKey)) {
             maxHunterKills = data.get(hunterMaxKillsKey, Integer.class);
         } else {
             maxHunterKills = 0;
         }
 
-        String hunterMobKey = HunterPlayer.formatData(slot, "hunter_mob");
+        String hunterMobKey = "prof.hunter_mob";
         if (data.has(hunterMobKey)) {
             String mobName = data.get(hunterMobKey, String.class);
             if (mobName != null) {
