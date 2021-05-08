@@ -1,12 +1,14 @@
 package com.runicrealms.plugin.professions.crafting.blacksmith;
 
-import com.runicrealms.plugin.RunicCore;
 import com.runicrealms.plugin.api.RunicCoreAPI;
 import com.runicrealms.plugin.item.GUIMenu.ItemGUI;
 import com.runicrealms.plugin.professions.Workstation;
 import com.runicrealms.plugin.professions.utilities.MenuUtil;
 import com.runicrealms.plugin.professions.utilities.itemutil.BlacksmithItems;
-import org.bukkit.*;
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.Particle;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
@@ -384,7 +386,7 @@ public class AnvilMenu extends Workstation {
                 "Chain Link", 5, 100, 45, 0, MenuUtil.itemStatsToString(BlacksmithItems.mailHelm()),
                 false, false, false);
         super.createMenuItem(forgeMenu, pl, 27, Material.IRON_HELMET, "&fForged Iron Helm", ironReqs,
-                "Iron Bar", 5, 100, 45, 0, MenuUtil.itemStatsToString(BlacksmithItems.ironHelm()),
+                "Iron Bar", 5, 100, 45, 0, this.generateItemLore(BlacksmithItems.FORGED_IRON_HELM),
                 false, false, false);
 
         // level 50 - legendary weapons
@@ -535,7 +537,7 @@ public class AnvilMenu extends Workstation {
                 item = BlacksmithItems.mailHelm();
                 break;
             case 27:
-                item = BlacksmithItems.ironHelm();
+                item = BlacksmithItems.FORGED_IRON_HELM.generateItem();
                 break;
             case 28:
                 item = BlacksmithItems.Stormsong();

@@ -33,8 +33,8 @@ public class RunicProfessionsAPI {
             int slot = playerCache.getCharacterSlot();
             PlayerMongoDataSection data = playerData.getCharacter(slot);
 
-            data.remove(HunterPlayer.formatData(slot, "hunter_mob"));
             data.remove(HunterPlayer.formatData(slot, "hunter_points"));
+            data.remove(HunterPlayer.formatData(slot, "hunter_mob"));
             data.remove(HunterPlayer.formatData(slot, "hunter_kills"));
             data.remove(HunterPlayer.formatData(slot, "hunter_kills_max"));
         }

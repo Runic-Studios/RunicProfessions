@@ -2,6 +2,8 @@ package com.runicrealms.plugin.professions.utilities.itemutil;
 
 import com.runicrealms.plugin.attributes.AttributeUtil;
 import com.runicrealms.plugin.item.RunicItem;
+import com.runicrealms.runicitems.RunicItemsAPI;
+import com.runicrealms.runicitems.item.RunicItemArmor;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -159,12 +161,8 @@ public class BlacksmithItems {
                         50, 0, 0, 0, 3, 0,
                         "head", false).getItem();
     }
-    public static ItemStack ironHelm() {
-        return new RunicItem
-                (Material.IRON_HELMET, ChatColor.WHITE, "Forged Iron Helm", 0, 45,
-                        50, 0, 0, 0, 0, 0,
-                        "head", false).getItem();
-    }
+
+    public static final RunicItemArmor FORGED_IRON_HELM = (RunicItemArmor) RunicItemsAPI.generateItemFromTemplate("blacksmith-forged-iron-helmet");
 
     // level 50 - legendary weapons
     public static ItemStack Stormsong() {
