@@ -192,8 +192,4 @@ public class HunterPlayer {
         }
         return false;
     }
-
-    public static String formatData(int slot, String field) {
-        return slot + ".prof." + field;
-    }
 }

@@ -28,15 +28,16 @@ public class RunicProfessionsAPI {
         
         HunterPlayer hunter = RunicProfessions.getHunterCache().getPlayers().remove(player.getUniqueId());
 
+        //check if the player is currently a hunter and if so remove all hunter data
         if (hunter != null) {
             PlayerMongoData playerData = (PlayerMongoData) playerCache.getMongoData();
             int slot = playerCache.getCharacterSlot();
             PlayerMongoDataSection data = playerData.getCharacter(slot);
 
-            data.remove(HunterPlayer.formatData(slot, "hunter_points"));
-            data.remove(HunterPlayer.formatData(slot, "hunter_mob"));
-            data.remove(HunterPlayer.formatData(slot, "hunter_kills"));
-            data.remove(HunterPlayer.formatData(slot, "hunter_kills_max"));
+            data.remove("prof.hunter_points");
+            data.remove("prof.hunter_mob");
+            data.remove("prof.hunter_kills");
+            data.remove("prof.hunter_kills_max");
             data.save();
         }
 
