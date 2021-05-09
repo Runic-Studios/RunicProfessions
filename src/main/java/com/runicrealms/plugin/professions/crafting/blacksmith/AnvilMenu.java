@@ -3,7 +3,6 @@ package com.runicrealms.plugin.professions.crafting.blacksmith;
 import com.runicrealms.plugin.api.RunicCoreAPI;
 import com.runicrealms.plugin.item.GUIMenu.ItemGUI;
 import com.runicrealms.plugin.professions.Workstation;
-import com.runicrealms.plugin.professions.utilities.MenuUtil;
 import com.runicrealms.plugin.professions.utilities.itemutil.BlacksmithItems;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -299,31 +298,31 @@ public class AnvilMenu extends Workstation {
         shieldReqs.put(Material.IRON_INGOT, 8);
         shieldReqs.put(Material.OAK_LOG, 1);
         super.createMenuItem(forgeMenu, pl, 10, Material.SHIELD, "&fOaken Shield", shieldReqs,
-                "Iron Bar\nOak Log", 999, 165, 5, 0, MenuUtil.itemStatsToString(BlacksmithItems.oakenShield()),
+                "Iron Bar\nOak Log", 999, 165, 5, 0, this.generateItemLore(BlacksmithItems.OAKEN_SHIELD),
                 false, false, false);
 
         // level 10
         super.createMenuItem(forgeMenu, pl, 11, Material.WOODEN_SWORD, "&fForged Iron Broadsword", ironReqs,
-                "Iron Bar", 5, 100, 10, 7, MenuUtil.itemStatsToString(BlacksmithItems.ironBroadsword()),
+                "Iron Bar", 5, 100, 10, 7, this.generateItemLore(BlacksmithItems.FORGED_IRON_BROADSWORD),
                 false, false, false);
         super.createMenuItem(forgeMenu, pl, 12, Material.WOODEN_AXE, "&fForged Iron Reaver", ironReqs,
-                "Iron Bar", 5, 100, 10, 7, MenuUtil.itemStatsToString(BlacksmithItems.ironReaver()),
+                "Iron Bar", 5, 100, 10, 7, this.generateItemLore(BlacksmithItems.FORGED_IRON_REAVER),
                 false, false, false);
 
         // level 15
         super.createMenuItem(forgeMenu, pl, 13, Material.CHAINMAIL_BOOTS, "&fForged Mail Greaves", chainReqs,
-                "Chain Link", 4, 80, 15, 0, MenuUtil.itemStatsToString(BlacksmithItems.mailGreaves()),
+                "Chain Link", 4, 80, 15, 0, this.generateItemLore(BlacksmithItems.FORGED_MAIL_GREAVES),
                 false, false, false);
         super.createMenuItem(forgeMenu, pl, 14, Material.GOLDEN_BOOTS, "&fForged Gilded Boots", goldReqs,
-                "Gold Bar", 4, 80, 15, 0, MenuUtil.itemStatsToString(BlacksmithItems.gildedBoots()),
+                "Gold Bar", 4, 80, 15, 0, this.generateItemLore(BlacksmithItems.FORGED_GILDED_BOOTS),
                 false, false, false);
 
         // level 20
         super.createMenuItem(forgeMenu, pl, 15, Material.CHAINMAIL_LEGGINGS, "&fForged Mail Tassets", chainReqs,
-                "Chain Link", 7, 140, 20, 0, MenuUtil.itemStatsToString(BlacksmithItems.mailTassets()),
+                "Chain Link", 7, 140, 20, 0, this.generateItemLore(BlacksmithItems.FORGED_MAIL_TASSEST),
                 false, false, false);
         super.createMenuItem(forgeMenu, pl, 16, Material.IRON_LEGGINGS, "&fForged Iron Platelegs", ironReqs,
-                "Iron Bar", 7, 140, 20, 0, MenuUtil.itemStatsToString(BlacksmithItems.plateLegs()),
+                "Iron Bar", 7, 140, 20, 0, this.generateItemLore(BlacksmithItems.FORGED_IRON_PLATELEGS),
                 false, false, false);
 
         LinkedHashMap<Material, Integer> flailReqs = new LinkedHashMap<>();
@@ -332,7 +331,7 @@ public class AnvilMenu extends Workstation {
         flailReqs.put(Material.EMERALD_ORE, 1);
         flailReqs.put(Material.BIRCH_LOG, 2);
         super.createMenuItem(forgeMenu, pl, 17, Material.STONE_SHOVEL, "&fFlail of Retribution", flailReqs,
-                "Gold Bar\nIron Bar\nUncut Emerald\nElder Log", 999, 140, 20, 0, MenuUtil.itemStatsToString(BlacksmithItems.flailOfRetribution()),
+                "Gold Bar\nIron Bar\nUncut Emerald\nElder Log", 999, 140, 20, 0, this.generateItemLore(BlacksmithItems.FLAIL_OF_RETRIBUTION),
                 false, false, false);
 
         LinkedHashMap<Material, Integer> wandReqs = new LinkedHashMap<>();
@@ -340,7 +339,7 @@ public class AnvilMenu extends Workstation {
         wandReqs.put(Material.DIAMOND_ORE, 2);
         wandReqs.put(Material.BIRCH_LOG, 2);
         super.createMenuItem(forgeMenu, pl, 18, Material.STONE_HOE, "&fIllusioner's Wand", wandReqs,
-                "Iron Bar\nUncut Diamond\nElder Log", 999, 120, 20, 0, MenuUtil.itemStatsToString(BlacksmithItems.illusionersWand()),
+                "Iron Bar\nUncut Diamond\nElder Log", 999, 120, 20, 0, this.generateItemLore(BlacksmithItems.ILLUSIONERS_WAND),
                 false, false, false);
 
         LinkedHashMap<Material, Integer> daggerReqs = new LinkedHashMap<>();
@@ -348,7 +347,7 @@ public class AnvilMenu extends Workstation {
         daggerReqs.put(Material.NETHER_QUARTZ_ORE, 3);
         daggerReqs.put(Material.OAK_LOG, 2);
         super.createMenuItem(forgeMenu, pl, 19, Material.STONE_SWORD, "&fEtched Dagger", daggerReqs,
-                "Iron Bar\nUncut Opal\nOak Log", 999, 60, 20, 0, MenuUtil.itemStatsToString(BlacksmithItems.etchedDagger()),
+                "Iron Bar\nUncut Opal\nOak Log", 999, 60, 20, 0, this.generateItemLore(BlacksmithItems.ETCHED_DAGGER),
                 false, false, false);
 
         // level 25
@@ -362,28 +361,28 @@ public class AnvilMenu extends Workstation {
         bastionReqs.put(Material.IRON_INGOT, 8);
         bastionReqs.put(Material.PHANTOM_MEMBRANE, 1);
         super.createMenuItem(forgeMenu, pl, 21, Material.SHIELD, "&fBastion", bastionReqs,
-                "Iron Bar\nFlag of Honor", 999, 310, 30, 0, MenuUtil.itemStatsToString(BlacksmithItems.bastion()),
+                "Iron Bar\nFlag of Honor", 999, 310, 30, 0, this.generateItemLore(BlacksmithItems.BASTION),
                 false, false, false);
 
         // level 35
         super.createMenuItem(forgeMenu, pl, 22, Material.BOW, "&fForged Iron Longbow", chainReqs,
-                "Iron Bar", 5, 100, 35, 7, MenuUtil.itemStatsToString(BlacksmithItems.ironLongbow()),
+                "Iron Bar", 5, 100, 35, 7, this.generateItemLore(BlacksmithItems.FORGED_IRON_LONGBOW),
                 false, false, false);
         super.createMenuItem(forgeMenu, pl, 23, Material.WOODEN_HOE, "&fForged Iron Scepter", ironReqs,
-                "Iron Bar", 5, 100, 35, 7, MenuUtil.itemStatsToString(BlacksmithItems.ironScepter()),
+                "Iron Bar", 5, 100, 35, 7, this.generateItemLore(BlacksmithItems.FORGED_IRON_SCEPTER),
                 false, false, false);
 
         // level 40
         super.createMenuItem(forgeMenu, pl, 24, Material.GOLDEN_CHESTPLATE, "&fForged Gilded Body", goldReqs,
-                "Gold Bar", 8, 160, 40, 0, MenuUtil.itemStatsToString(BlacksmithItems.gildedBody()),
+                "Gold Bar", 8, 160, 40, 0, this.generateItemLore(BlacksmithItems.FORGED_GILDED_BODY),
                 false, false, false);
         super.createMenuItem(forgeMenu, pl, 25, Material.IRON_CHESTPLATE, "&fForged Iron Platebody", ironReqs,
-                "Iron Bar", 8, 160, 40, 0, MenuUtil.itemStatsToString(BlacksmithItems.plateBody()),
+                "Iron Bar", 8, 160, 40, 0, this.generateItemLore(BlacksmithItems.FORGED_IRON_PLATEBODY),
                 false, false, false);
 
         // level 45
         super.createMenuItem(forgeMenu, pl, 26, Material.CHAINMAIL_HELMET, "&fForged Mail Helm", chainReqs,
-                "Chain Link", 5, 100, 45, 0, MenuUtil.itemStatsToString(BlacksmithItems.mailHelm()),
+                "Chain Link", 5, 100, 45, 0, this.generateItemLore(BlacksmithItems.FORGED_MAIL_HELM),
                 false, false, false);
         super.createMenuItem(forgeMenu, pl, 27, Material.IRON_HELMET, "&fForged Iron Helm", ironReqs,
                 "Iron Bar", 5, 100, 45, 0, this.generateItemLore(BlacksmithItems.FORGED_IRON_HELM),
@@ -395,15 +394,15 @@ public class AnvilMenu extends Workstation {
         legenReqs.put(Material.NETHER_STAR, 1);
         super.createMenuItem(forgeMenu, pl, 28, Material.BOW, "&6Stormsong", legenReqs,
                 "Iron Bar\nToken of Valor", 999, 400, 50, 10,
-                MenuUtil.itemStatsToString(BlacksmithItems.Stormsong()),
+                this.generateItemLore(BlacksmithItems.STORMSONG),
                 true, false, false);
         super.createMenuItem(forgeMenu, pl, 29, Material.WOODEN_SWORD, "&6Valkyrie", legenReqs,
                 "Iron Bar\nToken of Valor", 999, 400, 50, 10,
-                MenuUtil.itemStatsToString(BlacksmithItems.Valkyrie()),
+                this.generateItemLore(BlacksmithItems.VALKYRIE),
                 true, false, false);
         super.createMenuItem(forgeMenu, pl, 30, Material.WOODEN_AXE, "&6The Minotaur", legenReqs,
                 "Iron Bar\nToken of Valor", 999, 400, 50, 10,
-                MenuUtil.itemStatsToString(BlacksmithItems.theMinotaur()),
+                this.generateItemLore(BlacksmithItems.THE_MINOTAUR),
                 true, false, false);
 
         // level 60 - legendary off-hands
@@ -411,9 +410,9 @@ public class AnvilMenu extends Workstation {
         shieldReqs2.put(Material.IRON_INGOT, 8);
         shieldReqs2.put(Material.OAK_LOG, 1);
         shieldReqs2.put(Material.NETHER_STAR, 3);
-        super.createMenuItem(forgeMenu, pl, 31, Material.SHIELD, getName(BlacksmithItems.bulwark()), shieldReqs2,
+        super.createMenuItem(forgeMenu, pl, 31, Material.SHIELD, "&6Frost Lord's Bulwark", shieldReqs2,
                 "Iron Bar\nOak Log\nToken of Valor", 999, 0, 60, 0,
-                MenuUtil.itemStatsToString(BlacksmithItems.bulwark()),
+                this.generateItemLore(BlacksmithItems.FROST_LORDS_BULWARK),
                 false, false, false);
 
         LinkedHashMap<Material, Integer> flailReqs2 = new LinkedHashMap<>();
@@ -422,9 +421,9 @@ public class AnvilMenu extends Workstation {
         flailReqs2.put(Material.EMERALD_ORE, 1);
         flailReqs2.put(Material.BIRCH_LOG, 2);
         flailReqs2.put(Material.NETHER_STAR, 3);
-        super.createMenuItem(forgeMenu, pl, 32, Material.STONE_SHOVEL, getName(BlacksmithItems.redeemersFlail()), flailReqs2,
+        super.createMenuItem(forgeMenu, pl, 32, Material.STONE_SHOVEL, "&6Redeemer's Flail", flailReqs2,
                 "Gold Bar\nIron Bar\nUncut Emerald\nElder Log\nToken of Valor", 999, 0, 60, 0,
-                MenuUtil.itemStatsToString(BlacksmithItems.redeemersFlail()),
+                this.generateItemLore(BlacksmithItems.REDEEMERS_FLAIL),
                 false, false, false);
 
         LinkedHashMap<Material, Integer> wandReqs2 = new LinkedHashMap<>();
@@ -432,9 +431,9 @@ public class AnvilMenu extends Workstation {
         wandReqs2.put(Material.DIAMOND_ORE, 2);
         wandReqs2.put(Material.BIRCH_LOG, 2);
         wandReqs2.put(Material.NETHER_STAR, 3);
-        super.createMenuItem(forgeMenu, pl, 33, Material.STONE_HOE, getName(BlacksmithItems.icefuryWand()), wandReqs2,
+        super.createMenuItem(forgeMenu, pl, 33, Material.STONE_HOE, "&6Icefury Wand", wandReqs2,
                 "Iron Bar\nUncut Diamond\nElder Log\nToken of Valor", 999, 0, 60, 0,
-                MenuUtil.itemStatsToString(BlacksmithItems.icefuryWand()),
+                this.generateItemLore(BlacksmithItems.ICEFURY_WAND),
                 false, false, false);
 
         LinkedHashMap<Material, Integer> daggerReqs2 = new LinkedHashMap<>();
@@ -442,9 +441,9 @@ public class AnvilMenu extends Workstation {
         daggerReqs2.put(Material.NETHER_QUARTZ_ORE, 3);
         daggerReqs2.put(Material.OAK_LOG, 2);
         daggerReqs2.put(Material.NETHER_STAR, 3);
-        super.createMenuItem(forgeMenu, pl, 34, Material.STONE_SWORD, getName(BlacksmithItems.blackSteelDirk()), daggerReqs2,
+        super.createMenuItem(forgeMenu, pl, 34, Material.STONE_SWORD, "&6Black Steel Dirk", daggerReqs2,
                 "Iron Bar\nUncut Opal\nOak Log\nToken of Valor", 999, 0, 60, 0,
-                MenuUtil.itemStatsToString(BlacksmithItems.blackSteelDirk()),
+                this.generateItemLore(BlacksmithItems.BLACK_STEEL_DIRK),
                 false, false, false);
     }
 
@@ -486,79 +485,79 @@ public class AnvilMenu extends Workstation {
                 item = BlacksmithItems.whetStone();
                 break;
             case 10:
-                item = BlacksmithItems.oakenShield();
+                item = BlacksmithItems.OAKEN_SHIELD.generateItem();
                 break;
             case 11:
-                item = BlacksmithItems.ironBroadsword();
+                item = BlacksmithItems.FORGED_IRON_BROADSWORD.generateItem();
                 break;
             case 12:
-                item = BlacksmithItems.ironReaver();
+                item = BlacksmithItems.FORGED_IRON_REAVER.generateItem();
                 break;
             case 13:
-                item = BlacksmithItems.mailGreaves();
+                item = BlacksmithItems.FORGED_MAIL_GREAVES.generateItem();
                 break;
             case 14:
-                item = BlacksmithItems.gildedBoots();
+                item = BlacksmithItems.FORGED_GILDED_BOOTS.generateItem();
                 break;
             case 15:
-                item = BlacksmithItems.mailTassets();
+                item = BlacksmithItems.FORGED_MAIL_TASSEST.generateItem();
                 break;
             case 16:
-                item = BlacksmithItems.plateLegs();
+                item = BlacksmithItems.FORGED_IRON_PLATELEGS.generateItem();
                 break;
             case 17:
-                item = BlacksmithItems.flailOfRetribution();
+                item = BlacksmithItems.FLAIL_OF_RETRIBUTION.generateItem();
                 break;
             case 18:
-                item = BlacksmithItems.illusionersWand();
+                item = BlacksmithItems.ILLUSIONERS_WAND.generateItem();
                 break;
             case 19:
-                item = BlacksmithItems.etchedDagger();
+                item = BlacksmithItems.ETCHED_DAGGER.generateItem();
                 break;
             case 20:
                 item = BlacksmithItems.sharpStone();
                 break;
             case 21:
-                item = BlacksmithItems.bastion();
+                item = BlacksmithItems.BASTION.generateItem();
                 break;
             case 22:
-                item = BlacksmithItems.ironLongbow();
+                item = BlacksmithItems.FORGED_IRON_LONGBOW.generateItem();
                 break;
             case 23:
-                item = BlacksmithItems.ironScepter();
+                item = BlacksmithItems.FORGED_IRON_SCEPTER.generateItem();
                 break;
             case 24:
-                item = BlacksmithItems.gildedBody();
+                item = BlacksmithItems.FORGED_GILDED_BODY.generateItem();
                 break;
             case 25:
-                item = BlacksmithItems.plateBody();
+                item = BlacksmithItems.FORGED_IRON_PLATEBODY.generateItem();
                 break;
             case 26:
-                item = BlacksmithItems.mailHelm();
+                item = BlacksmithItems.FORGED_MAIL_HELM.generateItem();
                 break;
             case 27:
                 item = BlacksmithItems.FORGED_IRON_HELM.generateItem();
                 break;
             case 28:
-                item = BlacksmithItems.Stormsong();
+                item = BlacksmithItems.STORMSONG.generateItem();
                 break;
             case 29:
-                item = BlacksmithItems.Valkyrie();
+                item = BlacksmithItems.VALKYRIE.generateItem();
                 break;
             case 30:
-                item = BlacksmithItems.theMinotaur();
+                item = BlacksmithItems.THE_MINOTAUR.generateItem();
                 break;
             case 31:
-                item = BlacksmithItems.bulwark();
+                item = BlacksmithItems.FROST_LORDS_BULWARK.generateItem();
                 break;
             case 32:
-                item = BlacksmithItems.redeemersFlail();
+                item = BlacksmithItems.REDEEMERS_FLAIL.generateItem();
                 break;
             case 33:
-                item = BlacksmithItems.icefuryWand();
+                item = BlacksmithItems.ICEFURY_WAND.generateItem();
                 break;
             case 34:
-                item = BlacksmithItems.blackSteelDirk();
+                item = BlacksmithItems.BLACK_STEEL_DIRK.generateItem();
                 break;
         }
         return item;
