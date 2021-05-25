@@ -392,8 +392,7 @@ public abstract class Workstation implements Listener {
         String stats = "";
 
         RunicItemStatRange range = item.getWeaponDamage();
-        Stat damageStat = Stat.STRENGTH;
-        stats = stats.concat(damageStat.getChatColor() + "+ " + range.getMin() + "-" + range.getMax() + damageStat.getIcon() + "\n");
+        stats = stats.concat(ChatColor.RED + "" + range.getMin() + "-" + range.getMax() + " DMG\n");
         for (Stat stat : item.getStats().keySet()) {
             stats = stats.concat(stat.getChatColor() + "+" + item.getStats().get(stat).getValue() + stat.getIcon() + "\n");
         }

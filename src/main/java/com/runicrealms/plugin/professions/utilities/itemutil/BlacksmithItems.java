@@ -1,43 +1,16 @@
 package com.runicrealms.plugin.professions.utilities.itemutil;
 
-import com.runicrealms.plugin.attributes.AttributeUtil;
 import com.runicrealms.runicitems.RunicItemsAPI;
-import com.runicrealms.runicitems.item.RunicItem;
-import com.runicrealms.runicitems.item.RunicItemArmor;
-import com.runicrealms.runicitems.item.RunicItemOffhand;
-import com.runicrealms.runicitems.item.RunicItemWeapon;
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import com.runicrealms.runicitems.item.*;
 
 public class BlacksmithItems {
 
+    public static final RunicItemGeneric CHAIN_LINK = (RunicItemGeneric) RunicItemsAPI.generateItemFromTemplate("chain-link");
+    public static final RunicItemGeneric IRON_BAR = (RunicItemGeneric) RunicItemsAPI.generateItemFromTemplate("iron-bar");
+    public static final RunicItemGeneric GOLD_BAR = (RunicItemGeneric) RunicItemsAPI.generateItemFromTemplate("gold-bar");
+
     // level 1
-    private static final int WHETSTONE_DAMAGE_BONUS = 1;
-
-    public static final RunicItem CHAIN_LINK = RunicItemsAPI.generateItemFromTemplate("chain-link");
-    public static final RunicItem IRON_BAR = RunicItemsAPI.generateItemFromTemplate("iron-bar");
-    public static final RunicItem GOLD_BAR = RunicItemsAPI.generateItemFromTemplate("gold-bar");
-
-    public static ItemStack whetStone() {
-        ItemStack sharpStone = new ItemStack(Material.FLINT);
-        ItemMeta meta = sharpStone.getItemMeta();
-        List<String> lore = new ArrayList<>();
-        lore.add("");
-        lore.add(ChatColor.YELLOW + "Increase your weapon⚔ damage by +" + WHETSTONE_DAMAGE_BONUS + " for 3 min!");
-        lore.add("");
-        lore.add(ChatColor.GRAY + "Consumable");
-        Objects.requireNonNull(meta).setLore(lore);
-        meta.setDisplayName(ChatColor.WHITE + "Whetstone");
-        sharpStone.setItemMeta(meta);
-        sharpStone = AttributeUtil.addCustomStat(sharpStone, "custom.weaponDamageBonus", WHETSTONE_DAMAGE_BONUS);
-        return sharpStone;
-    }
+    public static final RunicItemGeneric WHETSTONE = (RunicItemGeneric) RunicItemsAPI.generateItemFromTemplate("whetstone");
 
     // level 5
     public static final RunicItemOffhand OAKEN_SHIELD = (RunicItemOffhand) RunicItemsAPI.generateItemFromTemplate("blacksmith-oaken-shield");
@@ -64,21 +37,7 @@ public class BlacksmithItems {
     public static final RunicItemOffhand ETCHED_DAGGER = (RunicItemOffhand) RunicItemsAPI.generateItemFromTemplate("blacksmith-etched-dagger");
 
     // level 25
-    private static final int SHARP_STONE_DAMAGE_BONUS = 3;
-    public static ItemStack sharpStone() {
-        ItemStack sharpStone = new ItemStack(Material.FLINT);
-        ItemMeta meta = sharpStone.getItemMeta();
-        List<String> lore = new ArrayList<>();
-        lore.add("");
-        lore.add(ChatColor.YELLOW + "Increase your weapon⚔ damage by +" + SHARP_STONE_DAMAGE_BONUS + " for 3 min!");
-        lore.add("");
-        lore.add(ChatColor.GRAY + "Consumable");
-        Objects.requireNonNull(meta).setLore(lore);
-        meta.setDisplayName(ChatColor.WHITE + "Sharpening Stone");
-        sharpStone.setItemMeta(meta);
-        sharpStone = AttributeUtil.addCustomStat(sharpStone, "custom.weaponDamageBonus", SHARP_STONE_DAMAGE_BONUS);
-        return sharpStone;
-    }
+    public static final RunicItemGeneric SHARPENING_STONE = (RunicItemGeneric) RunicItemsAPI.generateItemFromTemplate("sharpening-stone");
 
     // level 30
     public static final RunicItemOffhand BASTION = (RunicItemOffhand) RunicItemsAPI.generateItemFromTemplate("blacksmith-bastion");
