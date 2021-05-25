@@ -1,17 +1,15 @@
 package com.runicrealms.plugin.professions.crafting.blacksmith;
 
-import com.runicrealms.plugin.RunicCore;
-import com.runicrealms.plugin.RunicProfessions;
 import com.runicrealms.plugin.api.RunicCoreAPI;
 import com.runicrealms.plugin.item.GUIMenu.ItemGUI;
 import com.runicrealms.plugin.professions.Workstation;
+import com.runicrealms.plugin.professions.utilities.itemutil.BlacksmithItems;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Objects;
@@ -119,7 +117,7 @@ public class FurnaceMenu extends Workstation {
                 super.startCrafting(pl, reqHashMap, 0, 0, event.getCurrentItem().getType(),
                         meta.getDisplayName(), currentLvl, exp,
                         ((Damageable) meta).getDamage(), Particle.FLAME,
-                        Sound.ITEM_BUCKET_FILL_LAVA, Sound.BLOCK_LAVA_EXTINGUISH, 0, mult);
+                        Sound.ITEM_BUCKET_FILL_LAVA, Sound.BLOCK_LAVA_EXTINGUISH, event.getSlot(), mult);
             }});
 
         return forgeMenu;
@@ -155,19 +153,8 @@ public class FurnaceMenu extends Workstation {
     @Override
     public void produceResult(Player pl, Material material, String dispName,
                               int currentLvl, int amt, int rate, int durability, int someVar) {
-
         for (int i = 0; i < amt; i++) {
-            ItemStack craftedItem = new ItemStack(material);
-            ItemMeta meta = craftedItem.getItemMeta();
-            ((Damageable) Objects.requireNonNull(meta)).setDamage(durability);
-
-            ArrayList<String> lore = new ArrayList<>();
-
-            lore.add(ChatColor.GRAY + "Crafting Reagent");
-            meta.setLore(lore);
-            meta.setDisplayName(ChatColor.WHITE + dispName);
-            craftedItem.setItemMeta(meta);
-
+            ItemStack craftedItem = determineItem(someVar);
             // this ALLOWS furnace items to stack.
             HashMap<Integer, ItemStack> itemsToAdd = pl.getInventory().addItem(craftedItem);
             // drop leftover items on the floor
@@ -175,5 +162,17 @@ public class FurnaceMenu extends Workstation {
                 pl.getWorld().dropItem(pl.getLocation(), leftOver);
             }
         }
+    }
+
+    private ItemStack determineItem(int slot) {
+        switch (slot) {
+            case 9:
+                return BlacksmithItems.CHAIN_LINK.generateItem();
+            case 10:
+                return BlacksmithItems.IRON_BAR.generateItem();
+            case 11:
+                return BlacksmithItems.GOLD_BAR.generateItem();
+        }
+        return new ItemStack(Material.STONE); // oopsies
     }
 }

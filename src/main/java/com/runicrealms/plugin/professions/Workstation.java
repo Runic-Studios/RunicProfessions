@@ -7,11 +7,11 @@ import com.runicrealms.plugin.enums.ArmorSlotEnum;
 import com.runicrealms.plugin.item.GUIMenu.ItemGUI;
 import com.runicrealms.plugin.item.LoreGenerator;
 import com.runicrealms.plugin.item.util.ItemRemover;
-import com.runicrealms.plugin.player.stat.PlayerStatEnum;
 import com.runicrealms.plugin.professions.listeners.WorkstationListener;
 import com.runicrealms.plugin.professions.utilities.ProfExpUtil;
 import com.runicrealms.plugin.utilities.ColorUtil;
 import com.runicrealms.plugin.utilities.FloatingItemUtil;
+import com.runicrealms.runicitems.Stat;
 import com.runicrealms.runicitems.item.*;
 import com.runicrealms.runicitems.item.stats.RunicItemStatRange;
 import org.bukkit.*;
@@ -381,7 +381,7 @@ public abstract class Workstation implements Listener {
         String stats = "";
 
         stats = stats.concat(ChatColor.RED + "" + item.getHealth() + "❤\n");
-        for (PlayerStatEnum stat : item.getStats().keySet()) {
+        for (Stat stat : item.getStats().keySet()) {
             stats = stats.concat(stat.getChatColor() + "+" + item.getStats().get(stat).getValue() + stat.getIcon() + "\n");
         }
 
@@ -392,9 +392,9 @@ public abstract class Workstation implements Listener {
         String stats = "";
 
         RunicItemStatRange range = item.getWeaponDamage();
-        PlayerStatEnum damageStat = PlayerStatEnum.STRENGTH;
+        Stat damageStat = Stat.STRENGTH;
         stats = stats.concat(damageStat.getChatColor() + "+ " + range.getMin() + "-" + range.getMax() + damageStat.getIcon() + "\n");
-        for (PlayerStatEnum stat : item.getStats().keySet()) {
+        for (Stat stat : item.getStats().keySet()) {
             stats = stats.concat(stat.getChatColor() + "+" + item.getStats().get(stat).getValue() + stat.getIcon() + "\n");
         }
 
@@ -404,7 +404,7 @@ public abstract class Workstation implements Listener {
     private String generateOffhandItemLore(RunicItemOffhand item) {
         String stats = "";
 
-        for (PlayerStatEnum stat : item.getStats().keySet()) {
+        for (Stat stat : item.getStats().keySet()) {
             stats = stats.concat(stat.getChatColor() + "+" + item.getStats().get(stat).getValue() + stat.getIcon() + "\n");
         }
 

@@ -1,8 +1,8 @@
 package com.runicrealms.plugin.professions.utilities.itemutil;
 
 import com.runicrealms.plugin.attributes.AttributeUtil;
-import com.runicrealms.plugin.item.RunicItem;
 import com.runicrealms.runicitems.RunicItemsAPI;
+import com.runicrealms.runicitems.item.RunicItem;
 import com.runicrealms.runicitems.item.RunicItemArmor;
 import com.runicrealms.runicitems.item.RunicItemOffhand;
 import com.runicrealms.runicitems.item.RunicItemWeapon;
@@ -19,6 +19,10 @@ public class BlacksmithItems {
 
     // level 1
     private static final int WHETSTONE_DAMAGE_BONUS = 1;
+
+    public static final RunicItem CHAIN_LINK = RunicItemsAPI.generateItemFromTemplate("chain-link");
+    public static final RunicItem IRON_BAR = RunicItemsAPI.generateItemFromTemplate("iron-bar");
+    public static final RunicItem GOLD_BAR = RunicItemsAPI.generateItemFromTemplate("gold-bar");
 
     public static ItemStack whetStone() {
         ItemStack sharpStone = new ItemStack(Material.FLINT);
