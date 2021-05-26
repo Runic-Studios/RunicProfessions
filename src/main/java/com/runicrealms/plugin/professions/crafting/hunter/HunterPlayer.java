@@ -186,7 +186,7 @@ public class HunterPlayer {
 
     private boolean containsRegion(TaskMobs mob, List<String> names) {
         for (String name : names) {
-            if (mob.getRegions().contains(name)) {
+            if (mob.getRegion().equals(name)) {
                 return true;
             }
         }
