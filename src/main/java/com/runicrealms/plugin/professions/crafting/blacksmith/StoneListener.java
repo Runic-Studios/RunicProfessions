@@ -27,7 +27,8 @@ public class StoneListener implements Listener {
 
     @EventHandler
     public void onRunicClickTrigger(RunicItemGenericTriggerEvent e) {
-        if (!e.getItem().getDisplayableItem().getDisplayName().equals(BlacksmithItems.WHETSTONE.getDisplayableItem().getDisplayName()))
+        if (!e.getItem().getDisplayableItem().getDisplayName().equals(BlacksmithItems.WHETSTONE.getDisplayableItem().getDisplayName())
+                && !e.getItem().getDisplayableItem().getDisplayName().equals(BlacksmithItems.SHARPENING_STONE.getDisplayableItem().getDisplayName()))
             return;
 
         RunicItem runicItem = e.getItem();

@@ -362,6 +362,10 @@ public abstract class Workstation implements Listener {
     }
 
     public String generateItemLore(RunicItem item) {
+        if (item instanceof RunicItemGeneric) {
+            return this.generateGenericItemLore((RunicItemGeneric) item);
+        }
+
         if (item instanceof RunicItemArmor) {
             return this.generateArmorItemLore(((RunicItemArmor) item));
         }
@@ -375,6 +379,16 @@ public abstract class Workstation implements Listener {
         }
 
         return null;
+    }
+
+    private String generateGenericItemLore(RunicItemGeneric item) {
+        String lore = "";
+
+        for (String s : item.getLore()) {
+            lore = lore.concat(s) + "\n";
+        }
+
+        return lore;
     }
 
     private String generateArmorItemLore(RunicItemArmor item) {

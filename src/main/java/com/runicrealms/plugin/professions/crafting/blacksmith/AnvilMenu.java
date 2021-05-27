@@ -4,7 +4,6 @@ import com.runicrealms.plugin.api.RunicCoreAPI;
 import com.runicrealms.plugin.item.GUIMenu.ItemGUI;
 import com.runicrealms.plugin.professions.Workstation;
 import com.runicrealms.plugin.professions.utilities.itemutil.BlacksmithItems;
-import com.runicrealms.runicitems.RunicItemsAPI;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Particle;
@@ -291,7 +290,7 @@ public class AnvilMenu extends Workstation {
         // level 1
         super.createMenuItem(forgeMenu, pl, 9, Material.FLINT, "&fWhetstone", ironReqs,
                 "Iron Bar", 2, 40, 0, 0,
-                BlacksmithItems.WHETSTONE.getLore().get(0) + "\n",
+                generateItemLore(BlacksmithItems.WHETSTONE),
                 false, false, false);
 
         // level 5
@@ -354,7 +353,7 @@ public class AnvilMenu extends Workstation {
         // level 25
         super.createMenuItem(forgeMenu, pl, 20, Material.FLINT, "&fSharpening Stone", ironReqs,
                 "Iron Bar", 2, 40, 25, 0,
-                "&eIncrease your weapon⚔ damage by +3 for 3 min!\n",
+                generateItemLore(BlacksmithItems.SHARPENING_STONE),
                 false, false, false);
 
         // level 30
