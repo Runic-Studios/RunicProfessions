@@ -167,12 +167,12 @@ public class FurnaceMenu extends Workstation {
     private ItemStack determineItem(int slot) {
         switch (slot) {
             case 9:
-                return BlacksmithItems.CHAIN_LINK.generateItem();
+                return BlacksmithItems.CHAIN_LINK_ITEMSTACK;
             case 10:
-                return BlacksmithItems.IRON_BAR.generateItem();
+                return BlacksmithItems.IRON_BAR_ITEMSTACK;
             case 11:
-                return BlacksmithItems.GOLD_BAR.generateItem();
+                return BlacksmithItems.GOLD_BAR_ITEMSTACK;
         }
-        return new ItemStack(Material.STONE); // oopsies
+        return new ItemStack(Material.STONE); // oops
     }
 }

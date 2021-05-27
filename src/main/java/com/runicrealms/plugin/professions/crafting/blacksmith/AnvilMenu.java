@@ -454,7 +454,7 @@ public class AnvilMenu extends Workstation {
     public void produceResult(Player pl, Material material, String dispName,
                               int currentLvl, int amt, int rate, int durability, int someVar) {
 
-        ItemStack craftedItem = determineItem(someVar); // someVar is the slot of the item in the menu.
+        ItemStack itemStack = determineItem(someVar); // someVar is the slot of the item in the menu.
 
         // create a new item up to the amount
         int failCount = 0;
@@ -464,9 +464,9 @@ public class AnvilMenu extends Workstation {
             if (chance <= rate) {
                 if (pl.getInventory().firstEmpty() != -1) {
                     int firstEmpty = pl.getInventory().firstEmpty();
-                    pl.getInventory().setItem(firstEmpty, craftedItem);
+                    pl.getInventory().setItem(firstEmpty, itemStack);
                 } else {
-                    pl.getWorld().dropItem(pl.getLocation(), craftedItem);
+                    pl.getWorld().dropItem(pl.getLocation(), itemStack);
                 }
             } else {
                 failCount = failCount + 1;
@@ -479,87 +479,60 @@ public class AnvilMenu extends Workstation {
     }
 
     private ItemStack determineItem(int slot) {
-        ItemStack item = new ItemStack(Material.STICK);
         switch (slot) {
             case 9:
-                item = BlacksmithItems.WHETSTONE.generateItem();
-                break;
+                return BlacksmithItems.WHETSTONE_ITEMSTACK;
             case 10:
-                item = BlacksmithItems.OAKEN_SHIELD.generateItem();
-                break;
+                return BlacksmithItems.OAKEN_SHIELD_ITEMSTACK;
             case 11:
-                item = BlacksmithItems.FORGED_IRON_BROADSWORD.generateItem();
-                break;
+                return BlacksmithItems.FORGED_IRON_BROADSWORD_ITEMSTACK;
             case 12:
-                item = BlacksmithItems.FORGED_IRON_REAVER.generateItem();
-                break;
+                return BlacksmithItems.FORGED_IRON_REAVER_ITEMSTACK;
             case 13:
-                item = BlacksmithItems.FORGED_MAIL_GREAVES.generateItem();
-                break;
+                return BlacksmithItems.FORGED_MAIL_GREAVES_ITEMSTACK;
             case 14:
-                item = BlacksmithItems.FORGED_GILDED_BOOTS.generateItem();
-                break;
+                return BlacksmithItems.FORGED_GILDED_BOOTS_ITEMSTACK;
             case 15:
-                item = BlacksmithItems.FORGED_MAIL_TASSEST.generateItem();
-                break;
+                return BlacksmithItems.FORGED_MAIL_TASSEST_ITEMSTACK;
             case 16:
-                item = BlacksmithItems.FORGED_IRON_PLATELEGS.generateItem();
-                break;
+                return BlacksmithItems.FORGED_IRON_PLATELEGS_ITEMSTACK;
             case 17:
-                item = BlacksmithItems.FLAIL_OF_RETRIBUTION.generateItem();
-                break;
+                return BlacksmithItems.FLAIL_OF_RETRIBUTION_ITEMSTACK;
             case 18:
-                item = BlacksmithItems.ILLUSIONERS_WAND.generateItem();
-                break;
+                return BlacksmithItems.ILLUSIONERS_WAND_ITEMSTACK;
             case 19:
-                item = BlacksmithItems.ETCHED_DAGGER.generateItem();
-                break;
+                return BlacksmithItems.ETCHED_DAGGER_ITEMSTACK;
             case 20:
-                item = BlacksmithItems.SHARPENING_STONE.generateItem();
-                break;
+                return BlacksmithItems.SHARPENING_STONE_ITEMSTACK;
             case 21:
-                item = BlacksmithItems.BASTION.generateItem();
-                break;
+                return BlacksmithItems.BASTION_ITEMSTACK;
             case 22:
-                item = BlacksmithItems.FORGED_IRON_LONGBOW.generateItem();
-                break;
+                return BlacksmithItems.FORGED_IRON_LONGBOW_ITEMSTACK;
             case 23:
-                item = BlacksmithItems.FORGED_IRON_SCEPTER.generateItem();
-                break;
+                return BlacksmithItems.FORGED_IRON_SCEPTER_ITEMSTACK;
             case 24:
-                item = BlacksmithItems.FORGED_GILDED_BODY.generateItem();
-                break;
+                return BlacksmithItems.FORGED_GILDED_BODY_ITEMSTACK;
             case 25:
-                item = BlacksmithItems.FORGED_IRON_PLATEBODY.generateItem();
-                break;
+                return BlacksmithItems.FORGED_IRON_PLATEBODY_ITEMSTACK;
             case 26:
-                item = BlacksmithItems.FORGED_MAIL_HELM.generateItem();
-                break;
+                return BlacksmithItems.FORGED_MAIL_HELM_ITEMSTACK;
             case 27:
-                item = BlacksmithItems.FORGED_IRON_HELM.generateItem();
-                break;
+                return BlacksmithItems.FORGED_IRON_HELM_ITEMSTACK;
             case 28:
-                item = BlacksmithItems.STORMSONG.generateItem();
-                break;
+                return BlacksmithItems.STORMSONG_ITEMSTACK;
             case 29:
-                item = BlacksmithItems.VALKYRIE.generateItem();
-                break;
+                return BlacksmithItems.VALKYRIE_ITEMSTACK;
             case 30:
-                item = BlacksmithItems.THE_MINOTAUR.generateItem();
-                break;
+                return BlacksmithItems.THE_MINOTAUR_ITEMSTACK;
             case 31:
-                item = BlacksmithItems.FROST_LORDS_BULWARK.generateItem();
-                break;
+                return BlacksmithItems.FROST_LORDS_BULWARK_ITEMSTACK;
             case 32:
-                item = BlacksmithItems.REDEEMERS_FLAIL.generateItem();
-                break;
+                return BlacksmithItems.REDEEMERS_FLAIL_ITEMSTACK;
             case 33:
-                item = BlacksmithItems.ICEFURY_WAND.generateItem();
-                break;
+                return BlacksmithItems.ICEFURY_WAND_ITEMSTACK;
             case 34:
-                item = BlacksmithItems.BLACK_STEEL_DIRK.generateItem();
-                break;
+                return BlacksmithItems.BLACK_STEEL_DIRK_ITEMSTACK;
         }
-        return item;
+        return new ItemStack(Material.STONE); // oops
     }
 }
