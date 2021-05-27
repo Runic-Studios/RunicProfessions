@@ -3,6 +3,7 @@ package com.runicrealms.plugin.professions.crafting.cooking;
 import com.runicrealms.plugin.RunicProfessions;
 import com.runicrealms.plugin.spellapi.spellutil.HealUtil;
 import com.runicrealms.runicitems.item.event.RunicItemGenericTriggerEvent;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
@@ -18,9 +19,12 @@ public class CookingListener implements Listener {
      */
     @EventHandler
     public void onCustomFoodEat(RunicItemGenericTriggerEvent e) {
-        if (!e.getItemStack().isSimilar(CookingItems.AMBROSIA_STEW_ITEMSTACK)) return;
+        if (!e.getItem().getTemplateId().equals(CookingItems.AMBROSIA_STEW.getTemplateId())) return;
         Player pl = e.getPlayer();
-        if (pl.getHealth() == pl.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue()) return;
+        if (pl.getHealth() == pl.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue()) {
+            pl.sendMessage(ChatColor.GRAY + "You can't use this item at full health.");
+            return;
+        }
         takeItem(pl, e.getItemStack());
         pl.setFoodLevel(pl.getFoodLevel() + 6);
         healOverTime(pl, CookingMenu.getAmbrosiaStewAmt(), CookingMenu.getStewDuration());

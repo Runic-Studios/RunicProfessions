@@ -27,7 +27,7 @@ import java.util.Objects;
 public class HunterShop extends Shop {
 
     private static final int PRICE_POTION = 5;
-    private static final int PRICE_BOAT = 2;
+    private static final int PRICE_TELEPORT_SCROLL = 5;
     private static final int PRICE_ORB = 1;
     private static final int PRICE_TRACKING = 50;
     private static final int PRICE_COMPASS = 1000;
@@ -54,8 +54,8 @@ public class HunterShop extends Shop {
                 "\n&eAfter standing still for 5s, you turn invisible!\n\n&7Price: &6&l" + PRICE_POTION + " points",
                 0, false);
         shopMenu.setOption(10, new ItemStack(Material.OAK_BOAT),
-                "&fBoat",
-                "\n&7Price: &6&l" + PRICE_BOAT + " points", 0, false);
+                "&fTeleport Scroll: Outlaw Guild",
+                "\n&7Price: &6&l" + PRICE_TELEPORT_SCROLL + " points", 0, false);
         shopMenu.setOption(11, scryingOrb(),
                 "&fScrying Orb",
                 "\n&eLearn the stats of a player!\n\n&7Price: &6&l" + PRICE_ORB + " points",
@@ -77,27 +77,27 @@ public class HunterShop extends Shop {
 
                 switch (event.getSlot()) {
                     case 9:
-                        if (attemptToTakeGold(pl, PRICE_POTION)) {
-                            pl.getInventory().addItem(shadowmeldPotion());
+                        if (attemptToTakeHunterPoints(pl, PRICE_POTION)) {
+                            pl.getInventory().addItem(shadowmeldPotion()); // todo: from hunter items
                         }
                         break;
                     case 10:
-                        if (attemptToTakeGold(pl, PRICE_BOAT)){
+                        if (attemptToTakeHunterPoints(pl, PRICE_TELEPORT_SCROLL)){
                             pl.getInventory().addItem(new ItemStack(Material.OAK_BOAT));
                         }
                         break;
                     case 11:
-                        if (attemptToTakeGold(pl, PRICE_ORB)) {
+                        if (attemptToTakeHunterPoints(pl, PRICE_ORB)) {
                             pl.getInventory().addItem(scryingOrb());
                         }
                         break;
                     case 12:
-                        if (attemptToTakeGold(pl, PRICE_TRACKING)) {
+                        if (attemptToTakeHunterPoints(pl, PRICE_TRACKING)) {
                             pl.getInventory().addItem(trackingScroll());
                         }
                         break;
                     case 13:
-                        if (attemptToTakeGold(pl, PRICE_COMPASS)) {
+                        if (attemptToTakeHunterPoints(pl, PRICE_COMPASS)) {
                             pl.getInventory().addItem(trackingCompass());
                         }
                         break;
@@ -191,7 +191,7 @@ public class HunterShop extends Shop {
      * This method checks if player has required hunter points amount/inv space,
      * then takes it and proceeds
      */
-    private boolean attemptToTakeGold(Player pl, int price) {
+    private boolean attemptToTakeHunterPoints(Player pl, int price) {
 
         // check that the player has an open inventory space
         if (pl.getInventory().firstEmpty() == -1) {
