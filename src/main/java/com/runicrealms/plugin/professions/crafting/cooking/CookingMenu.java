@@ -3,9 +3,7 @@ package com.runicrealms.plugin.professions.crafting.cooking;
 import com.runicrealms.plugin.item.GUIMenu.ItemGUI;
 import com.runicrealms.plugin.professions.Workstation;
 import org.bukkit.*;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -15,8 +13,8 @@ import java.util.*;
 @SuppressWarnings("FieldCanBeLocal")
 public class CookingMenu extends Workstation {
 
-    private static final int STEW_DURATION = 10;
-    private static final int AMBROSIA_STEW_AMT = 350;
+    private static final int STEW_DURATION = Integer.parseInt(CookingItems.AMBROSIA_STEW.getData().get("duration"));
+    private static final int AMBROSIA_STEW_AMT = Integer.parseInt(CookingItems.AMBROSIA_STEW.getData().get("health-amount"));
 
     public CookingMenu(Player pl) {
         setupWorkstation(pl);
@@ -129,7 +127,7 @@ public class CookingMenu extends Workstation {
                 super.startCrafting(pl, reqs, 0, 0, event.getCurrentItem().getType(),
                         meta.getDisplayName(), 0, 0,
                         ((Damageable) meta).getDamage(), Particle.SMOKE_NORMAL,
-                        Sound.ENTITY_GHAST_SHOOT, Sound.BLOCK_LAVA_EXTINGUISH, 0, mult);
+                        Sound.ENTITY_GHAST_SHOOT, Sound.BLOCK_LAVA_EXTINGUISH, event.getSlot(), mult);
             }});
 
         return cookingMenu;
@@ -168,60 +166,36 @@ public class CookingMenu extends Workstation {
         ambrosiaStewReqs.put(Material.DARK_OAK_LOG, 1);
         super.createMenuItem(forgeMenu, pl, 12, Material.RABBIT_STEW, "&fAmbrosia Stew", ambrosiaStewReqs,
                 "Ambrosia Root\nUncooked Rabbit\nDark Oak Log", 999, 0, 0, 2,
-                "&eRestores &c" + AMBROSIA_STEW_AMT + "❤ &eover " + STEW_DURATION + " seconds\n",
+                generateItemLore(CookingItems.AMBROSIA_STEW),
                 true, false, true);
     }
 
     @Override
     public void produceResult(Player pl, Material material, String dispName,
                               int currentLvl, int amt, int rate, int durability, int someVar) {
-
         for (int i = 0; i < amt; i++) {
-
-            ItemStack craftedItem = new ItemStack(material);
-
-            if (durability == 2) {
-
-                craftedItem = ambrosiaStew();
-
-            // default food
-            } else {
-
-                ItemMeta meta = craftedItem.getItemMeta();
-                ((Damageable) Objects.requireNonNull(meta)).setDamage(durability);
-
-                ArrayList<String> lore = new ArrayList<>();
-
-                lore.add(ChatColor.GRAY + "Consumable");
-                meta.setLore(lore);
-                meta.setDisplayName(ChatColor.WHITE + dispName);
-                craftedItem.setItemMeta(meta);
-            }
-
-            // add items to inventory, drop items that couldn't be added
-            HashMap<Integer, ItemStack> leftOvers = pl.getInventory().addItem(craftedItem);
-            for (ItemStack is : leftOvers.values()) {
-                pl.getWorld().dropItem(pl.getLocation(), is);
+            ItemStack craftedItem = determineItem(someVar);
+            // this ALLOWS cooking items to stack.
+            HashMap<Integer, ItemStack> itemsToAdd = pl.getInventory().addItem(craftedItem);
+            // drop leftover items on the floor
+            for (ItemStack leftOver : itemsToAdd.values()) {
+                pl.getWorld().dropItem(pl.getLocation(), leftOver);
             }
         }
     }
 
-    public static ItemStack ambrosiaStew() {
-        ItemStack ambrosiaStew = new ItemStack(Material.RABBIT_STEW);
-        ItemMeta ambrosiaStewMeta = ambrosiaStew.getItemMeta();
-        Objects.requireNonNull(ambrosiaStewMeta).setDisplayName(ChatColor.WHITE + "Ambrosia Stew");
-        ambrosiaStewMeta.setLore(Arrays.asList(
-                "",
-                ChatColor.YELLOW + "Restores " + ChatColor.RED + AMBROSIA_STEW_AMT + "❤" + ChatColor.YELLOW + " over " + STEW_DURATION + " seconds",
-                "",
-                ChatColor.GRAY + "Consumable"));
-        ambrosiaStewMeta.addEnchant(Enchantment.DURABILITY, 1, true);
-        ambrosiaStewMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-        ((Damageable) ambrosiaStewMeta).setDamage(2);
-        ambrosiaStewMeta.setUnbreakable(true);
-        ambrosiaStewMeta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
-        ambrosiaStew.setItemMeta(ambrosiaStewMeta);
-        return ambrosiaStew;
+    private ItemStack determineItem(int slot) {
+        switch (slot) {
+            case 9:
+                return CookingItems.BREAD_ITEMSTACK;
+            case 10:
+                return CookingItems.COOKED_COD_ITEMSTACK;
+            case 11:
+                return CookingItems.COOKED_SALMON_ITEMSTACK;
+            case 12:
+                return CookingItems.AMBROSIA_STEW_ITEMSTACK;
+        }
+        return new ItemStack(Material.STONE); // oops
     }
 
     public static int getAmbrosiaStewAmt() {

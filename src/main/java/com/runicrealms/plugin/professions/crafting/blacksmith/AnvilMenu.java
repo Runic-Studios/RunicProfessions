@@ -3,7 +3,6 @@ package com.runicrealms.plugin.professions.crafting.blacksmith;
 import com.runicrealms.plugin.api.RunicCoreAPI;
 import com.runicrealms.plugin.item.GUIMenu.ItemGUI;
 import com.runicrealms.plugin.professions.Workstation;
-import com.runicrealms.plugin.professions.utilities.itemutil.BlacksmithItems;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Particle;

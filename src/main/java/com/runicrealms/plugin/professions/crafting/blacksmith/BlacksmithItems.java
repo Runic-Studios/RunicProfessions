@@ -1,4 +1,4 @@
-package com.runicrealms.plugin.professions.utilities.itemutil;
+package com.runicrealms.plugin.professions.crafting.blacksmith;
 
 import com.runicrealms.runicitems.RunicItemsAPI;
 import com.runicrealms.runicitems.item.*;

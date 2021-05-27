@@ -1,14 +1,13 @@
 package com.runicrealms.plugin.professions.crafting.cooking;
 
-import com.runicrealms.plugin.RunicCore;
 import com.runicrealms.plugin.RunicProfessions;
 import com.runicrealms.plugin.spellapi.spellutil.HealUtil;
-import org.bukkit.ChatColor;
+import com.runicrealms.runicitems.item.event.RunicItemGenericTriggerEvent;
 import org.bukkit.Material;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -18,13 +17,15 @@ public class CookingListener implements Listener {
     Controls custom food items
      */
     @EventHandler
-    public void onCustomFoodEat(PlayerItemConsumeEvent e) {
+    public void onCustomFoodEat(RunicItemGenericTriggerEvent e) {
+//        if (!e.getItem().getDisplayableItem().getDisplayName().equals(CookingItems.AMBROSIA_STEW.getDisplayableItem().getDisplayName()))
+//            return;
+        if (!e.getItemStack().isSimilar(CookingItems.AMBROSIA_STEW_ITEMSTACK)) return;
         Player pl = e.getPlayer();
-        if (!e.getItem().isSimilar(CookingMenu.ambrosiaStew())) return;
-        e.setCancelled(true);
-        takeItem(pl, e.getItem());
+        if (pl.getHealth() == pl.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue()) return;
+        takeItem(pl, e.getItemStack());
         pl.setFoodLevel(pl.getFoodLevel() + 6);
-        healOverTime(pl, CookingMenu.getAmbrosiaStewAmt(), CookingMenu.getStewDuration(), false);
+        healOverTime(pl, CookingMenu.getAmbrosiaStewAmt(), CookingMenu.getStewDuration());
     }
 
     /**
@@ -46,7 +47,7 @@ public class CookingListener implements Listener {
         }.runTaskLaterAsynchronously(RunicProfessions.getInstance(), 1L);
     }
 
-    private void healOverTime(Player pl, int healAmt, int duration, boolean isCancelledByCombat) {
+    private void healOverTime(Player pl, int healAmt, int duration) {
         new BukkitRunnable() {
             int count = 1;
 
@@ -55,9 +56,6 @@ public class CookingListener implements Listener {
                 if (count > duration) {
                     this.cancel();
                 } else {
-                    if (RunicCore.getCombatManager().getPlayersInCombat().containsKey(pl.getUniqueId()) && isCancelledByCombat) {
-                        this.cancel();
-                    }
                     count += 1;
                     HealUtil.healPlayer((healAmt / duration), pl, pl,
                             false, false, false);

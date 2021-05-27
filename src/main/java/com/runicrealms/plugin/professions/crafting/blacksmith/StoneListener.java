@@ -3,7 +3,6 @@ package com.runicrealms.plugin.professions.crafting.blacksmith;
 import com.runicrealms.plugin.RunicProfessions;
 import com.runicrealms.plugin.events.WeaponDamageEvent;
 import com.runicrealms.plugin.item.util.ItemRemover;
-import com.runicrealms.plugin.professions.utilities.itemutil.BlacksmithItems;
 import com.runicrealms.runicitems.item.RunicItem;
 import com.runicrealms.runicitems.item.event.RunicItemGenericTriggerEvent;
 import org.bukkit.*;

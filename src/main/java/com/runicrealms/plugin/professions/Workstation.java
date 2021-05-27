@@ -171,7 +171,7 @@ public abstract class Workstation implements Listener {
 
     protected void startCrafting(Player pl, LinkedHashMap<Material, Integer> itemReqs, int itemAmt, int reqLevel,
                                  Material craftedItemType, String itemName, int currentLvl, int exp, int durability,
-                                 Particle particle, Sound soundCraft, Sound soundDone, int health, int multiplier) {
+                                 Particle particle, Sound soundCraft, Sound soundDone, int someVar, int multiplier) {
 
         if (RunicProfessions.getProfManager().getCurrentCrafters().contains(pl)) return;
 
@@ -259,7 +259,7 @@ public abstract class Workstation implements Listener {
                         ProfExpUtil.giveExperience(pl, exp * multiplier, true);
                     }
 
-                    produceResult(pl, craftedItemType, itemName, currentLvl, multiplier, rate, durability, health);
+                    produceResult(pl, craftedItemType, itemName, currentLvl, multiplier, rate, durability, someVar);
                 } else {
                     pl.playSound(pl.getLocation(), soundCraft, 0.5f, 2.0f);
                     pl.spawnParticle(particle, stationLoc, 5, 0.25, 0.25, 0.25, 0.01);
