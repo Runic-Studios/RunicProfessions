@@ -18,8 +18,6 @@ public class CookingListener implements Listener {
      */
     @EventHandler
     public void onCustomFoodEat(RunicItemGenericTriggerEvent e) {
-//        if (!e.getItem().getDisplayableItem().getDisplayName().equals(CookingItems.AMBROSIA_STEW.getDisplayableItem().getDisplayName()))
-//            return;
         if (!e.getItemStack().isSimilar(CookingItems.AMBROSIA_STEW_ITEMSTACK)) return;
         Player pl = e.getPlayer();
         if (pl.getHealth() == pl.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue()) return;

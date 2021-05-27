@@ -9,7 +9,7 @@ import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.scheduler.BukkitRunnable;
+
 
 import java.util.HashMap;
 import java.util.UUID;
@@ -18,7 +18,7 @@ public class StoneListener implements Listener {
 
     private static final String DATA_DAMAGE_STRING = "damage-buff"; // used in the runic item config
     private static final String DATA_DURATION_STRING = "duration";
-    HashMap<UUID, Integer> boostedPlayers;
+    private final HashMap<UUID, Integer> boostedPlayers;
 
     public StoneListener() {
         boostedPlayers = new HashMap<>();
@@ -26,8 +26,8 @@ public class StoneListener implements Listener {
 
     @EventHandler
     public void onRunicClickTrigger(RunicItemGenericTriggerEvent e) {
-        if (!e.getItem().getDisplayableItem().getDisplayName().equals(BlacksmithItems.WHETSTONE.getDisplayableItem().getDisplayName())
-                && !e.getItem().getDisplayableItem().getDisplayName().equals(BlacksmithItems.SHARPENING_STONE.getDisplayableItem().getDisplayName()))
+        if (!e.getItemStack().isSimilar(BlacksmithItems.WHETSTONE_ITEMSTACK)
+                && !e.getItemStack().isSimilar(BlacksmithItems.SHARPENING_STONE_ITEMSTACK))
             return;
 
         RunicItem runicItem = e.getItem();
@@ -39,6 +39,7 @@ public class StoneListener implements Listener {
         ItemRemover.takeItem(pl, e.getItemStack(), 1);
         boostedPlayers.put(pl.getUniqueId(), Integer.valueOf(bonus));
         pl.playSound(pl.getLocation(), Sound.BLOCK_ANVIL_PLACE, 0.5f, 2.0f);
+
         pl.sendMessage
                 (
                         ChatColor.GREEN + "You consumed a " +
@@ -48,13 +49,10 @@ public class StoneListener implements Listener {
                         + (durationInt / 60) + " minutes."
                 );
 
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                boostedPlayers.remove(pl.getUniqueId());
-                e.getPlayer().sendMessage(ChatColor.GRAY + "Your attacks no longer deal additional damage.");
-            }
-        }.runTaskLater(RunicProfessions.getInstance(), durationInt * 20L);
+        Bukkit.getScheduler().scheduleSyncDelayedTask(RunicProfessions.getInstance(), () -> {
+            boostedPlayers.remove(pl.getUniqueId());
+            e.getPlayer().sendMessage(ChatColor.GRAY + "Your attacks no longer deal additional damage.");
+        }, durationInt * 20L);
     }
 
     @EventHandler
