@@ -20,40 +20,40 @@ public class HunterShopListener implements Listener {
     @EventHandler
     public void onShopClick(InventoryClickEvent e) {
 
-        if (!(e.getWhoClicked() instanceof Player)) return;
-        Player pl = (Player) e.getWhoClicked();
-        if (RunicCore.getShopManager().getPlayerShop(pl) == null) return;
-        if (!(RunicCore.getShopManager().getPlayerShop(pl) instanceof HunterShop)) return;
-        HunterShop shop = (HunterShop) RunicCore.getShopManager().getPlayerShop(pl);
-        String title = ChatColor.translateAlternateColorCodes('&', shop.getTitle());
-
-        // verify custom GUI
-        if (title.equals(e.getView().getTitle())) {
-
-            int slot = e.getRawSlot();
-
-            // shop gui
-            if (e.getClickedInventory() != null && e.getView().getTitle().equals(title)) {
-                e.setCancelled(true);
-                e.setResult(Event.Result.DENY);
-            }
-
-            /*
-            Call custom ItemGUI logic
-             */
-            ItemGUI itemGUI = shop.getItemGUI();
-            if (slot >= 0 && slot < itemGUI.getSize() && itemGUI.getOptionNames()[slot] != null) {
-
-                OptionClickEvent ope = new OptionClickEvent(e, (Player) e.getWhoClicked(), slot, itemGUI.getOptionNames()[slot]);
-                itemGUI.getHandler().onOptionClick(ope);
-
-                if (ope.willClose()) {
-                    Bukkit.getScheduler().scheduleSyncDelayedTask(RunicProfessions.getInstance(), pl::closeInventory, 1);
-                }
-                if (ope.willDestroy()) {
-                    itemGUI.destroy();
-                }
-            }
-        }
+//        if (!(e.getWhoClicked() instanceof Player)) return;
+//        Player pl = (Player) e.getWhoClicked();
+//        if (RunicCore.getShopManager().getPlayerShop(pl) == null) return;
+//        if (!(RunicCore.getShopManager().getPlayerShop(pl) instanceof HunterShop)) return;
+//        HunterShop shop = (HunterShop) RunicCore.getShopManager().getPlayerShop(pl);
+//        String title = ChatColor.translateAlternateColorCodes('&', shop.getTitle());
+//
+//        // verify custom GUI
+//        if (title.equals(e.getView().getTitle())) {
+//
+//            int slot = e.getRawSlot();
+//
+//            // shop gui
+//            if (e.getClickedInventory() != null && e.getView().getTitle().equals(title)) {
+//                e.setCancelled(true);
+//                e.setResult(Event.Result.DENY);
+//            }
+//
+//            /*
+//            Call custom ItemGUI logic
+//             */
+//            ItemGUI itemGUI = shop.getItemGUI();
+//            if (slot >= 0 && slot < itemGUI.getSize() && itemGUI.getOptionNames()[slot] != null) {
+//
+//                OptionClickEvent ope = new OptionClickEvent(e, (Player) e.getWhoClicked(), slot, itemGUI.getOptionNames()[slot]);
+//                itemGUI.getHandler().onOptionClick(ope);
+//
+//                if (ope.willClose()) {
+//                    Bukkit.getScheduler().scheduleSyncDelayedTask(RunicProfessions.getInstance(), pl::closeInventory, 1);
+//                }
+//                if (ope.willDestroy()) {
+//                    itemGUI.destroy();
+//                }
+//            }
+//        }
     }
 }

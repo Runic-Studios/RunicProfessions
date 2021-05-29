@@ -110,78 +110,78 @@ public class HunterListener implements Listener {
     @EventHandler
     public void onHunterItemUse(PlayerInteractEvent e) {
 
-        Player pl = e.getPlayer();
-        UUID uuid = pl.getUniqueId();
-
-        if (pl.getInventory().getItemInMainHand().getType() == Material.AIR) return;
-        if (pl.getGameMode() == GameMode.CREATIVE) return;
-
-        // annoying 1.9 feature which makes the event run twice, once for each hand
-        if (e.getHand() != EquipmentSlot.HAND) return;
-        if (e.getAction() != Action.RIGHT_CLICK_AIR && e.getAction() != Action.RIGHT_CLICK_BLOCK) return;
-
-        // todo: scrying orb is bugged
-        if (pl.getInventory().getItemInMainHand().isSimilar(HunterShop.scryingOrb())) {
-
-            // prevent player's from using a hunter item in combat
-            if (RunicCore.getCombatManager().getPlayersInCombat().containsKey(uuid)) {
-                pl.sendMessage(ChatColor.RED + "You can't use that in combat!");
-                return;
-            }
-
-            ItemRemover.takeItem(pl, HunterShop.scryingOrb(), 1);
-            pl.sendMessage(ChatColor.YELLOW + "Enter a player name in the chat.");
-            chatters.put(pl.getUniqueId(), HunterShop.scryingOrb());
-            // remove item
-        } else if (pl.getInventory().getItemInMainHand().isSimilar(HunterShop.trackingScroll())) {
-
-            // prevent player's from using a hunter item in combat
-            if (RunicCore.getCombatManager().getPlayersInCombat().containsKey(uuid)) {
-                pl.sendMessage(ChatColor.RED + "You can't use that in combat!");
-                return;
-            }
-
-            ItemRemover.takeItem(pl, HunterShop.trackingScroll(), 1);
-            pl.sendMessage(ChatColor.YELLOW + "Enter a player name in the chat.");
-            chatters.put(pl.getUniqueId(), HunterShop.trackingScroll());
-            // remove item
-            // todo: add cooldown
-        } else if (pl.getInventory().getItemInMainHand().isSimilar(HunterShop.trackingCompass())) {
-
-            // prevent player's from using a hunter item in combat
-            if (RunicCore.getCombatManager().getPlayersInCombat().containsKey(uuid)) {
-                pl.sendMessage(ChatColor.RED + "You can't use that in combat!");
-                return;
-            }
-
-            pl.sendMessage(ChatColor.YELLOW + "Enter a player name in the chat.");
-            chatters.put(pl.getUniqueId(), HunterShop.trackingCompass());
-        }
+//        Player pl = e.getPlayer();
+//        UUID uuid = pl.getUniqueId();
+//
+//        if (pl.getInventory().getItemInMainHand().getType() == Material.AIR) return;
+//        if (pl.getGameMode() == GameMode.CREATIVE) return;
+//
+//        // annoying 1.9 feature which makes the event run twice, once for each hand
+//        if (e.getHand() != EquipmentSlot.HAND) return;
+//        if (e.getAction() != Action.RIGHT_CLICK_AIR && e.getAction() != Action.RIGHT_CLICK_BLOCK) return;
+//
+//        // todo: scrying orb is bugged
+//        if (pl.getInventory().getItemInMainHand().isSimilar(HunterShop.scryingOrb())) {
+//
+//            // prevent player's from using a hunter item in combat
+//            if (RunicCore.getCombatManager().getPlayersInCombat().containsKey(uuid)) {
+//                pl.sendMessage(ChatColor.RED + "You can't use that in combat!");
+//                return;
+//            }
+//
+//            ItemRemover.takeItem(pl, HunterShop.scryingOrb(), 1);
+//            pl.sendMessage(ChatColor.YELLOW + "Enter a player name in the chat.");
+//            chatters.put(pl.getUniqueId(), HunterShop.scryingOrb());
+//            // remove item
+//        } else if (pl.getInventory().getItemInMainHand().isSimilar(HunterShop.trackingScroll())) {
+//
+//            // prevent player's from using a hunter item in combat
+//            if (RunicCore.getCombatManager().getPlayersInCombat().containsKey(uuid)) {
+//                pl.sendMessage(ChatColor.RED + "You can't use that in combat!");
+//                return;
+//            }
+//
+//            ItemRemover.takeItem(pl, HunterShop.trackingScroll(), 1);
+//            pl.sendMessage(ChatColor.YELLOW + "Enter a player name in the chat.");
+//            chatters.put(pl.getUniqueId(), HunterShop.trackingScroll());
+//            // remove item
+//            // todo: add cooldown
+//        } else if (pl.getInventory().getItemInMainHand().isSimilar(HunterShop.trackingCompass())) {
+//
+//            // prevent player's from using a hunter item in combat
+//            if (RunicCore.getCombatManager().getPlayersInCombat().containsKey(uuid)) {
+//                pl.sendMessage(ChatColor.RED + "You can't use that in combat!");
+//                return;
+//            }
+//
+//            pl.sendMessage(ChatColor.YELLOW + "Enter a player name in the chat.");
+//            chatters.put(pl.getUniqueId(), HunterShop.trackingCompass());
+//        }
     }
 
     @EventHandler
     public void onPlayerChat(AsyncPlayerChatEvent e) {
-        if (!chatters.containsKey(e.getPlayer().getUniqueId())) return;
-        e.setCancelled(true);
-        Player pl = e.getPlayer();
-
-        Player toLookup;
-        if (Bukkit.getPlayer(e.getMessage()) == null) {
-            pl.sendMessage(ChatColor.RED + "You must enter a valid player.");
-            return;
-        } else {
-            toLookup = Bukkit.getPlayer(e.getMessage());
-        }
-
-        if (chatters.get(pl.getUniqueId()).isSimilar(HunterShop.scryingOrb())) {
-            lookupStats(pl, toLookup);
-        } else if (chatters.get(pl.getUniqueId()).isSimilar(HunterShop.trackingScroll())) {
-            lookupLocation(pl, toLookup);
-        } else if (chatters.get(pl.getUniqueId()).isSimilar(HunterShop.trackingCompass())) {
-            lookupLocation(pl, toLookup);
-        }
-
-        chatters.remove(pl.getUniqueId());
+//        if (!chatters.containsKey(e.getPlayer().getUniqueId())) return;
+//        e.setCancelled(true);
+//        Player pl = e.getPlayer();
+//
+//        Player toLookup;
+//        if (Bukkit.getPlayer(e.getMessage()) == null) {
+//            pl.sendMessage(ChatColor.RED + "You must enter a valid player.");
+//            return;
+//        } else {
+//            toLookup = Bukkit.getPlayer(e.getMessage());
+//        }
+//
+//        if (chatters.get(pl.getUniqueId()).isSimilar(HunterShop.scryingOrb())) {
+//            lookupStats(pl, toLookup);
+//        } else if (chatters.get(pl.getUniqueId()).isSimilar(HunterShop.trackingScroll())) {
+//            lookupLocation(pl, toLookup);
+//        } else if (chatters.get(pl.getUniqueId()).isSimilar(HunterShop.trackingCompass())) {
+//            lookupLocation(pl, toLookup);
+//        }
+//
+//        chatters.remove(pl.getUniqueId());
     }
 
     private void lookupStats(Player pl, Player toLookup) {

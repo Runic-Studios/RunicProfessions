@@ -11,7 +11,7 @@ import com.runicrealms.plugin.professions.crafting.cooking.CookingListener;
 import com.runicrealms.plugin.professions.crafting.enchanter.EnchantListener;
 import com.runicrealms.plugin.professions.crafting.hunter.HunterCache;
 import com.runicrealms.plugin.professions.crafting.hunter.HunterListener;
-import com.runicrealms.plugin.professions.crafting.hunter.HunterShopCMD;
+import com.runicrealms.plugin.professions.crafting.hunter.HunterShop;
 import com.runicrealms.plugin.professions.crafting.hunter.HunterShopListener;
 import com.runicrealms.plugin.professions.crafting.jeweler.JewelShopCMD;
 import com.runicrealms.plugin.professions.crafting.jeweler.JewelShopListener;
@@ -32,6 +32,9 @@ public final class RunicProfessions extends JavaPlugin {
     private static ProfManager profManager;
     private static HunterCache hunterCache;
 
+    // shops
+    private static HunterShop hunterShop;
+
     public static RunicProfessions getInstance() {
         return plugin;
     }
@@ -42,11 +45,19 @@ public final class RunicProfessions extends JavaPlugin {
         return hunterCache;
     }
 
+    // getters for shops
+    public static HunterShop getHunterShop() {
+        return hunterShop;
+    }
+
     @Override
     public void onEnable() {
         plugin = this;
         profManager = new ProfManager();
         hunterCache = new HunterCache();
+
+        // shops
+        hunterShop = new HunterShop();
 
         // register command
         getCommand("gathertool").setExecutor(new GathertoolGive());
@@ -55,9 +66,6 @@ public final class RunicProfessions extends JavaPlugin {
 
         // gem removal shop
         getCommand("jewelmaster").setExecutor(new JewelShopCMD());
-
-        // hunter shop
-        getCommand("huntershop").setExecutor(new HunterShopCMD());
 
         this.registerEvents();
 
@@ -69,6 +77,9 @@ public final class RunicProfessions extends JavaPlugin {
         plugin.saveConfig();
         plugin = null;
         profManager = null;
+
+        // shops
+        hunterShop = null;
     }
 
     private void registerEvents() {
