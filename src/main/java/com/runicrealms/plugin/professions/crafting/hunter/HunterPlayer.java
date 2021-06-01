@@ -161,7 +161,7 @@ public class HunterPlayer {
 
         if (hunterMobs.isEmpty()) {
             this.player.closeInventory();
-            this.player.sendMessage(ColorUtil.format("&r&cYou are not high enough level to accept any tasks from this area!"));
+            this.player.sendMessage(ColorUtil.format("&r&cYour hunter level is too low to accept any tasks from this area!"));
             return;
         }
 
@@ -172,7 +172,7 @@ public class HunterPlayer {
         this.setTask(mob, 0, rand.nextInt(15, 30 + 1)); //+1 because the method is dumb and gens an index
 
         this.player.sendMessage(ColorUtil.format("&r&aYour target is: &r&f" + this.task.getName()));
-        this.player.sendMessage(ColorUtil.format("&r&aPlease defeat it &r&f" + this.maxHunterKills + " &r&atimes"));
+        this.player.sendMessage(ColorUtil.format("&r&aYou must hunt it &r&f" + this.maxHunterKills + " &r&atimes!"));
     }
 
     private List<String> getRegions() {
