@@ -4,7 +4,7 @@ import com.runicrealms.plugin.RunicCore;
 import com.runicrealms.plugin.RunicProfessions;
 import com.runicrealms.plugin.item.GUIMenu.ItemGUI;
 import com.runicrealms.plugin.item.GUIMenu.OptionClickEvent;
-import com.runicrealms.plugin.item.shops.Shop;
+import com.runicrealms.plugin.item.shops.RunicShop;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -26,9 +26,9 @@ public class JewelShopListener implements Listener {
 
         if (!(e.getWhoClicked() instanceof Player)) return;
         Player pl = (Player) e.getWhoClicked();
-        if (RunicCore.getShopManager().getPlayerShop(pl) == null) return;
-        if (!(RunicCore.getShopManager().getPlayerShop(pl) instanceof JewelMaster)) return;
-        JewelMaster shop = (JewelMaster) RunicCore.getShopManager().getPlayerShop(pl);
+        if (RunicCore.getRunicShopManager().getPlayerShop(pl) == null) return;
+        if (!(RunicCore.getRunicShopManager().getPlayerShop(pl) instanceof JewelMaster)) return;
+        JewelMaster shop = (JewelMaster) RunicCore.getRunicShopManager().getPlayerShop(pl);
         String title = ChatColor.translateAlternateColorCodes('&', shop.getTitle());
 
         // verify custom GUI
@@ -75,14 +75,14 @@ public class JewelShopListener implements Listener {
     public void onShopClose(InventoryCloseEvent e) {
         if (!(e.getPlayer() instanceof Player)) return;
         Player pl = (Player) e.getPlayer();
-        if (RunicCore.getShopManager().getPlayerShop(pl) == null) return;
-        Shop shop = RunicCore.getShopManager().getPlayerShop(pl);
-        String title = ChatColor.translateAlternateColorCodes('&', shop.getTitle());
-        if (shop instanceof JewelMaster && title.equals(e.getView().getTitle())) {
+        if (RunicCore.getRunicShopManager().getPlayerShop(pl) == null) return;
+        RunicShop runicShop = RunicCore.getRunicShopManager().getPlayerShop(pl);
+        String title = ChatColor.translateAlternateColorCodes('&', runicShop.getTitle());
+        if (runicShop instanceof JewelMaster && title.equals(e.getView().getTitle())) {
             for (int i = 0; i < 1; i++) {
                 if (e.getInventory().getItem(i) == null) continue;
                 ItemStack itemStack = e.getInventory().getItem(i);
-                if (((JewelMaster) shop).getStoredItems().get(pl.getUniqueId()).contains(itemStack)) continue;
+                if (((JewelMaster) runicShop).getStoredItems().get(pl.getUniqueId()).contains(itemStack)) continue;
                 if (e.getPlayer().getInventory().firstEmpty() != -1) {
                     e.getPlayer().getInventory().addItem(itemStack);
                 } else {

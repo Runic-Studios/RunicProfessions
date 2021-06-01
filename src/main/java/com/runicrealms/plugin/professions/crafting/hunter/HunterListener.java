@@ -4,28 +4,24 @@ import com.runicrealms.plugin.ProfessionEnum;
 import com.runicrealms.plugin.RunicCore;
 import com.runicrealms.plugin.RunicProfessions;
 import com.runicrealms.plugin.api.RunicCoreAPI;
-import com.runicrealms.plugin.attributes.AttributeUtil;
 import com.runicrealms.plugin.character.api.CharacterLoadEvent;
 import com.runicrealms.plugin.database.PlayerMongoData;
 import com.runicrealms.plugin.database.PlayerMongoDataSection;
 import com.runicrealms.plugin.database.event.CacheSaveEvent;
 import com.runicrealms.plugin.database.event.CacheSaveReason;
 import com.runicrealms.plugin.events.MobDamageEvent;
-import com.runicrealms.plugin.item.GearScanner;
 import com.runicrealms.plugin.item.util.ItemRemover;
 import com.runicrealms.plugin.player.cache.PlayerCache;
 import com.runicrealms.plugin.professions.event.ProfessionChangeEvent;
+import com.runicrealms.runicitems.item.event.RunicItemGenericTriggerEvent;
 import io.lumine.xikage.mythicmobs.api.bukkit.events.MythicMobDeathEvent;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
-import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -108,98 +104,86 @@ public class HunterListener implements Listener {
     }
 
     @EventHandler
-    public void onHunterItemUse(PlayerInteractEvent e) {
+    public void onHunterItemUse(RunicItemGenericTriggerEvent e) {
+        if (!isHunterItem(e.getItem().getTemplateId())) return;
+        String templateID = e.getItem().getTemplateId();
+        Player player = e.getPlayer();
+        if (RunicCoreAPI.isInCombat(player)) {
+            player.sendMessage(ChatColor.RED + "You can't use that in combat!");
+            return;
+        }
+        if (templateID.equals(HunterItems.SCRYING_ORB.getTemplateId())) {
+            ItemRemover.takeItem(player, HunterItems.SCRYING_ORB_ITEMSTACK, 1);
+            player.sendMessage(ChatColor.YELLOW + "Enter a player name in the chat.");
+            chatters.put(player.getUniqueId(), HunterItems.SCRYING_ORB_ITEMSTACK);
+        } else if (templateID.equals(HunterItems.SHADOWMELD_POTION.getTemplateId())) {
+            ItemRemover.takeItem(player, HunterItems.SHADOWMELD_POTION_ITEMSTACK, 1);
+            shadowmeld(player);
+        } else if (templateID.equals(HunterItems.TELEPORT_OUTLAW_GUILD.getTemplateId())) {
+            // todo
+        } else if (templateID.equals(HunterItems.TRACKING_SCROLL.getTemplateId())) {
+            ItemRemover.takeItem(player, HunterItems.TRACKING_SCROLL_ITEMSTACK, 1);
+            player.sendMessage(ChatColor.YELLOW + "Enter a player name in the chat.");
+            chatters.put(player.getUniqueId(), HunterItems.TRACKING_SCROLL_ITEMSTACK);
+        } else if (templateID.equals(HunterItems.TRACKING_COMPASS.getTemplateId())) {
+            player.sendMessage(ChatColor.YELLOW + "Enter a player name in the chat.");
+            chatters.put(player.getUniqueId(), HunterItems.TRACKING_COMPASS_ITEMSTACK);
+        }
+    }
 
-//        Player pl = e.getPlayer();
-//        UUID uuid = pl.getUniqueId();
-//
-//        if (pl.getInventory().getItemInMainHand().getType() == Material.AIR) return;
-//        if (pl.getGameMode() == GameMode.CREATIVE) return;
-//
-//        // annoying 1.9 feature which makes the event run twice, once for each hand
-//        if (e.getHand() != EquipmentSlot.HAND) return;
-//        if (e.getAction() != Action.RIGHT_CLICK_AIR && e.getAction() != Action.RIGHT_CLICK_BLOCK) return;
-//
-//        // todo: scrying orb is bugged
-//        if (pl.getInventory().getItemInMainHand().isSimilar(HunterShop.scryingOrb())) {
-//
-//            // prevent player's from using a hunter item in combat
-//            if (RunicCore.getCombatManager().getPlayersInCombat().containsKey(uuid)) {
-//                pl.sendMessage(ChatColor.RED + "You can't use that in combat!");
-//                return;
-//            }
-//
-//            ItemRemover.takeItem(pl, HunterShop.scryingOrb(), 1);
-//            pl.sendMessage(ChatColor.YELLOW + "Enter a player name in the chat.");
-//            chatters.put(pl.getUniqueId(), HunterShop.scryingOrb());
-//            // remove item
-//        } else if (pl.getInventory().getItemInMainHand().isSimilar(HunterShop.trackingScroll())) {
-//
-//            // prevent player's from using a hunter item in combat
-//            if (RunicCore.getCombatManager().getPlayersInCombat().containsKey(uuid)) {
-//                pl.sendMessage(ChatColor.RED + "You can't use that in combat!");
-//                return;
-//            }
-//
-//            ItemRemover.takeItem(pl, HunterShop.trackingScroll(), 1);
-//            pl.sendMessage(ChatColor.YELLOW + "Enter a player name in the chat.");
-//            chatters.put(pl.getUniqueId(), HunterShop.trackingScroll());
-//            // remove item
-//            // todo: add cooldown
-//        } else if (pl.getInventory().getItemInMainHand().isSimilar(HunterShop.trackingCompass())) {
-//
-//            // prevent player's from using a hunter item in combat
-//            if (RunicCore.getCombatManager().getPlayersInCombat().containsKey(uuid)) {
-//                pl.sendMessage(ChatColor.RED + "You can't use that in combat!");
-//                return;
-//            }
-//
-//            pl.sendMessage(ChatColor.YELLOW + "Enter a player name in the chat.");
-//            chatters.put(pl.getUniqueId(), HunterShop.trackingCompass());
-//        }
+    private boolean isHunterItem(String templateID) {
+        return templateID.equals(HunterItems.SCRYING_ORB.getTemplateId())
+                || templateID.equals(HunterItems.SHADOWMELD_POTION.getTemplateId())
+                || templateID.equals(HunterItems.TELEPORT_OUTLAW_GUILD.getTemplateId())
+                || templateID.equals(HunterItems.TRACKING_SCROLL.getTemplateId())
+                || templateID.equals(HunterItems.TRACKING_COMPASS.getTemplateId());
     }
 
     @EventHandler
     public void onPlayerChat(AsyncPlayerChatEvent e) {
-//        if (!chatters.containsKey(e.getPlayer().getUniqueId())) return;
-//        e.setCancelled(true);
-//        Player pl = e.getPlayer();
-//
-//        Player toLookup;
-//        if (Bukkit.getPlayer(e.getMessage()) == null) {
-//            pl.sendMessage(ChatColor.RED + "You must enter a valid player.");
-//            return;
-//        } else {
-//            toLookup = Bukkit.getPlayer(e.getMessage());
-//        }
-//
-//        if (chatters.get(pl.getUniqueId()).isSimilar(HunterShop.scryingOrb())) {
-//            lookupStats(pl, toLookup);
-//        } else if (chatters.get(pl.getUniqueId()).isSimilar(HunterShop.trackingScroll())) {
-//            lookupLocation(pl, toLookup);
-//        } else if (chatters.get(pl.getUniqueId()).isSimilar(HunterShop.trackingCompass())) {
-//            lookupLocation(pl, toLookup);
-//        }
-//
-//        chatters.remove(pl.getUniqueId());
+        if (!chatters.containsKey(e.getPlayer().getUniqueId())) return;
+        e.setCancelled(true);
+        Player pl = e.getPlayer();
+        Player toLookup;
+
+        if (Bukkit.getPlayer(e.getMessage()) == null) {
+            pl.sendMessage(ChatColor.RED + "You must enter a valid player.");
+            return;
+        } else {
+            toLookup = Bukkit.getPlayer(e.getMessage());
+        }
+
+        if (toLookup == null) {
+            pl.sendMessage(ChatColor.RED + "Error: player not found");
+            return;
+        }
+
+        if (chatters.get(pl.getUniqueId()).isSimilar(HunterItems.SCRYING_ORB_ITEMSTACK)) {
+            lookupStats(pl, toLookup);
+        } else if (chatters.get(pl.getUniqueId()).isSimilar(HunterItems.TRACKING_SCROLL_ITEMSTACK)) {
+            lookupLocation(pl, toLookup);
+        } else if (chatters.get(pl.getUniqueId()).isSimilar(HunterItems.TRACKING_COMPASS_ITEMSTACK)) {
+            lookupLocation(pl, toLookup);
+        }
+
+        chatters.remove(pl.getUniqueId());
     }
 
-    private void lookupStats(Player pl, Player toLookup) {
+    private void lookupStats(Player player, Player toLookup) {
         int maxHealth = (int) toLookup.getMaxHealth();
-        int maxMana = RunicCoreAPI.getPlayerCache(pl).getMaxMana();
-        int minDamage = GearScanner.getMinDamage(toLookup);
-        int maxDamage = GearScanner.getMaxDamage(toLookup);
-//        int healingBonus = GearScanner.getHealingBoost(toLookup);
-//        int magicBonus = GearScanner.getMagicBoost(toLookup);
-//        int shield = GearScanner.getShieldAmt(toLookup);
-        pl.sendMessage
+        int dexterity = RunicCoreAPI.getPlayerDexterity(player.getUniqueId());
+        int intelligence = RunicCoreAPI.getPlayerIntelligence(player.getUniqueId());
+        int strength = RunicCoreAPI.getPlayerStrength(player.getUniqueId());
+        int vitality = RunicCoreAPI.getPlayerVitality(player.getUniqueId());
+        int wisdom = RunicCoreAPI.getPlayerWisdom(player.getUniqueId());
+        player.sendMessage
                 (ChatColor.translateAlternateColorCodes('&', "&e" + toLookup.getName() + "'s Character Stats:" +
-                        "\n&c❤ (Health) &etotal: " + maxHealth +
-                        "\n&3✸ (Mana) &etotal: " + maxMana +
-                        "\n&c⚔ (DMG) &ebonus: " + minDamage + "-" + maxDamage));
-//                        "\n&a✦ (Heal) &ebonus: " + healingBonus +
-//                        "\n&3ʔ (Magic) &ebonus: " + magicBonus +
-//                        "\n&f■ (Shield) &ebonus: " + shield));
+                        "\n&c❤ (Health): " + maxHealth +
+                        "\n&e✦ (DEX): " + dexterity +
+                        "\n&3ʔ (INT): " + intelligence +
+                        "\n&c⚔ (STR): " + strength +
+                        "\n&f■ (VIT): " + vitality +
+                        "\n&a✸ (WIS): " + wisdom));
     }
 
     private void lookupLocation(Player pl, Player toLookup) {
@@ -215,27 +199,27 @@ public class HunterListener implements Listener {
     @EventHandler
     public void onPotionUse(PlayerItemConsumeEvent e) {
 
-        if (e.getItem().getType() == Material.POTION) {
-
-            Player pl = e.getPlayer();
-            boolean isShadowmeld = AttributeUtil.getCustomString(e.getItem(), "potion.shadowmeld").equals("true");
-
-            // remove glass bottle from inventory, main hand or offhand
-            new BukkitRunnable() {
-                @Override
-                public void run() {
-                    if (pl.getInventory().getItemInOffHand().getType() == Material.GLASS_BOTTLE) {
-                        pl.getInventory().setItemInOffHand(new ItemStack(Material.AIR));
-                    } else {
-                        pl.getInventory().setItemInMainHand(new ItemStack(Material.AIR));
-                    }
-                }
-            }.runTaskLaterAsynchronously(RunicProfessions.getInstance(), 1L);
-
-            if (isShadowmeld) {
-                shadowmeld(pl);
-            }
-        }
+//        if (e.getItem().getType() == Material.POTION) {
+//
+//            Player pl = e.getPlayer();
+//            boolean isShadowmeld = AttributeUtil.getCustomString(e.getItem(), "potion.shadowmeld").equals("true");
+//
+//            // remove glass bottle from inventory, main hand or offhand
+//            new BukkitRunnable() {
+//                @Override
+//                public void run() {
+//                    if (pl.getInventory().getItemInOffHand().getType() == Material.GLASS_BOTTLE) {
+//                        pl.getInventory().setItemInOffHand(new ItemStack(Material.AIR));
+//                    } else {
+//                        pl.getInventory().setItemInMainHand(new ItemStack(Material.AIR));
+//                    }
+//                }
+//            }.runTaskLaterAsynchronously(RunicProfessions.getInstance(), 1L);
+//
+//            if (isShadowmeld) {
+//                shadowmeld(pl);
+//            }
+//        }
     }
 
     private static final double MOVE_CONSTANT = 0.6;

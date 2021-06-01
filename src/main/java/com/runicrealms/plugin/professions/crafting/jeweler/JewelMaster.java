@@ -4,7 +4,7 @@ import com.runicrealms.plugin.attributes.AttributeUtil;
 import com.runicrealms.plugin.enums.ArmorSlotEnum;
 import com.runicrealms.plugin.item.GUIMenu.ItemGUI;
 import com.runicrealms.plugin.item.LoreGenerator;
-import com.runicrealms.plugin.item.shops.Shop;
+import com.runicrealms.plugin.item.shops.RunicShop;
 import com.runicrealms.plugin.item.util.ItemRemover;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
@@ -15,7 +15,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import java.util.*;
 
 // todo: test on items w/ two gem slots
-public class JewelMaster extends Shop {
+public class JewelMaster extends RunicShop {
 
     private static final int PRICE = 32;
     private final HashMap<UUID, List<ItemStack>> storedItems; // keep track of items stored in menu

@@ -22,8 +22,8 @@ public class JewelShopCMD implements CommandExecutor {
         if (!sender.isOp()) return false;
 
         pl.playSound(pl.getLocation(), Sound.UI_BUTTON_CLICK, 0.5f, 1.0f);
-        RunicCore.getShopManager().setPlayerShop(pl, new JewelMaster(pl));
-        ItemGUI jewelShop = ((RunicCore.getShopManager().getPlayerShop(pl))).getItemGUI();
+        RunicCore.getRunicShopManager().setPlayerShop(pl, new JewelMaster(pl));
+        ItemGUI jewelShop = ((RunicCore.getRunicShopManager().getPlayerShop(pl))).getItemGUI();
         jewelShop.open(pl);
         return true;
     }
