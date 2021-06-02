@@ -10,16 +10,19 @@ import com.runicrealms.plugin.database.PlayerMongoDataSection;
 import com.runicrealms.plugin.database.event.CacheSaveEvent;
 import com.runicrealms.plugin.database.event.CacheSaveReason;
 import com.runicrealms.plugin.events.MobDamageEvent;
+import com.runicrealms.plugin.events.SpellDamageEvent;
+import com.runicrealms.plugin.events.WeaponDamageEvent;
 import com.runicrealms.plugin.item.util.ItemRemover;
 import com.runicrealms.plugin.player.cache.PlayerCache;
 import com.runicrealms.plugin.professions.event.ProfessionChangeEvent;
 import com.runicrealms.runicitems.item.event.RunicItemGenericTriggerEvent;
 import io.lumine.xikage.mythicmobs.api.bukkit.events.MythicMobDeathEvent;
+import net.minecraft.server.v1_16_R3.PacketPlayOutPlayerInfo;
 import org.bukkit.*;
+import org.bukkit.craftbukkit.v1_16_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.inventory.ItemStack;
@@ -31,6 +34,8 @@ import java.util.Map;
 import java.util.UUID;
 
 public class HunterListener implements Listener {
+
+    private static final Location HUNTERS_GUILD = new Location(Bukkit.getWorld("Alterra"), -6.5, 31, -530.5, 180, 0);
     private final HashSet<UUID> cloakers; // for shadowmeld potion
     private final HashSet<UUID> hasDealtDamage; // for shadowmeld potion
     private final HashMap<UUID, ItemStack> chatters; // for listening to player chat
@@ -103,6 +108,9 @@ public class HunterListener implements Listener {
         player.addKill();
     }
 
+    /*
+    Teleport scrolls are handled in core.
+     */
     @EventHandler
     public void onHunterItemUse(RunicItemGenericTriggerEvent e) {
         if (!isHunterItem(e.getItem().getTemplateId())) return;
@@ -113,16 +121,14 @@ public class HunterListener implements Listener {
             return;
         }
         if (templateID.equals(HunterItems.SCRYING_ORB.getTemplateId())) {
-            ItemRemover.takeItem(player, HunterItems.SCRYING_ORB_ITEMSTACK, 1);
+            ItemRemover.takeItem(player, e.getItemStack(), 1);
             player.sendMessage(ChatColor.YELLOW + "Enter a player name in the chat.");
             chatters.put(player.getUniqueId(), HunterItems.SCRYING_ORB_ITEMSTACK);
         } else if (templateID.equals(HunterItems.SHADOWMELD_POTION.getTemplateId())) {
-            ItemRemover.takeItem(player, HunterItems.SHADOWMELD_POTION_ITEMSTACK, 1);
+            ItemRemover.takeItem(player, e.getItemStack(), 1);
             shadowmeld(player);
-        } else if (templateID.equals(HunterItems.TELEPORT_OUTLAW_GUILD.getTemplateId())) {
-            // todo
         } else if (templateID.equals(HunterItems.TRACKING_SCROLL.getTemplateId())) {
-            ItemRemover.takeItem(player, HunterItems.TRACKING_SCROLL_ITEMSTACK, 1);
+            ItemRemover.takeItem(player, e.getItemStack(), 1);
             player.sendMessage(ChatColor.YELLOW + "Enter a player name in the chat.");
             chatters.put(player.getUniqueId(), HunterItems.TRACKING_SCROLL_ITEMSTACK);
         } else if (templateID.equals(HunterItems.TRACKING_COMPASS.getTemplateId())) {
@@ -252,7 +258,14 @@ public class HunterListener implements Listener {
 
                 if (count >= 5) {
                     this.cancel();
-                    // poof!
+                    // hide the player, prevent them from disappearing in tab
+                    PacketPlayOutPlayerInfo packet =
+                            new PacketPlayOutPlayerInfo(PacketPlayOutPlayerInfo.EnumPlayerInfoAction.ADD_PLAYER,
+                                    ((CraftPlayer)pl).getHandle());
+                    for (Player ps : RunicCore.getCacheManager().getLoadedPlayers()) {
+                        ps.hidePlayer(RunicProfessions.getInstance(), pl);
+                        ((CraftPlayer)ps).getHandle().playerConnection.sendPacket(packet);
+                    }
                     cloakers.add(pl.getUniqueId());
                     pl.getWorld().playSound(pl.getLocation(), Sound.ENTITY_ENDER_DRAGON_FLAP, 0.5f, 0.5f);
                     pl.getWorld().spawnParticle(Particle.REDSTONE, pl.getEyeLocation(), 25, 0.5f, 0.5f, 0.5f,
@@ -311,12 +324,23 @@ public class HunterListener implements Listener {
      * Reveal the player after dealing damage
      */
     @EventHandler
-    public void onDamage(EntityDamageByEntityEvent e) {
-        if (!(e.getDamager() instanceof Player)) return;
-        Player pl = (Player) e.getDamager();
-        if (!cloakers.contains(pl.getUniqueId())) return;
-        if (hasDealtDamage.contains(pl.getUniqueId())) return;
-        hasDealtDamage.add(pl.getUniqueId());
+    public void onSpellDamage(SpellDamageEvent e) {
+        if (!(cloakers.contains(e.getPlayer().getUniqueId())
+                || cloakers.contains(e.getEntity().getUniqueId()))) return;
+        if (cloakers.contains(e.getPlayer().getUniqueId()))
+            hasDealtDamage.add(e.getPlayer().getUniqueId());
+        else
+            hasDealtDamage.add(e.getEntity().getUniqueId());
+    }
+
+    @EventHandler
+    public void onWeaponDamage(WeaponDamageEvent e) {
+        if (!(cloakers.contains(e.getPlayer().getUniqueId())
+                || cloakers.contains(e.getEntity().getUniqueId()))) return;
+        if (cloakers.contains(e.getPlayer().getUniqueId()))
+            hasDealtDamage.add(e.getPlayer().getUniqueId());
+        else
+            hasDealtDamage.add(e.getEntity().getUniqueId());
     }
 
     /**
