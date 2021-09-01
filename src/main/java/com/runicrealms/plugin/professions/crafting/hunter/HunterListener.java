@@ -36,6 +36,7 @@ import java.util.UUID;
 public class HunterListener implements Listener {
 
     private static final Location HUNTERS_GUILD = new Location(Bukkit.getWorld("Alterra"), -6.5, 31, -530.5, 180, 0);
+    private static final double MOVE_CONSTANT = 0.6;
     private final HashSet<UUID> cloakers; // for shadowmeld potion
     private final HashSet<UUID> hasDealtDamage; // for shadowmeld potion
     private final HashMap<UUID, ItemStack> chatters; // for listening to player chat
@@ -228,8 +229,6 @@ public class HunterListener implements Listener {
 //        }
     }
 
-    private static final double MOVE_CONSTANT = 0.6;
-
     private void shadowmeld(Player pl) {
         double timer_initX = Math.round(pl.getLocation().getX() * MOVE_CONSTANT);
         double timer_initY = Math.round(pl.getLocation().getY() * MOVE_CONSTANT);
@@ -261,10 +260,10 @@ public class HunterListener implements Listener {
                     // hide the player, prevent them from disappearing in tab
                     PacketPlayOutPlayerInfo packet =
                             new PacketPlayOutPlayerInfo(PacketPlayOutPlayerInfo.EnumPlayerInfoAction.ADD_PLAYER,
-                                    ((CraftPlayer)pl).getHandle());
+                                    ((CraftPlayer) pl).getHandle());
                     for (Player ps : RunicCore.getCacheManager().getLoadedPlayers()) {
                         ps.hidePlayer(RunicProfessions.getInstance(), pl);
-                        ((CraftPlayer)ps).getHandle().playerConnection.sendPacket(packet);
+                        ((CraftPlayer) ps).getHandle().playerConnection.sendPacket(packet);
                     }
                     cloakers.add(pl.getUniqueId());
                     pl.getWorld().playSound(pl.getLocation(), Sound.ENTITY_ENDER_DRAGON_FLAP, 0.5f, 0.5f);
@@ -326,21 +325,21 @@ public class HunterListener implements Listener {
     @EventHandler
     public void onSpellDamage(SpellDamageEvent e) {
         if (!(cloakers.contains(e.getPlayer().getUniqueId())
-                || cloakers.contains(e.getEntity().getUniqueId()))) return;
+                || cloakers.contains(e.getVictim().getUniqueId()))) return;
         if (cloakers.contains(e.getPlayer().getUniqueId()))
             hasDealtDamage.add(e.getPlayer().getUniqueId());
         else
-            hasDealtDamage.add(e.getEntity().getUniqueId());
+            hasDealtDamage.add(e.getVictim().getUniqueId());
     }
 
     @EventHandler
     public void onWeaponDamage(WeaponDamageEvent e) {
         if (!(cloakers.contains(e.getPlayer().getUniqueId())
-                || cloakers.contains(e.getEntity().getUniqueId()))) return;
+                || cloakers.contains(e.getVictim().getUniqueId()))) return;
         if (cloakers.contains(e.getPlayer().getUniqueId()))
             hasDealtDamage.add(e.getPlayer().getUniqueId());
         else
-            hasDealtDamage.add(e.getEntity().getUniqueId());
+            hasDealtDamage.add(e.getVictim().getUniqueId());
     }
 
     /**

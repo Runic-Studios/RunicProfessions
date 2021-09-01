@@ -12,13 +12,29 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import java.util.*;
-import java.util.concurrent.ThreadLocalRandom;
+import java.util.Arrays;
+import java.util.LinkedHashMap;
+import java.util.Objects;
 
 public class EnchantingTableMenu extends Workstation {
 
     public EnchantingTableMenu(Player pl) {
         setupWorkstation(pl);
+    }
+
+    public static ItemStack partySummonScroll() {
+        ItemStack item = new ItemStack(Material.PURPLE_DYE);
+        ItemMeta meta = item.getItemMeta();
+        Objects.requireNonNull(meta).setDisplayName(ChatColor.WHITE + "Party Summon Scroll");
+        meta.setLore(Arrays.asList(
+                "",
+                ChatColor.GOLD + "" + ChatColor.BOLD + "RIGHT CLICK " + ChatColor.GREEN + "Summon Party",
+                ChatColor.GRAY + "Summon your party to you!",
+                "",
+                ChatColor.WHITE + "Crafted",
+                ChatColor.GRAY + "Consumable"));
+        item.setItemMeta(meta);
+        return item;
     }
 
     @Override
@@ -179,7 +195,7 @@ public class EnchantingTableMenu extends Workstation {
 
                 // craft item based on experience and reagent amount
                 super.startCrafting(pl, reqHashMap, 1, reqLevel, event.getCurrentItem().getType(),
-                        meta.getDisplayName(), currentLvl, exp,
+                        currentLvl, exp,
                         ((Damageable) meta).getDamage(), Particle.SPELL_WITCH,
                         Sound.BLOCK_ENCHANTMENT_TABLE_USE, Sound.ENTITY_PLAYER_LEVELUP, slot, mult);
             }
@@ -256,90 +272,62 @@ public class EnchantingTableMenu extends Workstation {
                 false, false, false);
     }
 
+    /**
+     * This...
+     *
+     * @param player
+     * @param amt
+     * @param rate
+     * @param slot
+     */
     @Override
-    public void produceResult(Player pl, Material material, String dispName,
-                              int currentLvl, int amt, int rate, int durability, int someVar) {
-
-        ItemStack craftedItem = determineItem(pl, someVar, material, dispName, durability); // someVar is the slot of the item in the menu.
-
-        // create a new item up to the amount
-        int failCount = 0;
-        for (int i = 0; i < amt; i++) {
-
-            double chance = ThreadLocalRandom.current().nextDouble(0, 100);
-            if (chance <= rate) {
-                // add items to inventory, drop items that couldn't be added
-                HashMap<Integer, ItemStack> leftOvers = pl.getInventory().addItem(craftedItem);
-                for (ItemStack is : leftOvers.values()) {
-                    pl.getWorld().dropItem(pl.getLocation(), is);
-                }
-            } else {
-                failCount = failCount + 1;
-            }
-        }
-
-        // display fail message
-        if (failCount == 0) return;
-        pl.sendMessage(ChatColor.RED + "You fail to craft this item. [x" + failCount + "]");
+    public void produceResult(Player player, int amt, int rate, int slot) {
+        ItemStack itemStack = determineItem(slot);
+        produceResult(player, amt, rate, itemStack);
     }
 
-    private ItemStack determineItem(Player pl, int slot, Material material, String dispName, int durability) {
+    private ItemStack determineItem(int slot) {
         ItemStack item = new ItemStack(Material.STICK);
-        int percent;
-        int profLv = RunicCoreAPI.getPlayerCache(pl).getProfLevel();
-        if (profLv < 30) {
-            percent = 1;
-        } else if (profLv < 50) {
-            percent = 2;
-        } else {
-            percent = 3;
-        }
-        switch (slot) {
-            case 9:
-            case 10:
-            case 11:
-                item = new ItemStack(material);
-                ItemMeta meta = item.getItemMeta();
-                ((Damageable) Objects.requireNonNull(meta)).setDamage(durability);
-
-                ArrayList<String> lore = new ArrayList<>();
-
-                lore.add(ChatColor.GRAY + "Crafting Reagent");
-                meta.setLore(lore);
-                meta.setDisplayName(ChatColor.WHITE + dispName);
-                item.setItemMeta(meta);
-                break;
-            case 12:
-                item = new TeleportScroll(TeleportEnum.AZANA, 0).getItem(); // azana
-                break;
-            case 14:
-                item = new TeleportScroll(TeleportEnum.WINTERVALE, 20).getItem(); // wintervale
-                break;
-            case 16:
-                item = new TeleportScroll(TeleportEnum.ZENYTH, 40).getItem(); // zenyth
-                break;
-            case 18:
-                item = partySummonScroll();
-                break;
-            case 19:
-                item = new TeleportScroll(TeleportEnum.FROSTS_END, 60).getItem(); // frost's end
-                break;
-        }
-        return item;
-    }
-
-    public static ItemStack partySummonScroll() {
-        ItemStack item = new ItemStack(Material.PURPLE_DYE);
-        ItemMeta meta = item.getItemMeta();
-        Objects.requireNonNull(meta).setDisplayName(ChatColor.WHITE + "Party Summon Scroll");
-        meta.setLore(Arrays.asList(
-                "",
-                ChatColor.GOLD + "" + ChatColor.BOLD + "RIGHT CLICK " + ChatColor.GREEN + "Summon Party",
-                ChatColor.GRAY + "Summon your party to you!",
-                "",
-                ChatColor.WHITE + "Crafted",
-                ChatColor.GRAY + "Consumable"));
-        item.setItemMeta(meta);
+//        int percent;
+//        int profLv = RunicCoreAPI.getPlayerCache(pl).getProfLevel();
+//        if (profLv < 30) {
+//            percent = 1;
+//        } else if (profLv < 50) {
+//            percent = 2;
+//        } else {
+//            percent = 3;
+//        }
+//        switch (slot) {
+//            case 9:
+//            case 10:
+//            case 11:
+//                item = new ItemStack(material);
+//                ItemMeta meta = item.getItemMeta();
+//                ((Damageable) Objects.requireNonNull(meta)).setDamage(durability);
+//
+//                ArrayList<String> lore = new ArrayList<>();
+//
+//                lore.add(ChatColor.GRAY + "Crafting Reagent");
+//                meta.setLore(lore);
+//                meta.setDisplayName(ChatColor.WHITE + dispName);
+//                item.setItemMeta(meta);
+//                break;
+//            case 12:
+//                item = new TeleportScroll(TeleportEnum.AZANA, 0).getItem(); // azana
+//                break;
+//            case 14:
+//                item = new TeleportScroll(TeleportEnum.WINTERVALE, 20).getItem(); // wintervale
+//                break;
+//            case 16:
+//                item = new TeleportScroll(TeleportEnum.ZENYTH, 40).getItem(); // zenyth
+//                break;
+//            case 18:
+//                item = partySummonScroll();
+//                break;
+//            case 19:
+//                item = new TeleportScroll(TeleportEnum.FROSTS_END, 60).getItem(); // frost's end
+//                break;
+//        }
         return item;
     }
 }

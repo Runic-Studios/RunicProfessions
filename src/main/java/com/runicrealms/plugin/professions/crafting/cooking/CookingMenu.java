@@ -2,13 +2,16 @@ package com.runicrealms.plugin.professions.crafting.cooking;
 
 import com.runicrealms.plugin.item.GUIMenu.ItemGUI;
 import com.runicrealms.plugin.professions.Workstation;
-import org.bukkit.*;
+import org.bukkit.Material;
+import org.bukkit.Particle;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import java.util.*;
+import java.util.LinkedHashMap;
+import java.util.Objects;
 
 @SuppressWarnings("FieldCanBeLocal")
 public class CookingMenu extends Workstation {
@@ -18,6 +21,14 @@ public class CookingMenu extends Workstation {
 
     public CookingMenu(Player pl) {
         setupWorkstation(pl);
+    }
+
+    public static int getAmbrosiaStewAmt() {
+        return AMBROSIA_STEW_AMT;
+    }
+
+    public static int getStewDuration() {
+        return STEW_DURATION;
     }
 
     @Override
@@ -124,11 +135,14 @@ public class CookingMenu extends Workstation {
                 event.setWillDestroy(true);
 
                 // craft item based on experience and reagent amount
-                super.startCrafting(pl, reqs, 0, 0, event.getCurrentItem().getType(),
-                        meta.getDisplayName(), 0, 0,
-                        ((Damageable) meta).getDamage(), Particle.SMOKE_NORMAL,
-                        Sound.ENTITY_GHAST_SHOOT, Sound.BLOCK_LAVA_EXTINGUISH, event.getSlot(), mult);
-            }});
+                super.startCrafting
+                        (
+                                pl, reqs, 0, 0, event.getCurrentItem().getType(), 0, 0,
+                                ((Damageable) meta).getDamage(), Particle.SMOKE_NORMAL,
+                                Sound.ENTITY_GHAST_SHOOT, Sound.BLOCK_LAVA_EXTINGUISH, event.getSlot(), mult
+                        );
+            }
+        });
 
         return cookingMenu;
     }
@@ -170,18 +184,18 @@ public class CookingMenu extends Workstation {
                 true, false, true);
     }
 
+    /**
+     * This...
+     *
+     * @param player
+     * @param amt
+     * @param rate
+     * @param slot
+     */
     @Override
-    public void produceResult(Player pl, Material material, String dispName,
-                              int currentLvl, int amt, int rate, int durability, int someVar) {
-        for (int i = 0; i < amt; i++) {
-            ItemStack craftedItem = determineItem(someVar);
-            // this ALLOWS cooking items to stack.
-            HashMap<Integer, ItemStack> itemsToAdd = pl.getInventory().addItem(craftedItem);
-            // drop leftover items on the floor
-            for (ItemStack leftOver : itemsToAdd.values()) {
-                pl.getWorld().dropItem(pl.getLocation(), leftOver);
-            }
-        }
+    public void produceResult(Player player, int amt, int rate, int slot) {
+        ItemStack itemStack = determineItem(slot);
+        produceResult(player, amt, rate, itemStack);
     }
 
     private ItemStack determineItem(int slot) {
@@ -196,13 +210,5 @@ public class CookingMenu extends Workstation {
                 return CookingItems.AMBROSIA_STEW_ITEMSTACK;
         }
         return new ItemStack(Material.STONE); // oops
-    }
-
-    public static int getAmbrosiaStewAmt() {
-        return AMBROSIA_STEW_AMT;
-    }
-
-    public static int getStewDuration() {
-        return STEW_DURATION;
     }
 }

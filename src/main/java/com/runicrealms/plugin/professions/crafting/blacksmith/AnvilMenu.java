@@ -3,7 +3,6 @@ package com.runicrealms.plugin.professions.crafting.blacksmith;
 import com.runicrealms.plugin.api.RunicCoreAPI;
 import com.runicrealms.plugin.item.GUIMenu.ItemGUI;
 import com.runicrealms.plugin.professions.Workstation;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
@@ -14,7 +13,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.LinkedHashMap;
 import java.util.Objects;
-import java.util.concurrent.ThreadLocalRandom;
 
 public class AnvilMenu extends Workstation {
 
@@ -247,19 +245,15 @@ public class AnvilMenu extends Workstation {
                 } else if (slot == 31) {
                     reqLevel = 60;
                     reqHashMap = shieldReqs2;
-                    exp = 0;
                 } else if (slot == 32) {
                     reqLevel = 60;
                     reqHashMap = flailReqs2;
-                    exp = 0;
                 } else if (slot == 33) {
                     reqLevel = 60;
                     reqHashMap = wandReqs2;
-                    exp = 0;
                 } else if (slot == 34) {
                     reqLevel = 60;
                     reqHashMap = daggerReqs2;
-                    exp = 0;
                 }
 
                 // destroy instance of inventory to prevent bugs
@@ -268,10 +262,11 @@ public class AnvilMenu extends Workstation {
 
                 // craft item based on experience and reagent amount
                 super.startCrafting(pl, reqHashMap, reagentAmt, reqLevel, event.getCurrentItem().getType(),
-                        meta.getDisplayName(), currentLvl, exp,
+                        currentLvl, exp,
                         ((Damageable) meta).getDamage(), Particle.FIREWORKS_SPARK,
                         Sound.BLOCK_ANVIL_PLACE, Sound.BLOCK_ANVIL_USE, slot, mult);
-            }});
+            }
+        });
 
         return forgeMenu;
     }
@@ -447,34 +442,17 @@ public class AnvilMenu extends Workstation {
     }
 
     /**
-     * @param someVar is the slot of the item in the crafting menu. confusing, I know.
+     * This...
+     *
+     * @param player
+     * @param amt
+     * @param rate
+     * @param eventSlot
      */
     @Override
-    public void produceResult(Player pl, Material material, String dispName,
-                              int currentLvl, int amt, int rate, int durability, int someVar) {
-
-        ItemStack itemStack = determineItem(someVar); // someVar is the slot of the item in the menu.
-
-        // create a new item up to the amount
-        int failCount = 0;
-        for (int i = 0; i < amt; i++) {
-
-            double chance = ThreadLocalRandom.current().nextDouble(0, 100);
-            if (chance <= rate) {
-                if (pl.getInventory().firstEmpty() != -1) {
-                    int firstEmpty = pl.getInventory().firstEmpty();
-                    pl.getInventory().setItem(firstEmpty, itemStack);
-                } else {
-                    pl.getWorld().dropItem(pl.getLocation(), itemStack);
-                }
-            } else {
-                failCount = failCount + 1;
-            }
-        }
-
-        // display fail message
-        if (failCount == 0) return;
-        pl.sendMessage(ChatColor.RED + "You fail to craft this item. [x" + failCount + "]");
+    public void produceResult(Player player, int amt, int rate, int eventSlot) {
+        ItemStack itemStack = determineItem(eventSlot);
+        produceResult(player, amt, rate, itemStack);
     }
 
     private ItemStack determineItem(int slot) {

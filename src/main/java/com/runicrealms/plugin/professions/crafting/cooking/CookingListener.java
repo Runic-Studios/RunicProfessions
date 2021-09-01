@@ -33,7 +33,7 @@ public class CookingListener implements Listener {
     /**
      * Removes consumed item from players hand or offhand
      *
-     * @param pl to remove item from
+     * @param pl   to remove item from
      * @param item from consume event
      */
     private void takeItem(Player pl, ItemStack item) {
@@ -49,7 +49,7 @@ public class CookingListener implements Listener {
         }.runTaskLaterAsynchronously(RunicProfessions.getInstance(), 1L);
     }
 
-    private void healOverTime(Player pl, int healAmt, int duration) {
+    private void healOverTime(Player pl, double healAmt, double duration) {
         new BukkitRunnable() {
             int count = 1;
 
@@ -59,8 +59,7 @@ public class CookingListener implements Listener {
                     this.cancel();
                 } else {
                     count += 1;
-                    HealUtil.healPlayer((healAmt / duration), pl, pl,
-                            false, false, false);
+                    HealUtil.healPlayer((healAmt / duration), pl, pl, false);
                 }
             }
         }.runTaskTimer(RunicProfessions.getInstance(), 0, 20L);

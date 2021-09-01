@@ -3,7 +3,6 @@ package com.runicrealms.plugin.professions.crafting.enchanter;
 import com.runicrealms.plugin.api.RunicCoreAPI;
 import com.runicrealms.plugin.item.GUIMenu.ItemGUI;
 import com.runicrealms.plugin.professions.Workstation;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
@@ -12,10 +11,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Objects;
-import java.util.concurrent.ThreadLocalRandom;
 
 public class ShrineMenu extends Workstation {
 
@@ -112,10 +109,12 @@ public class ShrineMenu extends Workstation {
                 event.setWillDestroy(true);
 
                 // craft item based on experience and reagent amount
-                super.startCrafting(pl, reqHashMap, 1, reqLevel, event.getCurrentItem().getType(),
-                        meta.getDisplayName(), currentLvl, exp,
-                        ((Damageable) meta).getDamage(), Particle.SPELL_WITCH,
-                        Sound.BLOCK_ENCHANTMENT_TABLE_USE, Sound.ENTITY_PLAYER_LEVELUP, slot, mult);
+                super.startCrafting
+                        (
+                                pl, reqHashMap, 1, reqLevel, event.getCurrentItem().getType(), currentLvl, exp,
+                                ((Damageable) meta).getDamage(), Particle.SPELL_WITCH,
+                                Sound.BLOCK_ENCHANTMENT_TABLE_USE, Sound.ENTITY_PLAYER_LEVELUP, slot, mult
+                        );
             }
         });
 
@@ -131,50 +130,37 @@ public class ShrineMenu extends Workstation {
                 true, false, false);
     }
 
+    /**
+     * This...
+     *
+     * @param player
+     * @param amt
+     * @param rate
+     * @param slot
+     */
     @Override
-    public void produceResult(Player pl, Material material, String dispName,
-                              int currentLvl, int amt, int rate, int durability, int someVar) {
-
-        ItemStack craftedItem = determineItem(pl, someVar, material, dispName, durability); // someVar is the slot of the item in the menu.
-
-        // create a new item up to the amount
-        int failCount = 0;
-        for (int i = 0; i < amt; i++) {
-
-            double chance = ThreadLocalRandom.current().nextDouble(0, 100);
-            if (chance <= rate) {
-                // add items to inventory, drop items that couldn't be added
-                HashMap<Integer, ItemStack> leftOvers = pl.getInventory().addItem(craftedItem);
-                for (ItemStack is : leftOvers.values()) {
-                    pl.getWorld().dropItem(pl.getLocation(), is);
-                }
-            } else {
-                failCount = failCount + 1;
-            }
-        }
-
-        // display fail message
-        if (failCount == 0) return;
-        pl.sendMessage(ChatColor.RED + "You fail to craft this item. [x" + failCount + "]");
+    public void produceResult(Player player, int amt, int rate, int slot) {
+        ItemStack itemStack = determineItem(slot);
+        produceResult(player, amt, rate, itemStack);
     }
 
-    private ItemStack determineItem(Player pl, int slot, Material material, String dispName, int durability) {
+    private ItemStack determineItem(int slot) {
         ItemStack item = new ItemStack(Material.STICK);
-        int percent;
-        int profLv = RunicCoreAPI.getPlayerCache(pl).getProfLevel();
-        if (profLv < 30) {
-            percent = 1;
-        } else if (profLv < 50) {
-            percent = 2;
-        } else {
-            percent = 3;
-        }
-
-        switch (slot) {
-            case 9:
-                item = new ItemStack(Material.DIRT);
-                break;
-        }
+//        int percent;
+//        int profLv = RunicCoreAPI.getPlayerCache(pl).getProfLevel();
+//        if (profLv < 30) {
+//            percent = 1;
+//        } else if (profLv < 50) {
+//            percent = 2;
+//        } else {
+//            percent = 3;
+//        }
+//
+//        switch (slot) {
+//            case 9:
+//                item = new ItemStack(Material.DIRT);
+//                break;
+//        }
 
         return item;
     }

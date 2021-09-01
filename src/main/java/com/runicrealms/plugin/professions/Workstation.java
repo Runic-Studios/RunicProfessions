@@ -2,10 +2,7 @@ package com.runicrealms.plugin.professions;
 
 import com.runicrealms.plugin.RunicProfessions;
 import com.runicrealms.plugin.api.RunicCoreAPI;
-import com.runicrealms.plugin.attributes.AttributeUtil;
-import com.runicrealms.plugin.enums.ArmorSlotEnum;
 import com.runicrealms.plugin.item.GUIMenu.ItemGUI;
-import com.runicrealms.plugin.item.LoreGenerator;
 import com.runicrealms.plugin.item.util.ItemRemover;
 import com.runicrealms.plugin.professions.listeners.WorkstationListener;
 import com.runicrealms.plugin.professions.utilities.ProfExpUtil;
@@ -20,8 +17,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.Damageable;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -46,6 +41,30 @@ public abstract class Workstation implements Listener {
     public Workstation(String title) {
         this.title = title;
         this.itemGUI = new ItemGUI();
+    }
+
+    public static ItemStack potionItem(Color color, String displayName, String description) {
+
+        ItemStack potion = new ItemStack(Material.POTION);
+        PotionMeta pMeta = (PotionMeta) potion.getItemMeta();
+        Objects.requireNonNull(pMeta).setColor(color);//Color.fromRGB(255,0,180)
+
+        pMeta.setDisplayName(ColorUtil.format(displayName));
+        String[] desc = description.split("\n");
+        ArrayList<String> lore = new ArrayList<>();
+        for (String line : desc) {
+            lore.add(ColorUtil.format(line));
+        }
+        pMeta.setLore(lore);
+
+        pMeta.setUnbreakable(true);
+        pMeta.addEnchant(Enchantment.DURABILITY, 1, true);
+        pMeta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
+        pMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+        pMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+        pMeta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
+        potion.setItemMeta(pMeta);
+        return potion;
     }
 
     protected void setupWorkstation(Player pl) {
@@ -170,8 +189,8 @@ public abstract class Workstation implements Listener {
     }
 
     protected void startCrafting(Player pl, LinkedHashMap<Material, Integer> itemReqs, int itemAmt, int reqLevel,
-                                 Material craftedItemType, String itemName, int currentLvl, int exp, int durability,
-                                 Particle particle, Sound soundCraft, Sound soundDone, int someVar, int multiplier) {
+                                 Material craftedItemType, int currentLvl, int exp, int durability,
+                                 Particle particle, Sound soundCraft, Sound soundDone, int eventSlot, int numOfItems) {
 
         if (RunicProfessions.getProfManager().getCurrentCrafters().contains(pl)) return;
 
@@ -197,9 +216,9 @@ public abstract class Workstation implements Listener {
 
         // check that the player has the reagents
         for (Material reagent : itemReqs.keySet()) {
-            int amt = itemReqs.get(reagent) * multiplier;
+            int amt = itemReqs.get(reagent) * numOfItems;
             if (itemReqs.size() <= 1) {
-                amt = itemAmt * multiplier;
+                amt = itemAmt * numOfItems;
             }
             if (!pl.getInventory().contains(reagent, amt)) {
                 pl.playSound(pl.getLocation(), Sound.ENTITY_GENERIC_EXTINGUISH_FIRE, 0.5f, 1);
@@ -234,9 +253,9 @@ public abstract class Workstation implements Listener {
         RunicProfessions.getProfManager().getCurrentCrafters().add(pl);
         pl.sendMessage(ChatColor.GRAY + "Crafting...");
         for (Material reagent : itemReqs.keySet()) {
-            int amt = itemReqs.get(reagent) * multiplier;
+            int amt = itemReqs.get(reagent) * numOfItems;
             if (itemReqs.size() <= 1) {
-                amt = itemAmt * multiplier;
+                amt = itemAmt * numOfItems;
             }
             ItemRemover.takeItem(pl, reagent, amt);
         }
@@ -256,10 +275,9 @@ public abstract class Workstation implements Listener {
                     pl.playSound(pl.getLocation(), soundDone, 0.5f, 1.0f);
                     pl.sendMessage(ChatColor.GREEN + "Done!");
                     if (exp > 0) {
-                        ProfExpUtil.giveExperience(pl, exp * multiplier, true);
+                        ProfExpUtil.giveExperience(pl, exp * numOfItems, true);
                     }
-
-                    produceResult(pl, craftedItemType, itemName, currentLvl, multiplier, rate, durability, someVar);
+                    produceResult(pl, numOfItems, rate, eventSlot);
                 } else {
                     pl.playSound(pl.getLocation(), soundCraft, 0.5f, 2.0f);
                     pl.spawnParticle(particle, stationLoc, 5, 0.25, 0.25, 0.25, 0.01);
@@ -269,81 +287,43 @@ public abstract class Workstation implements Listener {
         }.runTaskTimer(RunicProfessions.getInstance(), 0, 20);
     }
 
-    protected void produceResult(Player pl, Material material, String dispName,
-                                 int currentLvl, int amt, int rate, int durability, int someVar) {
-
-        // set our minimum level
-        int reqLv = 0;
-        if (currentLvl >= 30 && currentLvl < 50) {
-            reqLv = 25;
-        } else if (currentLvl >= 50) {
-            reqLv = 50;
-        }
-
-        // create a new item up to the amount
+    /**
+     * This..
+     *
+     * @param pl
+     * @param amt
+     * @param rate
+     * @param itemStack
+     */
+    protected void produceResult(Player pl, int amt, int rate, ItemStack itemStack) {
         int failCount = 0;
         for (int i = 0; i < amt; i++) {
-
-            ItemStack craftedItem = new ItemStack(material);
-            ItemMeta meta = craftedItem.getItemMeta();
-            ((Damageable) Objects.requireNonNull(meta)).setDamage(durability);
-            craftedItem.setItemMeta(meta);
-
-            ArmorSlotEnum armorType = ArmorSlotEnum.matchSlot(craftedItem);
-
-            craftedItem = AttributeUtil.addCustomStat(craftedItem, "required.level", reqLv);
-            craftedItem = AttributeUtil.addCustomStat(craftedItem, "custom.maxHealth", someVar);
-            craftedItem = AttributeUtil.addCustomStat(craftedItem, "custom.manaBoost", someVar);
-
-            // item can be socket-ed ONCE
-            craftedItem = AttributeUtil.addCustomStat(craftedItem, "custom.socketCount", 1);
-
-            LoreGenerator.generateItemLore(craftedItem, ChatColor.WHITE, dispName, "", false, "");
-
-            double chance = ThreadLocalRandom.current().nextDouble(0, 100);
+            double chance = ThreadLocalRandom.current().nextDouble(0.0D, 100.0D);
             if (chance <= rate) {
-                // check that the player has an open inventory space
-                // this method prevents items from stacking if the player crafts 5
                 if (pl.getInventory().firstEmpty() != -1) {
                     int firstEmpty = pl.getInventory().firstEmpty();
-                    pl.getInventory().setItem(firstEmpty, craftedItem);
+                    pl.getInventory().setItem(firstEmpty, itemStack);
                 } else {
-                    pl.getWorld().dropItem(pl.getLocation(), craftedItem);
+                    pl.getWorld().dropItem(pl.getLocation(), itemStack);
                 }
             } else {
-                failCount = failCount + 1;
+                failCount++;
             }
         }
-
-        // display fail message
-        if (failCount == 0) return;
+        if (failCount == 0)
+            return;
         pl.sendMessage(ChatColor.RED + "You fail to craft this item. [x" + failCount + "]");
     }
 
-
-    public static ItemStack potionItem(Color color, String displayName, String description) {
-
-        ItemStack potion = new ItemStack(Material.POTION);
-        PotionMeta pMeta = (PotionMeta) potion.getItemMeta();
-        Objects.requireNonNull(pMeta).setColor(color);//Color.fromRGB(255,0,180)
-
-        pMeta.setDisplayName(ColorUtil.format(displayName));
-        String[] desc = description.split("\n");
-        ArrayList<String> lore = new ArrayList<>();
-        for (String line : desc) {
-            lore.add(ColorUtil.format(line));
-        }
-        pMeta.setLore(lore);
-
-        pMeta.setUnbreakable(true);
-        pMeta.addEnchant(Enchantment.DURABILITY, 1, true);
-        pMeta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
-        pMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-        pMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
-        pMeta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
-        potion.setItemMeta(pMeta);
-        return potion;
-    }
+    /**
+     * This...
+     *
+     * @param paramPlayer
+     * @param paramInt1
+     * @param paramInt2
+     * @param paramInt3
+     */
+    protected abstract void produceResult(Player paramPlayer, int paramInt1, int paramInt2, int paramInt3);
 
     public String getTitle() {
         return this.title;

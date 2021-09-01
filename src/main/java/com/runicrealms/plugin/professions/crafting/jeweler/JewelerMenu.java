@@ -1,21 +1,19 @@
 package com.runicrealms.plugin.professions.crafting.jeweler;
 
-import com.runicrealms.plugin.RunicCore;
 import com.runicrealms.plugin.api.RunicCoreAPI;
 import com.runicrealms.plugin.attributes.AttributeUtil;
 import com.runicrealms.plugin.item.GUIMenu.ItemGUI;
-import com.runicrealms.plugin.item.LoreGenerator;
 import com.runicrealms.plugin.professions.Workstation;
-import org.bukkit.*;
+import org.bukkit.Material;
+import org.bukkit.Particle;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Objects;
-import java.util.concurrent.ThreadLocalRandom;
 
 public class JewelerMenu extends Workstation {
 
@@ -140,7 +138,7 @@ public class JewelerMenu extends Workstation {
                         dummyVar = 10;
                     } else if (currentLvl < 50) {
                         dummyVar = 20;
-                    } else if (currentLvl < 60){
+                    } else if (currentLvl < 60) {
                         dummyVar = 30;
                     } else {
                         dummyVar = 50;
@@ -158,7 +156,7 @@ public class JewelerMenu extends Workstation {
                     } else {
                         dummyVar = 7;
                     }
-                // sapphire (mana)
+                    // sapphire (mana)
                 } else if (slot == 11) {
                     reqHashMap = cutSapphireReqs;
                     exp = 50;
@@ -184,7 +182,7 @@ public class JewelerMenu extends Workstation {
                     } else {
                         dummyVar = 4;
                     }
-                // opal
+                    // opal
                 } else if (slot == 13) {
                     reqLevel = 10;
                     reqHashMap = cutOpalReqs;
@@ -198,7 +196,7 @@ public class JewelerMenu extends Workstation {
                     } else {
                         dummyVar = 4;
                     }
-                // emerald
+                    // emerald
                 } else if (slot == 14) {
                     reqLevel = 25;
                     reqHashMap = cutEmeraldReqs;
@@ -212,7 +210,7 @@ public class JewelerMenu extends Workstation {
                     } else {
                         dummyVar = 9;
                     }
-                // diamond
+                    // diamond
                 } else if (slot == 15) {
                     reqLevel = 25;
                     reqHashMap = cutDiamondReqs;
@@ -233,10 +231,12 @@ public class JewelerMenu extends Workstation {
                 event.setWillDestroy(true);
 
                 // craft item based on experience and reagent amount
-                super.startCrafting(pl, reqHashMap, 1, reqLevel, event.getCurrentItem().getType(),
-                        meta.getDisplayName(), currentLvl, exp,
-                        ((Damageable) meta).getDamage(), Particle.FIREWORKS_SPARK,
-                        Sound.BLOCK_ANVIL_PLACE, Sound.BLOCK_ANVIL_USE, dummyVar, mult);
+                super.startCrafting
+                        (
+                                pl, reqHashMap, 1, reqLevel, event.getCurrentItem().getType(), currentLvl, exp,
+                                ((Damageable) meta).getDamage(), Particle.FIREWORKS_SPARK,
+                                Sound.BLOCK_ANVIL_PLACE, Sound.BLOCK_ANVIL_USE, dummyVar, mult
+                        );
             }
         });
 
@@ -342,44 +342,20 @@ public class JewelerMenu extends Workstation {
                 false, true, false);
     }
 
+
+    /**
+     * This...
+     *
+     * @param player
+     * @param amt
+     * @param rate
+     * @param slot
+     */
     @Override
-    public void produceResult(Player pl, Material material, String dispName,
-                              int currentLvl, int amt, int rate, int durability, int someVar) {
-
-        // check that the player has an open inventory space
-        int failCount = 0;
-        for (int i = 0; i < amt; i++) {
-
-            // build our item
-            ItemStack craftedItem = new ItemStack(material);
-
-            // roll chance for each item
-            double chance = ThreadLocalRandom.current().nextDouble(0, 100);
-
-            // tell the game that this is a gemstone
-            craftedItem = AttributeUtil.addCustomStat
-                    (craftedItem, "custom.isGemstone", "true");
-
-            craftedItem = addGemStat(GemEnum.valueOf
-                    (ChatColor.stripColor(dispName.toUpperCase().replace(" ", "_"))), craftedItem, someVar);
-
-            LoreGenerator.generateItemLore(craftedItem, ChatColor.WHITE, dispName,
-                    "\n" + ChatColor.DARK_GRAY + "Use this on an item", false, "");
-
-            if (chance <= rate) {
-                // add items to inventory, drop items that couldn't be added
-                HashMap<Integer, ItemStack> leftOvers = pl.getInventory().addItem(craftedItem);
-                for (ItemStack is : leftOvers.values()) {
-                    pl.getWorld().dropItem(pl.getLocation(), is);
-                }
-            } else {
-                failCount = failCount + 1;
-            }
-        }
-
-        // display fail message
-        if (failCount == 0) return;
-        pl.sendMessage(ChatColor.RED + "You fail to craft this item. [x" + failCount + "]");
+    public void produceResult(Player player, int amt, int rate, int slot) {
+//        ItemStack itemStack = determineItem(slot);
+        ItemStack placeholder = new ItemStack(Material.STICK);
+        produceResult(player, amt, rate, placeholder);
     }
 
     private ItemStack addGemStat(GemEnum gemEnum, ItemStack craftedItem, int dummyVar) {

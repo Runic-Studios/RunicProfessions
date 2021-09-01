@@ -31,22 +31,16 @@ public final class RunicProfessions extends JavaPlugin {
     private static ProfManager profManager;
     private static HunterCache hunterCache;
 
-    // shops
-    private static HunterShop hunterShop;
-
     public static RunicProfessions getInstance() {
         return plugin;
     }
+
     public static ProfManager getProfManager() {
         return profManager;
     }
+
     public static HunterCache getHunterCache() {
         return hunterCache;
-    }
-
-    // getters for shops
-    public static HunterShop getHunterShop() {
-        return hunterShop;
     }
 
     @Override
@@ -54,9 +48,6 @@ public final class RunicProfessions extends JavaPlugin {
         plugin = this;
         profManager = new ProfManager();
         hunterCache = new HunterCache();
-
-        // shops
-        hunterShop = new HunterShop();
 
         // register command
         getCommand("gathertool").setExecutor(new GathertoolGive());
@@ -66,6 +57,7 @@ public final class RunicProfessions extends JavaPlugin {
         // gem removal shop
         getCommand("jewelmaster").setExecutor(new JewelShopCMD());
 
+        this.initializeShops();
         this.registerEvents();
 
         getLogger().info(" §aRunic§2Professions §ahas been enabled.");
@@ -76,9 +68,6 @@ public final class RunicProfessions extends JavaPlugin {
         plugin.saveConfig();
         plugin = null;
         profManager = null;
-
-        // shops
-        hunterShop = null;
     }
 
     private void registerEvents() {
@@ -97,5 +86,9 @@ public final class RunicProfessions extends JavaPlugin {
         pm.registerEvents(new StoneListener(), this);
         pm.registerEvents(new EnchantListener(), this);
         pm.registerEvents(new CustomFishListener(), this);
+    }
+
+    private void initializeShops() {
+        new HunterShop();
     }
 }

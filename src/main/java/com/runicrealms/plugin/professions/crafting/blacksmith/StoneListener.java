@@ -5,11 +5,13 @@ import com.runicrealms.plugin.events.WeaponDamageEvent;
 import com.runicrealms.plugin.item.util.ItemRemover;
 import com.runicrealms.runicitems.item.RunicItem;
 import com.runicrealms.runicitems.item.event.RunicItemGenericTriggerEvent;
-import org.bukkit.*;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.Particle;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-
 
 import java.util.HashMap;
 import java.util.UUID;
@@ -43,10 +45,10 @@ public class StoneListener implements Listener {
         pl.sendMessage
                 (
                         ChatColor.GREEN + "You consumed a " +
-                        runicItem.getDisplayableItem().getDisplayName() +
-                        ChatColor.GREEN + "! Your attacks now deal " +
-                        bonus + " additional damage for "
-                        + (durationInt / 60) + " minutes."
+                                runicItem.getDisplayableItem().getDisplayName() +
+                                ChatColor.GREEN + "! Your attacks now deal " +
+                                bonus + " additional damage for "
+                                + (durationInt / 60) + " minutes."
                 );
 
         Bukkit.getScheduler().scheduleSyncDelayedTask(RunicProfessions.getInstance(), () -> {
@@ -61,6 +63,6 @@ public class StoneListener implements Listener {
         if (!boostedPlayers.containsKey(e.getPlayer().getUniqueId())) return;
         double bonus = boostedPlayers.get(e.getPlayer().getUniqueId());
         e.setAmount((int) (e.getAmount() + bonus));
-        e.getEntity().getWorld().spawnParticle(Particle.CRIT, e.getEntity().getLocation(), 10, 0, 0, 0, 0);
+        e.getVictim().getWorld().spawnParticle(Particle.CRIT, e.getVictim().getLocation(), 10, 0, 0, 0, 0);
     }
 }

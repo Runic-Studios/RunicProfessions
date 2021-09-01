@@ -3,13 +3,14 @@ package com.runicrealms.plugin.professions.crafting.blacksmith;
 import com.runicrealms.plugin.api.RunicCoreAPI;
 import com.runicrealms.plugin.item.GUIMenu.ItemGUI;
 import com.runicrealms.plugin.professions.Workstation;
-import org.bukkit.*;
+import org.bukkit.Material;
+import org.bukkit.Particle;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Objects;
 
@@ -113,11 +114,14 @@ public class FurnaceMenu extends Workstation {
                 event.setWillDestroy(true);
 
                 // craft item based on experience and reagent amount
-                super.startCrafting(pl, reqHashMap, 0, 0, event.getCurrentItem().getType(),
-                        meta.getDisplayName(), currentLvl, exp,
-                        ((Damageable) meta).getDamage(), Particle.FLAME,
-                        Sound.ITEM_BUCKET_FILL_LAVA, Sound.BLOCK_LAVA_EXTINGUISH, event.getSlot(), mult);
-            }});
+                super.startCrafting
+                        (
+                                pl, reqHashMap, 0, 0, event.getCurrentItem().getType(), currentLvl, exp,
+                                ((Damageable) meta).getDamage(), Particle.FLAME,
+                                Sound.ITEM_BUCKET_FILL_LAVA, Sound.BLOCK_LAVA_EXTINGUISH, event.getSlot(), mult
+                        );
+            }
+        });
 
         return forgeMenu;
     }
@@ -144,23 +148,23 @@ public class FurnaceMenu extends Workstation {
         LinkedHashMap<Material, Integer> ironBarReqs = new LinkedHashMap<>();
         ironBarReqs.put(Material.IRON_ORE, 1);
         ironBarReqs.put(Material.OAK_LOG, 1);
-        super.createMenuItem(forgeMenu, pl, 11, Material.IRON_INGOT, "&fIron Bar",ironBarReqs,
+        super.createMenuItem(forgeMenu, pl, 11, Material.IRON_INGOT, "&fIron Bar", ironBarReqs,
                 "Iron Ore\nOak Log", 999, 10, 0, 0, "",
                 true, false, false);
     }
 
+    /**
+     * This...
+     *
+     * @param player
+     * @param amt
+     * @param rate
+     * @param slot
+     */
     @Override
-    public void produceResult(Player pl, Material material, String dispName,
-                              int currentLvl, int amt, int rate, int durability, int someVar) {
-        for (int i = 0; i < amt; i++) {
-            ItemStack craftedItem = determineItem(someVar);
-            // this ALLOWS furnace items to stack.
-            HashMap<Integer, ItemStack> itemsToAdd = pl.getInventory().addItem(craftedItem);
-            // drop leftover items on the floor
-            for (ItemStack leftOver : itemsToAdd.values()) {
-                pl.getWorld().dropItem(pl.getLocation(), leftOver);
-            }
-        }
+    public void produceResult(Player player, int amt, int rate, int slot) {
+        ItemStack itemStack = determineItem(slot);
+        produceResult(player, amt, rate, itemStack);
     }
 
     private ItemStack determineItem(int slot) {

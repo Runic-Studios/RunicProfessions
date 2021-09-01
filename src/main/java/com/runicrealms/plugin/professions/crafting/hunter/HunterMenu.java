@@ -85,4 +85,9 @@ public class HunterMenu extends Workstation {
         // update our internal menu
         this.setItemGUI(hMenu);
     }
+
+    @Override
+    protected void produceResult(Player paramPlayer, int paramInt1, int paramInt2, int paramInt3) {
+
+    }
 }

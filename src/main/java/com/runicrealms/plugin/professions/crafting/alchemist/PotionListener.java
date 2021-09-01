@@ -65,11 +65,11 @@ public class PotionListener implements Listener {
             pl.playSound(pl.getLocation(), Sound.ENTITY_GENERIC_DRINK, 0.5f, 1.0f);
 
             if (healAmt > 0) {
-                HealUtil.healPlayer(healAmt, pl, pl, false, false, false);
+                HealUtil.healPlayer(healAmt, pl, pl, false);
             }
 
             if (manaAmt > 0) {
-                RunicCore.getRegenManager().addMana(pl, manaAmt, false);
+                RunicCore.getRegenManager().addMana(pl, manaAmt);
             }
 
             if (slayingDuration > 0) {
@@ -81,7 +81,7 @@ public class PotionListener implements Listener {
                         slayers.remove(pl.getUniqueId());
                         pl.sendMessage(ChatColor.GRAY + "Your potion of slaying has expired.");
                     }
-                }.runTaskLaterAsynchronously(RunicProfessions.getInstance(), slayingDuration*60*20L);
+                }.runTaskLaterAsynchronously(RunicProfessions.getInstance(), slayingDuration * 60 * 20L);
             }
 
             if (lootingDuration > 0) {
@@ -93,7 +93,7 @@ public class PotionListener implements Listener {
                         looters.remove(pl.getUniqueId());
                         pl.sendMessage(ChatColor.GRAY + "Your potion of looting has expired.");
                     }
-                }.runTaskLaterAsynchronously(RunicProfessions.getInstance(), lootingDuration*60*20L);
+                }.runTaskLaterAsynchronously(RunicProfessions.getInstance(), lootingDuration * 60 * 20L);
             }
 
             if (fireDuration > 0) {
@@ -105,7 +105,7 @@ public class PotionListener implements Listener {
                         pyromaniacs.remove(pl.getUniqueId());
                         pl.sendMessage(ChatColor.GRAY + "Your potion of sacred fire has expired.");
                     }
-                }.runTaskLaterAsynchronously(RunicProfessions.getInstance(), fireDuration*60*20L);
+                }.runTaskLaterAsynchronously(RunicProfessions.getInstance(), fireDuration * 60 * 20L);
             }
         }
     }
@@ -135,7 +135,7 @@ public class PotionListener implements Listener {
             // 20% chance for burn
             if (chance > 80) {
                 e.setAmount(e.getAmount() + FIRE_AMT);
-                LivingEntity victim = (LivingEntity) e.getEntity();
+                LivingEntity victim = e.getVictim();
                 victim.getWorld().playSound(victim.getLocation(), Sound.ENTITY_GHAST_SHOOT, 0.25f, 1.25f);
                 victim.getWorld().spawnParticle(Particle.FLAME, victim.getEyeLocation(), 5, 0.5F, 0.5F, 0.5F, 0);
             }
