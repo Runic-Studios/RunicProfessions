@@ -1,10 +1,11 @@
-package com.runicrealms.plugin.professions.gathering;
+package com.runicrealms.plugin.professions.listeners;
 
 import com.runicrealms.plugin.attributes.AttributeUtil;
 import com.runicrealms.plugin.professions.event.CustomFishEvent;
 import com.runicrealms.plugin.utilities.ActionBarUtil;
 import com.runicrealms.plugin.utilities.CurrencyUtil;
 import com.runicrealms.plugin.utilities.FloatingItemUtil;
+import com.runicrealms.plugin.utilities.HologramUtil;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.protection.ApplicableRegionSet;
@@ -29,7 +30,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.util.Vector;
-import com.runicrealms.plugin.utilities.HologramUtil;
 
 import java.lang.reflect.Field;
 import java.util.*;
@@ -114,7 +114,7 @@ public class FishingListener implements Listener {
         // reduce items durability
         double itemDurab = AttributeUtil.getCustomDouble(heldItem, "durability");
         heldItem = AttributeUtil.addCustomStat(heldItem, "durability", itemDurab - 1);
-        GatheringUtil.generateToolLore(heldItem, durability);
+//        GatheringUtil.generateToolLore(heldItem, durability);
         if (itemDurab - 1 <= 0) {
 
             pl.playSound(pl.getLocation(), Sound.ENTITY_ITEM_BREAK, 0.5f, 1.0f);

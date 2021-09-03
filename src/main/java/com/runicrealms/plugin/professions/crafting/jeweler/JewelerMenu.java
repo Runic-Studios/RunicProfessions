@@ -347,15 +347,15 @@ public class JewelerMenu extends Workstation {
      * This...
      *
      * @param player
-     * @param amt
-     * @param rate
-     * @param slot
+     * @param numberOfItems
+     * @param successRate
+     * @param inventorySlot
      */
     @Override
-    public void produceResult(Player player, int amt, int rate, int slot) {
+    public void produceResult(Player player, int numberOfItems, int successRate, int inventorySlot) {
 //        ItemStack itemStack = determineItem(slot);
         ItemStack placeholder = new ItemStack(Material.STICK);
-        produceResult(player, amt, rate, placeholder);
+        produceResult(player, numberOfItems, successRate, placeholder);
     }
 
     private ItemStack addGemStat(GemEnum gemEnum, ItemStack craftedItem, int dummyVar) {

@@ -134,14 +134,14 @@ public class ShrineMenu extends Workstation {
      * This...
      *
      * @param player
-     * @param amt
-     * @param rate
-     * @param slot
+     * @param numberOfItems
+     * @param successRate
+     * @param inventorySlot
      */
     @Override
-    public void produceResult(Player player, int amt, int rate, int slot) {
-        ItemStack itemStack = determineItem(slot);
-        produceResult(player, amt, rate, itemStack);
+    public void produceResult(Player player, int numberOfItems, int successRate, int inventorySlot) {
+        ItemStack itemStack = determineItem(inventorySlot);
+        produceResult(player, numberOfItems, successRate, itemStack);
     }
 
     private ItemStack determineItem(int slot) {

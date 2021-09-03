@@ -21,6 +21,7 @@ import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Objects;
 import java.util.concurrent.ThreadLocalRandom;
@@ -288,23 +289,23 @@ public abstract class Workstation implements Listener {
     }
 
     /**
-     * This..
+     * Generic produce result method which generates an ItemStack
+     * Outdated and should be replaced, as it does not play well with RunicItems
      *
-     * @param pl
-     * @param amt
-     * @param rate
-     * @param itemStack
+     * @param player        the player in the workstation
+     * @param numberOfItems the number of items they're crafting
+     * @param successRate   the chance to craft the item
+     * @param itemStack     the item to be built and dropped
      */
-    protected void produceResult(Player pl, int amt, int rate, ItemStack itemStack) {
+    protected void produceResult(Player player, int numberOfItems, int successRate, ItemStack itemStack) {
         int failCount = 0;
-        for (int i = 0; i < amt; i++) {
+        for (int i = 0; i < numberOfItems; i++) {
             double chance = ThreadLocalRandom.current().nextDouble(0.0D, 100.0D);
-            if (chance <= rate) {
-                if (pl.getInventory().firstEmpty() != -1) {
-                    int firstEmpty = pl.getInventory().firstEmpty();
-                    pl.getInventory().setItem(firstEmpty, itemStack);
-                } else {
-                    pl.getWorld().dropItem(pl.getLocation(), itemStack);
+            if (chance <= successRate) {
+                // adds items while there is inventory space and drops remaining items on the floor
+                HashMap<Integer, ItemStack> itemStacksToAdd = player.getInventory().addItem(itemStack);
+                for (ItemStack is : itemStacksToAdd.values()) {
+                    player.getWorld().dropItem(player.getLocation(), is);
                 }
             } else {
                 failCount++;
@@ -312,18 +313,18 @@ public abstract class Workstation implements Listener {
         }
         if (failCount == 0)
             return;
-        pl.sendMessage(ChatColor.RED + "You fail to craft this item. [x" + failCount + "]");
+        player.sendMessage(ChatColor.RED + "You fail to craft this item. [x" + failCount + "]");
     }
 
     /**
-     * This...
+     * Method to be overridden in child classes
      *
-     * @param paramPlayer
-     * @param paramInt1
-     * @param paramInt2
-     * @param paramInt3
+     * @param player        the player in the workstation
+     * @param numberOfItems the number of items they're crafting
+     * @param successRate   the chance to craft the item
+     * @param inventorySlot the inventory slot in the menu corresponding to the item
      */
-    protected abstract void produceResult(Player paramPlayer, int paramInt1, int paramInt2, int paramInt3);
+    protected abstract void produceResult(Player player, int numberOfItems, int successRate, int inventorySlot);
 
     public String getTitle() {
         return this.title;

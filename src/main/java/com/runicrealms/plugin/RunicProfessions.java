@@ -1,8 +1,8 @@
 package com.runicrealms.plugin;
 
 
+import com.runicrealms.plugin.professions.GatheringShopFactory;
 import com.runicrealms.plugin.professions.ProfManager;
-import com.runicrealms.plugin.professions.commands.GathertoolGive;
 import com.runicrealms.plugin.professions.commands.ProfLevelCMD;
 import com.runicrealms.plugin.professions.commands.SetProfCMD;
 import com.runicrealms.plugin.professions.crafting.alchemist.PotionListener;
@@ -12,16 +12,9 @@ import com.runicrealms.plugin.professions.crafting.enchanter.EnchantListener;
 import com.runicrealms.plugin.professions.crafting.hunter.HunterCache;
 import com.runicrealms.plugin.professions.crafting.hunter.HunterListener;
 import com.runicrealms.plugin.professions.crafting.hunter.HunterShop;
-import com.runicrealms.plugin.professions.crafting.jeweler.JewelShopCMD;
 import com.runicrealms.plugin.professions.crafting.jeweler.JewelShopListener;
 import com.runicrealms.plugin.professions.crafting.jeweler.SocketListener;
-import com.runicrealms.plugin.professions.gathering.FarmingListener;
-import com.runicrealms.plugin.professions.gathering.FishingListener;
-import com.runicrealms.plugin.professions.gathering.MiningListener;
-import com.runicrealms.plugin.professions.gathering.WCListener;
-import com.runicrealms.plugin.professions.listeners.CustomFishListener;
-import com.runicrealms.plugin.professions.listeners.StationClickListener;
-import com.runicrealms.plugin.professions.listeners.WorkstationListener;
+import com.runicrealms.plugin.professions.listeners.*;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -49,13 +42,9 @@ public final class RunicProfessions extends JavaPlugin {
         profManager = new ProfManager();
         hunterCache = new HunterCache();
 
-        // register command
-        getCommand("gathertool").setExecutor(new GathertoolGive());
+        // register commands
         getCommand("setprof").setExecutor(new SetProfCMD());
         getCommand("proflevel").setExecutor(new ProfLevelCMD());
-
-        // gem removal shop
-        getCommand("jewelmaster").setExecutor(new JewelShopCMD());
 
         this.initializeShops();
         this.registerEvents();
@@ -75,7 +64,7 @@ public final class RunicProfessions extends JavaPlugin {
         pm.registerEvents(new WorkstationListener(), this);
         pm.registerEvents(new MiningListener(), this);
         pm.registerEvents(new FarmingListener(), this);
-        pm.registerEvents(new WCListener(), this);
+        pm.registerEvents(new WoodcuttingListener(), this);
         pm.registerEvents(new FishingListener(), this);
         pm.registerEvents(new SocketListener(), this);
         pm.registerEvents(new PotionListener(), this);
@@ -90,5 +79,6 @@ public final class RunicProfessions extends JavaPlugin {
 
     private void initializeShops() {
         new HunterShop();
+        new GatheringShopFactory();
     }
 }

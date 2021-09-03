@@ -441,18 +441,10 @@ public class AnvilMenu extends Workstation {
                 false, false, false);
     }
 
-    /**
-     * This...
-     *
-     * @param player
-     * @param amt
-     * @param rate
-     * @param eventSlot
-     */
     @Override
-    public void produceResult(Player player, int amt, int rate, int eventSlot) {
-        ItemStack itemStack = determineItem(eventSlot);
-        produceResult(player, amt, rate, itemStack);
+    public void produceResult(Player player, int numberOfItems, int successRate, int inventorySlot) {
+        ItemStack itemStack = determineItem(inventorySlot);
+        produceResult(player, numberOfItems, successRate, itemStack);
     }
 
     private ItemStack determineItem(int slot) {
