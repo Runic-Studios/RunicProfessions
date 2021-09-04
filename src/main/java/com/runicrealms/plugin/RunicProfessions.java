@@ -75,6 +75,7 @@ public final class RunicProfessions extends JavaPlugin {
         pm.registerEvents(new StoneListener(), this);
         pm.registerEvents(new EnchantListener(), this);
         pm.registerEvents(new CustomFishListener(), this);
+        pm.registerEvents(new CropTrampleListener(), this);
     }
 
     private void initializeShops() {
