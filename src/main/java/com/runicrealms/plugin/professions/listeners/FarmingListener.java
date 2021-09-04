@@ -50,16 +50,15 @@ public class FarmingListener implements Listener {
 
         // verify the player is holding a tool
         if (player.getInventory().getItemInMainHand().getType() == Material.AIR) {
-            player.sendMessage(ChatColor.RED + "You need a harvesting tool to do that!");
+            player.sendMessage(ChatColor.RED + "You need a farming tool to do that!");
             return;
         }
 
-        // todo: right tools
         // verify held tool is a woodcutting axe
         RunicItem runicItem = RunicItemsAPI.getRunicItemFromItemStack(heldItem);
         String templateIdHeldItem = runicItem.getTemplateId();
-        if (GatheringUtil.getWoodcuttingAxes().stream().noneMatch(item -> item.getTemplateId().equals(templateIdHeldItem))) {
-            player.sendMessage(ChatColor.RED + "You need a harvesting tool to do that!");
+        if (GatheringUtil.getHoes().stream().noneMatch(item -> item.getTemplateId().equals(templateIdHeldItem))) {
+            player.sendMessage(ChatColor.RED + "You need a farming tool to do that!");
             return;
         }
 

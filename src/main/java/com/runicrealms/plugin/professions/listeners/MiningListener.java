@@ -54,11 +54,10 @@ public class MiningListener implements Listener {
             return;
         }
 
-        // todo: right tools
-        // verify held tool is a woodcutting axe
+        // verify held tool is a mining pickaxe
         RunicItem runicItem = RunicItemsAPI.getRunicItemFromItemStack(heldItem);
         String templateIdHeldItem = runicItem.getTemplateId();
-        if (GatheringUtil.getWoodcuttingAxes().stream().noneMatch(item -> item.getTemplateId().equals(templateIdHeldItem))) {
+        if (GatheringUtil.getPickaxes().stream().noneMatch(item -> item.getTemplateId().equals(templateIdHeldItem))) {
             player.sendMessage(ChatColor.RED + "You need a mining pick to do that!");
             return;
         }

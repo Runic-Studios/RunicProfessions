@@ -57,7 +57,7 @@ public class WoodcuttingListener implements Listener {
         // verify held tool is a woodcutting axe
         RunicItem runicItem = RunicItemsAPI.getRunicItemFromItemStack(heldItem);
         String templateIdHeldItem = runicItem.getTemplateId();
-        if (GatheringUtil.getWoodcuttingAxes().stream().noneMatch(item -> item.getTemplateId().equals(templateIdHeldItem))) {
+        if (GatheringUtil.getAxes().stream().noneMatch(item -> item.getTemplateId().equals(templateIdHeldItem))) {
             player.sendMessage(ChatColor.RED + "You need a woodcutting axe to do that!");
             return;
         }
