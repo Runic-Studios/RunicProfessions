@@ -11,7 +11,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.Arrays;
-import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 
 public class HunterShop {
 
@@ -24,80 +24,70 @@ public class HunterShop {
     private static final String HUNTER_POINTS = " Hunter Points";
 
     public HunterShop() {
-        LinkedHashMap<ItemStack, RunicShopItem> shopItems = new LinkedHashMap<>();
-        shopItems.put
+        LinkedHashSet<RunicShopItem> shopItems = new LinkedHashSet<>();
+        shopItems.add
                 (
-                        HunterItems.SCRYING_ORB_ITEMSTACK,
                         new RunicShopItem(ORB_PRICE, "Coin",
-                                RunicShopGeneric.iconWithLore(HunterItems.SCRYING_ORB_ITEMSTACK, ORB_PRICE + HUNTER_POINTS),
+                                HunterItems.SCRYING_ORB_ITEMSTACK, ORB_PRICE + HUNTER_POINTS,
                                 runShopBuy(HunterItems.SCRYING_ORB_ITEMSTACK, ORB_PRICE))
                 );
-        shopItems.put
+        shopItems.add
                 (
-                        HunterItems.SHADOWMELD_POTION_ITEMSTACK,
                         new RunicShopItem(POTION_PRICE, "Coin",
-                                RunicShopGeneric.iconWithLore(HunterItems.SHADOWMELD_POTION_ITEMSTACK, POTION_PRICE + HUNTER_POINTS),
+                                HunterItems.SHADOWMELD_POTION_ITEMSTACK, POTION_PRICE + HUNTER_POINTS,
                                 runShopBuy(HunterItems.SHADOWMELD_POTION_ITEMSTACK, POTION_PRICE))
                 );
-        shopItems.put
+        shopItems.add
                 (
-                        HunterItems.TELEPORT_OUTLAW_GUILD_ITEMSTACK,
                         new RunicShopItem(TELEPORT_SCROLL_PRICE, "Coin",
-                                RunicShopGeneric.iconWithLore(HunterItems.TELEPORT_OUTLAW_GUILD_ITEMSTACK, TELEPORT_SCROLL_PRICE + HUNTER_POINTS),
+                                HunterItems.TELEPORT_OUTLAW_GUILD_ITEMSTACK, TELEPORT_SCROLL_PRICE + HUNTER_POINTS,
                                 runShopBuy(HunterItems.TELEPORT_OUTLAW_GUILD_ITEMSTACK, TELEPORT_SCROLL_PRICE))
                 );
-        shopItems.put
+        shopItems.add
                 (
-                        HunterItems.TRACKING_SCROLL_ITEMSTACK,
                         new RunicShopItem(SCROLL_PRICE, "Coin",
-                                RunicShopGeneric.iconWithLore(HunterItems.TRACKING_SCROLL_ITEMSTACK, SCROLL_PRICE + HUNTER_POINTS),
+                                HunterItems.TRACKING_SCROLL_ITEMSTACK, SCROLL_PRICE + HUNTER_POINTS,
                                 runShopBuy(HunterItems.TRACKING_SCROLL_ITEMSTACK, SCROLL_PRICE))
                 );
-        shopItems.put
+        shopItems.add
                 (
-                        HunterItems.TRACKING_COMPASS_ITEMSTACK,
                         new RunicShopItem(COMPASS_PRICE, "Coin",
-                                RunicShopGeneric.iconWithLore(HunterItems.TRACKING_COMPASS_ITEMSTACK, COMPASS_PRICE + HUNTER_POINTS),
+                                HunterItems.TRACKING_COMPASS_ITEMSTACK, COMPASS_PRICE + HUNTER_POINTS,
                                 runShopBuy(HunterItems.TRACKING_COMPASS_ITEMSTACK, COMPASS_PRICE))
                 );
-        shopItems.put
+        shopItems.add
                 (
-                        HunterItems.HUNTER_CHEST_ARCHER_ITEMSTACK,
                         new RunicShopItem(ARMOR_PRICE, "Coin",
-                                RunicShopGeneric.iconWithLore(HunterItems.HUNTER_CHEST_ARCHER_ITEMSTACK, ARMOR_PRICE + HUNTER_POINTS),
+                                HunterItems.HUNTER_CHEST_ARCHER_ITEMSTACK, ARMOR_PRICE + HUNTER_POINTS,
                                 runShopBuy(HunterItems.HUNTER_CHEST_ARCHER_ITEMSTACK, ARMOR_PRICE))
                 );
-        shopItems.put
+        shopItems.add
                 (
-                        HunterItems.HUNTER_CHEST_CLERIC_ITEMSTACK,
                         new RunicShopItem(ARMOR_PRICE, "Coin",
-                                RunicShopGeneric.iconWithLore(HunterItems.HUNTER_CHEST_CLERIC_ITEMSTACK, ARMOR_PRICE + HUNTER_POINTS),
+                                HunterItems.HUNTER_CHEST_CLERIC_ITEMSTACK, ARMOR_PRICE + HUNTER_POINTS,
                                 runShopBuy(HunterItems.HUNTER_CHEST_CLERIC_ITEMSTACK, ARMOR_PRICE))
                 );
-        shopItems.put
+        shopItems.add
                 (
-                        HunterItems.HUNTER_CHEST_MAGE_ITEMSTACK,
                         new RunicShopItem(ARMOR_PRICE, "Coin",
-                                RunicShopGeneric.iconWithLore(HunterItems.HUNTER_CHEST_MAGE_ITEMSTACK, ARMOR_PRICE + HUNTER_POINTS),
+                                HunterItems.HUNTER_CHEST_MAGE_ITEMSTACK, ARMOR_PRICE + HUNTER_POINTS,
                                 runShopBuy(HunterItems.HUNTER_CHEST_MAGE_ITEMSTACK, ARMOR_PRICE))
                 );
-        shopItems.put
+        shopItems.add
                 (
-                        HunterItems.HUNTER_CHEST_ROGUE_ITEMSTACK,
                         new RunicShopItem(ARMOR_PRICE, "Coin",
-                                RunicShopGeneric.iconWithLore(HunterItems.HUNTER_CHEST_ROGUE_ITEMSTACK, ARMOR_PRICE + HUNTER_POINTS),
+                                HunterItems.HUNTER_CHEST_ROGUE_ITEMSTACK, ARMOR_PRICE + HUNTER_POINTS,
                                 runShopBuy(HunterItems.HUNTER_CHEST_ROGUE_ITEMSTACK, ARMOR_PRICE))
                 );
-        shopItems.put
+        shopItems.add
                 (
-                        HunterItems.HUNTER_CHEST_WARRIOR_ITEMSTACK,
                         new RunicShopItem(ARMOR_PRICE, "Coin",
-                                RunicShopGeneric.iconWithLore(HunterItems.HUNTER_CHEST_WARRIOR_ITEMSTACK, ARMOR_PRICE + HUNTER_POINTS),
+                                HunterItems.HUNTER_CHEST_WARRIOR_ITEMSTACK, ARMOR_PRICE + HUNTER_POINTS,
                                 runShopBuy(HunterItems.HUNTER_CHEST_WARRIOR_ITEMSTACK, ARMOR_PRICE))
                 );
         // we're using hunter points, so we disable default currency functionality
-        for (ItemStack itemStack : shopItems.keySet()) {
-            shopItems.get(itemStack).setRemovePayment(false);
+        for (RunicShopItem runicShopItem : shopItems) {
+            runicShopItem.setRemovePayment(false);
         }
         new RunicShopGeneric(45, ChatColor.YELLOW + "Hunter Shop", Arrays.asList(354, 234, 248, 254, 258, 263, 276, 278, 282, 323), shopItems,
                 new int[]{0, 1, 2, 3, 4, 9, 10, 11, 12, 13});

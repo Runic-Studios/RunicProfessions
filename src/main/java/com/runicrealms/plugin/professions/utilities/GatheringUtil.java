@@ -20,12 +20,15 @@ import java.util.Set;
 public class GatheringUtil {
 
     public static final RunicItemDynamic GATHERING_AXE_APPRENTICE = (RunicItemDynamic) RunicItemsAPI.generateItemFromTemplate("gathering-axe-apprentice");
-    // todo: update with runic items
     public static final ItemStack GATHERING_AXE_APPRENTICE_ITEMSTACK = GATHERING_AXE_APPRENTICE.generateItem();
-//    public static final RunicItemDynamic GATHERING_AXE_ADEPT = (RunicItemDynamic) RunicItemsAPI.generateItemFromTemplate("gathering-axe-adept");
-//    public static final RunicItemDynamic GATHERING_AXE_REFINED = (RunicItemDynamic) RunicItemsAPI.generateItemFromTemplate("gathering-axe-refined");
-//    public static final RunicItemDynamic GATHERING_AXE_MASTER = (RunicItemDynamic) RunicItemsAPI.generateItemFromTemplate("gathering-axe-master");
-//    public static final RunicItemDynamic GATHERING_AXE_ARTISAN = (RunicItemDynamic) RunicItemsAPI.generateItemFromTemplate("gathering-axe-artisan");
+    public static final RunicItemDynamic GATHERING_AXE_ADEPT = (RunicItemDynamic) RunicItemsAPI.generateItemFromTemplate("gathering-axe-adept");
+    public static final ItemStack GATHERING_AXE_ADEPT_ITEMSTACK = GATHERING_AXE_ADEPT.generateItem();
+    public static final RunicItemDynamic GATHERING_AXE_REFINED = (RunicItemDynamic) RunicItemsAPI.generateItemFromTemplate("gathering-axe-refined");
+    public static final ItemStack GATHERING_AXE_REFINED_ITEMSTACK = GATHERING_AXE_REFINED.generateItem();
+    public static final RunicItemDynamic GATHERING_AXE_MASTER = (RunicItemDynamic) RunicItemsAPI.generateItemFromTemplate("gathering-axe-master");
+    public static final ItemStack GATHERING_AXE_MASTER_ITEMSTACK = GATHERING_AXE_MASTER.generateItem();
+    public static final RunicItemDynamic GATHERING_AXE_ARTISAN = (RunicItemDynamic) RunicItemsAPI.generateItemFromTemplate("gathering-axe-artisan");
+    public static final ItemStack GATHERING_AXE_ARTISAN_ITEMSTACK = GATHERING_AXE_ARTISAN.generateItem();
 
     public static void gatherMaterial(Player player, RunicItemDynamic gatheringTool, String templateId, Location location,
                                       Block block, Material placeholderMaterial, String hologramItemName, double chance) {
@@ -78,14 +81,23 @@ public class GatheringUtil {
     }
 
     /**
-     * @return
+     * Grabs a set of gathering axes to ensure player is holding the right item
+     *
+     * @return a set of pre-defined gathering axes
      */
     public static Set<RunicItemDynamic> getWoodcuttingAxes() {
         Set<RunicItemDynamic> woodcuttingAxes = new HashSet<>();
         woodcuttingAxes.add(GATHERING_AXE_APPRENTICE);
+        woodcuttingAxes.add(GATHERING_AXE_ADEPT);
+        woodcuttingAxes.add(GATHERING_AXE_REFINED);
+        woodcuttingAxes.add(GATHERING_AXE_MASTER);
+        woodcuttingAxes.add(GATHERING_AXE_ARTISAN);
         return woodcuttingAxes;
     }
 
+    /**
+     * A handy class that bundles some key components used in gathering
+     */
     public static class GatheringReagentWrapper {
 
         private final String templateId;
