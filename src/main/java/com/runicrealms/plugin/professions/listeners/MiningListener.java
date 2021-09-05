@@ -63,11 +63,11 @@ public class MiningListener implements Listener {
         }
 
         // reduce tool durability
-        RunicItemDynamic woodcuttingAxe = (RunicItemDynamic) runicItem;
-        GatheringUtil.reduceGatheringToolDurability(player, woodcuttingAxe);
+        RunicItemDynamic miningPickaxe = (RunicItemDynamic) runicItem;
+        GatheringUtil.reduceGatheringToolDurability(player, miningPickaxe);
 
         // gather the material
-        GatheringUtil.gatherMaterial(player, woodcuttingAxe, templateId, loc, block, placeHolderType, holoString, chance);
+        GatheringUtil.gatherMaterial(player, miningPickaxe, templateId, loc, block, placeHolderType, holoString, chance);
         RunicProfessions.getProfManager().getBlocksToRestore().put(block.getLocation(), oldType);
     }
 

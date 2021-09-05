@@ -12,7 +12,7 @@ public class GatheringShopFactory {
 
     public GatheringShopFactory() {
         getFarmerShop();
-//        getFisherShop();
+        getFisherShop();
         getLumberjackShop();
         getMinerShop();
     }
@@ -26,11 +26,14 @@ public class GatheringShopFactory {
         return new RunicShopGeneric(9, ChatColor.YELLOW + "Farmer", Arrays.asList(211, 235, 242, 255, 266, 277, 281), shopItems);
     }
 
-//    public RunicShopGeneric getFisherShop() {
-//        LinkedHashMap<ItemStack, RunicShopItem> shopItems = new LinkedHashMap<>();
-//        shopItems.put(axeApprentice, new RunicShopItem(10, "Coin", RunicShopGeneric.iconWithLore(axeApprentice, 10)));
-//        return new RunicShopGeneric(9, ChatColor.YELLOW + "Fisher", Arrays.asList(203, 209, 236, 253, 260, 502, 273, 322), shopItems);
-//    }
+    public RunicShopGeneric getFisherShop() {
+        LinkedHashSet<RunicShopItem> shopItems = new LinkedHashSet<>();
+        shopItems.add(new RunicShopItem(10, "Coin", GatheringUtil.GATHERING_ROD_APPRENTICE_ITEMSTACK));
+        shopItems.add(new RunicShopItem(45, "Coin", GatheringUtil.GATHERING_ROD_ADEPT_ITEMSTACK));
+        shopItems.add(new RunicShopItem(100, "Coin", GatheringUtil.GATHERING_ROD_REFINED_ITEMSTACK));
+        shopItems.add(new RunicShopItem(250, "Coin", GatheringUtil.GATHERING_ROD_MASTER_ITEMSTACK));
+        return new RunicShopGeneric(9, ChatColor.YELLOW + "Fisher", Arrays.asList(203, 209, 236, 253, 260, 502, 273, 322), shopItems);
+    }
 
     public RunicShopGeneric getLumberjackShop() {
         LinkedHashSet<RunicShopItem> shopItems = new LinkedHashSet<>();

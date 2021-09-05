@@ -54,7 +54,7 @@ public class FarmingListener implements Listener {
             return;
         }
 
-        // verify held tool is a woodcutting axe
+        // verify held tool is a farming hoe
         RunicItem runicItem = RunicItemsAPI.getRunicItemFromItemStack(heldItem);
         String templateIdHeldItem = runicItem.getTemplateId();
         if (GatheringUtil.getHoes().stream().noneMatch(item -> item.getTemplateId().equals(templateIdHeldItem))) {
@@ -63,11 +63,11 @@ public class FarmingListener implements Listener {
         }
 
         // reduce tool durability
-        RunicItemDynamic woodcuttingAxe = (RunicItemDynamic) runicItem;
-        GatheringUtil.reduceGatheringToolDurability(player, woodcuttingAxe);
+        RunicItemDynamic farmingHoe = (RunicItemDynamic) runicItem;
+        GatheringUtil.reduceGatheringToolDurability(player, farmingHoe);
 
         // gather the material
-        GatheringUtil.gatherMaterial(player, woodcuttingAxe, templateId, loc, block, placeHolderType, holoString, chance);
+        GatheringUtil.gatherMaterial(player, farmingHoe, templateId, loc, block, placeHolderType, holoString, chance);
         RunicProfessions.getProfManager().getBlocksToRestore().put(block.getLocation(), oldType);
     }
 

@@ -1,20 +1,14 @@
 package com.runicrealms.plugin.professions.listeners;
 
-import com.runicrealms.plugin.attributes.AttributeUtil;
-import com.runicrealms.plugin.professions.event.CustomFishEvent;
-import com.runicrealms.plugin.utilities.ActionBarUtil;
-import com.runicrealms.plugin.utilities.CurrencyUtil;
-import com.runicrealms.plugin.utilities.FloatingItemUtil;
-import com.runicrealms.plugin.utilities.HologramUtil;
-import com.sk89q.worldedit.bukkit.BukkitAdapter;
-import com.sk89q.worldguard.WorldGuard;
-import com.sk89q.worldguard.protection.ApplicableRegionSet;
-import com.sk89q.worldguard.protection.regions.ProtectedRegion;
-import com.sk89q.worldguard.protection.regions.RegionContainer;
-import com.sk89q.worldguard.protection.regions.RegionQuery;
-import net.minecraft.server.v1_16_R3.EntityFishingHook;
-import org.bukkit.*;
-import org.bukkit.craftbukkit.v1_16_R3.entity.CraftEntity;
+import com.runicrealms.plugin.professions.GatheringRegion;
+import com.runicrealms.plugin.professions.api.RunicProfessionsAPI;
+import com.runicrealms.plugin.professions.utilities.GatheringUtil;
+import com.runicrealms.runicitems.RunicItemsAPI;
+import com.runicrealms.runicitems.item.RunicItem;
+import com.runicrealms.runicitems.item.RunicItemDynamic;
+import org.bukkit.ChatColor;
+import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Fish;
 import org.bukkit.entity.FishHook;
@@ -27,142 +21,81 @@ import org.bukkit.event.player.PlayerFishEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.Damageable;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.util.Vector;
 
-import java.lang.reflect.Field;
-import java.util.*;
+import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
- * Listener for Fishing (Gathering Profesion)
+ * Listener for Fishing (Gathering Profession)
  * randomizes which fish they receive
  * Checks name of WG region for "pond" to perform tasks
  */
 @SuppressWarnings("FieldCanBeLocal")
 public class FishingListener implements Listener {
 
-    private final double nuggetRate = 5.0;
-
     @EventHandler
     public void onFishCatch(PlayerFishEvent e) {
-
         // disable exp
         e.setExpToDrop(0);
-
         e.setCancelled(false);
         if (e.getCaught() != null) e.getCaught().remove();
         if (e.getState() != PlayerFishEvent.State.BITE) return;
+        Player player = e.getPlayer();
 
-        // grab the player, location
-        Player pl = e.getPlayer();
-        Material itemType;
-        String itemName;
-        String holoString;
-        String desc = "Crafting Reagent";
-
-        // roll to see if player succesfully fished
+        // roll to see if player successfully fished
         // roll to see what kind of fish they will receive
-        double chance = ThreadLocalRandom.current().nextDouble(0, 100);
-        int fishType = ThreadLocalRandom.current().nextInt(0, 100);
+        double chance = ThreadLocalRandom.current().nextDouble();
+        double fishType = ThreadLocalRandom.current().nextDouble();
         Location hookLoc = e.getHook().getLocation();
-        Vector fishPath = pl.getLocation().toVector().subtract
+        Vector fishPath = player.getLocation().toVector().subtract
                 (hookLoc.clone().add(0, 1, 0).toVector()).normalize();
 
-        if (fishType < 50) {
-            itemType = Material.SALMON;
-            itemName = "Salmon";
-            holoString = "+ Salmon";
-        } else if (fishType < 75) {
-            itemType = Material.COD;
-            itemName = "Cod";
-            holoString = "+ Cod";
-        } else if (fishType < 95) {
-            itemType = Material.TROPICAL_FISH;
-            itemName = "Tropical Fish";
-            holoString = "+ Tropical";
-        } else {
-            itemType = Material.PUFFERFISH;
-            itemName = "Pufferfish";
-            holoString = "+ Pufferfish";
-        }
+        // ensure the proper type of block is being mined
+        GatheringUtil.GatheringReagentWrapper gatheringReagentWrapper = buildGatheringReagentWrapper(fishType);
+        String templateId = gatheringReagentWrapper.getTemplateId();
+        ItemStack fish = RunicItemsAPI.generateItemFromTemplate(gatheringReagentWrapper.getTemplateId()).generateItem();
+        String holoString = gatheringReagentWrapper.getHologramDisplayString();
+        ItemStack heldItem = player.getInventory().getItemInMainHand();
 
-        if (pl.getInventory().getItemInMainHand().getType() == Material.AIR) {
-            pl.sendMessage(ChatColor.RED + "You need a fishing rod to do that!");
+        // verify the player is holding a tool
+        if (player.getInventory().getItemInMainHand().getType() == Material.AIR) {
+            player.sendMessage(ChatColor.RED + "You need a fishing rod to do that!");
             return;
         }
 
-        // make sure player has harvesting tool
-        // this will always be a hoe, so we check for the staff enum
-        // we also ensure it has durability 100, arbitrarily chosen.
-        ItemStack heldItem = pl.getInventory().getItemInMainHand();
-        int slot = pl.getInventory().getHeldItemSlot();
-        ItemMeta meta = pl.getInventory().getItemInMainHand().getItemMeta();
-        int durability = ((Damageable) Objects.requireNonNull(meta)).getDamage();
-
-        if (heldItem.getType() != Material.FISHING_ROD
-                && durability != 1
-                && durability != 2
-                && durability != 3
-                && durability != 4
-                && durability != 5) {
-            pl.sendMessage(ChatColor.RED + "You need a fishing rod to do that!");
+        // verify held tool is a fishing rod
+        RunicItem runicItem = RunicItemsAPI.getRunicItemFromItemStack(heldItem);
+        String templateIdHeldItem = runicItem.getTemplateId();
+        if (GatheringUtil.getRods().stream().noneMatch(item -> item.getTemplateId().equals(templateIdHeldItem))) {
+            player.sendMessage(ChatColor.RED + "You need a fishing rod to do that!");
             return;
         }
 
-        // reduce items durability
-        double itemDurab = AttributeUtil.getCustomDouble(heldItem, "durability");
-        heldItem = AttributeUtil.addCustomStat(heldItem, "durability", itemDurab - 1);
-//        GatheringUtil.generateToolLore(heldItem, durability);
-        if (itemDurab - 1 <= 0) {
-
-            pl.playSound(pl.getLocation(), Sound.ENTITY_ITEM_BREAK, 0.5f, 1.0f);
-            pl.sendMessage(ChatColor.RED + "Your tool broke!");
-            pl.getInventory().setItem(slot, null);
-        } else {
-            pl.getInventory().setItem(slot, heldItem);
-        }
+        // reduce tool durability
+        RunicItemDynamic fishingRod = (RunicItemDynamic) runicItem;
+        GatheringUtil.reduceGatheringToolDurability(player, fishingRod);
 
         // gather material
-        gatherMaterial(pl, hookLoc, hookLoc.clone().add(0, 1.5, 0), itemType, holoString,
-                itemName, desc, chance, fishPath, durability);
+        GatheringUtil.gatherMaterial(player, fishingRod, templateId, hookLoc,
+                hookLoc.clone().add(0, 1.5, 0), fish.getType(), holoString, chance,
+                fishPath);
     }
 
+    /**
+     * Prevents players from fishing outside of ponds
+     */
     @EventHandler
     public void onRodUse(PlayerInteractEvent e) {
-
-        Player pl = e.getPlayer();
-        Location plLoc = pl.getLocation();
-
-        // grab all regions the player is standing in
-        RegionContainer container = WorldGuard.getInstance().getPlatform().getRegionContainer();
-        RegionQuery query = container.createQuery();
-        ApplicableRegionSet set = query.getApplicableRegions(BukkitAdapter.adapt(plLoc));
-        Set<ProtectedRegion> regions = set.getRegions();
-
-        if (regions == null) return;
-
-        boolean canFish = false;
-
-        // check the region for the keyword 'pond'
-        // ignore the rest of this event if the player cannot fish
-        for (ProtectedRegion region : regions) {
-            if (region.getId().contains("pond")) {
-                canFish = true;
-            }
-        }
-
         if (e.getAction() != Action.RIGHT_CLICK_AIR && e.getAction() != Action.RIGHT_CLICK_BLOCK) return;
-
-        Material mainHand = pl.getInventory().getItemInMainHand().getType();
-        Material offHand = pl.getInventory().getItemInOffHand().getType();
-
+        Player player = e.getPlayer();
+        Material mainHand = player.getInventory().getItemInMainHand().getType();
+        Material offHand = player.getInventory().getItemInOffHand().getType();
         if (mainHand != Material.FISHING_ROD && offHand != Material.FISHING_ROD) return;
-
+        boolean canFish = RunicProfessionsAPI.isInGatheringRegion(GatheringRegion.POND, player.getLocation());
         if (!canFish) {
             e.setCancelled(true);
-            pl.sendMessage(ChatColor.RED + "You can't fish here.");
+            player.sendMessage(ChatColor.RED + "You can't fish here.");
         }
     }
 
@@ -192,81 +125,13 @@ public class FishingListener implements Listener {
      * Prevents a player from consuming puffer / tropical
      */
     @EventHandler
-    public void onPufferTropFishEat(PlayerInteractEvent e) {
+    public void onPufferOrTropicalFishEat(PlayerInteractEvent e) {
         if (e.getItem() == null) return;
         Material m = e.getItem().getType();
         if (m == Material.PUFFERFISH || m == Material.TROPICAL_FISH) {
             e.getPlayer().sendMessage(ChatColor.RED + "I shouldn't eat that.");
             e.setCancelled(true);
         }
-    }
-
-    private void gatherMaterial(Player pl, Location loc, Location fishLoc, Material gathered,
-                                String name, String itemName, String desc,
-                                double chance, Vector fishPath, int tier) {
-
-        // call the fishing event
-        ItemStack fish = gatheredItem(gathered, itemName, desc);
-        CustomFishEvent event = new CustomFishEvent(pl, fish);
-        Bukkit.getPluginManager().callEvent(event);
-        if (event.isCancelled()) return;
-
-        double successRate;
-        switch (tier) {
-            case 5:
-                successRate = 75;
-                break;
-            case 4:
-                successRate = 62.5;
-                break;
-            case 3:
-                successRate = 50;
-                break;
-            case 2:
-                successRate = 37.5;
-                break;
-            case 1:
-            default:
-                successRate = 25;
-                break;
-        }
-
-        if (chance < (100 - successRate)) {
-            ActionBarUtil.sendTimedMessage(pl, "&cThe fish got away!", 3);
-            return;
-        }
-
-        // spawn floating fish
-        FloatingItemUtil.spawnFloatingItem(pl, fishLoc, gathered, 1, fishPath);
-
-        // give the player the gathered item, drop on floor if inventory is full
-        HologramUtil.createStaticHologram(pl, loc, ChatColor.GREEN + "" + ChatColor.BOLD + name, 0, 2, 0);
-        HashMap<Integer, ItemStack> fishToDrop = pl.getInventory().addItem(fish);
-        for (ItemStack is : fishToDrop.values()) {
-            pl.getWorld().dropItem(pl.getLocation(), is);
-        }
-
-        // give the player a coin
-        if (chance >= (100 - this.nuggetRate)) {
-            pl.getWorld().playSound(loc, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 0.5f, 2.0f);
-            HologramUtil.createStaticHologram(pl, loc, ChatColor.GOLD + "" + ChatColor.BOLD + "+ Coin", 0, 1.25, 0);
-
-            HashMap<Integer, ItemStack> coin = pl.getInventory().addItem(CurrencyUtil.goldCoin());
-            for (ItemStack is : coin.values()) {
-                pl.getWorld().dropItem(pl.getLocation(), is);
-            }
-        }
-    }
-
-    private ItemStack gatheredItem(Material material, String itemName, String desc) {
-        ItemStack item = new ItemStack(material);
-        ItemMeta meta = item.getItemMeta();
-        ArrayList<String> lore = new ArrayList<>();
-        meta.setDisplayName(ChatColor.WHITE + itemName);
-        lore.add(ChatColor.GRAY + desc);
-        meta.setLore(lore);
-        item.setItemMeta(meta);
-        return item;
     }
 
     /**
@@ -278,26 +143,32 @@ public class FishingListener implements Listener {
         FishHook plHook = e.getHook();
         Random rand = new Random();
         int time = rand.nextInt(25 - 5) + 5;
-        setBiteTime(plHook, time);
+        GatheringUtil.setBiteTime(plHook, time);
     }
 
-    private void setBiteTime(FishHook hook, int time) {
-        net.minecraft.server.v1_16_R3.EntityFishingHook hookCopy = (EntityFishingHook) ((CraftEntity) hook).getHandle();
-
-        Field fishCatchTime = null;
-
-        try {
-            fishCatchTime = net.minecraft.server.v1_16_R3.EntityFishingHook.class.getDeclaredField("ah");
-        } catch (NoSuchFieldException | SecurityException e) {
-            e.printStackTrace();
+    /**
+     * Builds out a handy wrapper for matching the runic item template id and changing the hologram display
+     *
+     * @param fishType a double representing a random roll that corresponds to fish type
+     * @return a wrapper with a material and a string
+     */
+    private GatheringUtil.GatheringReagentWrapper buildGatheringReagentWrapper(double fishType) {
+        String templateId;
+        Material placeHolderType = Material.AIR;
+        String holoString;
+        if (fishType < .5) {
+            templateId = "Salmon";
+            holoString = "+ Salmon";
+        } else if (fishType < .75) {
+            templateId = "Cod";
+            holoString = "+ Cod";
+        } else if (fishType < .95) {
+            templateId = "Tropical";
+            holoString = "+ Tropical";
+        } else {
+            templateId = "Pufferfish";
+            holoString = "+ Pufferfish";
         }
-
-        Objects.requireNonNull(fishCatchTime).setAccessible(true);
-
-        try {
-            fishCatchTime.setInt(hookCopy, time);
-        } catch (IllegalArgumentException | IllegalAccessException e) {
-            e.printStackTrace();
-        }
+        return new GatheringUtil.GatheringReagentWrapper(templateId, placeHolderType, holoString);
     }
 }

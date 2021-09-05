@@ -1,19 +1,24 @@
 package com.runicrealms.plugin.professions.utilities;
 
+import com.runicrealms.plugin.professions.event.CustomFishEvent;
 import com.runicrealms.plugin.utilities.ActionBarUtil;
 import com.runicrealms.plugin.utilities.CurrencyUtil;
+import com.runicrealms.plugin.utilities.FloatingItemUtil;
 import com.runicrealms.plugin.utilities.HologramUtil;
 import com.runicrealms.runicitems.RunicItemsAPI;
 import com.runicrealms.runicitems.item.RunicItemDynamic;
-import org.bukkit.ChatColor;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.Sound;
+import net.minecraft.server.v1_16_R3.EntityFishingHook;
+import org.bukkit.*;
 import org.bukkit.block.Block;
+import org.bukkit.craftbukkit.v1_16_R3.entity.CraftEntity;
+import org.bukkit.entity.FishHook;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.util.Vector;
 
+import java.lang.reflect.Field;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 public class GatheringUtil {
@@ -63,19 +68,19 @@ public class GatheringUtil {
     /*
     Rods
      */
-//    public static final RunicItemDynamic GATHERING_ROD_APPRENTICE = (RunicItemDynamic) RunicItemsAPI.generateItemFromTemplate("gathering-rod-apprentice");
-//    public static final ItemStack GATHERING_ROD_APPRENTICE_ITEMSTACK = GATHERING_ROD_APPRENTICE.generateItem();
-//    public static final RunicItemDynamic GATHERING_ROD_ADEPT = (RunicItemDynamic) RunicItemsAPI.generateItemFromTemplate("gathering-rod-adept");
-//    public static final ItemStack GATHERING_ROD_ADEPT_ITEMSTACK = GATHERING_ROD_ADEPT.generateItem();
-//    public static final RunicItemDynamic GATHERING_ROD_REFINED = (RunicItemDynamic) RunicItemsAPI.generateItemFromTemplate("gathering-rod-refined");
-//    public static final ItemStack GATHERING_ROD_REFINED_ITEMSTACK = GATHERING_ROD_REFINED.generateItem();
-//    public static final RunicItemDynamic GATHERING_ROD_MASTER = (RunicItemDynamic) RunicItemsAPI.generateItemFromTemplate("gathering-rod-master");
-//    public static final ItemStack GATHERING_ROD_MASTER_ITEMSTACK = GATHERING_ROD_MASTER.generateItem();
-//    public static final RunicItemDynamic GATHERING_ROD_ARTISAN = (RunicItemDynamic) RunicItemsAPI.generateItemFromTemplate("gathering-rod-artisan");
-//    public static final ItemStack GATHERING_ROD_ARTISAN_ITEMSTACK = GATHERING_ROD_ARTISAN.generateItem();
+    public static final RunicItemDynamic GATHERING_ROD_APPRENTICE = (RunicItemDynamic) RunicItemsAPI.generateItemFromTemplate("gathering-rod-apprentice");
+    public static final ItemStack GATHERING_ROD_APPRENTICE_ITEMSTACK = GATHERING_ROD_APPRENTICE.generateItem();
+    public static final RunicItemDynamic GATHERING_ROD_ADEPT = (RunicItemDynamic) RunicItemsAPI.generateItemFromTemplate("gathering-rod-adept");
+    public static final ItemStack GATHERING_ROD_ADEPT_ITEMSTACK = GATHERING_ROD_ADEPT.generateItem();
+    public static final RunicItemDynamic GATHERING_ROD_REFINED = (RunicItemDynamic) RunicItemsAPI.generateItemFromTemplate("gathering-rod-refined");
+    public static final ItemStack GATHERING_ROD_REFINED_ITEMSTACK = GATHERING_ROD_REFINED.generateItem();
+    public static final RunicItemDynamic GATHERING_ROD_MASTER = (RunicItemDynamic) RunicItemsAPI.generateItemFromTemplate("gathering-rod-master");
+    public static final ItemStack GATHERING_ROD_MASTER_ITEMSTACK = GATHERING_ROD_MASTER.generateItem();
+    public static final RunicItemDynamic GATHERING_ROD_ARTISAN = (RunicItemDynamic) RunicItemsAPI.generateItemFromTemplate("gathering-rod-artisan");
+    public static final ItemStack GATHERING_ROD_ARTISAN_ITEMSTACK = GATHERING_ROD_ARTISAN.generateItem();
 
     /**
-     * General function handle gathering.
+     * General function to handle gathering
      *
      * @param player              who gathered material
      * @param gatheringTool       the tool used
@@ -107,6 +112,51 @@ public class GatheringUtil {
         // give the player a coin
         if (chance >= (.95)) {
             block.getWorld().playSound(location, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 0.5f, 2.0f);
+            HologramUtil.createStaticHologram(player, location, ChatColor.GOLD + "" + ChatColor.BOLD + "+ Coin", 0, 1.25, 0);
+            RunicItemsAPI.addItem(player.getInventory(), CurrencyUtil.goldCoin(), player.getLocation());
+        }
+    }
+
+    /**
+     * Modified function to handle gathering for fishing
+     *
+     * @param player            who gathered material
+     * @param gatheringTool     the tool used
+     * @param templateId        the templateId of the gathered material (iron-ore)
+     * @param location          the location of the block to replace
+     * @param fishLocation      the location where the fish item will be displayed
+     * @param fishItemToDisplay the material of the fish item
+     * @param hologramItemName  the hologram to display upon successful gathering
+     * @param chance            the chance to gather the material
+     * @param fishPath          a vector where the fish item will travel
+     */
+    public static void gatherMaterial(Player player, RunicItemDynamic gatheringTool, String templateId, Location location,
+                                      Location fishLocation, Material fishItemToDisplay, String hologramItemName, double chance,
+                                      Vector fishPath) {
+
+        // call the fishing event
+        ItemStack fish = RunicItemsAPI.generateItemFromTemplate(templateId).generateItem();
+        CustomFishEvent event = new CustomFishEvent(player, fish);
+        Bukkit.getPluginManager().callEvent(event);
+        if (event.isCancelled()) return;
+
+        double successRate = Double.parseDouble(gatheringTool.getData().get("rate"));
+
+        if (chance < (1 - successRate)) {
+            ActionBarUtil.sendTimedMessage(player, "&cThe fish got away!", 3);
+            return;
+        }
+
+        // spawn floating fish
+        FloatingItemUtil.spawnFloatingItem(player, fishLocation, fishItemToDisplay, 1, fishPath);
+
+        // give the player the gathered item, drop on floor if inventory is full
+        HologramUtil.createStaticHologram(player, location, ChatColor.GREEN + "" + ChatColor.BOLD + hologramItemName, 0, 2, 0);
+        RunicItemsAPI.addItem(player.getInventory(), fish, player.getLocation());
+
+        // give the player a coin
+        if (chance >= (.95)) {
+            player.getWorld().playSound(location, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 0.5f, 2.0f);
             HologramUtil.createStaticHologram(player, location, ChatColor.GOLD + "" + ChatColor.BOLD + "+ Coin", 0, 1.25, 0);
             RunicItemsAPI.addItem(player.getInventory(), CurrencyUtil.goldCoin(), player.getLocation());
         }
@@ -182,15 +232,41 @@ public class GatheringUtil {
      *
      * @return a set of pre-defined gathering rods
      */
-//    public static Set<RunicItemDynamic> getRods() {
-//        Set<RunicItemDynamic> fishingRods = new HashSet<>();
-//        fishingRods.add(GATHERING_ROD_APPRENTICE);
-//        fishingRods.add(GATHERING_ROD_ADEPT);
-//        fishingRods.add(GATHERING_ROD_REFINED);
-//        fishingRods.add(GATHERING_ROD_MASTER);
-//        fishingRods.add(GATHERING_ROD_ARTISAN);
-//        return fishingRods;
-//    }
+    public static Set<RunicItemDynamic> getRods() {
+        Set<RunicItemDynamic> fishingRods = new HashSet<>();
+        fishingRods.add(GATHERING_ROD_APPRENTICE);
+        fishingRods.add(GATHERING_ROD_ADEPT);
+        fishingRods.add(GATHERING_ROD_REFINED);
+        fishingRods.add(GATHERING_ROD_MASTER);
+        fishingRods.add(GATHERING_ROD_ARTISAN);
+        return fishingRods;
+    }
+
+    /**
+     * A bit of nms magic to modify the rate of fishing on the server
+     *
+     * @param hook the player's fishing hook
+     * @param time (in seconds) before a fish bites
+     */
+    public static void setBiteTime(FishHook hook, int time) {
+        net.minecraft.server.v1_16_R3.EntityFishingHook hookCopy = (EntityFishingHook) ((CraftEntity) hook).getHandle();
+
+        Field fishCatchTime = null;
+
+        try {
+            fishCatchTime = net.minecraft.server.v1_16_R3.EntityFishingHook.class.getDeclaredField("ah");
+        } catch (NoSuchFieldException | SecurityException e) {
+            e.printStackTrace();
+        }
+
+        Objects.requireNonNull(fishCatchTime).setAccessible(true);
+
+        try {
+            fishCatchTime.setInt(hookCopy, time);
+        } catch (IllegalArgumentException | IllegalAccessException e) {
+            e.printStackTrace();
+        }
+    }
 
     /**
      * A handy class that bundles some key components used in gathering
