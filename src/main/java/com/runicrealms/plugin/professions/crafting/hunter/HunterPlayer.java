@@ -21,7 +21,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
+/**
+ * Wrapper for players with the hunter profession
+ */
 public class HunterPlayer {
+
     private final Player player;
     private final PlayerCache playerCache;
     private int hunterPoints;
@@ -79,7 +83,7 @@ public class HunterPlayer {
 
         this.player.sendMessage(ColorUtil.format("&r&aHunter mob slain!"));
 
-        ProfExpUtil.giveExperience(this.player, this.task.getExperience(), true);
+        ProfExpUtil.giveCraftingExperience(this.player, this.task.getExperience(), true);
 
         this.hunterKills++;
 

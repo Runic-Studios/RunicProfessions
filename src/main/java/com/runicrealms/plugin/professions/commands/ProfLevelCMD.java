@@ -1,6 +1,5 @@
 package com.runicrealms.plugin.professions.commands;
 
-import com.runicrealms.plugin.RunicCore;
 import com.runicrealms.plugin.api.RunicCoreAPI;
 import com.runicrealms.plugin.professions.utilities.ProfExpUtil;
 import org.bukkit.Bukkit;
@@ -24,10 +23,10 @@ public class ProfLevelCMD implements CommandExecutor {
         if (!sender.isOp()) return false;
 
         int level = Integer.parseInt(args[1]);
-        int exp = ProfExpUtil.calculateTotalExperience(level+1);
+        int exp = ProfExpUtil.calculateTotalExperience(level + 1);
 
         RunicCoreAPI.getPlayerCache(pl).setProfExp(0);
-        ProfExpUtil.giveExperience(pl, exp, false);
+        ProfExpUtil.giveCraftingExperience(pl, exp, false);
         RunicCoreAPI.getPlayerCache(pl).setProfLevel(level);
         RunicCoreAPI.getPlayerCache(pl).setProfExp(exp);
 
