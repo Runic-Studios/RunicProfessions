@@ -9,6 +9,7 @@ import com.runicrealms.plugin.utilities.ColorUtil;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.protection.ApplicableRegionSet;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Color;
 import org.bukkit.FireworkEffect;
@@ -26,7 +27,6 @@ import java.util.concurrent.ThreadLocalRandom;
  */
 public class HunterPlayer {
 
-    private final Player player;
     private final PlayerCache playerCache;
     private int hunterPoints;
     private int hunterKills;
@@ -34,7 +34,6 @@ public class HunterPlayer {
     private TaskMobs task;
 
     public HunterPlayer(Player player, int hunterPoints, int hunterKills, int maxHunterKills, TaskMobs task) {
-        this.player = player;
         this.playerCache = RunicCoreAPI.getPlayerCache(player);
         this.hunterPoints = hunterPoints;
         this.hunterKills = hunterKills;
@@ -81,9 +80,9 @@ public class HunterPlayer {
             return;
         }
 
-        this.player.sendMessage(ColorUtil.format("&r&aHunter mob slain!"));
+        this.getPlayer().sendMessage(ColorUtil.format("&r&aHunter mob slain!"));
 
-        ProfExpUtil.giveCraftingExperience(this.player, this.task.getExperience(), true);
+        ProfExpUtil.giveCraftingExperience(this.getPlayer(), this.task.getExperience(), true);
 
         this.hunterKills++;
 
@@ -93,16 +92,21 @@ public class HunterPlayer {
 
         this.hunterPoints += this.task.getPoints();
 
-        this.player.sendMessage
+        this.getPlayer().sendMessage
                 (ChatColor.GREEN + "You have completed your hunter task and receive " +
                         ChatColor.GOLD + ChatColor.BOLD + this.task.getPoints() + " points!" +
                         ChatColor.GREEN + " Return to a hunting board for another task.");
-        this.launchFirework(this.player);
+        this.launchFirework(this.getPlayer());
         this.resetTask();
     }
 
     public Player getPlayer() {
-        return this.player;
+        try {
+            return Bukkit.getPlayer(this.getPlayerCache().getPlayerID());
+        } catch (NullPointerException e) {
+            Bukkit.getLogger().info(ChatColor.DARK_RED + "Player cache for hunter player was not found!");
+            return null;
+        }
     }
 
     public PlayerCache getPlayerCache() {
@@ -164,8 +168,8 @@ public class HunterPlayer {
         }
 
         if (hunterMobs.isEmpty()) {
-            this.player.closeInventory();
-            this.player.sendMessage(ColorUtil.format("&r&cYour hunter level is too low to accept any tasks from this area!"));
+            this.getPlayer().closeInventory();
+            this.getPlayer().sendMessage(ColorUtil.format("&r&cYour hunter level is too low to accept any tasks from this area!"));
             return;
         }
 
@@ -175,12 +179,12 @@ public class HunterPlayer {
 
         this.setTask(mob, 0, rand.nextInt(15, 30 + 1)); //+1 because the method is dumb and gens an index
 
-        this.player.sendMessage(ColorUtil.format("&r&aYour target is: &r&f" + this.task.getName()));
-        this.player.sendMessage(ColorUtil.format("&r&aYou must hunt it &r&f" + this.maxHunterKills + " &r&atimes!"));
+        this.getPlayer().sendMessage(ColorUtil.format("&r&aYour target is: &r&f" + this.task.getName()));
+        this.getPlayer().sendMessage(ColorUtil.format("&r&aYou must hunt it &r&f" + this.maxHunterKills + " &r&atimes!"));
     }
 
     private List<String> getRegions() {
-        ApplicableRegionSet regions = WorldGuard.getInstance().getPlatform().getRegionContainer().createQuery().getApplicableRegions(BukkitAdapter.adapt(this.player.getLocation()));
+        ApplicableRegionSet regions = WorldGuard.getInstance().getPlatform().getRegionContainer().createQuery().getApplicableRegions(BukkitAdapter.adapt(this.getPlayer().getLocation()));
         List<String> names = new ArrayList<>();
 
         regions.forEach(region -> names.add(region.getId()));

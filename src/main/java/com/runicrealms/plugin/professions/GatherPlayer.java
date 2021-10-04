@@ -1,20 +1,25 @@
 package com.runicrealms.plugin.professions;
 
+import com.runicrealms.plugin.RunicProfessions;
+import com.runicrealms.plugin.api.RunicCoreAPI;
 import com.runicrealms.plugin.database.PlayerMongoData;
-import com.runicrealms.plugin.database.PlayerMongoDataSection;
+import com.runicrealms.plugin.database.event.CacheSaveEvent;
 import com.runicrealms.plugin.player.cache.PlayerCache;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
+
+import java.util.UUID;
 
 /**
  * Wrapper for player gathering levels
  */
 public class GatherPlayer {
 
-    private static final String DATA_SECTION = "prof.gathering.";
+    private static final String DATA_SECTION = "gathering.";
     private static final String EXP_SECTION = ".exp";
     private static final String LEVEL_SECTION = ".level";
 
-    private final Player player;
     private final PlayerCache playerCache;
     private int cookingExp;
     private int cookingLevel;
@@ -29,10 +34,9 @@ public class GatherPlayer {
     private int woodcuttingExp;
     private int woodcuttingLevel;
 
-    public GatherPlayer(Player player, PlayerCache playerCache, int cookingExp, int cookingLevel, int farmingExp,
+    public GatherPlayer(PlayerCache playerCache, int cookingExp, int cookingLevel, int farmingExp,
                         int farmingLevel, int fishingExp, int fishingLevel, int harvestingExp, int harvestingLevel,
                         int miningExp, int miningLevel, int woodcuttingExp, int woodcuttingLevel) {
-        this.player = player;
         this.playerCache = playerCache;
         this.cookingExp = cookingExp;
         this.cookingLevel = cookingLevel;
@@ -49,13 +53,76 @@ public class GatherPlayer {
     }
 
     /**
+     * A method used to register a player into the in-memory storage for gathering
+     *
+     * @param player the player to be registered
+     */
+    public static void registerGatherPlayer(Player player) {
+        PlayerCache playerCache = RunicCoreAPI.getPlayerCache(player);
+        PlayerMongoData playerData = (PlayerMongoData) playerCache.getMongoData();
+        UUID uuid = player.getUniqueId();
+
+        int cookingExp = 0;
+        int cookingLevel = 0;
+        int farmingExp = 0;
+        int farmingLevel = 0;
+        int fishingExp = 0;
+        int fishingLevel = 0;
+        int harvestingExp = 0;
+        int harvestingLevel = 0;
+        int miningExp = 0;
+        int miningLevel = 0;
+        int woodcuttingExp = 0;
+        int woodcuttingLevel = 0;
+        int[] gatheringSkillsExp = new int[]{cookingExp, farmingExp, fishingExp, harvestingExp, miningExp, woodcuttingExp};
+        int[] gatheringSkillsLevel = new int[]{cookingLevel, farmingLevel, fishingLevel, harvestingLevel, miningLevel, woodcuttingLevel};
+
+        // initialize all stored gathering exp values if the value is found
+        int i = 0;
+        for (GatheringSkill gatheringSkill : GatheringSkill.values()) {
+            String gatheringSkillDataSectionKey = DATA_SECTION + gatheringSkill.getIdentifier() + EXP_SECTION;
+            if (playerData.has(gatheringSkillDataSectionKey)) {
+                gatheringSkillsExp[i] = playerData.get(gatheringSkillDataSectionKey, Integer.class);
+            }
+            i++;
+        }
+
+        // initialize all stored gathering level values if the value is found
+        int j = 0;
+        for (GatheringSkill gatheringSkill : GatheringSkill.values()) {
+            String gatheringSkillDataSectionKey = DATA_SECTION + gatheringSkill.getIdentifier() + LEVEL_SECTION;
+            if (playerData.has(gatheringSkillDataSectionKey)) {
+                gatheringSkillsLevel[j] = playerData.get(gatheringSkillDataSectionKey, Integer.class);
+            }
+            j++;
+        }
+
+        RunicProfessions.getGatherPlayerManager().getGatherPlayers().put(uuid,
+                new GatherPlayer
+                        (
+                                playerCache,
+                                gatheringSkillsExp[0],
+                                gatheringSkillsLevel[0],
+                                gatheringSkillsExp[1],
+                                gatheringSkillsLevel[1],
+                                gatheringSkillsExp[2],
+                                gatheringSkillsLevel[2],
+                                gatheringSkillsExp[3],
+                                gatheringSkillsLevel[3],
+                                gatheringSkillsExp[4],
+                                gatheringSkillsLevel[4],
+                                gatheringSkillsExp[5],
+                                gatheringSkillsLevel[5]
+                        ));
+    }
+
+    /**
      * ALWAYS ONLY CALL ON CACHE SAVE EVENT
      *
-     * @param playerData the player data
+     * @param event the saving event that we'll listen for
      */
-    public void save(PlayerMongoData playerData) {
-        int slot = this.playerCache.getCharacterSlot();
-        PlayerMongoDataSection data = playerData.getCharacter(slot);
+    public void save(CacheSaveEvent event) {
+        PlayerMongoData data = event.getMongoData();
         data.set(DATA_SECTION + GatheringSkill.COOKING.getIdentifier() + EXP_SECTION, this.getCookingExp());
         data.set(DATA_SECTION + GatheringSkill.COOKING.getIdentifier() + LEVEL_SECTION, this.getCookingLevel());
         data.set(DATA_SECTION + GatheringSkill.FARMING.getIdentifier() + EXP_SECTION, this.getFarmingExp());
@@ -71,7 +138,12 @@ public class GatherPlayer {
     }
 
     public Player getPlayer() {
-        return this.player;
+        try {
+            return Bukkit.getPlayer(this.getPlayerCache().getPlayerID());
+        } catch (NullPointerException e) {
+            Bukkit.getLogger().info(ChatColor.DARK_RED + "Player cache for gather player was not found!");
+            return null;
+        }
     }
 
     public PlayerCache getPlayerCache() {

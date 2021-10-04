@@ -1,6 +1,7 @@
 package com.runicrealms.plugin;
 
 
+import com.runicrealms.plugin.professions.GatherPlayerManager;
 import com.runicrealms.plugin.professions.GatheringShopFactory;
 import com.runicrealms.plugin.professions.ProfManager;
 import com.runicrealms.plugin.professions.commands.ProfLevelCMD;
@@ -12,8 +13,6 @@ import com.runicrealms.plugin.professions.crafting.enchanter.EnchantListener;
 import com.runicrealms.plugin.professions.crafting.hunter.HunterCache;
 import com.runicrealms.plugin.professions.crafting.hunter.HunterListener;
 import com.runicrealms.plugin.professions.crafting.hunter.HunterShop;
-import com.runicrealms.plugin.professions.crafting.jeweler.JewelShopListener;
-import com.runicrealms.plugin.professions.crafting.jeweler.SocketListener;
 import com.runicrealms.plugin.professions.listeners.*;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -22,6 +21,7 @@ public final class RunicProfessions extends JavaPlugin {
 
     private static RunicProfessions plugin;
     private static ProfManager profManager;
+    private static GatherPlayerManager gatherPlayerManager;
     private static HunterCache hunterCache;
 
     public static RunicProfessions getInstance() {
@@ -32,6 +32,10 @@ public final class RunicProfessions extends JavaPlugin {
         return profManager;
     }
 
+    public static GatherPlayerManager getGatherPlayerManager() {
+        return gatherPlayerManager;
+    }
+
     public static HunterCache getHunterCache() {
         return hunterCache;
     }
@@ -40,6 +44,7 @@ public final class RunicProfessions extends JavaPlugin {
     public void onEnable() {
         plugin = this;
         profManager = new ProfManager();
+        gatherPlayerManager = new GatherPlayerManager();
         hunterCache = new HunterCache();
 
         // register commands
@@ -66,11 +71,9 @@ public final class RunicProfessions extends JavaPlugin {
         pm.registerEvents(new FarmingListener(), this);
         pm.registerEvents(new WoodcuttingListener(), this);
         pm.registerEvents(new FishingListener(), this);
-        pm.registerEvents(new SocketListener(), this);
         pm.registerEvents(new PotionListener(), this);
         pm.registerEvents(new CookingListener(), this);
         pm.registerEvents(new StationClickListener(), this);
-        pm.registerEvents(new JewelShopListener(), this);
         pm.registerEvents(new HunterListener(), this);
         pm.registerEvents(new StoneListener(), this);
         pm.registerEvents(new EnchantListener(), this);
