@@ -22,20 +22,20 @@ public class CauldronMenu extends Workstation {
         setupWorkstation(pl);
     }
 
-    public void setupWorkstation(Player pl) {
-        setupWorkstation("&f&l" + pl.getName() + "'s &e&lCauldron");
+    public void setupWorkstation(Player player) {
+        setupWorkstation("&f&l" + player.getName() + "'s &e&lCauldron");
         ItemGUI baseMenu = getItemGUI();
         baseMenu.setOption(3, potionItem(Color.RED, "", ""), "&fBrew Potions", "&7Brew powerful and unique potions!", 0, false);
         baseMenu.setHandler(event -> {
             if (event.getSlot() == 3) {
-                pl.playSound(pl.getLocation(), Sound.UI_BUTTON_CLICK, 0.5F, 1.0F);
-                setItemGUI(cauldronMenu(pl));
-                setTitle(cauldronMenu(pl).getName());
-                getItemGUI().open(pl);
+                player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 0.5F, 1.0F);
+                setItemGUI(cauldronMenu(player));
+                setTitle(cauldronMenu(player).getName());
+                getItemGUI().open(player);
                 event.setWillClose(false);
                 event.setWillDestroy(true);
             } else if (event.getSlot() == 5) {
-                pl.playSound(pl.getLocation(), Sound.UI_BUTTON_CLICK, 0.5F, 1.0F);
+                player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 0.5F, 1.0F);
                 event.setWillClose(true);
                 event.setWillDestroy(true);
             }

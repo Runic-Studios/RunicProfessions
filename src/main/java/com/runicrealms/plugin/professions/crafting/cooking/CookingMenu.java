@@ -32,10 +32,10 @@ public class CookingMenu extends Workstation {
     }
 
     @Override
-    public void setupWorkstation(Player pl) {
+    public void setupWorkstation(Player player) {
 
         // name the menu
-        super.setupWorkstation("&f&l" + pl.getName() + "'s &e&lCooking Fire");
+        super.setupWorkstation("&f&l" + player.getName() + "'s &e&lCooking Fire");
         ItemGUI cookingMenu = getItemGUI();
         cookingMenu.setName(this.getTitle());
 
@@ -49,17 +49,17 @@ public class CookingMenu extends Workstation {
             if (event.getSlot() == 3) {
 
                 // open the cooking menu
-                pl.playSound(pl.getLocation(), Sound.UI_BUTTON_CLICK, 0.5f, 1);
-                this.setItemGUI(cookingMenu(pl));
-                this.setTitle(cookingMenu(pl).getName());
-                this.getItemGUI().open(pl);
+                player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 0.5f, 1);
+                this.setItemGUI(cookingMenu(player));
+                this.setTitle(cookingMenu(player).getName());
+                this.getItemGUI().open(player);
                 event.setWillClose(false);
                 event.setWillDestroy(true);
 
             } else if (event.getSlot() == 5) {
 
                 // close editor
-                pl.playSound(pl.getLocation(), Sound.UI_BUTTON_CLICK, 0.5f, 1);
+                player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 0.5f, 1);
                 event.setWillClose(true);
                 event.setWillDestroy(true);
             }
@@ -70,6 +70,11 @@ public class CookingMenu extends Workstation {
     }
 
     private ItemGUI cookingMenu(Player pl) {
+
+        // meat
+        LinkedHashMap<Material, Integer> meatReqs = new LinkedHashMap<>();
+        meatReqs.put(Material.MUTTON, 4);
+        meatReqs.put(Material.OAK_LOG, 2);
 
         // bread
         LinkedHashMap<Material, Integer> breadReqs = new LinkedHashMap<>();
@@ -89,8 +94,8 @@ public class CookingMenu extends Workstation {
         // ambrosia stew
         LinkedHashMap<Material, Integer> ambrosiaStewReqs = new LinkedHashMap<>();
         ambrosiaStewReqs.put(Material.GOLDEN_CARROT, 1);
-        ambrosiaStewReqs.put(Material.RABBIT, 1);
-        ambrosiaStewReqs.put(Material.DARK_OAK_LOG, 1);
+        ambrosiaStewReqs.put(Material.RABBIT, 4);
+        ambrosiaStewReqs.put(Material.DARK_OAK_LOG, 16);
 
         ItemGUI cookingMenu = super.craftingMenu(pl, 18);
 
@@ -116,12 +121,14 @@ public class CookingMenu extends Workstation {
                 LinkedHashMap<Material, Integer> reqs = new LinkedHashMap<>();
 
                 if (event.getSlot() == 9) {
-                    reqs = breadReqs;
+                    reqs = meatReqs;
                 } else if (event.getSlot() == 10) {
-                    reqs = codReqs;
+                    reqs = breadReqs;
                 } else if (event.getSlot() == 11) {
-                    reqs = salmonReqs;
+                    reqs = codReqs;
                 } else if (event.getSlot() == 12) {
+                    reqs = salmonReqs;
+                } else if (event.getSlot() == 13) {
                     reqs = ambrosiaStewReqs;
                 }
 
@@ -147,13 +154,21 @@ public class CookingMenu extends Workstation {
         return cookingMenu;
     }
 
-    private void setupItems(ItemGUI forgeMenu, Player pl) {
+    private void setupItems(ItemGUI cookingFireMenu, Player player) {
+
+        // meat
+        LinkedHashMap<Material, Integer> meatReqs = new LinkedHashMap<>();
+        meatReqs.put(Material.MUTTON, 4);
+        meatReqs.put(Material.OAK_LOG, 2);
+        super.createMenuItem(cookingFireMenu, player, 9, Material.COOKED_MUTTON, "&fCooked Meat", meatReqs,
+                "Raw Meat\nOak Log", 999, 0, 0, 0, "",
+                true, false, false);
 
         // bread
         LinkedHashMap<Material, Integer> breadReqs = new LinkedHashMap<>();
         breadReqs.put(Material.WHEAT, 3);
         breadReqs.put(Material.SPRUCE_LOG, 1);
-        super.createMenuItem(forgeMenu, pl, 9, Material.BREAD, "&fBread", breadReqs,
+        super.createMenuItem(cookingFireMenu, player, 10, Material.BREAD, "&fBread", breadReqs,
                 "Wheat\nSpruce Log", 999, 0, 0, 0, "",
                 true, false, false);
 
@@ -161,7 +176,7 @@ public class CookingMenu extends Workstation {
         LinkedHashMap<Material, Integer> codReqs = new LinkedHashMap<>();
         codReqs.put(Material.COD, 1);
         codReqs.put(Material.OAK_LOG, 1);
-        super.createMenuItem(forgeMenu, pl, 10, Material.COOKED_COD, "&fCooked Cod", codReqs,
+        super.createMenuItem(cookingFireMenu, player, 11, Material.COOKED_COD, "&fCooked Cod", codReqs,
                 "Cod\nOak Log", 999, 0, 0, 0, "",
                 true, false, false);
 
@@ -169,16 +184,16 @@ public class CookingMenu extends Workstation {
         LinkedHashMap<Material, Integer> salmonReqs = new LinkedHashMap<>();
         salmonReqs.put(Material.SALMON, 1);
         salmonReqs.put(Material.OAK_LOG, 1);
-        super.createMenuItem(forgeMenu, pl, 11, Material.COOKED_SALMON, "&fCooked Salmon", salmonReqs,
+        super.createMenuItem(cookingFireMenu, player, 12, Material.COOKED_SALMON, "&fCooked Salmon", salmonReqs,
                 "Salmon\nOak Log", 999, 0, 0, 0, "",
                 true, false, false);
 
         // ambrosia stew
         LinkedHashMap<Material, Integer> ambrosiaStewReqs = new LinkedHashMap<>();
         ambrosiaStewReqs.put(Material.GOLDEN_CARROT, 1);
-        ambrosiaStewReqs.put(Material.RABBIT, 1);
-        ambrosiaStewReqs.put(Material.DARK_OAK_LOG, 1);
-        super.createMenuItem(forgeMenu, pl, 12, Material.RABBIT_STEW, "&fAmbrosia Stew", ambrosiaStewReqs,
+        ambrosiaStewReqs.put(Material.RABBIT, 4);
+        ambrosiaStewReqs.put(Material.DARK_OAK_LOG, 16);
+        super.createMenuItem(cookingFireMenu, player, 13, Material.RABBIT_STEW, "&fAmbrosia Stew", ambrosiaStewReqs,
                 "Ambrosia Root\nUncooked Rabbit\nDark Oak Log", 999, 0, 0, 2,
                 generateItemLore(CookingItems.AMBROSIA_STEW),
                 true, false, true);
@@ -201,12 +216,14 @@ public class CookingMenu extends Workstation {
     private ItemStack determineItem(int slot) {
         switch (slot) {
             case 9:
-                return CookingItems.BREAD_ITEMSTACK;
+                return CookingItems.COOKED_MEAT_ITEMSTACK;
             case 10:
-                return CookingItems.COOKED_COD_ITEMSTACK;
+                return CookingItems.BREAD_ITEMSTACK;
             case 11:
-                return CookingItems.COOKED_SALMON_ITEMSTACK;
+                return CookingItems.COOKED_COD_ITEMSTACK;
             case 12:
+                return CookingItems.COOKED_SALMON_ITEMSTACK;
+            case 13:
                 return CookingItems.AMBROSIA_STEW_ITEMSTACK;
         }
         return new ItemStack(Material.STONE); // oops

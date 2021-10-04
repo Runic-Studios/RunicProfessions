@@ -38,10 +38,10 @@ public class EnchantingTableMenu extends Workstation {
     }
 
     @Override
-    public void setupWorkstation(Player pl) {
+    public void setupWorkstation(Player player) {
 
         // setup the menu
-        super.setupWorkstation("&f&l" + pl.getName() + "'s &e&lEnchanting Table");
+        super.setupWorkstation("&f&l" + player.getName() + "'s &e&lEnchanting Table");
         ItemGUI enchanterMenu = getItemGUI();
 
         //set the visual items
@@ -54,10 +54,10 @@ public class EnchantingTableMenu extends Workstation {
             if (event.getSlot() == 3) {
 
                 // open the bench menu
-                pl.playSound(pl.getLocation(), Sound.UI_BUTTON_CLICK, 0.5f, 1);
-                this.setItemGUI(tableMenu(pl));
-                this.setTitle(tableMenu(pl).getName());
-                this.getItemGUI().open(pl);
+                player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 0.5f, 1);
+                this.setItemGUI(tableMenu(player));
+                this.setTitle(tableMenu(player).getName());
+                this.getItemGUI().open(player);
 
                 event.setWillClose(false);
                 event.setWillDestroy(true);
@@ -65,7 +65,7 @@ public class EnchantingTableMenu extends Workstation {
             } else if (event.getSlot() == 5) {
 
                 // close editor
-                pl.playSound(pl.getLocation(), Sound.UI_BUTTON_CLICK, 0.5f, 1);
+                player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 0.5f, 1);
                 event.setWillClose(true);
                 event.setWillDestroy(true);
             }

@@ -6,6 +6,9 @@ import org.bukkit.inventory.ItemStack;
 
 public class CookingItems {
 
+    public static final RunicItemGeneric COOKED_MEAT = (RunicItemGeneric) RunicItemsAPI.generateItemFromTemplate("CookedMeat");
+    public static final ItemStack COOKED_MEAT_ITEMSTACK = COOKED_MEAT.generateItem();
+
     public static final RunicItemGeneric BREAD = (RunicItemGeneric) RunicItemsAPI.generateItemFromTemplate("Bread");
     public static final ItemStack BREAD_ITEMSTACK = BREAD.generateItem();
 

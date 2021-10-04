@@ -21,10 +21,10 @@ public class FurnaceMenu extends Workstation {
     }
 
     @Override
-    public void setupWorkstation(Player pl) {
+    public void setupWorkstation(Player player) {
 
         // setup the menu
-        super.setupWorkstation("&f&l" + pl.getName() + "'s &e&lFurnace");
+        super.setupWorkstation("&f&l" + player.getName() + "'s &e&lFurnace");
         ItemGUI furnaceMenu = getItemGUI();
 
         //set the visual items
@@ -37,17 +37,17 @@ public class FurnaceMenu extends Workstation {
             if (event.getSlot() == 3) {
 
                 // open the forging menu
-                pl.playSound(pl.getLocation(), Sound.UI_BUTTON_CLICK, 0.5f, 1);
-                this.setItemGUI(smeltingMenu(pl));
-                this.setTitle(smeltingMenu(pl).getName());
-                this.getItemGUI().open(pl);
+                player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 0.5f, 1);
+                this.setItemGUI(smeltingMenu(player));
+                this.setTitle(smeltingMenu(player).getName());
+                this.getItemGUI().open(player);
                 event.setWillClose(false);
                 event.setWillDestroy(true);
 
             } else if (event.getSlot() == 5) {
 
                 // close editor
-                pl.playSound(pl.getLocation(), Sound.UI_BUTTON_CLICK, 0.5f, 1);
+                player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 0.5f, 1);
                 event.setWillClose(true);
                 event.setWillDestroy(true);
             }

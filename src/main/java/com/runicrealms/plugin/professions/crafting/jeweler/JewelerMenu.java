@@ -22,10 +22,10 @@ public class JewelerMenu extends Workstation {
     }
 
     @Override
-    public void setupWorkstation(Player pl) {
+    public void setupWorkstation(Player player) {
 
         // setup the menu
-        super.setupWorkstation("&f&l" + pl.getName() + "'s &e&lGemcutting Bench");
+        super.setupWorkstation("&f&l" + player.getName() + "'s &e&lGemcutting Bench");
         ItemGUI jewelerMenu = getItemGUI();
 
         //set the visual items
@@ -38,10 +38,10 @@ public class JewelerMenu extends Workstation {
             if (event.getSlot() == 3) {
 
                 // open the bench menu
-                pl.playSound(pl.getLocation(), Sound.UI_BUTTON_CLICK, 0.5f, 1);
-                this.setItemGUI(benchMenu(pl));
-                this.setTitle(benchMenu(pl).getName());
-                this.getItemGUI().open(pl);
+                player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 0.5f, 1);
+                this.setItemGUI(benchMenu(player));
+                this.setTitle(benchMenu(player).getName());
+                this.getItemGUI().open(player);
 
                 event.setWillClose(false);
                 event.setWillDestroy(true);
@@ -49,7 +49,7 @@ public class JewelerMenu extends Workstation {
             } else if (event.getSlot() == 5) {
 
                 // close editor
-                pl.playSound(pl.getLocation(), Sound.UI_BUTTON_CLICK, 0.5f, 1);
+                player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 0.5f, 1);
                 event.setWillClose(true);
                 event.setWillDestroy(true);
             }

@@ -21,10 +21,10 @@ public class ShrineMenu extends Workstation {
     }
 
     @Override
-    public void setupWorkstation(Player pl) {
+    public void setupWorkstation(Player player) {
 
         // setup the menu
-        super.setupWorkstation("&f&l" + pl.getName() + "'s &e&lShrine");
+        super.setupWorkstation("&f&l" + player.getName() + "'s &e&lShrine");
         ItemGUI shrineMenu = getItemGUI();
 
         //set the visual items
@@ -37,10 +37,10 @@ public class ShrineMenu extends Workstation {
             if (event.getSlot() == 3) {
 
                 // open the bench menu
-                pl.playSound(pl.getLocation(), Sound.UI_BUTTON_CLICK, 0.5f, 1);
-                this.setItemGUI(shrineMenu(pl));
-                this.setTitle(shrineMenu(pl).getName());
-                this.getItemGUI().open(pl);
+                player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 0.5f, 1);
+                this.setItemGUI(shrineMenu(player));
+                this.setTitle(shrineMenu(player).getName());
+                this.getItemGUI().open(player);
 
                 event.setWillClose(false);
                 event.setWillDestroy(true);
@@ -48,7 +48,7 @@ public class ShrineMenu extends Workstation {
             } else if (event.getSlot() == 5) {
 
                 // close editor
-                pl.playSound(pl.getLocation(), Sound.UI_BUTTON_CLICK, 0.5f, 1);
+                player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 0.5f, 1);
                 event.setWillClose(true);
                 event.setWillDestroy(true);
             }
