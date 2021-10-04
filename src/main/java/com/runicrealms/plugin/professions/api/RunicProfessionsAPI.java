@@ -6,6 +6,7 @@ import com.runicrealms.plugin.api.RunicCoreAPI;
 import com.runicrealms.plugin.database.PlayerMongoData;
 import com.runicrealms.plugin.database.PlayerMongoDataSection;
 import com.runicrealms.plugin.player.cache.PlayerCache;
+import com.runicrealms.plugin.professions.GatherPlayer;
 import com.runicrealms.plugin.professions.GatheringRegion;
 import com.runicrealms.plugin.professions.crafting.hunter.HunterPlayer;
 import com.runicrealms.plugin.professions.event.ProfessionChangeEvent;
@@ -20,6 +21,7 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 import java.util.Set;
+import java.util.UUID;
 
 public class RunicProfessionsAPI {
 
@@ -54,6 +56,16 @@ public class RunicProfessionsAPI {
 
         ProfessionChangeEvent event = new ProfessionChangeEvent(player, profession);
         Bukkit.getServer().getPluginManager().callEvent(event);
+    }
+
+    /**
+     * Returns the GatherPlayer wrapper for the given player
+     *
+     * @param uuid of player to grab wrapper for
+     * @return the gather player wrapper
+     */
+    public static GatherPlayer getGatherPlayer(UUID uuid) {
+        return RunicProfessions.getGatherPlayerManager().getGatherPlayers().get(uuid);
     }
 
     /**
