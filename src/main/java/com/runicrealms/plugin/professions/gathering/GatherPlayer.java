@@ -1,4 +1,4 @@
-package com.runicrealms.plugin.professions;
+package com.runicrealms.plugin.professions.gathering;
 
 import com.runicrealms.plugin.RunicProfessions;
 import com.runicrealms.plugin.api.RunicCoreAPI;

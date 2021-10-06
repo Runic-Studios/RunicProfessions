@@ -1,4 +1,4 @@
-package com.runicrealms.plugin;
+package com.runicrealms.plugin.professions;
 
 public enum ProfessionEnum {
 
@@ -16,6 +16,7 @@ public enum ProfessionEnum {
 
     /**
      * Formats the profession name w/ an uppercase first letter for scoreboard purposes.
+     *
      * @return the formatted name
      */
     public String getName() {

@@ -1,6 +1,5 @@
 package com.runicrealms.plugin.professions.crafting.hunter;
 
-import com.runicrealms.plugin.ProfessionEnum;
 import com.runicrealms.plugin.RunicCore;
 import com.runicrealms.plugin.RunicProfessions;
 import com.runicrealms.plugin.api.RunicCoreAPI;
@@ -14,6 +13,7 @@ import com.runicrealms.plugin.events.SpellDamageEvent;
 import com.runicrealms.plugin.events.WeaponDamageEvent;
 import com.runicrealms.plugin.item.util.ItemRemover;
 import com.runicrealms.plugin.player.cache.PlayerCache;
+import com.runicrealms.plugin.professions.ProfessionEnum;
 import com.runicrealms.plugin.professions.event.ProfessionChangeEvent;
 import com.runicrealms.runicitems.item.event.RunicItemGenericTriggerEvent;
 import io.lumine.xikage.mythicmobs.api.bukkit.events.MythicMobDeathEvent;

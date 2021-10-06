@@ -1,11 +1,8 @@
 package com.runicrealms.plugin.professions.listeners;
 
-import com.runicrealms.plugin.professions.GatheringRegion;
 import com.runicrealms.plugin.professions.api.RunicProfessionsAPI;
+import com.runicrealms.plugin.professions.gathering.GatheringRegion;
 import com.runicrealms.plugin.professions.utilities.GatheringUtil;
-import com.runicrealms.runicitems.RunicItemsAPI;
-import com.runicrealms.runicitems.item.RunicItem;
-import com.runicrealms.runicitems.item.RunicItemDynamic;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -20,7 +17,6 @@ import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.player.PlayerFishEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 
 import java.util.Random;
@@ -52,34 +48,29 @@ public class FishingListener implements Listener {
                 (hookLoc.clone().add(0, 1, 0).toVector()).normalize();
 
         // ensure the proper type of block is being mined
-        GatheringUtil.GatheringReagentWrapper gatheringReagentWrapper = buildGatheringReagentWrapper(fishType);
-        String templateId = gatheringReagentWrapper.getTemplateId();
-        ItemStack fish = RunicItemsAPI.generateItemFromTemplate(gatheringReagentWrapper.getTemplateId()).generateItem();
-        String holoString = gatheringReagentWrapper.getHologramDisplayString();
-        ItemStack heldItem = player.getInventory().getItemInMainHand();
-
-        // verify the player is holding a tool
-        if (player.getInventory().getItemInMainHand().getType() == Material.AIR) {
-            player.sendMessage(ChatColor.RED + "You need a fishing rod to do that!");
-            return;
-        }
-
-        // verify held tool is a fishing rod
-        RunicItem runicItem = RunicItemsAPI.getRunicItemFromItemStack(heldItem);
-        String templateIdHeldItem = runicItem.getTemplateId();
-        if (GatheringUtil.getRods().stream().noneMatch(item -> item.getTemplateId().equals(templateIdHeldItem))) {
-            player.sendMessage(ChatColor.RED + "You need a fishing rod to do that!");
-            return;
-        }
-
-        // reduce tool durability
-        RunicItemDynamic fishingRod = (RunicItemDynamic) runicItem;
-        GatheringUtil.reduceGatheringToolDurability(player, fishingRod);
-
-        // gather material
-        GatheringUtil.gatherMaterial(player, fishingRod, templateId, hookLoc,
-                hookLoc.clone().add(0, 1.5, 0), fish.getType(), holoString, chance,
-                fishPath);
+//        GatheringResource gatheringResource = GatheringResource.getFromResourceBlockType(fishType);
+//        String templateId = gatheringResource.getTemplateId();
+//        ItemStack fish = RunicItemsAPI.generateItemFromTemplate(gatheringResource.getTemplateId()).generateItem();
+//        String holoString = gatheringResource.getHologramDisplayString();
+//        ItemStack heldItem = player.getInventory().getItemInMainHand();
+//
+//        // verify the player is holding a tool
+//        if (player.getInventory().getItemInMainHand().getType() == Material.AIR) {
+//            player.sendMessage(ChatColor.RED + "You need a fishing rod to do that!");
+//            return;
+//        }
+//
+//        // verify held tool is a fishing rod
+//        RunicItem runicItem = RunicItemsAPI.getRunicItemFromItemStack(heldItem);
+//        String templateIdHeldItem = runicItem.getTemplateId();
+//        Optional<GatheringTool> gatheringTool = GatheringUtil.getRods().stream().filter(tool -> tool.getRunicItemDynamic().getTemplateId().equals(templateIdHeldItem)).findFirst();
+//        if (!gatheringTool.isPresent()) {
+//            player.sendMessage(ChatColor.RED + "You need a fishing rod to do that!");
+//            return;
+//        }
+//
+//        GatheringEvent gatheringEvent = new GatheringEvent(player, gatheringResource, gatheringTool.get(), templateId, hookLoc, hookLoc.clone().add(0, 1.5, 0), fish.getType(), holoString, chance, fishPath);
+//        Bukkit.getPluginManager().callEvent(gatheringEvent);
     }
 
     /**
@@ -146,29 +137,29 @@ public class FishingListener implements Listener {
         GatheringUtil.setBiteTime(plHook, time);
     }
 
-    /**
-     * Builds out a handy wrapper for matching the runic item template id and changing the hologram display
-     *
-     * @param fishType a double representing a random roll that corresponds to fish type
-     * @return a wrapper with a material and a string
-     */
-    private GatheringUtil.GatheringReagentWrapper buildGatheringReagentWrapper(double fishType) {
-        String templateId;
-        Material placeHolderType = Material.AIR;
-        String holoString;
-        if (fishType < .5) {
-            templateId = "Salmon";
-            holoString = "+ Salmon";
-        } else if (fishType < .75) {
-            templateId = "Cod";
-            holoString = "+ Cod";
-        } else if (fishType < .95) {
-            templateId = "Tropical";
-            holoString = "+ Tropical";
-        } else {
-            templateId = "Pufferfish";
-            holoString = "+ Pufferfish";
-        }
-        return new GatheringUtil.GatheringReagentWrapper(templateId, placeHolderType, holoString);
-    }
+//    /**
+//     * Builds out a handy wrapper for matching the runic item template id and changing the hologram display
+//     *
+//     * @param fishType a double representing a random roll that corresponds to fish type
+//     * @return a wrapper with a material and a string
+//     */
+//    private GatheringUtil.GatheringReagentWrapper buildGatheringReagentWrapper(double fishType) {
+//        String templateId;
+//        Material placeHolderType = Material.AIR;
+//        String holoString;
+//        if (fishType < .5) {
+//            templateId = "Salmon";
+//            holoString = "+ Salmon";
+//        } else if (fishType < .75) {
+//            templateId = "Cod";
+//            holoString = "+ Cod";
+//        } else if (fishType < .95) {
+//            templateId = "Tropical";
+//            holoString = "+ Tropical";
+//        } else {
+//            templateId = "Pufferfish";
+//            holoString = "+ Pufferfish";
+//        }
+//        return new GatheringUtil.GatheringReagentWrapper(templateId, placeHolderType, holoString);
+//    }
 }

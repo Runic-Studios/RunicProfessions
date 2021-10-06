@@ -1,15 +1,16 @@
 package com.runicrealms.plugin.professions.api;
 
-import com.runicrealms.plugin.ProfessionEnum;
 import com.runicrealms.plugin.RunicProfessions;
 import com.runicrealms.plugin.api.RunicCoreAPI;
 import com.runicrealms.plugin.database.PlayerMongoData;
 import com.runicrealms.plugin.database.PlayerMongoDataSection;
 import com.runicrealms.plugin.player.cache.PlayerCache;
-import com.runicrealms.plugin.professions.GatherPlayer;
-import com.runicrealms.plugin.professions.GatheringRegion;
+import com.runicrealms.plugin.professions.ProfessionEnum;
 import com.runicrealms.plugin.professions.crafting.hunter.HunterPlayer;
 import com.runicrealms.plugin.professions.event.ProfessionChangeEvent;
+import com.runicrealms.plugin.professions.gathering.GatherPlayer;
+import com.runicrealms.plugin.professions.gathering.GatheringRegion;
+import com.runicrealms.plugin.professions.gathering.GatheringSkill;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.protection.ApplicableRegionSet;
@@ -56,6 +57,31 @@ public class RunicProfessionsAPI {
 
         ProfessionChangeEvent event = new ProfessionChangeEvent(player, profession);
         Bukkit.getServer().getPluginManager().callEvent(event);
+    }
+
+    /**
+     * @param player
+     * @param gatheringSkill
+     * @return
+     */
+    public static int determineCurrentGatheringLevel(Player player, GatheringSkill gatheringSkill) {
+        GatherPlayer gatherPlayer = RunicProfessionsAPI.getGatherPlayer(player.getUniqueId());
+        switch (gatheringSkill) {
+            case COOKING:
+                return gatherPlayer.getCookingLevel();
+            case FARMING:
+                return gatherPlayer.getFarmingLevel();
+            case FISHING:
+                return gatherPlayer.getFishingLevel();
+            case HARVESTING:
+                return gatherPlayer.getHarvestingLevel();
+            case MINING:
+                return gatherPlayer.getMiningLevel();
+            case WOODCUTTING:
+                return gatherPlayer.getWoodcuttingLevel();
+            default:
+                return 0;
+        }
     }
 
     /**

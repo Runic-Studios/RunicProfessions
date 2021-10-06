@@ -1,8 +1,5 @@
 package com.runicrealms.plugin;
 
-
-import com.runicrealms.plugin.professions.GatherPlayerManager;
-import com.runicrealms.plugin.professions.GatheringShopFactory;
 import com.runicrealms.plugin.professions.ProfManager;
 import com.runicrealms.plugin.professions.commands.ProfLevelCMD;
 import com.runicrealms.plugin.professions.commands.SetProfCMD;
@@ -13,6 +10,8 @@ import com.runicrealms.plugin.professions.crafting.enchanter.EnchantListener;
 import com.runicrealms.plugin.professions.crafting.hunter.HunterCache;
 import com.runicrealms.plugin.professions.crafting.hunter.HunterListener;
 import com.runicrealms.plugin.professions.crafting.hunter.HunterShop;
+import com.runicrealms.plugin.professions.gathering.GatherPlayerManager;
+import com.runicrealms.plugin.professions.gathering.GatheringShopFactory;
 import com.runicrealms.plugin.professions.listeners.*;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -67,9 +66,6 @@ public final class RunicProfessions extends JavaPlugin {
     private void registerEvents() {
         PluginManager pm = this.getServer().getPluginManager();
         pm.registerEvents(new WorkstationListener(), this);
-        pm.registerEvents(new MiningListener(), this);
-        pm.registerEvents(new FarmingListener(), this);
-        pm.registerEvents(new WoodcuttingListener(), this);
         pm.registerEvents(new FishingListener(), this);
         pm.registerEvents(new PotionListener(), this);
         pm.registerEvents(new CookingListener(), this);

@@ -1,8 +1,8 @@
 package com.runicrealms.plugin.professions.commands;
 
-import com.runicrealms.plugin.ProfessionEnum;
 import com.runicrealms.plugin.api.RunicCoreAPI;
 import com.runicrealms.plugin.item.util.ItemRemover;
+import com.runicrealms.plugin.professions.ProfessionEnum;
 import com.runicrealms.plugin.professions.api.RunicProfessionsAPI;
 import com.runicrealms.plugin.utilities.CurrencyUtil;
 import org.bukkit.Bukkit;
@@ -45,11 +45,11 @@ public class SetProfCMD implements CommandExecutor {
         ProfessionEnum profession = ProfessionEnum.valueOf(profStr.toUpperCase());
         String isAdmin = args[2];
 
-        if (isAdmin.toLowerCase().equals("true")) {
+        if (isAdmin.equalsIgnoreCase("true")) {
             RunicProfessionsAPI.changePlayerProfession(pl, profession);
             return true;
-        } else if (isAdmin.toLowerCase().equals("tutor")) {
-            if (RunicCoreAPI.getPlayerCache(pl).getProfName().toLowerCase().equals("none")) {
+        } else if (isAdmin.equalsIgnoreCase("tutor")) {
+            if (RunicCoreAPI.getPlayerCache(pl).getProfName().equalsIgnoreCase("none")) {
                 RunicProfessionsAPI.changePlayerProfession(pl, profession);
             } else {
                 if (pl.getInventory().contains(Material.GOLD_NUGGET, PRICE)) {
@@ -63,7 +63,7 @@ public class SetProfCMD implements CommandExecutor {
                 }
             }
         } else {
-            if (RunicCoreAPI.getPlayerCache(pl).getProfName().toLowerCase().equals("none")) {
+            if (RunicCoreAPI.getPlayerCache(pl).getProfName().equalsIgnoreCase("none")) {
                 RunicProfessionsAPI.changePlayerProfession(pl, profession);
             } else {
                 pl.playSound(pl.getLocation(), Sound.BLOCK_FIRE_EXTINGUISH, 0.5f, 1.0f);

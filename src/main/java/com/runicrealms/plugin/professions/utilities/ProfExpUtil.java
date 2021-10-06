@@ -1,9 +1,9 @@
 package com.runicrealms.plugin.professions.utilities;
 
 import com.runicrealms.plugin.api.RunicCoreAPI;
-import com.runicrealms.plugin.professions.GatherPlayer;
-import com.runicrealms.plugin.professions.GatheringSkill;
 import com.runicrealms.plugin.professions.api.RunicProfessionsAPI;
+import com.runicrealms.plugin.professions.gathering.GatherPlayer;
+import com.runicrealms.plugin.professions.gathering.GatheringSkill;
 import com.runicrealms.plugin.utilities.NumRounder;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;

@@ -1,4 +1,4 @@
-package com.runicrealms.plugin.professions;
+package com.runicrealms.plugin.professions.gathering;
 
 public enum GatheringRegion {
 

@@ -4,7 +4,7 @@ import com.runicrealms.plugin.RunicProfessions;
 import com.runicrealms.plugin.character.api.CharacterLoadEvent;
 import com.runicrealms.plugin.database.event.CacheSaveEvent;
 import com.runicrealms.plugin.database.event.CacheSaveReason;
-import com.runicrealms.plugin.professions.GatherPlayer;
+import com.runicrealms.plugin.professions.gathering.GatherPlayer;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -12,6 +12,9 @@ import org.bukkit.event.Listener;
 import java.util.Map;
 import java.util.UUID;
 
+/**
+ * Handles logic for storing in-memory gathering levels for each player
+ */
 public class GatherPlayerListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST) // run event last
