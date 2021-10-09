@@ -73,7 +73,7 @@ public class GatheringListener implements Listener {
             return;
         }
 
-        GatheringEvent gatheringEvent = new GatheringEvent(player, gatheringResource, gatheringTool.get(), templateId, loc, block, placeHolderType, holoString, chance, gatheringResource.getResourceBlockType());
+        GatheringEvent gatheringEvent = new GatheringEvent(player, gatheringResource, gatheringTool.get(), heldItem, templateId, loc, block, placeHolderType, holoString, chance, gatheringResource.getResourceBlockType());
         Bukkit.getPluginManager().callEvent(gatheringEvent);
     }
 
@@ -100,20 +100,19 @@ public class GatheringListener implements Listener {
             event.getPlayer().sendMessage
                     (
                             ChatColor.RED + "You must reach level " + requiredGatheringLevel + " " +
-                                    event.getGatheringResource().getGatheringSkill().getIdentifier() + " to use this tool!"
+                                    event.getGatheringResource().getGatheringSkill().getIdentifier() + " to gather this resource!"
                     );
             return;
         }
         // reduce tool durability
-        RunicItemDynamic runicItemDynamic = event.getGatheringTool().getRunicItemDynamic();
-        reduceGatheringToolDurability(event.getPlayer(), runicItemDynamic);
+        RunicItemDynamic runicItemDynamic = (RunicItemDynamic) RunicItemsAPI.getRunicItemFromItemStack(event.getItemStack());
+        reduceGatheringToolDurability(event.getPlayer(), runicItemDynamic, event.getItemStack());
         if (event.getGatheringTool().getGatheringSkill() == GatheringSkill.FISHING) {
             // todo if check for fishing method
         } else {
             // gather the material
             gatherMaterial(event.getPlayer(), event.getTemplateIdOfResource(), event.getLocation(),
-                    event.getBlock(), event.getPlaceholderMaterial(), event.getHologramItemName(), event.getRoll());
-            RunicProfessions.getProfManager().getBlocksToRestore().put(event.getBlock().getLocation(), event.getReagentBlockType());
+                    event.getBlock(), event.getReagentBlockType(), event.getPlaceholderMaterial(), event.getHologramItemName(), event.getRoll());
         }
     }
 
@@ -124,12 +123,14 @@ public class GatheringListener implements Listener {
      * @param templateId          the templateId of the gathered material (iron-ore)
      * @param location            the location of the block to replace
      * @param block               the block itself to replace
+     * @param reagentBlockType    the material of the resource (iron ore)
      * @param placeholderMaterial the material to set while the block is regenerating (cobblestone)
      * @param hologramItemName    the hologram to display upon successful gathering
      * @param chance              the chance to gather the material
      */
-    private void gatherMaterial(Player player, String templateId, Location location,
-                                Block block, Material placeholderMaterial, String hologramItemName, double chance) {
+    private void gatherMaterial(Player player, String templateId, Location location, Block block,
+                                Material reagentBlockType, Material placeholderMaterial, String hologramItemName,
+                                double chance) {
         block.setType(placeholderMaterial);
         if (location.clone().add(0, 1.5, 0).getBlock().getType() == Material.AIR) {
             HologramUtil.createStaticHologram(player, location, ChatColor.GREEN + "" + ChatColor.BOLD + hologramItemName, 0, 2, 0);
@@ -143,6 +144,7 @@ public class GatheringListener implements Listener {
             HologramUtil.createStaticHologram(player, location, ChatColor.GOLD + "" + ChatColor.BOLD + "+ Coin", 0, 1.25, 0);
             RunicItemsAPI.addItem(player.getInventory(), CurrencyUtil.goldCoin(), player.getLocation());
         }
+        RunicProfessions.getProfManager().getBlocksToRestore().put(block.getLocation(), reagentBlockType);
     }
 
     /**
@@ -186,14 +188,14 @@ public class GatheringListener implements Listener {
     /**
      * Reduces the durability of a RunicItemDynamic after gathering a material
      *
-     * @param player        who gathered material
-     * @param gatheringTool the item to reduce the durability of
+     * @param player           who gathered material
+     * @param runicItemDynamic the item to reduce the durability of
      */
-    private void reduceGatheringToolDurability(Player player, RunicItemDynamic gatheringTool) {
-        int durability = gatheringTool.getDynamicField();
+    private void reduceGatheringToolDurability(Player player, RunicItemDynamic runicItemDynamic, ItemStack itemStack) {
+        int durability = runicItemDynamic.getDynamicField();
         int newDurability = durability - 1;
-        gatheringTool.setDynamicField(newDurability);
-        ItemStack newGatheringTool = gatheringTool.generateItem();
+        runicItemDynamic.setDynamicField(newDurability);
+        ItemStack newGatheringTool = runicItemDynamic.updateItemStack(itemStack);
         if (newDurability <= 0) {
             player.getInventory().setItemInMainHand(null);
             player.playSound(player.getLocation(), Sound.ENTITY_ITEM_BREAK, 0.5f, 1.0f);

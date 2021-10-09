@@ -67,7 +67,7 @@ public enum GatheringTool {
         this.gatheringSkill = gatheringSkill;
         this.requiredLevel = GatheringUtil.getRunicItemDataFieldInt(runicItemDynamic, REQUIRED_LEVEL_KEY);
         this.bonusLootAmount = GatheringUtil.getRunicItemDataFieldInt(runicItemDynamic, BONUS_LOOT_CEILING_KEY);
-        this.bonusLootChance = GatheringUtil.getRunicItemDataFieldInt(runicItemDynamic, BONUS_LOOT_CHANCE_KEY);
+        this.bonusLootChance = GatheringUtil.getRunicItemDataFieldDouble(runicItemDynamic, BONUS_LOOT_CHANCE_KEY);
     }
 
     public RunicItemDynamic getRunicItemDynamic() {

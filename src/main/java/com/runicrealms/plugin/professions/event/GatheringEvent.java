@@ -9,6 +9,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
+import org.bukkit.inventory.ItemStack;
 
 /**
  * This custom event is called when a player catches a fish
@@ -19,6 +20,7 @@ public class GatheringEvent extends Event implements Cancellable {
     private final Player player;
     private final GatheringResource gatheringResource;
     private final GatheringTool gatheringTool;
+    private final ItemStack itemStack;
     private final String templateIdOfResource;
     private final Location location;
     private final Block block;
@@ -33,7 +35,8 @@ public class GatheringEvent extends Event implements Cancellable {
      *
      * @param player               who gathered material
      * @param gatheringResource    the resource being gathered
-     * @param gatheringTool        the tool used
+     * @param gatheringTool        the tool used (wraps runicItemDynamic)
+     * @param itemStack            the actual itemStack used to mine
      * @param templateIdOfResource the templateId of the gathered material (iron-ore)
      * @param location             the location of the block to replace
      * @param block                the block itself to replace
@@ -43,11 +46,13 @@ public class GatheringEvent extends Event implements Cancellable {
      * @param reagentBlockType     for setting the old block type BACK to ore, wheat, etc. (not used for fishing)
      */
     public GatheringEvent(Player player, GatheringResource gatheringResource, GatheringTool gatheringTool,
-                          String templateIdOfResource, Location location, Block block, Material placeholderMaterial,
-                          String hologramItemName, double roll, Material reagentBlockType) {
+                          ItemStack itemStack, String templateIdOfResource, Location location, Block block,
+                          Material placeholderMaterial, String hologramItemName, double roll,
+                          Material reagentBlockType) {
         this.player = player;
         this.gatheringResource = gatheringResource;
         this.gatheringTool = gatheringTool;
+        this.itemStack = itemStack;
         this.templateIdOfResource = templateIdOfResource;
         this.location = location;
         this.block = block;
@@ -73,6 +78,10 @@ public class GatheringEvent extends Event implements Cancellable {
 
     public GatheringTool getGatheringTool() {
         return gatheringTool;
+    }
+
+    public ItemStack getItemStack() {
+        return itemStack;
     }
 
     public String getTemplateIdOfResource() {
