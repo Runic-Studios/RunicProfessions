@@ -7,6 +7,7 @@ import com.runicrealms.plugin.professions.event.GatheringEvent;
 import com.runicrealms.plugin.professions.gathering.GatheringResource;
 import com.runicrealms.plugin.professions.gathering.GatheringSkill;
 import com.runicrealms.plugin.professions.gathering.GatheringTool;
+import com.runicrealms.plugin.professions.utilities.ProfExpUtil;
 import com.runicrealms.plugin.utilities.CurrencyUtil;
 import com.runicrealms.plugin.utilities.FloatingItemUtil;
 import com.runicrealms.plugin.utilities.HologramUtil;
@@ -111,8 +112,9 @@ public class GatheringListener implements Listener {
             // todo if check for fishing method
         } else {
             // gather the material
-            gatherMaterial(event.getPlayer(), event.getTemplateIdOfResource(), event.getLocation(),
-                    event.getBlock(), event.getReagentBlockType(), event.getPlaceholderMaterial(), event.getHologramItemName(), event.getRoll());
+            gatherMaterial(event.getPlayer(), event.getTemplateIdOfResource(), event.getGatheringTool(), event.getGatheringResource(),
+                    event.getLocation(), event.getBlock(), event.getReagentBlockType(), event.getPlaceholderMaterial(),
+                    event.getHologramItemName(), event.getRoll());
         }
     }
 
@@ -121,6 +123,8 @@ public class GatheringListener implements Listener {
      *
      * @param player              who gathered material
      * @param templateId          the templateId of the gathered material (iron-ore)
+     * @param gatheringTool       the tool used to gather material (for loot rates)
+     * @param gatheringResource   the resource which is to be gathered
      * @param location            the location of the block to replace
      * @param block               the block itself to replace
      * @param reagentBlockType    the material of the resource (iron ore)
@@ -128,16 +132,25 @@ public class GatheringListener implements Listener {
      * @param hologramItemName    the hologram to display upon successful gathering
      * @param chance              the chance to gather the material
      */
-    private void gatherMaterial(Player player, String templateId, Location location, Block block,
-                                Material reagentBlockType, Material placeholderMaterial, String hologramItemName,
-                                double chance) {
+    private void gatherMaterial(Player player, String templateId, GatheringTool gatheringTool, GatheringResource gatheringResource,
+                                Location location, Block block, Material reagentBlockType, Material placeholderMaterial,
+                                String hologramItemName, double chance) {
         block.setType(placeholderMaterial);
         if (location.clone().add(0, 1.5, 0).getBlock().getType() == Material.AIR) {
             HologramUtil.createStaticHologram(player, location, ChatColor.GREEN + "" + ChatColor.BOLD + hologramItemName, 0, 2, 0);
         }
-        // todo custom drop chance
-        // todo exp
+        // give experience and resource
+        ProfExpUtil.giveGatheringExperience(player, gatheringResource.getGatheringSkill(), gatheringResource.getExperience());
         RunicItemsAPI.addItem(player.getInventory(), RunicItemsAPI.generateItemFromTemplate(templateId).generateItem(), player.getLocation());
+        // gathering luck logic
+        double bonusLootChance = gatheringTool.getBonusLootChance();
+        if (bonusLootChance > 0) {
+            double bonusLootRoll = ThreadLocalRandom.current().nextDouble();
+            if (bonusLootRoll <= bonusLootChance) {
+                int bonusLootAmount = ThreadLocalRandom.current().nextInt(1, gatheringTool.getBonusLootAmount() + 1);
+                RunicItemsAPI.addItem(player.getInventory(), RunicItemsAPI.generateItemFromTemplate(templateId, bonusLootAmount).generateItem(), player.getLocation());
+            }
+        }
         // give the player a coin
         if (chance >= (COIN_CHANCE)) {
             block.getWorld().playSound(location, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 0.5f, 2.0f);

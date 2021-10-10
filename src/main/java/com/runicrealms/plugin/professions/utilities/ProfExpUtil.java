@@ -4,13 +4,11 @@ import com.runicrealms.plugin.api.RunicCoreAPI;
 import com.runicrealms.plugin.professions.api.RunicProfessionsAPI;
 import com.runicrealms.plugin.professions.gathering.GatherPlayer;
 import com.runicrealms.plugin.professions.gathering.GatheringSkill;
+import com.runicrealms.plugin.utilities.ActionBarUtil;
 import com.runicrealms.plugin.utilities.NumRounder;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
-
-import java.util.UUID;
 
 /**
  * Utility to grant player profession experience and keep track of it.
@@ -64,42 +62,44 @@ public class ProfExpUtil {
     }
 
     /**
-     * @param uuid
-     * @param gatheringSkill
-     * @param expGained
-     * @param sendMsg
+     * Grants the player experience in the given gathering skill
+     *
+     * @param player         to receive experience
+     * @param gatheringSkill in which to give experience
+     * @param expGained      amount of experience gained
      */
-    public static void giveGatheringExperience(UUID uuid, GatheringSkill gatheringSkill, int expGained, boolean sendMsg) {
-        GatherPlayer gatherPlayer = RunicProfessionsAPI.getGatherPlayer(uuid);
-        int currentExp = 0;
-        int currentLevel = 0;
-        switch (gatheringSkill) {
-            case COOKING:
-                currentExp = gatherPlayer.getCookingExp();
-                currentLevel = gatherPlayer.getCookingLevel();
-                break;
-            case FARMING:
-                currentExp = gatherPlayer.getFarmingExp();
-                currentLevel = gatherPlayer.getFarmingLevel();
-                break;
-            case FISHING:
-                currentExp = gatherPlayer.getFishingExp();
-                currentLevel = gatherPlayer.getFishingLevel();
-                break;
-            case HARVESTING:
-                currentExp = gatherPlayer.getHarvestingExp();
-                currentLevel = gatherPlayer.getHarvestingLevel();
-                break;
-            case MINING:
-                currentExp = gatherPlayer.getMiningExp();
-                currentLevel = gatherPlayer.getMiningLevel();
-                break;
-            case WOODCUTTING:
-                currentExp = gatherPlayer.getWoodcuttingExp();
-                currentLevel = gatherPlayer.getWoodcuttingLevel();
-                break;
-        }
+    public static void giveGatheringExperience(Player player, GatheringSkill gatheringSkill, int expGained) {
+        GatherPlayer gatherPlayer = RunicProfessionsAPI.getGatherPlayer(player.getUniqueId());
+        int currentExp = gatherPlayer.getGatheringExp(gatheringSkill);
+        int currentLevel = gatherPlayer.getGatheringLevel(gatheringSkill);
         if (currentLevel >= MAX_GATHERING_PROF_LEVEL) return;
+        gatherPlayer.setGatheringExp(gatheringSkill, currentExp + expGained);
+        int newTotalExp = gatherPlayer.getGatheringExp(gatheringSkill);
+        int totalExpAtLevel = calculateTotalExperience(currentLevel);
+        int totalExpToLevel = calculateTotalExperience(currentLevel + 1);
+        ActionBarUtil.sendTimedMessage
+                (
+                        player,
+                        ChatColor.GREEN + "+ " + ChatColor.WHITE + expGained + ChatColor.GREEN + " " +
+                                gatheringSkill.getFormattedIdentifier() + " exp " + ChatColor.GRAY + "(" +
+                                ChatColor.WHITE + (currentExp - totalExpAtLevel) + ChatColor.GRAY + "/" +
+                                (totalExpToLevel - totalExpAtLevel) + ")",
+                        3
+                );
+        if (calculateProfessionLevel(newTotalExp) == currentLevel) return;
+        // player has earned a level!
+        gatherPlayer.setGatheringLevel(gatheringSkill, calculateProfessionLevel(newTotalExp));
+        currentLevel = gatherPlayer.getGatheringLevel(gatheringSkill);
+        player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 0.5f, 1.0f);
+        if (currentLevel == MAX_GATHERING_PROF_LEVEL) {
+            player.sendTitle(
+                    ChatColor.GOLD + "Max Level!",
+                    ChatColor.GOLD + gatheringSkill.getFormattedIdentifier() + " Level " + ChatColor.WHITE + currentLevel, 10, 40, 10);
+        } else {
+            player.sendTitle(
+                    ChatColor.GREEN + "Level Up!",
+                    ChatColor.GREEN + gatheringSkill.getFormattedIdentifier() + " Level " + ChatColor.WHITE + currentLevel, 10, 40, 10);
+        }
     }
 
     /**
@@ -110,7 +110,6 @@ public class ProfExpUtil {
      * @return the level at which they should be (e.g., ~500000 experience should be level 60)
      */
     private static int calculateProfessionLevel(double experience) {
-        Bukkit.broadcastMessage("expected level from " + experience + "is " + (int) ((Math.cbrt((1125 + (5 * experience)) / 9)) - 5));
         return (int) ((Math.cbrt((1125 + (5 * experience)) / 9)) - 5);
     }
 

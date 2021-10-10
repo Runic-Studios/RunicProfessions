@@ -150,6 +150,114 @@ public class GatherPlayer {
         return this.playerCache;
     }
 
+    /**
+     * A handy general method for grabbing the gathering exp which corresponds to the skill
+     *
+     * @param gatheringSkill which gathering skill do we want info for
+     * @return our gathering exp
+     */
+    public int getGatheringExp(GatheringSkill gatheringSkill) {
+        switch (gatheringSkill) {
+            case COOKING:
+                return this.getCookingExp();
+            case FARMING:
+                return this.getFarmingExp();
+            case FISHING:
+                return this.getFishingExp();
+            case HARVESTING:
+                return this.getHarvestingExp();
+            case MINING:
+                return this.getMiningExp();
+            case WOODCUTTING:
+                return this.getWoodcuttingExp();
+            default:
+                return 0;
+        }
+    }
+
+    /**
+     * A handy general method for grabbing the gathering level which corresponds to the skill
+     *
+     * @param gatheringSkill which gathering skill do we want info for
+     * @return our gathering level
+     */
+    public int getGatheringLevel(GatheringSkill gatheringSkill) {
+        switch (gatheringSkill) {
+            case COOKING:
+                return this.getCookingLevel();
+            case FARMING:
+                return this.getFarmingLevel();
+            case FISHING:
+                return this.getFishingLevel();
+            case HARVESTING:
+                return this.getHarvestingLevel();
+            case MINING:
+                return this.getMiningLevel();
+            case WOODCUTTING:
+                return this.getWoodcuttingLevel();
+            default:
+                return 0;
+        }
+    }
+
+    /**
+     * General method to set gathering exp total for specified skill
+     *
+     * @param gatheringSkill to update
+     * @param gatheringExp   total to set to
+     */
+    public void setGatheringExp(GatheringSkill gatheringSkill, int gatheringExp) {
+        switch (gatheringSkill) {
+            case COOKING:
+                this.setCookingExp(gatheringExp);
+                break;
+            case FARMING:
+                this.setFarmingExp(gatheringExp);
+                break;
+            case FISHING:
+                this.setFishingExp(gatheringExp);
+                break;
+            case HARVESTING:
+                this.setHarvestingExp(gatheringExp);
+                break;
+            case MINING:
+                this.setMiningExp(gatheringExp);
+                break;
+            case WOODCUTTING:
+                this.setWoodcuttingExp(gatheringExp);
+                break;
+        }
+    }
+
+    /**
+     * General method to set gathering level total for specified skill
+     *
+     * @param gatheringSkill to update
+     * @param gatheringLevel total to set to
+     */
+    public void setGatheringLevel(GatheringSkill gatheringSkill, int gatheringLevel) {
+        switch (gatheringSkill) {
+            case COOKING:
+                this.setCookingLevel(gatheringLevel);
+                break;
+            case FARMING:
+                this.setFarmingLevel(gatheringLevel);
+                break;
+            case FISHING:
+                this.setFishingLevel(gatheringLevel);
+                break;
+            case HARVESTING:
+                this.setHarvestingLevel(gatheringLevel);
+                break;
+            case MINING:
+                this.setMiningLevel(gatheringLevel);
+                break;
+            case WOODCUTTING:
+                this.setWoodcuttingLevel(gatheringLevel);
+                break;
+        }
+    }
+
     public int getCookingExp() {
         return cookingExp;
     }

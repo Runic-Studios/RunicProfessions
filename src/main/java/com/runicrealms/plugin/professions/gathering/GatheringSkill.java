@@ -23,6 +23,10 @@ public enum GatheringSkill {
         return identifier;
     }
 
+    public String getFormattedIdentifier() {
+        return identifier.substring(0, 1).toUpperCase() + identifier.substring(1);
+    }
+
     public String getNoToolMessage() {
         return ChatColor.RED + noToolMessage;
     }
