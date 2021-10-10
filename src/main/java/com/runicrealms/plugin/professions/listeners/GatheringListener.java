@@ -147,6 +147,7 @@ public class GatheringListener implements Listener {
         if (bonusLootChance > 0) {
             double bonusLootRoll = ThreadLocalRandom.current().nextDouble();
             if (bonusLootRoll <= bonusLootChance) {
+                player.playSound(player.getLocation(), Sound.BLOCK_STONE_BREAK, 0.5f, 0.5f);
                 int bonusLootAmount = ThreadLocalRandom.current().nextInt(1, gatheringTool.getBonusLootAmount() + 1);
                 RunicItemsAPI.addItem(player.getInventory(), RunicItemsAPI.generateItemFromTemplate(templateId, bonusLootAmount).generateItem(), player.getLocation());
             }
