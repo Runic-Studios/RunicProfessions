@@ -18,6 +18,8 @@ import java.util.Objects;
 
 public class EnchantingTableMenu extends Workstation {
 
+    private static final int TABLE_MENU_SIZE = 54;
+
     public EnchantingTableMenu(Player pl) {
         setupWorkstation(pl);
     }
@@ -122,7 +124,7 @@ public class EnchantingTableMenu extends Workstation {
         frostsEndScroll.put(Material.GUNPOWDER, 1);
         frostsEndScroll.put(Material.GOLDEN_CARROT, 1);
 
-        ItemGUI benchMenu = super.craftingMenu(pl, 27);
+        ItemGUI benchMenu = super.craftingMenu(pl, TABLE_MENU_SIZE);
 
         benchMenu.setOption(4, new ItemStack(Material.ENCHANTING_TABLE), "&eEnchanting Table",
                 "&fClick &7an item to start crafting!"

@@ -17,6 +17,8 @@ import java.util.Objects;
 
 public class JewelerMenu extends Workstation {
 
+    private static final int JEWELER_MENU_SIZE = 54;
+
     public JewelerMenu(Player pl) {
         setupWorkstation(pl);
     }
@@ -98,7 +100,7 @@ public class JewelerMenu extends Workstation {
         cutDiamondReqs.put(Material.LEATHER, 1);
         cutDiamondReqs.put(Material.BLUE_ORCHID, 1);
 
-        ItemGUI benchMenu = super.craftingMenu(pl, 18);
+        ItemGUI benchMenu = super.craftingMenu(pl, JEWELER_MENU_SIZE);
 
         benchMenu.setOption(4, new ItemStack(Material.COBBLESTONE_STAIRS), "&eGemcutting Bench",
                 "&fClick &7an item to start crafting!"
