@@ -102,8 +102,7 @@ public class ProfExpUtil {
                     ChatColor.GREEN + "Level Up!",
                     ChatColor.GREEN + gatheringSkill.getFormattedIdentifier() + " Level " + ChatColor.WHITE + currentLevel, 10, 40, 10);
         }
-        if (gatheringSkill == GatheringSkill.FISHING) // we'll add more level-up message to make fishing clearer
-            sendFishingMessage(player, currentLevel);
+        sendLevelUpMessage(player, gatheringSkill, currentLevel);
     }
 
     /**
@@ -132,19 +131,20 @@ public class ProfExpUtil {
     }
 
     /**
-     * Helpful level-up message for informing players when they can unlock new fish
+     * Helpful level-up message for informing players when they can unlock a new resource
      *
-     * @param player       who is fishing
-     * @param fishingLevel level the player just reached
+     * @param player         who is gathering
+     * @param gatheringSkill the skill the player has leveled-up
+     * @param gatheringLevel level the player just reached
      */
-    private static void sendFishingMessage(Player player, int fishingLevel) {
+    private static void sendLevelUpMessage(Player player, GatheringSkill gatheringSkill, int gatheringLevel) {
         for (GatheringResource gatheringResource : GatheringResource.values()) {
-            if (gatheringResource.getGatheringSkill() != GatheringSkill.FISHING) continue;
-            if (fishingLevel < gatheringResource.getRequiredLevel()) {
+            if (gatheringResource.getGatheringSkill() != gatheringSkill) continue;
+            if (gatheringLevel < gatheringResource.getRequiredLevel()) {
                 player.sendMessage(
                         ChatColor.YELLOW + "You have " + ChatColor.WHITE +
-                                (gatheringResource.getRequiredLevel() - fishingLevel) + ChatColor.YELLOW +
-                                " levels remaining until you can fish " +
+                                (gatheringResource.getRequiredLevel() - gatheringLevel) + ChatColor.YELLOW +
+                                " levels remaining until you can gather " +
                                 RunicItemsAPI.generateItemFromTemplate(gatheringResource.getTemplateId()).getDisplayableItem().getDisplayName() +
                                 ChatColor.YELLOW + "!");
                 return;
