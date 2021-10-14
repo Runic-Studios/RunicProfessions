@@ -6,6 +6,7 @@ import com.runicrealms.plugin.professions.gathering.GatherPlayer;
 import com.runicrealms.plugin.professions.gathering.GatheringResource;
 import com.runicrealms.plugin.professions.gathering.GatheringSkill;
 import com.runicrealms.plugin.utilities.ActionBarUtil;
+import com.runicrealms.plugin.utilities.ChatUtils;
 import com.runicrealms.plugin.utilities.NumRounder;
 import com.runicrealms.runicitems.RunicItemsAPI;
 import org.bukkit.ChatColor;
@@ -141,12 +142,15 @@ public class ProfExpUtil {
         for (GatheringResource gatheringResource : GatheringResource.values()) {
             if (gatheringResource.getGatheringSkill() != gatheringSkill) continue;
             if (gatheringLevel < gatheringResource.getRequiredLevel()) {
-                player.sendMessage(
+                ChatUtils.sendCenteredMessage(player, "");
+                ChatUtils.sendCenteredMessage(
+                        player,
                         ChatColor.YELLOW + "You have " + ChatColor.WHITE +
                                 (gatheringResource.getRequiredLevel() - gatheringLevel) + ChatColor.YELLOW +
                                 " levels remaining until you can gather " +
                                 RunicItemsAPI.generateItemFromTemplate(gatheringResource.getTemplateId()).getDisplayableItem().getDisplayName() +
                                 ChatColor.YELLOW + "!");
+                ChatUtils.sendCenteredMessage(player, "");
                 return;
             }
         }
