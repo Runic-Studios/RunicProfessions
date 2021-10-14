@@ -25,7 +25,7 @@ public enum GatheringResource {
     SALMON("Salmon", GatheringSkill.FISHING, GatheringRegion.POND, Material.SALMON, Material.AIR, "+ Salmon"),
     COD("Cod", GatheringSkill.FISHING, GatheringRegion.POND, Material.COD, Material.AIR, "+ Cod"),
     TROPICAL_FISH("Tropical", GatheringSkill.FISHING, GatheringRegion.POND, Material.TROPICAL_FISH, Material.AIR, "+ Tropical"),
-    PUFFERFISH("Pufferfish", GatheringSkill.FISHING, GatheringRegion.POND, Material.PUFFERFISH, Material.AIR, "+ Pufferfish "),
+    PUFFERFISH("Pufferfish", GatheringSkill.FISHING, GatheringRegion.POND, Material.PUFFERFISH, Material.AIR, "+ Pufferfish"),
 
     /*
     Harvesting

@@ -3,9 +3,11 @@ package com.runicrealms.plugin.professions.utilities;
 import com.runicrealms.plugin.api.RunicCoreAPI;
 import com.runicrealms.plugin.professions.api.RunicProfessionsAPI;
 import com.runicrealms.plugin.professions.gathering.GatherPlayer;
+import com.runicrealms.plugin.professions.gathering.GatheringResource;
 import com.runicrealms.plugin.professions.gathering.GatheringSkill;
 import com.runicrealms.plugin.utilities.ActionBarUtil;
 import com.runicrealms.plugin.utilities.NumRounder;
+import com.runicrealms.runicitems.RunicItemsAPI;
 import org.bukkit.ChatColor;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -100,6 +102,8 @@ public class ProfExpUtil {
                     ChatColor.GREEN + "Level Up!",
                     ChatColor.GREEN + gatheringSkill.getFormattedIdentifier() + " Level " + ChatColor.WHITE + currentLevel, 10, 40, 10);
         }
+        if (gatheringSkill == GatheringSkill.FISHING) // we'll add more level-up message to make fishing clearer
+            sendFishingMessage(player, currentLevel);
     }
 
     /**
@@ -125,5 +129,26 @@ public class ProfExpUtil {
     public static int calculateTotalExperience(int currentLevel) {
         int cubed = (int) Math.pow((currentLevel + 5), 3);
         return ((9 * cubed) / 5) - 225;
+    }
+
+    /**
+     * Helpful level-up message for informing players when they can unlock new fish
+     *
+     * @param player       who is fishing
+     * @param fishingLevel level the player just reached
+     */
+    private static void sendFishingMessage(Player player, int fishingLevel) {
+        for (GatheringResource gatheringResource : GatheringResource.values()) {
+            if (gatheringResource.getGatheringSkill() != GatheringSkill.FISHING) continue;
+            if (fishingLevel < gatheringResource.getRequiredLevel()) {
+                player.sendMessage(
+                        ChatColor.YELLOW + "You have " + ChatColor.WHITE +
+                                (gatheringResource.getRequiredLevel() - fishingLevel) + ChatColor.YELLOW +
+                                " levels remaining until you can fish " +
+                                RunicItemsAPI.generateItemFromTemplate(gatheringResource.getTemplateId()).getDisplayableItem().getDisplayName() +
+                                ChatColor.YELLOW + "!");
+                return;
+            }
+        }
     }
 }
