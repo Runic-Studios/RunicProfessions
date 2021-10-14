@@ -82,7 +82,7 @@ public class ProfExpUtil {
                         player,
                         ChatColor.GREEN + "+ " + ChatColor.WHITE + expGained + ChatColor.GREEN + " " +
                                 gatheringSkill.getFormattedIdentifier() + " exp " + ChatColor.GRAY + "(" +
-                                ChatColor.WHITE + (currentExp - totalExpAtLevel) + ChatColor.GRAY + "/" +
+                                ChatColor.WHITE + (newTotalExp - totalExpAtLevel) + ChatColor.GRAY + "/" +
                                 (totalExpToLevel - totalExpAtLevel) + ")",
                         3
                 );
