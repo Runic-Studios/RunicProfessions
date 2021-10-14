@@ -9,11 +9,11 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.HashSet;
 
+/**
+ * Prevents various types of fishing exploits
+ */
 public class CustomFishListener implements Listener {
 
-    /*
-    Lets do this so players cannot game the system
-     */
     private final HashSet<Player> currentFishers;
 
     public CustomFishListener() {

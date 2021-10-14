@@ -2,7 +2,6 @@ package com.runicrealms.plugin.professions.event;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
-
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.bukkit.inventory.ItemStack;
@@ -12,14 +11,19 @@ import org.bukkit.inventory.ItemStack;
  */
 public class CustomFishEvent extends Event implements Cancellable {
 
-    private Player player;
-    private ItemStack fish;
+    private static final HandlerList handlers = new HandlerList();
+    private final Player player;
+    private final ItemStack fish;
     private boolean isCancelled;
 
     public CustomFishEvent(Player player, ItemStack fish) {
         this.player = player;
         this.fish = fish;
         this.isCancelled = false;
+    }
+
+    public static HandlerList getHandlerList() {
+        return handlers;
     }
 
     public Player getPlayer() {
@@ -40,15 +44,9 @@ public class CustomFishEvent extends Event implements Cancellable {
         this.isCancelled = arg0;
     }
 
-    private static final HandlerList handlers = new HandlerList();
-
     @SuppressWarnings("NullableProblems")
     @Override
     public HandlerList getHandlers() {
-        return handlers;
-    }
-
-    public static HandlerList getHandlerList() {
         return handlers;
     }
 }

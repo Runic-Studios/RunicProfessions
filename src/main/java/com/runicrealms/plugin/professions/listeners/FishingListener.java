@@ -1,8 +1,14 @@
 package com.runicrealms.plugin.professions.listeners;
 
 import com.runicrealms.plugin.professions.api.RunicProfessionsAPI;
+import com.runicrealms.plugin.professions.event.GatheringEvent;
 import com.runicrealms.plugin.professions.gathering.GatheringRegion;
+import com.runicrealms.plugin.professions.gathering.GatheringResource;
+import com.runicrealms.plugin.professions.gathering.GatheringTool;
 import com.runicrealms.plugin.professions.utilities.GatheringUtil;
+import com.runicrealms.runicitems.RunicItemsAPI;
+import com.runicrealms.runicitems.item.RunicItem;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -17,8 +23,9 @@ import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.player.PlayerFishEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
-import org.bukkit.util.Vector;
+import org.bukkit.inventory.ItemStack;
 
+import java.util.Optional;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -27,50 +34,59 @@ import java.util.concurrent.ThreadLocalRandom;
  * randomizes which fish they receive
  * Checks name of WG region for "pond" to perform tasks
  */
-@SuppressWarnings("FieldCanBeLocal")
 public class FishingListener implements Listener {
 
     @EventHandler
     public void onFishCatch(PlayerFishEvent e) {
-        // disable exp
+        // disable default exp
         e.setExpToDrop(0);
         e.setCancelled(false);
         if (e.getCaught() != null) e.getCaught().remove();
         if (e.getState() != PlayerFishEvent.State.BITE) return;
         Player player = e.getPlayer();
-
-        // roll to see if player successfully fished
-        // roll to see what kind of fish they will receive
         double chance = ThreadLocalRandom.current().nextDouble();
-        double fishType = ThreadLocalRandom.current().nextDouble();
+
+        // roll to see what kind of fish they will receive
+        double fishRoll = ThreadLocalRandom.current().nextDouble();
         Location hookLoc = e.getHook().getLocation();
-        Vector fishPath = player.getLocation().toVector().subtract
-                (hookLoc.clone().add(0, 1, 0).toVector()).normalize();
 
         // ensure the proper type of block is being mined
-//        GatheringResource gatheringResource = GatheringResource.getFromResourceBlockType(fishType);
-//        String templateId = gatheringResource.getTemplateId();
-//        ItemStack fish = RunicItemsAPI.generateItemFromTemplate(gatheringResource.getTemplateId()).generateItem();
-//        String holoString = gatheringResource.getHologramDisplayString();
-//        ItemStack heldItem = player.getInventory().getItemInMainHand();
-//
-//        // verify the player is holding a tool
-//        if (player.getInventory().getItemInMainHand().getType() == Material.AIR) {
-//            player.sendMessage(ChatColor.RED + "You need a fishing rod to do that!");
-//            return;
-//        }
-//
-//        // verify held tool is a fishing rod
-//        RunicItem runicItem = RunicItemsAPI.getRunicItemFromItemStack(heldItem);
-//        String templateIdHeldItem = runicItem.getTemplateId();
-//        Optional<GatheringTool> gatheringTool = GatheringUtil.getRods().stream().filter(tool -> tool.getRunicItemDynamic().getTemplateId().equals(templateIdHeldItem)).findFirst();
-//        if (!gatheringTool.isPresent()) {
-//            player.sendMessage(ChatColor.RED + "You need a fishing rod to do that!");
-//            return;
-//        }
-//
-//        GatheringEvent gatheringEvent = new GatheringEvent(player, gatheringResource, gatheringTool.get(), templateId, hookLoc, hookLoc.clone().add(0, 1.5, 0), fish.getType(), holoString, chance, fishPath);
-//        Bukkit.getPluginManager().callEvent(gatheringEvent);
+        GatheringResource gatheringResource = getFishFromRoll(fishRoll, RunicProfessionsAPI.getGatherPlayer(player.getUniqueId()).getFishingLevel());
+        String templateId = gatheringResource.getTemplateId();
+        String holoString = gatheringResource.getHologramDisplayString();
+        ItemStack heldItem = player.getInventory().getItemInMainHand();
+        // ItemStack fish = RunicItemsAPI.generateItemFromTemplate(gatheringResource.getTemplateId()).generateItem();
+
+        // verify the player is holding a tool
+        if (player.getInventory().getItemInMainHand().getType() == Material.AIR) {
+            player.sendMessage(gatheringResource.getGatheringSkill().getNoToolMessage());
+            return;
+        }
+
+        // verify held tool is a fishing rod
+        RunicItem runicItem = RunicItemsAPI.getRunicItemFromItemStack(heldItem);
+        String templateIdHeldItem = runicItem.getTemplateId();
+        Optional<GatheringTool> gatheringTool = GatheringUtil.getRods().stream().filter(tool -> tool.getRunicItemDynamic().getTemplateId().equals(templateIdHeldItem)).findFirst();
+        if (!gatheringTool.isPresent()) {
+            player.sendMessage(gatheringResource.getGatheringSkill().getNoToolMessage());
+            return;
+        }
+
+        GatheringEvent gatheringEvent = new GatheringEvent
+                (
+                        player,
+                        gatheringResource,
+                        gatheringTool.get(),
+                        heldItem,
+                        templateId,
+                        hookLoc,
+                        null,
+                        gatheringResource.getResourceBlockType(),
+                        holoString,
+                        chance,
+                        gatheringResource.getResourceBlockType()
+                );
+        Bukkit.getPluginManager().callEvent(gatheringEvent);
     }
 
     /**
@@ -137,29 +153,32 @@ public class FishingListener implements Listener {
         GatheringUtil.setBiteTime(plHook, time);
     }
 
-//    /**
-//     * Builds out a handy wrapper for matching the runic item template id and changing the hologram display
-//     *
-//     * @param fishType a double representing a random roll that corresponds to fish type
-//     * @return a wrapper with a material and a string
-//     */
-//    private GatheringUtil.GatheringReagentWrapper buildGatheringReagentWrapper(double fishType) {
-//        String templateId;
-//        Material placeHolderType = Material.AIR;
-//        String holoString;
-//        if (fishType < .5) {
-//            templateId = "Salmon";
-//            holoString = "+ Salmon";
-//        } else if (fishType < .75) {
-//            templateId = "Cod";
-//            holoString = "+ Cod";
-//        } else if (fishType < .95) {
-//            templateId = "Tropical";
-//            holoString = "+ Tropical";
-//        } else {
-//            templateId = "Pufferfish";
-//            holoString = "+ Pufferfish";
-//        }
-//        return new GatheringUtil.GatheringReagentWrapper(templateId, placeHolderType, holoString);
-//    }
+    /**
+     * Roll a die to determine which fish the player should receive
+     * If they have not reached the necessary level for that fish,
+     * they will receive the default fish instead (salmon)
+     *
+     * @param roll               random double between 0-1
+     * @param playerFishingLevel the level of fishing
+     * @return the appropriate fish to gather
+     */
+    private GatheringResource getFishFromRoll(double roll, int playerFishingLevel) {
+        GatheringResource gatheringResource = GatheringResource.SALMON;
+        if (roll < .5) {
+            return gatheringResource;
+        } else if (roll < .75) {
+            gatheringResource = GatheringResource.COD;
+            if (playerFishingLevel >= gatheringResource.getRequiredLevel())
+                return GatheringResource.COD;
+        } else if (roll < .95) {
+            gatheringResource = GatheringResource.TROPICAL_FISH;
+            if (playerFishingLevel >= gatheringResource.getRequiredLevel())
+                return GatheringResource.TROPICAL_FISH;
+        } else {
+            gatheringResource = GatheringResource.PUFFERFISH;
+            if (playerFishingLevel >= gatheringResource.getRequiredLevel())
+                return GatheringResource.PUFFERFISH;
+        }
+        return GatheringResource.SALMON;
+    }
 }

@@ -39,7 +39,7 @@ public class GatheringEvent extends Event implements Cancellable {
      * @param itemStack            the actual itemStack used to mine
      * @param templateIdOfResource the templateId of the gathered material (iron-ore)
      * @param location             the location of the block to replace
-     * @param block                the block itself to replace
+     * @param block                the block itself to replace (not used for fishing)
      * @param placeholderMaterial  the material to set while the block is regenerating (cobblestone)
      * @param hologramItemName     the hologram to display upon successful gathering
      * @param roll                 the chance to get a gold coin
@@ -61,8 +61,6 @@ public class GatheringEvent extends Event implements Cancellable {
         this.roll = roll;
         this.reagentBlockType = reagentBlockType;
     }
-
-    // todo second event with fish info
 
     public static HandlerList getHandlerList() {
         return handlers;
