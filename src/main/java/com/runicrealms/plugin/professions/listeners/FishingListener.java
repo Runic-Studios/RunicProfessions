@@ -22,7 +22,6 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.player.PlayerFishEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.Optional;
@@ -115,30 +114,6 @@ public class FishingListener implements Listener {
         Entity spawned = e.getEntity();
         if (e.getSpawnReason() == CreatureSpawnEvent.SpawnReason.CUSTOM) return;
         if (spawned instanceof Fish) e.setCancelled(true);
-    }
-
-    /**
-     * Prevents a player from consuming raw fish
-     */
-    @EventHandler
-    public void onRawFishEat(PlayerItemConsumeEvent e) {
-        if (e.getItem().getType() == Material.COD || e.getItem().getType() == Material.SALMON) {
-            e.getPlayer().sendMessage(ChatColor.RED + "I need to cook that first.");
-            e.setCancelled(true);
-        }
-    }
-
-    /**
-     * Prevents a player from consuming puffer / tropical
-     */
-    @EventHandler
-    public void onPufferOrTropicalFishEat(PlayerInteractEvent e) {
-        if (e.getItem() == null) return;
-        Material m = e.getItem().getType();
-        if (m == Material.PUFFERFISH || m == Material.TROPICAL_FISH) {
-            e.getPlayer().sendMessage(ChatColor.RED + "I shouldn't eat that.");
-            e.setCancelled(true);
-        }
     }
 
     /**
