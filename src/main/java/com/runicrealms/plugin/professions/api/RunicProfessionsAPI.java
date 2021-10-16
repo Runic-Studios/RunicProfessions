@@ -9,6 +9,7 @@ import com.runicrealms.plugin.professions.ProfessionEnum;
 import com.runicrealms.plugin.professions.crafting.hunter.HunterPlayer;
 import com.runicrealms.plugin.professions.event.ProfessionChangeEvent;
 import com.runicrealms.plugin.professions.gathering.GatherPlayer;
+import com.runicrealms.plugin.professions.gathering.GatheringGUI;
 import com.runicrealms.plugin.professions.gathering.GatheringRegion;
 import com.runicrealms.plugin.professions.gathering.GatheringSkill;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
@@ -60,9 +61,11 @@ public class RunicProfessionsAPI {
     }
 
     /**
-     * @param player
-     * @param gatheringSkill
-     * @return
+     * Retrieves the gathering level for the player for the associated gathering skill
+     *
+     * @param player         to check
+     * @param gatheringSkill (mining, fishing, etc.) to check
+     * @return the level
      */
     public static int determineCurrentGatheringLevel(Player player, GatheringSkill gatheringSkill) {
         GatherPlayer gatherPlayer = RunicProfessionsAPI.getGatherPlayer(player.getUniqueId());
@@ -121,5 +124,14 @@ public class RunicProfessionsAPI {
         }
 
         return isInRegion;
+    }
+
+    /**
+     * Opens the menu which displays all gathering info for the given player
+     *
+     * @param player to display menu to
+     */
+    public static void openGatheringGUI(Player player) {
+        player.openInventory(new GatheringGUI(player).getInventory());
     }
 }

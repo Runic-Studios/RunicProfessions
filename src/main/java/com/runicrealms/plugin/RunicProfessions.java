@@ -11,6 +11,7 @@ import com.runicrealms.plugin.professions.crafting.hunter.HunterCache;
 import com.runicrealms.plugin.professions.crafting.hunter.HunterListener;
 import com.runicrealms.plugin.professions.crafting.hunter.HunterShop;
 import com.runicrealms.plugin.professions.gathering.GatherPlayerManager;
+import com.runicrealms.plugin.professions.gathering.GatheringGUIListener;
 import com.runicrealms.plugin.professions.gathering.GatheringShopFactory;
 import com.runicrealms.plugin.professions.listeners.*;
 import org.bukkit.plugin.PluginManager;
@@ -77,6 +78,7 @@ public final class RunicProfessions extends JavaPlugin {
         pm.registerEvents(new CropTrampleListener(), this);
         pm.registerEvents(new GatherPlayerListener(), this);
         pm.registerEvents(new GatheringListener(), this);
+        pm.registerEvents(new GatheringGUIListener(), this);
     }
 
     private void initializeShops() {
