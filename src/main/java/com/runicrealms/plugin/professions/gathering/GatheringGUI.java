@@ -1,8 +1,11 @@
 package com.runicrealms.plugin.professions.gathering;
 
 import com.runicrealms.plugin.professions.api.RunicProfessionsAPI;
+import com.runicrealms.plugin.professions.utilities.ProfExpUtil;
 import com.runicrealms.plugin.utilities.ColorUtil;
 import com.runicrealms.plugin.utilities.GUIUtil;
+import com.runicrealms.plugin.utilities.NumRounder;
+import org.apache.commons.lang.ArrayUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -13,7 +16,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class GatheringGUI implements InventoryHolder {
 
-    private static final int[] skillSlots = new int[]{21, 22, 23, 30, 31, 32};
+    private static final int[] skillSlots = new int[]{20, 22, 24, 29, 31, 33};
     private final Inventory inventory;
     private final Player player;
 
@@ -24,13 +27,30 @@ public class GatheringGUI implements InventoryHolder {
     }
 
     private static String[] gatheringSkillDescription(GatherPlayer gatherPlayer, GatheringSkill gatheringSkill) {
-        return new String[]{
-                // todo: exp bar here
+        String[] unlockMessageArray = ProfExpUtil.nextReagentUnlockMessage(gatheringSkill,
+                gatherPlayer.getGatheringLevel(gatheringSkill), true).toArray(new String[0]);
+        String[] descriptionArray = new String[]{
+                buildProgressBar(gatherPlayer, gatheringSkill),
                 "",
                 ChatColor.GRAY + "Level: " + ChatColor.WHITE + gatherPlayer.getGatheringLevel(gatheringSkill),
                 ChatColor.GRAY + "Exp: " + ChatColor.WHITE + gatherPlayer.getGatheringExp(gatheringSkill),
-                ""
+                "",
         };
+        return (String[]) ArrayUtils.addAll(descriptionArray, unlockMessageArray); // append formatted unlock message
+    }
+
+    private static String buildProgressBar(GatherPlayer gatherPlayer, GatheringSkill gatheringSkill) {
+        String bar = "❚❚❚❚❚❚❚❚❚❚"; // 10 bars
+        int currentExp = gatherPlayer.getGatheringExp(gatheringSkill);
+        int currentLv = gatherPlayer.getGatheringLevel(gatheringSkill);
+        int totalExpAtLevel = ProfExpUtil.calculateTotalExperience(currentLv);
+        int totalExpToLevel = ProfExpUtil.calculateTotalExperience(currentLv + 1);
+        double progress = (double) (currentExp - totalExpAtLevel) / (totalExpToLevel - totalExpAtLevel); // 60 - 55 = 5 / 75 - 55 = 20, 5 /20
+        int progressRounded = (int) NumRounder.round(progress * 100);
+        int percent = progressRounded / 10;
+        return ChatColor.GREEN + bar.substring(0, percent) + ChatColor.WHITE + bar.substring(percent) +
+                " (" + (currentExp - totalExpAtLevel) + "/" + (totalExpToLevel - totalExpAtLevel) + ") " +
+                ChatColor.GREEN + ChatColor.BOLD + progressRounded + "% ";
     }
 
     @NotNull

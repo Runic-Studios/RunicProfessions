@@ -13,6 +13,9 @@ import org.bukkit.ChatColor;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 
+import java.util.Collections;
+import java.util.List;
+
 /**
  * Utility to grant player profession experience and keep track of it.
  *
@@ -139,20 +142,35 @@ public class ProfExpUtil {
      * @param gatheringLevel level the player just reached
      */
     private static void sendLevelUpMessage(Player player, GatheringSkill gatheringSkill, int gatheringLevel) {
+        ChatUtils.sendCenteredMessage(player, "");
+        ChatUtils.sendCenteredMessage(
+                player, nextReagentUnlockMessage(gatheringSkill, gatheringLevel, false).get(0));
+        ChatUtils.sendCenteredMessage(player, "");
+    }
+
+    /**
+     * Helpful level-up message for informing players when they can unlock a new resource
+     *
+     * @param gatheringSkill the skill the player has leveled-up
+     * @param gatheringLevel level the player just reached
+     * @param formatText     boolean value to determine whether the string will be formatted (for menu uis)
+     * @return a list of strings (only contains 1 if it's not formatted) with reagent unlock info
+     */
+    public static List<String> nextReagentUnlockMessage(GatheringSkill gatheringSkill, int gatheringLevel, boolean formatText) {
         for (GatheringResource gatheringResource : GatheringResource.values()) {
             if (gatheringResource.getGatheringSkill() != gatheringSkill) continue;
             if (gatheringLevel < gatheringResource.getRequiredLevel()) {
-                ChatUtils.sendCenteredMessage(player, "");
-                ChatUtils.sendCenteredMessage(
-                        player,
-                        ChatColor.YELLOW + "You have " + ChatColor.WHITE +
-                                (gatheringResource.getRequiredLevel() - gatheringLevel) + ChatColor.YELLOW +
-                                " levels remaining until you can gather " +
-                                RunicItemsAPI.generateItemFromTemplate(gatheringResource.getTemplateId()).getDisplayableItem().getDisplayName() +
-                                ChatColor.YELLOW + "!");
-                ChatUtils.sendCenteredMessage(player, "");
-                return;
+                String result = ChatColor.YELLOW + "You have " + ChatColor.WHITE +
+                        (gatheringResource.getRequiredLevel() - gatheringLevel) + ChatColor.YELLOW +
+                        " levels remaining until you can gather " +
+                        RunicItemsAPI.generateItemFromTemplate(gatheringResource.getTemplateId()).getDisplayableItem().getDisplayName() +
+                        ChatColor.YELLOW + "!";
+                if (formatText) return ChatUtils.formattedText(result);
+                return Collections.singletonList(result);
             }
         }
+        String noUnlocks = ChatColor.GREEN + "You have unlocked all reagents for this skill!";
+        if (formatText) return ChatUtils.formattedText(noUnlocks);
+        return Collections.singletonList(noUnlocks);
     }
 }
