@@ -53,6 +53,14 @@ public class GatheringGUI implements InventoryHolder {
                 ChatColor.GREEN + ChatColor.BOLD + progressRounded + "% ";
     }
 
+    private static int calculateTotalLevel(GatherPlayer gatherPlayer) {
+        int totalLevel = 0;
+        for (GatheringSkill gatheringSkill : GatheringSkill.values()) {
+            totalLevel += gatherPlayer.getGatheringLevel(gatheringSkill);
+        }
+        return totalLevel;
+    }
+
     @NotNull
     @Override
     public Inventory getInventory() {
@@ -70,7 +78,21 @@ public class GatheringGUI implements InventoryHolder {
         GatherPlayer gatherPlayer = RunicProfessionsAPI.getGatherPlayer(player.getUniqueId());
         this.inventory.clear();
         this.inventory.setItem(0, GUIUtil.closeButton());
-        // todo: set position to 4 as an info item
+        this.inventory.setItem(4, GUIUtil.dispItem(
+                Material.PAPER,
+                ChatColor.YELLOW + "Skills Info",
+                new String[]{
+                        "",
+                        ChatColor.YELLOW + "Cooking " + ChatColor.GRAY + gatherPlayer.getGatheringLevel(GatheringSkill.COOKING),
+                        ChatColor.YELLOW + "Farming " + ChatColor.GRAY + gatherPlayer.getGatheringLevel(GatheringSkill.FARMING),
+                        ChatColor.YELLOW + "Fishing " + ChatColor.GRAY + gatherPlayer.getGatheringLevel(GatheringSkill.FISHING),
+                        ChatColor.YELLOW + "Harvesting " + ChatColor.GRAY + gatherPlayer.getGatheringLevel(GatheringSkill.HARVESTING),
+                        ChatColor.YELLOW + "Mining " + ChatColor.GRAY + gatherPlayer.getGatheringLevel(GatheringSkill.MINING),
+                        ChatColor.YELLOW + "Woodcutting " + ChatColor.GRAY + gatherPlayer.getGatheringLevel(GatheringSkill.WOODCUTTING),
+                        "",
+                        ChatColor.GRAY + "Total Level " + calculateTotalLevel(gatherPlayer)
+                }
+        ));
         this.inventory.setItem(skillSlots[0], GUIUtil.dispItem
                 (
                         Material.COOKED_MUTTON,
