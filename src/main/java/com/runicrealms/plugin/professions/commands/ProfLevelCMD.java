@@ -26,7 +26,7 @@ public class ProfLevelCMD implements CommandExecutor {
         int exp = ProfExpUtil.calculateTotalExperience(level + 1);
 
         RunicCoreAPI.getPlayerCache(pl).setProfExp(0);
-        ProfExpUtil.giveCraftingExperience(pl, exp, false);
+        ProfExpUtil.giveCraftingExperience(pl, exp);
         RunicCoreAPI.getPlayerCache(pl).setProfLevel(level);
         RunicCoreAPI.getPlayerCache(pl).setProfExp(exp);
 

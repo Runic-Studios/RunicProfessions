@@ -118,7 +118,7 @@ public class FurnaceMenu extends Workstation {
                         (
                                 pl, reqHashMap, 0, 0, event.getCurrentItem().getType(), currentLvl, exp,
                                 ((Damageable) meta).getDamage(), Particle.FLAME,
-                                Sound.ITEM_BUCKET_FILL_LAVA, Sound.BLOCK_LAVA_EXTINGUISH, event.getSlot(), mult
+                                Sound.ITEM_BUCKET_FILL_LAVA, Sound.BLOCK_LAVA_EXTINGUISH, event.getSlot(), mult, false
                         );
             }
         });
@@ -153,18 +153,10 @@ public class FurnaceMenu extends Workstation {
                 true, false, false);
     }
 
-    /**
-     * This...
-     *
-     * @param player
-     * @param numberOfItems
-     * @param successRate
-     * @param inventorySlot
-     */
     @Override
-    public void produceResult(Player player, int numberOfItems, int successRate, int inventorySlot) {
+    public void produceResult(Player player, int numberOfItems, int inventorySlot) {
         ItemStack itemStack = determineItem(inventorySlot);
-        produceResult(player, numberOfItems, successRate, itemStack);
+        produceResult(player, numberOfItems, itemStack);
     }
 
     private ItemStack determineItem(int slot) {

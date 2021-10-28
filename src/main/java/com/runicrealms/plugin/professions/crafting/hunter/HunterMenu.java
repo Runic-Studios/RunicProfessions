@@ -87,7 +87,6 @@ public class HunterMenu extends Workstation {
     }
 
     @Override
-    protected void produceResult(Player player, int numberOfItems, int successRate, int inventorySlot) {
-
+    protected void produceResult(Player player, int numberOfItems, int inventorySlot) {
     }
 }

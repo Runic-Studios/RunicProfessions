@@ -264,7 +264,7 @@ public class AnvilMenu extends Workstation {
                 super.startCrafting(pl, reqHashMap, reagentAmt, reqLevel, event.getCurrentItem().getType(),
                         currentLvl, exp,
                         ((Damageable) meta).getDamage(), Particle.FIREWORKS_SPARK,
-                        Sound.BLOCK_ANVIL_PLACE, Sound.BLOCK_ANVIL_USE, slot, mult);
+                        Sound.BLOCK_ANVIL_PLACE, Sound.BLOCK_ANVIL_USE, slot, mult, false);
             }
         });
 
@@ -442,9 +442,9 @@ public class AnvilMenu extends Workstation {
     }
 
     @Override
-    public void produceResult(Player player, int numberOfItems, int successRate, int inventorySlot) {
+    public void produceResult(Player player, int numberOfItems, int inventorySlot) {
         ItemStack itemStack = determineItem(inventorySlot);
-        produceResult(player, numberOfItems, successRate, itemStack);
+        produceResult(player, numberOfItems, itemStack);
     }
 
     private ItemStack determineItem(int slot) {

@@ -82,7 +82,7 @@ public class HunterPlayer {
 
         this.getPlayer().sendMessage(ColorUtil.format("&r&aHunter mob slain!"));
 
-        ProfExpUtil.giveCraftingExperience(this.getPlayer(), this.task.getExperience(), true);
+        ProfExpUtil.giveCraftingExperience(this.getPlayer(), this.task.getExperience());
 
         this.hunterKills++;
 

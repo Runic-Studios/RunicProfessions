@@ -237,7 +237,7 @@ public class JewelerMenu extends Workstation {
                         (
                                 pl, reqHashMap, 1, reqLevel, event.getCurrentItem().getType(), currentLvl, exp,
                                 ((Damageable) meta).getDamage(), Particle.FIREWORKS_SPARK,
-                                Sound.BLOCK_ANVIL_PLACE, Sound.BLOCK_ANVIL_USE, dummyVar, mult
+                                Sound.BLOCK_ANVIL_PLACE, Sound.BLOCK_ANVIL_USE, dummyVar, mult, false
                         );
             }
         });
@@ -344,20 +344,10 @@ public class JewelerMenu extends Workstation {
                 false, true, false);
     }
 
-
-    /**
-     * This...
-     *
-     * @param player
-     * @param numberOfItems
-     * @param successRate
-     * @param inventorySlot
-     */
     @Override
-    public void produceResult(Player player, int numberOfItems, int successRate, int inventorySlot) {
-//        ItemStack itemStack = determineItem(slot);
+    public void produceResult(Player player, int numberOfItems, int inventorySlot) {
         ItemStack placeholder = new ItemStack(Material.STICK);
-        produceResult(player, numberOfItems, successRate, placeholder);
+        produceResult(player, numberOfItems, placeholder);
     }
 
     private ItemStack addGemStat(GemEnum gemEnum, ItemStack craftedItem, int dummyVar) {

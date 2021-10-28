@@ -4,10 +4,12 @@ import com.runicrealms.plugin.RunicProfessions;
 import com.runicrealms.plugin.api.RunicCoreAPI;
 import com.runicrealms.plugin.item.GUIMenu.ItemGUI;
 import com.runicrealms.plugin.item.util.ItemRemover;
+import com.runicrealms.plugin.professions.gathering.GatheringSkill;
 import com.runicrealms.plugin.professions.listeners.WorkstationListener;
 import com.runicrealms.plugin.professions.utilities.ProfExpUtil;
 import com.runicrealms.plugin.utilities.ColorUtil;
 import com.runicrealms.plugin.utilities.FloatingItemUtil;
+import com.runicrealms.runicitems.RunicItemsAPI;
 import com.runicrealms.runicitems.Stat;
 import com.runicrealms.runicitems.item.*;
 import com.runicrealms.runicitems.item.stats.RunicItemStatRange;
@@ -21,10 +23,8 @@ import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Objects;
-import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * Basic workstation class with some handy methods
@@ -99,33 +99,8 @@ public abstract class Workstation implements Listener {
         // grab the player's current profession level, progress toward that level
         int currentLvl = RunicCoreAPI.getPlayerCache(pl).getProfLevel();
 
-        // determine the success rate, based on level
-        int rate = (40 + currentLvl);
-
-        String rateToStr;
-        if (rate < 50) {
-            rateToStr = ChatColor.RED + "" + rate;
-        } else if (rate < 80) {
-            rateToStr = ChatColor.YELLOW + "" + rate;
-        } else {
-            rateToStr = ChatColor.GREEN + "" + rate;
-        }
-
-        if (cantFail) {
-            rateToStr = ChatColor.GREEN + "100";
-        }
-
         // build the menu display
         StringBuilder desc = new StringBuilder();
-        if (canUpgrade) {
-            if (currentLvl < 30) {
-                desc.append("&eNext upgrade: Lv. 30\n");
-            } else if (currentLvl < 50) {
-                desc.append("&eNext Upgrade: Lv. 50\n");
-            } else if (currentLvl < 60) {
-                desc.append("&eNext Upgrade: Lv. 60\n");
-            }
-        }
 
         if (currentLvl < reqLevel) {
             desc.append("&cReq. Lv: ").append(reqLevel).append("\n");
@@ -138,8 +113,8 @@ public abstract class Workstation implements Listener {
 
         String[] reqsAsList = reqsToString.split("\n");
 
-        // add every item in the reagents keyset with its associated amount.
-        // if there is only one reagent in the keyset, it uses the 'itemAmt' field instead.
+        // add every item in the reagent's key set with its associated amount.
+        // if there is only one reagent in the key set, it uses the 'itemAmt' field instead.
         int i = 0;
 
         for (Material reagent : itemReqs.keySet()) {
@@ -155,12 +130,12 @@ public abstract class Workstation implements Listener {
             i += 1;
         }
 
-        desc.append("\n&7Success Rate:\n")
-                .append(rateToStr).append("%\n\n")
+        desc.append("\n")
                 .append(ChatColor.WHITE).append("Left Click ")
                 .append(ChatColor.DARK_GRAY).append("to craft\n")
                 .append(ChatColor.WHITE).append("Right Click ")
                 .append(ChatColor.DARK_GRAY).append("to craft 5");
+
         if (exp > 0) {
             desc.append("\n\n&7&oRewards &f&o").append(exp).append(" &7&oExperience");
         }
@@ -189,29 +164,36 @@ public abstract class Workstation implements Listener {
         }
     }
 
-    protected void startCrafting(Player pl, LinkedHashMap<Material, Integer> itemReqs, int itemAmt, int reqLevel,
+    /**
+     * @param player
+     * @param itemReqs
+     * @param itemAmt
+     * @param reqLevel
+     * @param craftedItemType
+     * @param currentLvl
+     * @param exp
+     * @param durability
+     * @param particle
+     * @param soundCraft
+     * @param soundDone
+     * @param eventSlot
+     * @param numOfItems
+     * @param isCooking
+     */
+    protected void startCrafting(Player player, LinkedHashMap<Material, Integer> itemReqs, int itemAmt, int reqLevel,
                                  Material craftedItemType, int currentLvl, int exp, int durability,
-                                 Particle particle, Sound soundCraft, Sound soundDone, int eventSlot, int numOfItems) {
+                                 Particle particle, Sound soundCraft, Sound soundDone, int eventSlot, int numOfItems,
+                                 boolean isCooking) {
 
-        if (RunicProfessions.getProfManager().getCurrentCrafters().contains(pl)) return;
+        if (RunicProfessions.getProfManager().getCurrentCrafters().contains(player)) return;
 
         // grab the location of the anvil
-        Location stationLoc = WorkstationListener.getStationLocation().get(pl.getUniqueId());
-
-        // --------------------------------------
-        // fix for tutorial island
-        int rate;
-        if (currentLvl == 0 || currentLvl == 1) {
-            rate = 100;
-        } else {
-            rate = (40 + currentLvl);
-        }
-        // --------------------------------------
+        Location stationLoc = WorkstationListener.getStationLocation().get(player.getUniqueId());
 
         // check that the player has reached the req. lv
         if (currentLvl < reqLevel) {
-            pl.playSound(pl.getLocation(), Sound.ENTITY_GENERIC_EXTINGUISH_FIRE, 0.5f, 1);
-            pl.sendMessage(ChatColor.RED + "You haven't learned to craft this yet!");
+            player.playSound(player.getLocation(), Sound.ENTITY_GENERIC_EXTINGUISH_FIRE, 0.5f, 1);
+            player.sendMessage(ChatColor.RED + "You haven't learned to craft this yet!");
             return;
         }
 
@@ -221,29 +203,29 @@ public abstract class Workstation implements Listener {
             if (itemReqs.size() <= 1) {
                 amt = itemAmt * numOfItems;
             }
-            if (!pl.getInventory().contains(reagent, amt)) {
-                pl.playSound(pl.getLocation(), Sound.ENTITY_GENERIC_EXTINGUISH_FIRE, 0.5f, 1);
-                pl.sendMessage(ChatColor.RED + "You don't have the items to craft this!");
+            if (!player.getInventory().contains(reagent, amt)) {
+                player.playSound(player.getLocation(), Sound.ENTITY_GENERIC_EXTINGUISH_FIRE, 0.5f, 1);
+                player.sendMessage(ChatColor.RED + "You don't have the items to craft this!");
                 return;
             }
         }
 
         // check that the player has an open inventory space
-        if (pl.getInventory().firstEmpty() == -1 && craftedItemType.getMaxStackSize() == 1) {
-            pl.playSound(pl.getLocation(), Sound.ENTITY_GENERIC_EXTINGUISH_FIRE, 0.5f, 1);
-            pl.sendMessage(ChatColor.RED + "You don't have any inventory space!");
+        if (player.getInventory().firstEmpty() == -1 && craftedItemType.getMaxStackSize() == 1) {
+            player.playSound(player.getLocation(), Sound.ENTITY_GENERIC_EXTINGUISH_FIRE, 0.5f, 1);
+            player.sendMessage(ChatColor.RED + "You don't have any inventory space!");
             return;
         }
 
         // check that the player has an open inventory space (if the item is stackable)
-        ItemStack[] inv = pl.getInventory().getContents();
-        if (pl.getInventory().firstEmpty() == -1 && craftedItemType.getMaxStackSize() != 1) {
+        ItemStack[] inv = player.getInventory().getContents();
+        if (player.getInventory().firstEmpty() == -1 && craftedItemType.getMaxStackSize() != 1) {
             for (int i = 0; i < inv.length; i++) {
-                if (pl.getInventory().getItem(i) == null) continue;
-                if (Objects.requireNonNull(pl.getInventory().getItem(i)).getType() == craftedItemType
-                        && Objects.requireNonNull(pl.getInventory().getItem(i)).getAmount() + 1 > craftedItemType.getMaxStackSize()) {
-                    pl.playSound(pl.getLocation(), Sound.ENTITY_GENERIC_EXTINGUISH_FIRE, 0.5f, 1);
-                    pl.sendMessage(ChatColor.RED + "You don't have any inventory space!");
+                if (player.getInventory().getItem(i) == null) continue;
+                if (Objects.requireNonNull(player.getInventory().getItem(i)).getType() == craftedItemType
+                        && Objects.requireNonNull(player.getInventory().getItem(i)).getAmount() + 1 > craftedItemType.getMaxStackSize()) {
+                    player.playSound(player.getLocation(), Sound.ENTITY_GENERIC_EXTINGUISH_FIRE, 0.5f, 1);
+                    player.sendMessage(ChatColor.RED + "You don't have any inventory space!");
                     return;
                 }
             }
@@ -251,18 +233,18 @@ public abstract class Workstation implements Listener {
 
         // if player has everything, take player's items, display first reagent visually
         // add player to currently crafting ArrayList
-        RunicProfessions.getProfManager().getCurrentCrafters().add(pl);
-        pl.sendMessage(ChatColor.GRAY + "Crafting...");
+        RunicProfessions.getProfManager().getCurrentCrafters().add(player);
+        player.sendMessage(ChatColor.GRAY + "Crafting...");
         for (Material reagent : itemReqs.keySet()) {
             int amt = itemReqs.get(reagent) * numOfItems;
             if (itemReqs.size() <= 1) {
                 amt = itemAmt * numOfItems;
             }
-            ItemRemover.takeItem(pl, reagent, amt);
+            ItemRemover.takeItem(player, reagent, amt);
         }
 
         // spawn item on workstation for visual
-        FloatingItemUtil.spawnFloatingItem(pl, stationLoc, craftedItemType, 4, durability);
+        FloatingItemUtil.spawnFloatingItem(player, stationLoc, craftedItemType, 4, durability);
 
         // start the crafting process
         new BukkitRunnable() {
@@ -272,16 +254,19 @@ public abstract class Workstation implements Listener {
             public void run() {
                 if (count > 3) {
                     this.cancel();
-                    RunicProfessions.getProfManager().getCurrentCrafters().remove(pl);
-                    pl.playSound(pl.getLocation(), soundDone, 0.5f, 1.0f);
-                    pl.sendMessage(ChatColor.GREEN + "Done!");
+                    RunicProfessions.getProfManager().getCurrentCrafters().remove(player);
+                    player.playSound(player.getLocation(), soundDone, 0.5f, 1.0f);
+                    player.sendMessage(ChatColor.GREEN + "Done!");
                     if (exp > 0) {
-                        ProfExpUtil.giveCraftingExperience(pl, exp * numOfItems, true);
+                        if (!isCooking)
+                            ProfExpUtil.giveCraftingExperience(player, exp * numOfItems);
+                        else
+                            ProfExpUtil.giveGatheringExperience(player, GatheringSkill.COOKING, exp * numOfItems);
                     }
-                    produceResult(pl, numOfItems, rate, eventSlot);
+                    produceResult(player, numOfItems, eventSlot);
                 } else {
-                    pl.playSound(pl.getLocation(), soundCraft, 0.5f, 2.0f);
-                    pl.spawnParticle(particle, stationLoc, 5, 0.25, 0.25, 0.25, 0.01);
+                    player.playSound(player.getLocation(), soundCraft, 0.5f, 2.0f);
+                    player.spawnParticle(particle, stationLoc, 5, 0.25, 0.25, 0.25, 0.01);
                     count = count + 1;
                 }
             }
@@ -294,26 +279,12 @@ public abstract class Workstation implements Listener {
      *
      * @param player        the player in the workstation
      * @param numberOfItems the number of items they're crafting
-     * @param successRate   the chance to craft the item
      * @param itemStack     the item to be built and dropped
      */
-    protected void produceResult(Player player, int numberOfItems, int successRate, ItemStack itemStack) {
-        int failCount = 0;
+    protected void produceResult(Player player, int numberOfItems, ItemStack itemStack) {
         for (int i = 0; i < numberOfItems; i++) {
-            double chance = ThreadLocalRandom.current().nextDouble(0.0D, 100.0D);
-            if (chance <= successRate) {
-                // adds items while there is inventory space and drops remaining items on the floor
-                HashMap<Integer, ItemStack> itemStacksToAdd = player.getInventory().addItem(itemStack);
-                for (ItemStack is : itemStacksToAdd.values()) {
-                    player.getWorld().dropItem(player.getLocation(), is);
-                }
-            } else {
-                failCount++;
-            }
+            RunicItemsAPI.addItem(player.getInventory(), itemStack);
         }
-        if (failCount == 0)
-            return;
-        player.sendMessage(ChatColor.RED + "You fail to craft this item. [x" + failCount + "]");
     }
 
     /**
@@ -321,10 +292,9 @@ public abstract class Workstation implements Listener {
      *
      * @param player        the player in the workstation
      * @param numberOfItems the number of items they're crafting
-     * @param successRate   the chance to craft the item
      * @param inventorySlot the inventory slot in the menu corresponding to the item
      */
-    protected abstract void produceResult(Player player, int numberOfItems, int successRate, int inventorySlot);
+    protected abstract void produceResult(Player player, int numberOfItems, int inventorySlot);
 
     public String getTitle() {
         return this.title;

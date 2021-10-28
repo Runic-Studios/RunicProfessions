@@ -118,17 +118,23 @@ public class CookingMenu extends Workstation {
 
             } else {
 
+                int exp = 0;
                 LinkedHashMap<Material, Integer> reqs = new LinkedHashMap<>();
 
                 if (event.getSlot() == 9) {
+                    exp = 10;
                     reqs = meatReqs;
                 } else if (event.getSlot() == 10) {
+                    exp = 10;
                     reqs = breadReqs;
                 } else if (event.getSlot() == 11) {
+                    exp = 20;
                     reqs = codReqs;
                 } else if (event.getSlot() == 12) {
+                    exp = 20;
                     reqs = salmonReqs;
                 } else if (event.getSlot() == 13) {
+                    exp = 100;
                     reqs = ambrosiaStewReqs;
                 }
 
@@ -144,9 +150,9 @@ public class CookingMenu extends Workstation {
                 // craft item based on experience and reagent amount
                 super.startCrafting
                         (
-                                pl, reqs, 0, 0, event.getCurrentItem().getType(), 0, 0,
+                                pl, reqs, 0, 0, event.getCurrentItem().getType(), 0, exp,
                                 ((Damageable) meta).getDamage(), Particle.SMOKE_NORMAL,
-                                Sound.ENTITY_GHAST_SHOOT, Sound.BLOCK_LAVA_EXTINGUISH, event.getSlot(), mult
+                                Sound.ENTITY_GHAST_SHOOT, Sound.BLOCK_LAVA_EXTINGUISH, event.getSlot(), mult, true
                         );
             }
         });
@@ -161,7 +167,7 @@ public class CookingMenu extends Workstation {
         meatReqs.put(Material.MUTTON, 4);
         meatReqs.put(Material.OAK_LOG, 2);
         super.createMenuItem(cookingFireMenu, player, 9, Material.COOKED_MUTTON, "&fCooked Meat", meatReqs,
-                "Raw Meat\nOak Log", 999, 0, 0, 0, "",
+                "Raw Meat\nOak Log", 999, 10, 0, 0, "",
                 true, false, false);
 
         // bread
@@ -169,7 +175,7 @@ public class CookingMenu extends Workstation {
         breadReqs.put(Material.WHEAT, 3);
         breadReqs.put(Material.SPRUCE_LOG, 1);
         super.createMenuItem(cookingFireMenu, player, 10, Material.BREAD, "&fBread", breadReqs,
-                "Wheat\nSpruce Log", 999, 0, 0, 0, "",
+                "Wheat\nSpruce Log", 999, 10, 0, 0, "",
                 true, false, false);
 
         // cod
@@ -177,7 +183,7 @@ public class CookingMenu extends Workstation {
         codReqs.put(Material.COD, 1);
         codReqs.put(Material.OAK_LOG, 1);
         super.createMenuItem(cookingFireMenu, player, 11, Material.COOKED_COD, "&fCooked Cod", codReqs,
-                "Cod\nOak Log", 999, 0, 0, 0, "",
+                "Cod\nOak Log", 999, 20, 0, 0, "",
                 true, false, false);
 
         // salmon
@@ -185,7 +191,7 @@ public class CookingMenu extends Workstation {
         salmonReqs.put(Material.SALMON, 1);
         salmonReqs.put(Material.OAK_LOG, 1);
         super.createMenuItem(cookingFireMenu, player, 12, Material.COOKED_SALMON, "&fCooked Salmon", salmonReqs,
-                "Salmon\nOak Log", 999, 0, 0, 0, "",
+                "Salmon\nOak Log", 999, 20, 0, 0, "",
                 true, false, false);
 
         // ambrosia stew
@@ -194,23 +200,15 @@ public class CookingMenu extends Workstation {
         ambrosiaStewReqs.put(Material.RABBIT, 4);
         ambrosiaStewReqs.put(Material.DARK_OAK_LOG, 16);
         super.createMenuItem(cookingFireMenu, player, 13, Material.RABBIT_STEW, "&fAmbrosia Stew", ambrosiaStewReqs,
-                "Ambrosia Root\nUncooked Rabbit\nDark Oak Log", 999, 0, 0, 2,
+                "Ambrosia Root\nUncooked Rabbit\nDark Oak Log", 999, 100, 0, 2,
                 generateItemLore(CookingItems.AMBROSIA_STEW),
                 true, false, true);
     }
 
-    /**
-     * This...
-     *
-     * @param player
-     * @param numberOfItems
-     * @param successRate
-     * @param inventorySlot
-     */
     @Override
-    public void produceResult(Player player, int numberOfItems, int successRate, int inventorySlot) {
+    public void produceResult(Player player, int numberOfItems, int inventorySlot) {
         ItemStack itemStack = determineItem(inventorySlot);
-        produceResult(player, numberOfItems, successRate, itemStack);
+        produceResult(player, numberOfItems, itemStack);
     }
 
     private ItemStack determineItem(int slot) {

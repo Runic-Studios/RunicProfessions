@@ -86,28 +86,33 @@ public class CauldronMenu extends Workstation {
                 int reqLevel = 0;
                 int exp = 0;
                 LinkedHashMap<Material, Integer> reqHashMap = new LinkedHashMap<>();
-                if (slot == 9) {
+                if (slot == 10) {
                     reqHashMap = healthPotReqs;
                     exp = 35;
-                } else if (slot == 10) {
+                } else if (slot == 11) {
                     reqLevel = 10;
                     reqHashMap = manaPotReqs;
                     exp = 60;
-                } else if (slot == 11) {
+                } else if (slot == 12) {
                     reqLevel = 25;
                     reqHashMap = slayPotReqs;
                     exp = 90;
-                } else if (slot == 12) {
+                } else if (slot == 13) {
                     reqLevel = 40;
                     reqHashMap = lootPotReqs;
                     exp = 600;
-                } else if (slot == 13) {
+                } else if (slot == 14) {
                     reqLevel = 60;
                     reqHashMap = sacredFirePotReqs;
                 }
                 event.setWillClose(true);
                 event.setWillDestroy(true);
-                startCrafting(pl, reqHashMap, 999, reqLevel, event.getCurrentItem().getType(), currentLvl, exp, ((Damageable) meta).getDamage(), Particle.WATER_SPLASH, Sound.BLOCK_BREWING_STAND_BREW, Sound.ENTITY_GENERIC_DRINK, slot, mult);
+                startCrafting
+                        (
+                                pl, reqHashMap, 999, reqLevel, event.getCurrentItem().getType(), currentLvl,
+                                exp, ((Damageable) meta).getDamage(), Particle.WATER_SPLASH, Sound.BLOCK_BREWING_STAND_BREW,
+                                Sound.ENTITY_GENERIC_DRINK, slot, mult, false
+                        );
             }
         });
         return cauldronMenu;
@@ -207,18 +212,10 @@ public class CauldronMenu extends Workstation {
                 generateItemLore(AlchemistItems.POTION_SACRED_FIRE), false, false, false);
     }
 
-    /**
-     * This...
-     *
-     * @param player
-     * @param numberOfItems
-     * @param successRate
-     * @param inventorySlot
-     */
     @Override
-    public void produceResult(Player player, int numberOfItems, int successRate, int inventorySlot) {
+    public void produceResult(Player player, int numberOfItems, int inventorySlot) {
         ItemStack itemStack = determineItem(inventorySlot);
-        produceResult(player, numberOfItems, successRate, itemStack);
+        produceResult(player, numberOfItems, itemStack);
     }
 
     private ItemStack determineItem(int slot) {

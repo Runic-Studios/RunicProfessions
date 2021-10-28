@@ -113,7 +113,7 @@ public class ShrineMenu extends Workstation {
                         (
                                 pl, reqHashMap, 1, reqLevel, event.getCurrentItem().getType(), currentLvl, exp,
                                 ((Damageable) meta).getDamage(), Particle.SPELL_WITCH,
-                                Sound.BLOCK_ENCHANTMENT_TABLE_USE, Sound.ENTITY_PLAYER_LEVELUP, slot, mult
+                                Sound.BLOCK_ENCHANTMENT_TABLE_USE, Sound.ENTITY_PLAYER_LEVELUP, slot, mult, false
                         );
             }
         });
@@ -130,18 +130,10 @@ public class ShrineMenu extends Workstation {
                 true, false, false);
     }
 
-    /**
-     * This...
-     *
-     * @param player
-     * @param numberOfItems
-     * @param successRate
-     * @param inventorySlot
-     */
     @Override
-    public void produceResult(Player player, int numberOfItems, int successRate, int inventorySlot) {
+    public void produceResult(Player player, int numberOfItems, int inventorySlot) {
         ItemStack itemStack = determineItem(inventorySlot);
-        produceResult(player, numberOfItems, successRate, itemStack);
+        produceResult(player, numberOfItems, itemStack);
     }
 
     private ItemStack determineItem(int slot) {
