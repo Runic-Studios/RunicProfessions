@@ -21,7 +21,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.util.Vector;
 
 import java.util.Optional;
 import java.util.Set;
@@ -124,8 +123,7 @@ public class GatheringListener implements Listener {
         if (event.getGatheringTool().getGatheringSkill() == GatheringSkill.FISHING) {
             gatherMaterial(event.getPlayer(), event.getTemplateIdOfResource(), event.getGatheringTool(), event.getGatheringResource(),
                     event.getLocation(), event.getLocation().clone().add(0, 1.5, 0), event.getReagentBlockType(),
-                    event.getHologramItemName(), event.getRoll(), event.getPlayer().getLocation().toVector().subtract
-                            (event.getLocation().clone().add(0, 1, 0).toVector()).normalize());
+                    event.getHologramItemName(), event.getRoll());
         } else {
             gatherMaterial(event.getPlayer(), event.getTemplateIdOfResource(), event.getGatheringTool(), event.getGatheringResource(),
                     event.getLocation(), event.getBlock(), event.getReagentBlockType(), event.getPlaceholderMaterial(),
@@ -166,7 +164,7 @@ public class GatheringListener implements Listener {
     }
 
     /**
-     * Modified function to handle gathering for fishing
+     * Modified function to handle gathering for FISHING
      *
      * @param player            who gathered material
      * @param templateId        the templateId of the gathered material (iron-ore)
@@ -177,18 +175,17 @@ public class GatheringListener implements Listener {
      * @param fishItemToDisplay the floating item which will display
      * @param hologramItemName  the hologram to display upon successful gathering
      * @param chance            the chance to gather the material
-     * @param fishPath          the vector which the floating fish will follow
      */
     private void gatherMaterial(Player player, String templateId, GatheringTool gatheringTool, GatheringResource gatheringResource,
                                 Location location, Location fishLocation, Material fishItemToDisplay,
-                                String hologramItemName, double chance, Vector fishPath) {
+                                String hologramItemName, double chance) {
         // call the fishing event
         ItemStack fish = RunicItemsAPI.generateItemFromTemplate(templateId).generateItem();
         CustomFishEvent event = new CustomFishEvent(player, fish);
         Bukkit.getPluginManager().callEvent(event);
         if (event.isCancelled()) return;
         // spawn floating fish
-        FloatingItemUtil.spawnFloatingItem(player, fishLocation, fishItemToDisplay, 1, fishPath);
+        FloatingItemUtil.spawnFloatingItem(player, fishLocation, fishItemToDisplay, 2);
         // give the player experience the gathered item, drop on floor if inventory is full
         HologramUtil.createStaticHologram(player, location, ChatColor.GREEN + "" + ChatColor.BOLD + hologramItemName, 0, 2, 0);
         ProfExpUtil.giveGatheringExperience(player, gatheringResource.getGatheringSkill(), gatheringResource.getExperience());
