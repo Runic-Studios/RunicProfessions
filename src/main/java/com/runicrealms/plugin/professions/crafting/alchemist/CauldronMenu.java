@@ -142,73 +142,74 @@ public class CauldronMenu extends Workstation {
         lootPotReqs.put(Material.GLASS_BOTTLE, 1);
         lootPotReqs.put(Material.GOLDEN_CARROT, 1);
         lootPotReqs.put(Material.PUFFERFISH, 1);
+
         createMenuItem(forgeMenu, pl, 10, Material.POTION,
                 AlchemistItems.LESSER_POTION_HEALING.getDisplayableItem().getDisplayName(), healthPotReqs, "Glass Bottle\nUncut Ruby\nSalmon",
                 5, 35, 0, 0,
                 generateItemLore(AlchemistItems.LESSER_POTION_HEALING), false, false, false);
+
         createMenuItem(forgeMenu, pl, 11, Material.POTION, AlchemistItems.LESSER_POTION_MANA
-                        .getDisplayableItem().getDisplayName(), manaPotReqs, "Glass Bottle\nUncut Sapphire\nCod", 8, 60, 10, 0,
-
+                        .getDisplayableItem().getDisplayName(), manaPotReqs, "Glass Bottle\nUncut Sapphire\nCod", 8, 60, 5, 0,
                 generateItemLore(AlchemistItems.LESSER_POTION_MANA), false, false, false);
+
         createMenuItem(forgeMenu, pl, 12, Material.POTION, AlchemistItems.LESSER_POTION_SLAYING
-                        .getDisplayableItem().getDisplayName(), slayPotReqs, "Glass Bottle\nUncut Opal\nUncut Diamond\nTropical Fish", 7, 90, 25, 0,
-
+                        .getDisplayableItem().getDisplayName(), slayPotReqs, "Glass Bottle\nUncut Opal\nUncut Diamond\nTropical Fish", 7, 90, 10, 0,
                 generateItemLore(AlchemistItems.LESSER_POTION_SLAYING), false, false, false);
+
         createMenuItem(forgeMenu, pl, 13, Material.POTION, AlchemistItems.MINOR_POTION_HEALING
-                        .getDisplayableItem().getDisplayName(), healthPotReqs, "Glass Bottle\nUncut Ruby\nSalmon", 5, 35, 30, 0,
-
+                        .getDisplayableItem().getDisplayName(), healthPotReqs, "Glass Bottle\nUncut Ruby\nSalmon", 5, 35, 15, 0,
                 generateItemLore(AlchemistItems.MINOR_POTION_HEALING), false, false, false);
+
         createMenuItem(forgeMenu, pl, 14, Material.POTION, AlchemistItems.MINOR_POTION_MANA
-                        .getDisplayableItem().getDisplayName(), manaPotReqs, "Glass Bottle\nUncut Sapphire\nCod", 8, 60, 30, 0,
-
+                        .getDisplayableItem().getDisplayName(), manaPotReqs, "Glass Bottle\nUncut Sapphire\nCod", 8, 60, 15, 0,
                 generateItemLore(AlchemistItems.MINOR_POTION_MANA), false, false, false);
-        createMenuItem(forgeMenu, pl, 15, Material.POTION, AlchemistItems.MINOR_POTION_SLAYING
-                        .getDisplayableItem().getDisplayName(), slayPotReqs, "Glass Bottle\nUncut Opal\nUncut Diamond\nTropical Fish", 7, 90, 30, 0,
 
+        createMenuItem(forgeMenu, pl, 15, Material.POTION, AlchemistItems.MINOR_POTION_SLAYING
+                        .getDisplayableItem().getDisplayName(), slayPotReqs, "Glass Bottle\nUncut Opal\nUncut Diamond\nTropical Fish", 7, 90, 20, 0,
                 generateItemLore(AlchemistItems.MINOR_POTION_SLAYING), false, false, false);
+
         createMenuItem(forgeMenu, pl, 16, Material.POTION, AlchemistItems.MINOR_POTION_LOOTING
-                        .getDisplayableItem().getDisplayName(), lootPotReqs, "Glass Bottle\nAmbrosia Root\nPufferfish", 4, 600, 40, 0,
+                        .getDisplayableItem().getDisplayName(), lootPotReqs, "Glass Bottle\nAmbrosia Root\nPufferfish", 4, 600, 25, 0,
 
                 generateItemLore(AlchemistItems.MINOR_POTION_LOOTING), false, true, false);
         createMenuItem(forgeMenu, pl, 17, Material.POTION, AlchemistItems.MAJOR_POTION_HEALING
-                        .getDisplayableItem().getDisplayName(), healthPotReqs, "Glass Bottle\nUncut Ruby\nSalmon", 5, 35, 0, 0,
-
+                        .getDisplayableItem().getDisplayName(), healthPotReqs, "Glass Bottle\nUncut Ruby\nSalmon", 5, 35, 30, 0,
                 generateItemLore(AlchemistItems.MAJOR_POTION_HEALING), false, false, false);
+
         createMenuItem(forgeMenu, pl, 18, Material.POTION, AlchemistItems.MAJOR_POTION_MANA
-                        .getDisplayableItem().getDisplayName(), manaPotReqs, "Glass Bottle\nUncut Sapphire\nCod", 8, 60, 10, 0,
-
+                        .getDisplayableItem().getDisplayName(), manaPotReqs, "Glass Bottle\nUncut Sapphire\nCod", 8, 60, 30, 0,
                 generateItemLore(AlchemistItems.MAJOR_POTION_MANA), false, false, false);
-        createMenuItem(forgeMenu, pl, 19, Material.POTION, AlchemistItems.MAJOR_POTION_SLAYING
-                        .getDisplayableItem().getDisplayName(), slayPotReqs, "Glass Bottle\nUncut Opal\nUncut Diamond\nTropical Fish", 7, 90, 25, 0,
 
+        createMenuItem(forgeMenu, pl, 19, Material.POTION, AlchemistItems.MAJOR_POTION_SLAYING
+                        .getDisplayableItem().getDisplayName(), slayPotReqs, "Glass Bottle\nUncut Opal\nUncut Diamond\nTropical Fish", 7, 90, 35, 0,
                 generateItemLore(AlchemistItems.MAJOR_POTION_SLAYING), false, false, false);
+
         createMenuItem(forgeMenu, pl, 20, Material.POTION, AlchemistItems.MAJOR_POTION_LOOTING
                         .getDisplayableItem().getDisplayName(), lootPotReqs, "Glass Bottle\nAmbrosia Root\nPufferfish", 4, 600, 40, 0,
-
                 generateItemLore(AlchemistItems.MAJOR_POTION_LOOTING), false, true, false);
-        createMenuItem(forgeMenu, pl, 21, Material.POTION, AlchemistItems.MINOR_POTION_HEALING
-                        .getDisplayableItem().getDisplayName(), healthPotReqs, "Glass Bottle\nUncut Ruby\nSalmon", 5, 35, 0, 0,
 
-                generateItemLore(AlchemistItems.MINOR_POTION_HEALING), false, false, false);
-        createMenuItem(forgeMenu, pl, 22, Material.POTION, AlchemistItems.MINOR_POTION_MANA
-                        .getDisplayableItem().getDisplayName(), manaPotReqs, "Glass Bottle\nUncut Sapphire\nCod", 8, 60, 10, 0,
+        createMenuItem(forgeMenu, pl, 21, Material.POTION, AlchemistItems.GREATER_POTION_HEALING
+                        .getDisplayableItem().getDisplayName(), healthPotReqs, "Glass Bottle\nUncut Ruby\nSalmon", 5, 35, 45, 0,
+                generateItemLore(AlchemistItems.GREATER_POTION_HEALING), false, false, false);
 
-                generateItemLore(AlchemistItems.MINOR_POTION_MANA), false, false, false);
-        createMenuItem(forgeMenu, pl, 23, Material.POTION, AlchemistItems.MINOR_POTION_SLAYING
-                        .getDisplayableItem().getDisplayName(), slayPotReqs, "Glass Bottle\nUncut Opal\nUncut Diamond\nTropical Fish", 7, 90, 25, 0,
+        createMenuItem(forgeMenu, pl, 22, Material.POTION, AlchemistItems.GREATER_POTION_MANA
+                        .getDisplayableItem().getDisplayName(), manaPotReqs, "Glass Bottle\nUncut Sapphire\nCod", 8, 60, 45, 0,
+                generateItemLore(AlchemistItems.GREATER_POTION_MANA), false, false, false);
 
-                generateItemLore(AlchemistItems.MINOR_POTION_SLAYING), false, false, false);
-        createMenuItem(forgeMenu, pl, 24, Material.POTION, AlchemistItems.MINOR_POTION_LOOTING
-                        .getDisplayableItem().getDisplayName(), lootPotReqs, "Glass Bottle\nAmbrosia Root\nPufferfish", 4, 600, 40, 0,
+        createMenuItem(forgeMenu, pl, 23, Material.POTION, AlchemistItems.GREATER_POTION_SLAYING
+                        .getDisplayableItem().getDisplayName(), slayPotReqs, "Glass Bottle\nUncut Opal\nUncut Diamond\nTropical Fish", 7, 90, 50, 0,
+                generateItemLore(AlchemistItems.GREATER_POTION_SLAYING), false, false, false);
 
-                generateItemLore(AlchemistItems.MINOR_POTION_LOOTING), false, true, false);
+        createMenuItem(forgeMenu, pl, 24, Material.POTION, AlchemistItems.GREATER_POTION_LOOTING
+                        .getDisplayableItem().getDisplayName(), lootPotReqs, "Glass Bottle\nAmbrosia Root\nPufferfish", 4, 600, 55, 0,
+                generateItemLore(AlchemistItems.GREATER_POTION_LOOTING), false, true, false);
+
         LinkedHashMap<Material, Integer> firePotReqs = new LinkedHashMap<>();
         firePotReqs.put(Material.GLASS_BOTTLE, 1);
         firePotReqs.put(Material.NETHER_WART, 1);
         firePotReqs.put(Material.PUFFERFISH, 1);
         createMenuItem(forgeMenu, pl, 25, Material.POTION, AlchemistItems.POTION_SACRED_FIRE
                         .getDisplayableItem().getDisplayName(), firePotReqs, "Glass Bottle\nSacred Flame\nPufferfish", 4, 0, 60, 0,
-
                 generateItemLore(AlchemistItems.POTION_SACRED_FIRE), false, false, false);
     }
 
