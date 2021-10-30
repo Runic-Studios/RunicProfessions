@@ -1,6 +1,7 @@
 package com.runicrealms.plugin.professions.gathering;
 
 import com.runicrealms.plugin.professions.utilities.GatheringUtil;
+import com.runicrealms.plugin.professions.utilities.ProfUtil;
 import com.runicrealms.runicitems.RunicItemsAPI;
 import org.bukkit.Material;
 
@@ -52,8 +53,6 @@ public enum GatheringResource {
     ACACIA_WOOD("AcaciaWood", GatheringSkill.WOODCUTTING, GatheringRegion.GROVE, Material.ACACIA_WOOD, Material.ACACIA_PLANKS, "+ Acacia"),
     DARK_OAK_WOOD("DarkOakWood", GatheringSkill.WOODCUTTING, GatheringRegion.GROVE, Material.DARK_OAK_WOOD, Material.DARK_OAK_PLANKS, "+ Dark Oak");
 
-    private static final String REQUIRED_LEVEL_KEY = "requiredLevel";
-    private static final String EXPERIENCE_KEY = "experience";
     private final String templateId;
     private final GatheringSkill gatheringSkill;
     private final GatheringRegion gatheringRegion;
@@ -83,8 +82,8 @@ public enum GatheringResource {
         this.resourceBlockType = resourceBlockType;
         this.placeholderBlockType = placeholderBlockType;
         this.hologramDisplayString = hologramDisplayString;
-        this.requiredLevel = GatheringUtil.getRunicItemDataFieldInt(RunicItemsAPI.generateItemFromTemplate(templateId), REQUIRED_LEVEL_KEY);
-        this.experience = GatheringUtil.getRunicItemDataFieldInt(RunicItemsAPI.generateItemFromTemplate(templateId), EXPERIENCE_KEY);
+        this.requiredLevel = ProfUtil.getRunicItemDataFieldInt(RunicItemsAPI.generateItemFromTemplate(templateId), ProfUtil.REQUIRED_LEVEL_KEY);
+        this.experience = ProfUtil.getRunicItemDataFieldInt(RunicItemsAPI.generateItemFromTemplate(templateId), ProfUtil.EXPERIENCE_KEY);
     }
 
     /**

@@ -5,11 +5,9 @@ import com.runicrealms.plugin.item.GUIMenu.ItemGUI;
 import com.runicrealms.plugin.professions.Workstation;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.Arrays;
@@ -196,10 +194,10 @@ public class EnchantingTableMenu extends Workstation {
                 event.setWillDestroy(true);
 
                 // craft item based on experience and reagent amount
-                super.startCrafting(pl, reqHashMap, 1, reqLevel, event.getCurrentItem().getType(),
-                        currentLvl, exp,
-                        ((Damageable) meta).getDamage(), Particle.SPELL_WITCH,
-                        Sound.BLOCK_ENCHANTMENT_TABLE_USE, Sound.ENTITY_PLAYER_LEVELUP, slot, mult, false);
+//                super.startCrafting(pl, null, 1, reqLevel, event.getCurrentItem().getType(),
+//                        currentLvl, exp,
+//                        ((Damageable) meta).getDamage(), Particle.SPELL_WITCH,
+//                        Sound.BLOCK_ENCHANTMENT_TABLE_USE, Sound.ENTITY_PLAYER_LEVELUP, slot, mult, false);
             }
         });
 
@@ -210,68 +208,68 @@ public class EnchantingTableMenu extends Workstation {
         // paper
         LinkedHashMap<Material, Integer> paperReqs = new LinkedHashMap<>();
         paperReqs.put(Material.STRING, 999);
-        super.createMenuItem(tableMenu, pl, 9, Material.PAPER, "&fPaper", paperReqs,
-                "String", 2, 15, 0, 0, "",
-                true, false, false);
-
-        // ancient powder
-        LinkedHashMap<Material, Integer> powderReqs = new LinkedHashMap<>();
-        powderReqs.put(Material.BIRCH_LOG, 999);
-        super.createMenuItem(tableMenu, pl, 10, Material.GUNPOWDER, "&fAncient Powder", powderReqs,
-                "Elder Log", 1, 10, 0, 0, "",
-                true, false, false);
-
-        // magic powder
-        LinkedHashMap<Material, Integer> magicPowderReqs = new LinkedHashMap<>();
-        magicPowderReqs.put(Material.DARK_OAK_LOG, 999);
-        super.createMenuItem(tableMenu, pl, 11, Material.BLAZE_POWDER, "&fMagic Powder", magicPowderReqs,
-                "Dark Oak Log", 1, 10, 0, 0, "",
-                true, false, false);
-
-        // azana scroll
-        LinkedHashMap<Material, Integer> azanaScrollReqs = new LinkedHashMap<>();
-        azanaScrollReqs.put(Material.PAPER, 1);
-        azanaScrollReqs.put(Material.GUNPOWDER, 1);
-        azanaScrollReqs.put(Material.REDSTONE_ORE, 1);
-        super.createMenuItem(tableMenu, pl, 12, Material.PURPLE_DYE, "&fTeleport Scroll: Azana", azanaScrollReqs,
-                "Paper\nAncient Powder\nUncut Ruby", 2, 40, 0, 0, "&eTeleport to Azana!\n",
-                false, false, false);
-
-        // wintervale scroll
-        LinkedHashMap<Material, Integer> valeScrollReqs = new LinkedHashMap<>();
-        valeScrollReqs.put(Material.PAPER, 1);
-        valeScrollReqs.put(Material.GUNPOWDER, 1);
-        valeScrollReqs.put(Material.DIAMOND_ORE, 1);
-        super.createMenuItem(tableMenu, pl, 13, Material.PURPLE_DYE, "&fTeleport Scroll: Wintervale", valeScrollReqs,
-                "Paper\nAncient Powder\nUncut Diamond", 1, 40, 20, 0, "&eTeleport to Wintervale!\n",
-                false, false, false);
-
-        // zenyth scroll
-        LinkedHashMap<Material, Integer> zenythScrollReqs = new LinkedHashMap<>();
-        zenythScrollReqs.put(Material.PAPER, 1);
-        zenythScrollReqs.put(Material.GUNPOWDER, 1);
-        zenythScrollReqs.put(Material.NETHER_QUARTZ_ORE, 1);
-        super.createMenuItem(tableMenu, pl, 14, Material.PURPLE_DYE, "&fTeleport Scroll: Zenyth", zenythScrollReqs,
-                "Paper\nAncient Powder\nUncut Opal", 1, 40, 40, 0, "&eTeleport to Zenyth!\n",
-                false, false, false);
-
-        // party scroll
-        LinkedHashMap<Material, Integer> partyScrollReqs = new LinkedHashMap<>();
-        partyScrollReqs.put(Material.PAPER, 1);
-        partyScrollReqs.put(Material.GUNPOWDER, 1);
-        partyScrollReqs.put(Material.PINK_TULIP, 1);
-        super.createMenuItem(tableMenu, pl, 15, Material.PURPLE_DYE, "&fParty Summon Scroll", partyScrollReqs,
-                "Paper\nAncient Powder\nLavender", 1, 100, 50, 0, "&eSummon your party to you!\n",
-                false, false, false);
-
-        // frosts end scroll
-        LinkedHashMap<Material, Integer> frostScrollReqs = new LinkedHashMap<>();
-        frostScrollReqs.put(Material.PAPER, 1);
-        frostScrollReqs.put(Material.GUNPOWDER, 1);
-        frostScrollReqs.put(Material.GOLDEN_CARROT, 1);
-        super.createMenuItem(tableMenu, pl, 16, Material.PURPLE_DYE, "&fTeleport Scroll: Frost's End", frostScrollReqs,
-                "Paper\nAncient Powder\nAmbrosia Root", 1, 0, 60, 0, "&eTeleport to Frost's End!\n",
-                false, false, false);
+//        super.createMenuItem(tableMenu, pl, 9, Material.PAPER, "&fPaper", paperReqs,
+//                "String", 2, 15, 0, 0, "",
+//                true, false, false);
+//
+//        // ancient powder
+//        LinkedHashMap<Material, Integer> powderReqs = new LinkedHashMap<>();
+//        powderReqs.put(Material.BIRCH_LOG, 999);
+//        super.createMenuItem(tableMenu, pl, 10, Material.GUNPOWDER, "&fAncient Powder", powderReqs,
+//                "Elder Log", 1, 10, 0, 0, "",
+//                true, false, false);
+//
+//        // magic powder
+//        LinkedHashMap<Material, Integer> magicPowderReqs = new LinkedHashMap<>();
+//        magicPowderReqs.put(Material.DARK_OAK_LOG, 999);
+//        super.createMenuItem(tableMenu, pl, 11, Material.BLAZE_POWDER, "&fMagic Powder", magicPowderReqs,
+//                "Dark Oak Log", 1, 10, 0, 0, "",
+//                true, false, false);
+//
+//        // azana scroll
+//        LinkedHashMap<Material, Integer> azanaScrollReqs = new LinkedHashMap<>();
+//        azanaScrollReqs.put(Material.PAPER, 1);
+//        azanaScrollReqs.put(Material.GUNPOWDER, 1);
+//        azanaScrollReqs.put(Material.REDSTONE_ORE, 1);
+//        super.createMenuItem(tableMenu, pl, 12, Material.PURPLE_DYE, "&fTeleport Scroll: Azana", azanaScrollReqs,
+//                "Paper\nAncient Powder\nUncut Ruby", 2, 40, 0, 0, "&eTeleport to Azana!\n",
+//                );
+//
+//        // wintervale scroll
+//        LinkedHashMap<Material, Integer> valeScrollReqs = new LinkedHashMap<>();
+//        valeScrollReqs.put(Material.PAPER, 1);
+//        valeScrollReqs.put(Material.GUNPOWDER, 1);
+//        valeScrollReqs.put(Material.DIAMOND_ORE, 1);
+//        super.createMenuItem(tableMenu, pl, 13, Material.PURPLE_DYE, "&fTeleport Scroll: Wintervale", valeScrollReqs,
+//                "Paper\nAncient Powder\nUncut Diamond", 1, 40, 20, 0, "&eTeleport to Wintervale!\n",
+//                );
+//
+//        // zenyth scroll
+//        LinkedHashMap<Material, Integer> zenythScrollReqs = new LinkedHashMap<>();
+//        zenythScrollReqs.put(Material.PAPER, 1);
+//        zenythScrollReqs.put(Material.GUNPOWDER, 1);
+//        zenythScrollReqs.put(Material.NETHER_QUARTZ_ORE, 1);
+//        super.createMenuItem(tableMenu, pl, 14, Material.PURPLE_DYE, "&fTeleport Scroll: Zenyth", zenythScrollReqs,
+//                "Paper\nAncient Powder\nUncut Opal", 1, 40, 40, 0, "&eTeleport to Zenyth!\n",
+//                );
+//
+//        // party scroll
+//        LinkedHashMap<Material, Integer> partyScrollReqs = new LinkedHashMap<>();
+//        partyScrollReqs.put(Material.PAPER, 1);
+//        partyScrollReqs.put(Material.GUNPOWDER, 1);
+//        partyScrollReqs.put(Material.PINK_TULIP, 1);
+//        super.createMenuItem(tableMenu, pl, 15, Material.PURPLE_DYE, "&fParty Summon Scroll", partyScrollReqs,
+//                "Paper\nAncient Powder\nLavender", 1, 100, 50, 0, "&eSummon your party to you!\n",
+//                );
+//
+//        // frosts end scroll
+//        LinkedHashMap<Material, Integer> frostScrollReqs = new LinkedHashMap<>();
+//        frostScrollReqs.put(Material.PAPER, 1);
+//        frostScrollReqs.put(Material.GUNPOWDER, 1);
+//        frostScrollReqs.put(Material.GOLDEN_CARROT, 1);
+//        super.createMenuItem(tableMenu, pl, 16, Material.PURPLE_DYE, "&fTeleport Scroll: Frost's End", frostScrollReqs,
+//                "Paper\nAncient Powder\nAmbrosia Root", 1, 0, 60, 0, "&eTeleport to Frost's End!\n",
+//                );
     }
 
     @Override

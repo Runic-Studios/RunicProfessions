@@ -5,11 +5,9 @@ import com.runicrealms.plugin.attributes.AttributeUtil;
 import com.runicrealms.plugin.item.GUIMenu.ItemGUI;
 import com.runicrealms.plugin.professions.Workstation;
 import org.bukkit.Material;
-import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.LinkedHashMap;
@@ -233,12 +231,12 @@ public class JewelerMenu extends Workstation {
                 event.setWillDestroy(true);
 
                 // craft item based on experience and reagent amount
-                super.startCrafting
-                        (
-                                pl, reqHashMap, 1, reqLevel, event.getCurrentItem().getType(), currentLvl, exp,
-                                ((Damageable) meta).getDamage(), Particle.FIREWORKS_SPARK,
-                                Sound.BLOCK_ANVIL_PLACE, Sound.BLOCK_ANVIL_USE, dummyVar, mult, false
-                        );
+//                super.startCrafting
+//                        (
+//                                pl, reqHashMap, 1, reqLevel, event.getCurrentItem().getType(), currentLvl, exp,
+//                                ((Damageable) meta).getDamage(), Particle.FIREWORKS_SPARK,
+//                                Sound.BLOCK_ANVIL_PLACE, Sound.BLOCK_ANVIL_USE, dummyVar, mult, false
+//                        );
             }
         });
 
@@ -288,60 +286,60 @@ public class JewelerMenu extends Workstation {
             spellStr = "8";
         }
 
-        // ruby (+health)
-        LinkedHashMap<Material, Integer> cutRubyReqs = new LinkedHashMap<>();
-        cutRubyReqs.put(Material.REDSTONE_ORE, 1);
-        cutRubyReqs.put(Material.LEATHER, 1);
-        super.createMenuItem(forgeMenu, pl, 9, Material.REDSTONE, "&fCut Ruby", cutRubyReqs,
-                "Uncut Ruby\nAnimal Hide", 1, 25, 0, 0, "&c+" + healthStr + "❤ (Health)\n",
-                false, true, false);
-        // ruby (+health regen)
-        LinkedHashMap<Material, Integer> ornateRubyReqs = (LinkedHashMap<Material, Integer>) cutRubyReqs.clone();
-        ornateRubyReqs.put(Material.RED_TULIP, 1);
-        super.createMenuItem(forgeMenu, pl, 10, Material.REDSTONE, "&fOrnate Ruby", ornateRubyReqs,
-                "Uncut Ruby\nAnimal Hide\nHibiscus", 1, 35, 0, 0, "&c+" + healthRegenStr + "❤/s (Health Regen)\n",
-                false, true, false);
-
-        // sapphire (+mana)
-        LinkedHashMap<Material, Integer> cutSapphireReqs = new LinkedHashMap<>();
-        cutSapphireReqs.put(Material.LAPIS_ORE, 1);
-        cutSapphireReqs.put(Material.LEATHER, 1);
-        super.createMenuItem(forgeMenu, pl, 11, Material.LAPIS_LAZULI, "&fCut Sapphire", cutSapphireReqs,
-                "Uncut Sapphire\nAnimal Hide", 1, 50, 0, 0, "&3+" + manaStr + "✸ (Mana)\n",
-                false, true, false);
-        // sapphire (+mana regen)
-        LinkedHashMap<Material, Integer> ornateSapphireReqs = (LinkedHashMap<Material, Integer>) cutSapphireReqs.clone();
-        ornateSapphireReqs.put(Material.AZURE_BLUET, 1);
-        super.createMenuItem(forgeMenu, pl, 12, Material.LAPIS_LAZULI, "&fOrnate Sapphire", ornateSapphireReqs,
-                "Uncut Sapphire\nAnimal Hide\nValerian", 1, 65, 0, 0, "&3+" + manaRegenStr + "✸/s (Mana Regen)\n",
-                false, true, false);
-
-        // opal (+dmg)
-        LinkedHashMap<Material, Integer> cutOpalReqs = new LinkedHashMap<>();
-        cutOpalReqs.put(Material.NETHER_QUARTZ_ORE, 1);
-        cutOpalReqs.put(Material.LEATHER, 1);
-        cutOpalReqs.put(Material.ORANGE_TULIP, 1);
-        super.createMenuItem(forgeMenu, pl, 13, Material.QUARTZ, "&fCut Opal", cutOpalReqs,
-                "Uncut Opal\nAnimal Hide\nTurmeric", 1, 75, 10, 0, "&c+" + weaponStr + "⚔ (DMG)\n",
-                false, true, false);
-
-        // emerald (+healing)
-        LinkedHashMap<Material, Integer> cutEmeraldReqs = new LinkedHashMap<>();
-        cutEmeraldReqs.put(Material.EMERALD_ORE, 1);
-        cutEmeraldReqs.put(Material.LEATHER, 1);
-        cutEmeraldReqs.put(Material.OXEYE_DAISY, 1);
-        super.createMenuItem(forgeMenu, pl, 14, Material.EMERALD, "&fCut Emerald", cutEmeraldReqs,
-                "Uncut Emerald\nAnimal Hide\nChamomile", 1, 90, 25, 0, "&a+" + healingStr + "✦ (Healing)\n",
-                false, true, false);
-
-        // diamond (+spell dmg)
-        LinkedHashMap<Material, Integer> cutDiamondReqs = new LinkedHashMap<>();
-        cutDiamondReqs.put(Material.DIAMOND_ORE, 1);
-        cutDiamondReqs.put(Material.LEATHER, 1);
-        cutDiamondReqs.put(Material.BLUE_ORCHID, 1);
-        super.createMenuItem(forgeMenu, pl, 15, Material.DIAMOND, "&fCut Diamond", cutDiamondReqs,
-                "Uncut Diamond\nAnimal Hide\nWintercress", 1, 120, 25, 0, "&3+" + spellStr + "ʔ (Magic)\n",
-                false, true, false);
+//        // ruby (+health)
+//        LinkedHashMap<Material, Integer> cutRubyReqs = new LinkedHashMap<>();
+//        cutRubyReqs.put(Material.REDSTONE_ORE, 1);
+//        cutRubyReqs.put(Material.LEATHER, 1);
+//        super.createMenuItem(forgeMenu, pl, 9, Material.REDSTONE, "&fCut Ruby", cutRubyReqs,
+//                "Uncut Ruby\nAnimal Hide", 1, 25, 0, 0, "&c+" + healthStr + "❤ (Health)\n",
+//                false, true, false);
+//        // ruby (+health regen)
+//        LinkedHashMap<Material, Integer> ornateRubyReqs = (LinkedHashMap<Material, Integer>) cutRubyReqs.clone();
+//        ornateRubyReqs.put(Material.RED_TULIP, 1);
+//        super.createMenuItem(forgeMenu, pl, 10, Material.REDSTONE, "&fOrnate Ruby", ornateRubyReqs,
+//                "Uncut Ruby\nAnimal Hide\nHibiscus", 1, 35, 0, 0, "&c+" + healthRegenStr + "❤/s (Health Regen)\n",
+//                false, true, false);
+//
+//        // sapphire (+mana)
+//        LinkedHashMap<Material, Integer> cutSapphireReqs = new LinkedHashMap<>();
+//        cutSapphireReqs.put(Material.LAPIS_ORE, 1);
+//        cutSapphireReqs.put(Material.LEATHER, 1);
+//        super.createMenuItem(forgeMenu, pl, 11, Material.LAPIS_LAZULI, "&fCut Sapphire", cutSapphireReqs,
+//                "Uncut Sapphire\nAnimal Hide", 1, 50, 0, 0, "&3+" + manaStr + "✸ (Mana)\n",
+//                false, true, false);
+//        // sapphire (+mana regen)
+//        LinkedHashMap<Material, Integer> ornateSapphireReqs = (LinkedHashMap<Material, Integer>) cutSapphireReqs.clone();
+//        ornateSapphireReqs.put(Material.AZURE_BLUET, 1);
+//        super.createMenuItem(forgeMenu, pl, 12, Material.LAPIS_LAZULI, "&fOrnate Sapphire", ornateSapphireReqs,
+//                "Uncut Sapphire\nAnimal Hide\nValerian", 1, 65, 0, 0, "&3+" + manaRegenStr + "✸/s (Mana Regen)\n",
+//                false, true, false);
+//
+//        // opal (+dmg)
+//        LinkedHashMap<Material, Integer> cutOpalReqs = new LinkedHashMap<>();
+//        cutOpalReqs.put(Material.NETHER_QUARTZ_ORE, 1);
+//        cutOpalReqs.put(Material.LEATHER, 1);
+//        cutOpalReqs.put(Material.ORANGE_TULIP, 1);
+//        super.createMenuItem(forgeMenu, pl, 13, Material.QUARTZ, "&fCut Opal", cutOpalReqs,
+//                "Uncut Opal\nAnimal Hide\nTurmeric", 1, 75, 10, 0, "&c+" + weaponStr + "⚔ (DMG)\n",
+//                false, true, false);
+//
+//        // emerald (+healing)
+//        LinkedHashMap<Material, Integer> cutEmeraldReqs = new LinkedHashMap<>();
+//        cutEmeraldReqs.put(Material.EMERALD_ORE, 1);
+//        cutEmeraldReqs.put(Material.LEATHER, 1);
+//        cutEmeraldReqs.put(Material.OXEYE_DAISY, 1);
+//        super.createMenuItem(forgeMenu, pl, 14, Material.EMERALD, "&fCut Emerald", cutEmeraldReqs,
+//                "Uncut Emerald\nAnimal Hide\nChamomile", 1, 90, 25, 0, "&a+" + healingStr + "✦ (Healing)\n",
+//                false, true, false);
+//
+//        // diamond (+spell dmg)
+//        LinkedHashMap<Material, Integer> cutDiamondReqs = new LinkedHashMap<>();
+//        cutDiamondReqs.put(Material.DIAMOND_ORE, 1);
+//        cutDiamondReqs.put(Material.LEATHER, 1);
+//        cutDiamondReqs.put(Material.BLUE_ORCHID, 1);
+//        super.createMenuItem(forgeMenu, pl, 15, Material.DIAMOND, "&fCut Diamond", cutDiamondReqs,
+//                "Uncut Diamond\nAnimal Hide\nWintercress", 1, 120, 25, 0, "&3+" + spellStr + "ʔ (Magic)\n",
+//                false, true, false);
     }
 
     @Override

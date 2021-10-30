@@ -2,7 +2,6 @@ package com.runicrealms.plugin.professions.utilities;
 
 import com.runicrealms.plugin.professions.gathering.GatheringTool;
 import com.runicrealms.runicitems.RunicItemsAPI;
-import com.runicrealms.runicitems.item.RunicItem;
 import com.runicrealms.runicitems.item.RunicItemDynamic;
 import net.minecraft.server.v1_16_R3.EntityFishingHook;
 import org.bukkit.craftbukkit.v1_16_R3.entity.CraftEntity;
@@ -155,38 +154,6 @@ public class GatheringUtil {
             fishCatchTime.setInt(hookCopy, time);
         } catch (IllegalArgumentException | IllegalAccessException e) {
             e.printStackTrace();
-        }
-    }
-
-    /**
-     * Helper function for RunicItemDynamic
-     *
-     * @param runicItem the runic item to read
-     * @param key       the key of the data field
-     * @return an Integer value matching key
-     */
-    public static double getRunicItemDataFieldDouble(RunicItem runicItem, String key) {
-        try {
-            return Double.parseDouble(runicItem.getData().get(key));
-        } catch (Exception e) {
-            e.printStackTrace();
-            return -1.0;
-        }
-    }
-
-    /**
-     * Helper function for RunicItemDynamic
-     *
-     * @param runicItem the runic item to read
-     * @param key       the key of the data field
-     * @return an Integer value matching key
-     */
-    public static int getRunicItemDataFieldInt(RunicItem runicItem, String key) {
-        try {
-            return Integer.parseInt(runicItem.getData().get(key));
-        } catch (Exception e) {
-            e.printStackTrace();
-            return -1;
         }
     }
 }

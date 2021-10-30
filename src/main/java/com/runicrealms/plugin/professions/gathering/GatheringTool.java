@@ -1,6 +1,7 @@
 package com.runicrealms.plugin.professions.gathering;
 
 import com.runicrealms.plugin.professions.utilities.GatheringUtil;
+import com.runicrealms.plugin.professions.utilities.ProfUtil;
 import com.runicrealms.runicitems.item.RunicItemDynamic;
 
 /**
@@ -65,9 +66,9 @@ public enum GatheringTool {
     GatheringTool(RunicItemDynamic runicItemDynamic, GatheringSkill gatheringSkill) {
         this.runicItemDynamic = runicItemDynamic;
         this.gatheringSkill = gatheringSkill;
-        this.requiredLevel = GatheringUtil.getRunicItemDataFieldInt(runicItemDynamic, REQUIRED_LEVEL_KEY);
-        this.bonusLootAmount = GatheringUtil.getRunicItemDataFieldInt(runicItemDynamic, BONUS_LOOT_CEILING_KEY);
-        this.bonusLootChance = GatheringUtil.getRunicItemDataFieldDouble(runicItemDynamic, BONUS_LOOT_CHANCE_KEY);
+        this.requiredLevel = ProfUtil.getRunicItemDataFieldInt(runicItemDynamic, REQUIRED_LEVEL_KEY);
+        this.bonusLootAmount = ProfUtil.getRunicItemDataFieldInt(runicItemDynamic, BONUS_LOOT_CEILING_KEY);
+        this.bonusLootChance = ProfUtil.getRunicItemDataFieldDouble(runicItemDynamic, BONUS_LOOT_CHANCE_KEY);
     }
 
     public RunicItemDynamic getRunicItemDynamic() {

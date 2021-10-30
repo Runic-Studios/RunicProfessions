@@ -3,7 +3,9 @@ package com.runicrealms.plugin.professions;
 import com.runicrealms.plugin.RunicProfessions;
 import com.runicrealms.plugin.api.RunicCoreAPI;
 import com.runicrealms.plugin.item.GUIMenu.ItemGUI;
+import com.runicrealms.plugin.item.shops.RunicItemShopManager;
 import com.runicrealms.plugin.item.util.ItemRemover;
+import com.runicrealms.plugin.professions.crafting.CraftedResource;
 import com.runicrealms.plugin.professions.gathering.GatheringSkill;
 import com.runicrealms.plugin.professions.listeners.WorkstationListener;
 import com.runicrealms.plugin.professions.utilities.ProfExpUtil;
@@ -85,19 +87,27 @@ public abstract class Workstation implements Listener {
     }
 
     protected ItemGUI craftingMenu(Player pl, int size) {
-
         return new ItemGUI("&f&l" + pl.getName() + "'s Crafting Menu", size, event -> {
-        },
-                RunicProfessions.getInstance());
+        }, RunicProfessions.getInstance());
     }
 
-    protected void createMenuItem(ItemGUI gui, Player pl, int slot, Material itemType, String name,
-                                  LinkedHashMap<Material, Integer> itemReqs, String reqsToString, int itemAmt,
-                                  int exp, int reqLevel, int durability, String itemStats, boolean cantFail,
-                                  boolean canUpgrade, boolean isGlowing) {
+    /**
+     * Creates the visual menu item inside a crafting menu
+     *
+     * @param gui             the associated gui to place the menu item inside
+     * @param player          the player who opened the menu
+     * @param craftedResource the crafting resource associated w/ the menu item
+     * @param slot            the slot to place the menu item in
+     * @param durability      the durability of the menu item
+     */
+    protected void createMenuItem(ItemGUI gui, Player player, CraftedResource craftedResource, int slot, int... durability) {
 
         // grab the player's current profession level, progress toward that level
-        int currentLvl = RunicCoreAPI.getPlayerCache(pl).getProfLevel();
+        int currentLvl = RunicCoreAPI.getPlayerCache(player).getProfLevel();
+        int reqLevel = craftedResource.getRequiredLevel();
+        int exp = craftedResource.getExperience();
+        LinkedHashMap<ItemStack, Integer> reagents = craftedResource.getReagents();
+        String itemStats = generateItemLore(craftedResource.getRunicItem());
 
         // build the menu display
         StringBuilder desc = new StringBuilder();
@@ -107,27 +117,20 @@ public abstract class Workstation implements Listener {
         }
 
         if (!itemStats.equals("")) {
-            desc.append("\n&7Item Info:\n").append(itemStats);//.append("\n")
+            desc.append("\n&7Item Info:\n").append(itemStats);
         }
         desc.append("\n&7Material(s) Required:\n");
 
-        String[] reqsAsList = reqsToString.split("\n");
-
         // add every item in the reagent's key set with its associated amount.
         // if there is only one reagent in the key set, it uses the 'itemAmt' field instead.
-        int i = 0;
-
-        for (Material reagent : itemReqs.keySet()) {
-            int amt = itemReqs.get(reagent);
-            if (reqsAsList.length <= 1) {
-                amt = itemAmt;
-            }
-            if (pl.getInventory().contains(reagent, amt)) {
-                desc.append("&a").append(reqsAsList[i]).append("&7, &f").append(amt).append("\n");
+        for (ItemStack itemStack : reagents.keySet()) {
+            assert itemStack.getItemMeta() != null;
+            int amt = reagents.get(itemStack);
+            if (RunicItemShopManager.hasItems(player, itemStack, amt)) {
+                desc.append("&a").append(ChatColor.stripColor(itemStack.getItemMeta().getDisplayName())).append("&7, &f").append(amt).append("\n");
             } else {
-                desc.append("&c").append(reqsAsList[i]).append("&7, &f").append(amt).append("\n");
+                desc.append("&c").append(ChatColor.stripColor(itemStack.getItemMeta().getDisplayName())).append("&7, &f").append(amt).append("\n");
             }
-            i += 1;
         }
 
         desc.append("\n")
@@ -142,7 +145,8 @@ public abstract class Workstation implements Listener {
 
         desc = new StringBuilder(ColorUtil.format(desc.toString()));
 
-        if (itemType == Material.POTION) {
+        String name = craftedResource.getRunicItem().getDisplayableItem().getDisplayName();
+        if (craftedResource.getItemStack().getType() == Material.POTION) {
             Color color;
             if (name.toLowerCase().contains("healing")) {
                 color = Color.RED;
@@ -157,21 +161,18 @@ public abstract class Workstation implements Listener {
             }
             gui.setOption(slot,
                     potionItem(color, name, desc.toString()),
-                    name, desc.toString(), durability, isGlowing);
+                    name, desc.toString(), durability.length > 0 ? durability[0] : 0, false);
         } else {
-            gui.setOption(slot, new ItemStack(itemType),
-                    name, desc.toString(), durability, isGlowing);
+            gui.setOption(slot, new ItemStack(craftedResource.getItemStack().getType()),
+                    name, desc.toString(), durability.length > 0 ? durability[0] : 0, false);
         }
     }
 
     /**
-     * @param player
-     * @param itemReqs
-     * @param itemAmt
-     * @param reqLevel
-     * @param craftedItemType
-     * @param currentLvl
-     * @param exp
+     * Begins the crafting process to create a CraftedResource
+     *
+     * @param player          who initiated crafting
+     * @param craftedResource to be created
      * @param durability
      * @param particle
      * @param soundCraft
@@ -180,12 +181,15 @@ public abstract class Workstation implements Listener {
      * @param numOfItems
      * @param isCooking
      */
-    protected void startCrafting(Player player, LinkedHashMap<Material, Integer> itemReqs, int itemAmt, int reqLevel,
-                                 Material craftedItemType, int currentLvl, int exp, int durability,
-                                 Particle particle, Sound soundCraft, Sound soundDone, int eventSlot, int numOfItems,
-                                 boolean isCooking) {
+    protected void startCrafting(Player player, CraftedResource craftedResource, int durability, Particle particle,
+                                 Sound soundCraft, Sound soundDone, int eventSlot, int numOfItems, boolean isCooking) {
 
         if (RunicProfessions.getProfManager().getCurrentCrafters().contains(player)) return;
+        int currentLvl = RunicCoreAPI.getPlayerCache(player).getProfLevel();
+        int reqLevel = craftedResource.getRequiredLevel();
+        int exp = craftedResource.getExperience();
+        LinkedHashMap<ItemStack, Integer> reagents = craftedResource.getReagents();
+        Material craftedItemType = craftedResource.getItemStack().getType();
 
         // grab the location of the anvil
         Location stationLoc = WorkstationListener.getStationLocation().get(player.getUniqueId());
@@ -198,12 +202,9 @@ public abstract class Workstation implements Listener {
         }
 
         // check that the player has the reagents
-        for (Material reagent : itemReqs.keySet()) {
-            int amt = itemReqs.get(reagent) * numOfItems;
-            if (itemReqs.size() <= 1) {
-                amt = itemAmt * numOfItems;
-            }
-            if (!player.getInventory().contains(reagent, amt)) {
+        for (ItemStack itemStack : reagents.keySet()) {
+            int amt = reagents.get(itemStack) * numOfItems;
+            if (!RunicItemShopManager.hasItems(player, itemStack, amt)) {
                 player.playSound(player.getLocation(), Sound.ENTITY_GENERIC_EXTINGUISH_FIRE, 0.5f, 1);
                 player.sendMessage(ChatColor.RED + "You don't have the items to craft this!");
                 return;
@@ -235,12 +236,9 @@ public abstract class Workstation implements Listener {
         // add player to currently crafting ArrayList
         RunicProfessions.getProfManager().getCurrentCrafters().add(player);
         player.sendMessage(ChatColor.GRAY + "Crafting...");
-        for (Material reagent : itemReqs.keySet()) {
-            int amt = itemReqs.get(reagent) * numOfItems;
-            if (itemReqs.size() <= 1) {
-                amt = itemAmt * numOfItems;
-            }
-            ItemRemover.takeItem(player, reagent, amt);
+        for (ItemStack itemStack : reagents.keySet()) {
+            int amt = reagents.get(itemStack) * numOfItems;
+            ItemRemover.takeItem(player, itemStack, amt);
         }
 
         // spawn item on workstation for visual
@@ -273,6 +271,7 @@ public abstract class Workstation implements Listener {
         }.runTaskTimer(RunicProfessions.getInstance(), 0, 20);
     }
 
+
     /**
      * Generic produce result method which generates an ItemStack
      * Outdated and should be replaced, as it does not play well with RunicItems
@@ -283,7 +282,7 @@ public abstract class Workstation implements Listener {
      */
     protected void produceResult(Player player, int numberOfItems, ItemStack itemStack) {
         for (int i = 0; i < numberOfItems; i++) {
-            RunicItemsAPI.addItem(player.getInventory(), itemStack);
+            RunicItemsAPI.addItem(player.getInventory(), itemStack, true); // prevents anti-dupe from triggering
         }
     }
 
@@ -312,6 +311,12 @@ public abstract class Workstation implements Listener {
         this.itemGUI = itemGUI;
     }
 
+    /**
+     * Generates correct item lore to display in crafting menu based on type of runic item
+     *
+     * @param item the parent class runic item
+     * @return a string that has correct fields based on child class
+     */
     public String generateItemLore(RunicItem item) {
         if (item instanceof RunicItemGeneric) {
             return this.generateGenericItemLore((RunicItemGeneric) item);

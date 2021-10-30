@@ -4,11 +4,9 @@ import com.runicrealms.plugin.api.RunicCoreAPI;
 import com.runicrealms.plugin.item.GUIMenu.ItemGUI;
 import com.runicrealms.plugin.professions.Workstation;
 import org.bukkit.Material;
-import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.LinkedHashMap;
@@ -109,12 +107,12 @@ public class ShrineMenu extends Workstation {
                 event.setWillDestroy(true);
 
                 // craft item based on experience and reagent amount
-                super.startCrafting
-                        (
-                                pl, reqHashMap, 1, reqLevel, event.getCurrentItem().getType(), currentLvl, exp,
-                                ((Damageable) meta).getDamage(), Particle.SPELL_WITCH,
-                                Sound.BLOCK_ENCHANTMENT_TABLE_USE, Sound.ENTITY_PLAYER_LEVELUP, slot, mult, false
-                        );
+//                super.startCrafting
+//                        (
+//                                pl, reqHashMap, 1, reqLevel, event.getCurrentItem().getType(), currentLvl, exp,
+//                                ((Damageable) meta).getDamage(), Particle.SPELL_WITCH,
+//                                Sound.BLOCK_ENCHANTMENT_TABLE_USE, Sound.ENTITY_PLAYER_LEVELUP, slot, mult, false
+//                        );
             }
         });
 
@@ -123,11 +121,11 @@ public class ShrineMenu extends Workstation {
 
     private void setupItems(ItemGUI tableMenu, Player pl) {
         // placeholder
-        LinkedHashMap<Material, Integer> placeholderReqs = new LinkedHashMap<>();
-        placeholderReqs.put(Material.DIRT, 999);
-        super.createMenuItem(tableMenu, pl, 9, Material.DIRT, "&fPlaceholder", placeholderReqs,
-                "Placeholder", 1, 1, 0, 0, "",
-                true, false, false);
+//        LinkedHashMap<Material, Integer> placeholderReqs = new LinkedHashMap<>();
+//        placeholderReqs.put(Material.DIRT, 999);
+//        super.createMenuItem(tableMenu, pl, 9, Material.DIRT, "&fPlaceholder", placeholderReqs,
+//                "Placeholder", 1, 1, 0, 0, "",
+//                true, false, false);
     }
 
     @Override

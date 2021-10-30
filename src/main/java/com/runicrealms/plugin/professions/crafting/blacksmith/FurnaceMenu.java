@@ -4,11 +4,9 @@ import com.runicrealms.plugin.api.RunicCoreAPI;
 import com.runicrealms.plugin.item.GUIMenu.ItemGUI;
 import com.runicrealms.plugin.professions.Workstation;
 import org.bukkit.Material;
-import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.LinkedHashMap;
@@ -114,12 +112,12 @@ public class FurnaceMenu extends Workstation {
                 event.setWillDestroy(true);
 
                 // craft item based on experience and reagent amount
-                super.startCrafting
-                        (
-                                pl, reqHashMap, 0, 0, event.getCurrentItem().getType(), currentLvl, exp,
-                                ((Damageable) meta).getDamage(), Particle.FLAME,
-                                Sound.ITEM_BUCKET_FILL_LAVA, Sound.BLOCK_LAVA_EXTINGUISH, event.getSlot(), mult, false
-                        );
+//                super.startCrafting
+//                        (
+//                                pl, reqHashMap, 0, 0, event.getCurrentItem().getType(), currentLvl, exp,
+//                                ((Damageable) meta).getDamage(), Particle.FLAME,
+//                                Sound.ITEM_BUCKET_FILL_LAVA, Sound.BLOCK_LAVA_EXTINGUISH, event.getSlot(), mult, false
+//                        );
             }
         });
 
@@ -128,29 +126,29 @@ public class FurnaceMenu extends Workstation {
 
     private void setupItems(ItemGUI forgeMenu, Player pl) {
 
-        // chain link
-        LinkedHashMap<Material, Integer> chainLinkReqs = new LinkedHashMap<>();
-        chainLinkReqs.put(Material.IRON_ORE, 1);
-        chainLinkReqs.put(Material.SPRUCE_LOG, 1);
-        super.createMenuItem(forgeMenu, pl, 9, Material.IRON_BARS, "&fChain Link", chainLinkReqs,
-                "Iron Ore\nSpruce Log", 999, 10, 0, 0, "",
-                true, false, false);
-
-        // gold bar
-        LinkedHashMap<Material, Integer> goldBarReqs = new LinkedHashMap<>();
-        goldBarReqs.put(Material.GOLD_ORE, 1);
-        goldBarReqs.put(Material.OAK_LOG, 1);
-        super.createMenuItem(forgeMenu, pl, 10, Material.GOLD_INGOT, "&fGold Bar", goldBarReqs,
-                "Gold Ore\nOak Log", 999, 10, 0, 0, "",
-                true, false, false);
-
-        // iron bar
-        LinkedHashMap<Material, Integer> ironBarReqs = new LinkedHashMap<>();
-        ironBarReqs.put(Material.IRON_ORE, 1);
-        ironBarReqs.put(Material.OAK_LOG, 1);
-        super.createMenuItem(forgeMenu, pl, 11, Material.IRON_INGOT, "&fIron Bar", ironBarReqs,
-                "Iron Ore\nOak Log", 999, 10, 0, 0, "",
-                true, false, false);
+//        // chain link
+//        LinkedHashMap<Material, Integer> chainLinkReqs = new LinkedHashMap<>();
+//        chainLinkReqs.put(Material.IRON_ORE, 1);
+//        chainLinkReqs.put(Material.SPRUCE_LOG, 1);
+//        super.createMenuItem(forgeMenu, pl, 9, Material.IRON_BARS, "&fChain Link", chainLinkReqs,
+//                "Iron Ore\nSpruce Log", 999, 10, 0, 0, "",
+//                true, false, false);
+//
+//        // gold bar
+//        LinkedHashMap<Material, Integer> goldBarReqs = new LinkedHashMap<>();
+//        goldBarReqs.put(Material.GOLD_ORE, 1);
+//        goldBarReqs.put(Material.OAK_LOG, 1);
+//        super.createMenuItem(forgeMenu, pl, 10, Material.GOLD_INGOT, "&fGold Bar", goldBarReqs,
+//                "Gold Ore\nOak Log", 999, 10, 0, 0, "",
+//                true, false, false);
+//
+//        // iron bar
+//        LinkedHashMap<Material, Integer> ironBarReqs = new LinkedHashMap<>();
+//        ironBarReqs.put(Material.IRON_ORE, 1);
+//        ironBarReqs.put(Material.OAK_LOG, 1);
+//        super.createMenuItem(forgeMenu, pl, 11, Material.IRON_INGOT, "&fIron Bar", ironBarReqs,
+//                "Iron Ore\nOak Log", 999, 10, 0, 0, "",
+//                true, false, false);
     }
 
     @Override

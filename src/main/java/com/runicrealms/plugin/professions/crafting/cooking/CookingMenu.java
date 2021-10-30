@@ -3,11 +3,9 @@ package com.runicrealms.plugin.professions.crafting.cooking;
 import com.runicrealms.plugin.item.GUIMenu.ItemGUI;
 import com.runicrealms.plugin.professions.Workstation;
 import org.bukkit.Material;
-import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.LinkedHashMap;
@@ -148,12 +146,12 @@ public class CookingMenu extends Workstation {
                 event.setWillDestroy(true);
 
                 // craft item based on experience and reagent amount
-                super.startCrafting
-                        (
-                                pl, reqs, 0, 0, event.getCurrentItem().getType(), 0, exp,
-                                ((Damageable) meta).getDamage(), Particle.SMOKE_NORMAL,
-                                Sound.ENTITY_GHAST_SHOOT, Sound.BLOCK_LAVA_EXTINGUISH, event.getSlot(), mult, true
-                        );
+//                super.startCrafting
+//                        (
+//                                pl, reqs, 0, 0, event.getCurrentItem().getType(), 0, exp,
+//                                ((Damageable) meta).getDamage(), Particle.SMOKE_NORMAL,
+//                                Sound.ENTITY_GHAST_SHOOT, Sound.BLOCK_LAVA_EXTINGUISH, event.getSlot(), mult, true
+//                        );
             }
         });
 
@@ -162,47 +160,42 @@ public class CookingMenu extends Workstation {
 
     private void setupItems(ItemGUI cookingFireMenu, Player player) {
 
-        // meat
-        LinkedHashMap<Material, Integer> meatReqs = new LinkedHashMap<>();
-        meatReqs.put(Material.MUTTON, 4);
-        meatReqs.put(Material.OAK_LOG, 2);
-        super.createMenuItem(cookingFireMenu, player, 9, Material.COOKED_MUTTON, "&fCooked Meat", meatReqs,
-                "Raw Meat\nOak Log", 999, 10, 0, 0, "",
-                true, false, false);
-
-        // bread
-        LinkedHashMap<Material, Integer> breadReqs = new LinkedHashMap<>();
-        breadReqs.put(Material.WHEAT, 3);
-        breadReqs.put(Material.SPRUCE_LOG, 1);
-        super.createMenuItem(cookingFireMenu, player, 10, Material.BREAD, "&fBread", breadReqs,
-                "Wheat\nSpruce Log", 999, 10, 0, 0, "",
-                true, false, false);
-
-        // cod
-        LinkedHashMap<Material, Integer> codReqs = new LinkedHashMap<>();
-        codReqs.put(Material.COD, 1);
-        codReqs.put(Material.OAK_LOG, 1);
-        super.createMenuItem(cookingFireMenu, player, 11, Material.COOKED_COD, "&fCooked Cod", codReqs,
-                "Cod\nOak Log", 999, 20, 0, 0, "",
-                true, false, false);
-
-        // salmon
-        LinkedHashMap<Material, Integer> salmonReqs = new LinkedHashMap<>();
-        salmonReqs.put(Material.SALMON, 1);
-        salmonReqs.put(Material.OAK_LOG, 1);
-        super.createMenuItem(cookingFireMenu, player, 12, Material.COOKED_SALMON, "&fCooked Salmon", salmonReqs,
-                "Salmon\nOak Log", 999, 20, 0, 0, "",
-                true, false, false);
-
-        // ambrosia stew
-        LinkedHashMap<Material, Integer> ambrosiaStewReqs = new LinkedHashMap<>();
-        ambrosiaStewReqs.put(Material.GOLDEN_CARROT, 1);
-        ambrosiaStewReqs.put(Material.RABBIT, 4);
-        ambrosiaStewReqs.put(Material.DARK_OAK_LOG, 16);
-        super.createMenuItem(cookingFireMenu, player, 13, Material.RABBIT_STEW, "&fAmbrosia Stew", ambrosiaStewReqs,
-                "Ambrosia Root\nUncooked Rabbit\nDark Oak Log", 999, 100, 0, 2,
-                generateItemLore(CookingItems.AMBROSIA_STEW),
-                true, false, true);
+//        // meat
+//        LinkedHashMap<Material, Integer> meatReqs = new LinkedHashMap<>();
+//        meatReqs.put(Material.MUTTON, 4);
+//        meatReqs.put(Material.OAK_LOG, 2);
+//        super.createMenuItem(cookingFireMenu, player, 9, Material.COOKED_MUTTON, "&fCooked Meat", meatReqs,
+//                "Raw Meat\nOak Log", 999, 10, 0, 0, "");
+//
+//        // bread
+//        LinkedHashMap<Material, Integer> breadReqs = new LinkedHashMap<>();
+//        breadReqs.put(Material.WHEAT, 3);
+//        breadReqs.put(Material.SPRUCE_LOG, 1);
+//        super.createMenuItem(cookingFireMenu, player, 10, Material.BREAD, "&fBread", breadReqs,
+//                "Wheat\nSpruce Log", 999, 10, 0, 0, "");
+//
+//        // cod
+//        LinkedHashMap<Material, Integer> codReqs = new LinkedHashMap<>();
+//        codReqs.put(Material.COD, 1);
+//        codReqs.put(Material.OAK_LOG, 1);
+//        super.createMenuItem(cookingFireMenu, player, 11, Material.COOKED_COD, "&fCooked Cod", codReqs,
+//                "Cod\nOak Log", 999, 20, 0, 0, "");
+//
+//        // salmon
+//        LinkedHashMap<Material, Integer> salmonReqs = new LinkedHashMap<>();
+//        salmonReqs.put(Material.SALMON, 1);
+//        salmonReqs.put(Material.OAK_LOG, 1);
+//        super.createMenuItem(cookingFireMenu, player, 12, Material.COOKED_SALMON, "&fCooked Salmon", salmonReqs,
+//                "Salmon\nOak Log", 999, 20, 0, 0, "");
+//
+//        // ambrosia stew
+//        LinkedHashMap<Material, Integer> ambrosiaStewReqs = new LinkedHashMap<>();
+//        ambrosiaStewReqs.put(Material.GOLDEN_CARROT, 1);
+//        ambrosiaStewReqs.put(Material.RABBIT, 4);
+//        ambrosiaStewReqs.put(Material.DARK_OAK_LOG, 16);
+//        super.createMenuItem(cookingFireMenu, player, 13, Material.RABBIT_STEW, "&fAmbrosia Stew", ambrosiaStewReqs,
+//                "Ambrosia Root\nUncooked Rabbit\nDark Oak Log", 999, 100, 0, 2,
+//                generateItemLore(CookingItems.AMBROSIA_STEW));
     }
 
     @Override
