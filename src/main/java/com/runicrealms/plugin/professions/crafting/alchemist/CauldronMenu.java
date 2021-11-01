@@ -96,7 +96,7 @@ public class CauldronMenu extends Workstation {
         createMenuItem(forgeMenu, player, CraftedResource.LESSER_POTION_SLAYING, 12);
         createMenuItem(forgeMenu, player, CraftedResource.MINOR_POTION_HEALING, 13);
         createMenuItem(forgeMenu, player, CraftedResource.MINOR_POTION_MANA, 14);
-        createMenuItem(forgeMenu, player, CraftedResource.MAJOR_POTION_SLAYING, 15);
+        createMenuItem(forgeMenu, player, CraftedResource.MINOR_POTION_SLAYING, 15);
         createMenuItem(forgeMenu, player, CraftedResource.MINOR_POTION_LOOTING, 16);
         createMenuItem(forgeMenu, player, CraftedResource.MAJOR_POTION_HEALING, 17);
         createMenuItem(forgeMenu, player, CraftedResource.MAJOR_POTION_MANA, 18);

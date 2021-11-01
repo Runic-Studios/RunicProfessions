@@ -19,7 +19,6 @@ public class CustomFishEvent extends Event implements Cancellable {
     public CustomFishEvent(Player player, ItemStack fish) {
         this.player = player;
         this.fish = fish;
-        this.isCancelled = false;
     }
 
     public static HandlerList getHandlerList() {

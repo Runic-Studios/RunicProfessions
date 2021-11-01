@@ -113,7 +113,7 @@ public abstract class Workstation implements Listener {
         StringBuilder desc = new StringBuilder();
 
         if (currentLvl < reqLevel) {
-            desc.append("&cReq. Lv: ").append(reqLevel).append("\n");
+            desc.append("&4Req. Lv: ").append(reqLevel).append("\n");
         }
 
         if (!itemStats.equals("")) {
@@ -173,13 +173,13 @@ public abstract class Workstation implements Listener {
      *
      * @param player          who initiated crafting
      * @param craftedResource to be created
-     * @param durability
-     * @param particle
-     * @param soundCraft
-     * @param soundDone
-     * @param eventSlot
-     * @param numOfItems
-     * @param isCooking
+     * @param durability      the durability of the menu item
+     * @param particle        the particle to display while crafting
+     * @param soundCraft      the sound to display while crafting
+     * @param soundDone       the sound to display when done crafting
+     * @param eventSlot       the slot of the menu item
+     * @param numOfItems      the number of items to craft
+     * @param isCooking       whether the activity is cooking
      */
     protected void startCrafting(Player player, CraftedResource craftedResource, int durability, Particle particle,
                                  Sound soundCraft, Sound soundDone, int eventSlot, int numOfItems, boolean isCooking) {
@@ -261,7 +261,8 @@ public abstract class Workstation implements Listener {
                         else
                             ProfExpUtil.giveGatheringExperience(player, GatheringSkill.COOKING, exp * numOfItems);
                     }
-                    produceResult(player, numOfItems, eventSlot);
+//                    produceResult(player, numOfItems, eventSlot);
+                    produceResult(player, numOfItems, craftedResource.getItemStack());
                 } else {
                     player.playSound(player.getLocation(), soundCraft, 0.5f, 2.0f);
                     player.spawnParticle(particle, stationLoc, 5, 0.25, 0.25, 0.25, 0.01);
