@@ -342,12 +342,6 @@ public class JewelerMenu extends Workstation {
 //                false, true, false);
     }
 
-    @Override
-    public void produceResult(Player player, int numberOfItems, int inventorySlot) {
-        ItemStack placeholder = new ItemStack(Material.STICK);
-        produceResult(player, numberOfItems, placeholder);
-    }
-
     private ItemStack addGemStat(GemEnum gemEnum, ItemStack craftedItem, int dummyVar) {
         craftedItem = AttributeUtil.addCustomStat(craftedItem, gemEnum.getAttributeName(), dummyVar);
         return craftedItem;

@@ -86,7 +86,4 @@ public class HunterMenu extends Workstation {
         this.setItemGUI(hMenu);
     }
 
-    @Override
-    protected void produceResult(Player player, int numberOfItems, int inventorySlot) {
-    }
 }

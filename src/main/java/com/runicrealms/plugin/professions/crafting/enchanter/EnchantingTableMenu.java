@@ -272,12 +272,6 @@ public class EnchantingTableMenu extends Workstation {
 //                );
     }
 
-    @Override
-    public void produceResult(Player player, int numberOfItems, int inventorySlot) {
-        ItemStack itemStack = determineItem(inventorySlot);
-        produceResult(player, numberOfItems, itemStack);
-    }
-
     private ItemStack determineItem(int slot) {
         ItemStack item = new ItemStack(Material.STICK);
 //        int percent;

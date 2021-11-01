@@ -198,12 +198,6 @@ public class CookingMenu extends Workstation {
 //                generateItemLore(CookingItems.AMBROSIA_STEW));
     }
 
-    @Override
-    public void produceResult(Player player, int numberOfItems, int inventorySlot) {
-        ItemStack itemStack = determineItem(inventorySlot);
-        produceResult(player, numberOfItems, itemStack);
-    }
-
     private ItemStack determineItem(int slot) {
         switch (slot) {
             case 9:

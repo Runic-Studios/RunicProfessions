@@ -82,7 +82,7 @@ public class CauldronMenu extends Workstation {
                 startCrafting
                         (
                                 player, craftedResource, ((Damageable) meta).getDamage(), Particle.WATER_SPLASH,
-                                Sound.BLOCK_BREWING_STAND_BREW, Sound.ENTITY_GENERIC_DRINK, slot, mult, false
+                                Sound.BLOCK_BREWING_STAND_BREW, Sound.ENTITY_GENERIC_DRINK, mult, false
                         );
             }
         });
@@ -107,12 +107,6 @@ public class CauldronMenu extends Workstation {
         createMenuItem(forgeMenu, player, CraftedResource.GREATER_POTION_LOOTING, 23);
         createMenuItem(forgeMenu, player, CraftedResource.GREATER_POTION_SLAYING, 24);
         createMenuItem(forgeMenu, player, CraftedResource.POTION_SACRED_FIRE, 25);
-    }
-
-    @Override
-    public void produceResult(Player player, int numberOfItems, int inventorySlot) {
-        ItemStack itemStack = determineItem(inventorySlot).getItemStack();
-        produceResult(player, numberOfItems, itemStack);
     }
 
     private CraftedResource determineItem(int slot) {

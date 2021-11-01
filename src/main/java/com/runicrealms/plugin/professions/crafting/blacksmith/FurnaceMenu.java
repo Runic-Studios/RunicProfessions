@@ -86,7 +86,7 @@ public class FurnaceMenu extends Workstation {
                 startCrafting
                         (
                                 player, craftedResource, 0, Particle.FLAME,
-                                Sound.ITEM_BUCKET_FILL_LAVA, Sound.BLOCK_LAVA_EXTINGUISH, event.getSlot(), mult, false
+                                Sound.ITEM_BUCKET_FILL_LAVA, Sound.BLOCK_LAVA_EXTINGUISH, mult, false
                         );
             }
         });
@@ -98,12 +98,6 @@ public class FurnaceMenu extends Workstation {
         createMenuItem(forgeMenu, player, CraftedResource.CHAIN_LINK, 9);
         createMenuItem(forgeMenu, player, CraftedResource.IRON_BAR, 10);
         createMenuItem(forgeMenu, player, CraftedResource.GOLD_BAR, 11);
-    }
-
-    @Override
-    public void produceResult(Player player, int numberOfItems, int inventorySlot) {
-        ItemStack itemStack = determineItem(inventorySlot).getItemStack();
-        produceResult(player, numberOfItems, itemStack);
     }
 
     private CraftedResource determineItem(int slot) {

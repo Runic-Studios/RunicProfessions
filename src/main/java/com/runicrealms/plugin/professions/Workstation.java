@@ -177,12 +177,11 @@ public abstract class Workstation implements Listener {
      * @param particle        the particle to display while crafting
      * @param soundCraft      the sound to display while crafting
      * @param soundDone       the sound to display when done crafting
-     * @param eventSlot       the slot of the menu item
      * @param numOfItems      the number of items to craft
      * @param isCooking       whether the activity is cooking
      */
     protected void startCrafting(Player player, CraftedResource craftedResource, int durability, Particle particle,
-                                 Sound soundCraft, Sound soundDone, int eventSlot, int numOfItems, boolean isCooking) {
+                                 Sound soundCraft, Sound soundDone, int numOfItems, boolean isCooking) {
 
         if (RunicProfessions.getProfManager().getCurrentCrafters().contains(player)) return;
         int currentLvl = RunicCoreAPI.getPlayerCache(player).getProfLevel();
@@ -261,7 +260,6 @@ public abstract class Workstation implements Listener {
                         else
                             ProfExpUtil.giveGatheringExperience(player, GatheringSkill.COOKING, exp * numOfItems);
                     }
-//                    produceResult(player, numOfItems, eventSlot);
                     produceResult(player, numOfItems, craftedResource.getItemStack());
                 } else {
                     player.playSound(player.getLocation(), soundCraft, 0.5f, 2.0f);
@@ -286,15 +284,6 @@ public abstract class Workstation implements Listener {
             RunicItemsAPI.addItem(player.getInventory(), itemStack, true); // prevents anti-dupe from triggering
         }
     }
-
-    /**
-     * Method to be overridden in child classes
-     *
-     * @param player        the player in the workstation
-     * @param numberOfItems the number of items they're crafting
-     * @param inventorySlot the inventory slot in the menu corresponding to the item
-     */
-    protected abstract void produceResult(Player player, int numberOfItems, int inventorySlot);
 
     public String getTitle() {
         return this.title;

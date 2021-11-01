@@ -1,18 +1,21 @@
 package com.runicrealms.plugin.professions.crafting.blacksmith;
 
-import com.runicrealms.plugin.api.RunicCoreAPI;
 import com.runicrealms.plugin.item.GUIMenu.ItemGUI;
 import com.runicrealms.plugin.professions.Workstation;
+import com.runicrealms.plugin.professions.crafting.CraftedResource;
 import org.bukkit.Material;
+import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import java.util.LinkedHashMap;
 import java.util.Objects;
 
 public class AnvilMenu extends Workstation {
+
+    private static final int ANVIL_MENU_SIZE = 54;
 
     public AnvilMenu(Player pl) {
         setupWorkstation(pl);
@@ -56,83 +59,24 @@ public class AnvilMenu extends Workstation {
         this.setItemGUI(blackSmithMenu);
     }
 
-    private ItemGUI forgeMenu(Player pl) {
+    private ItemGUI forgeMenu(Player player) {
 
-        // grab the player's current profession level, progress toward that level
-        int currentLvl = RunicCoreAPI.getPlayerCache(pl).getProfLevel();
-
-        // create three hash maps for the reagents, set to 0 since we've only got 1 reagent
-        // level 1
-        LinkedHashMap<Material, Integer> chainLinkReqs = new LinkedHashMap<>();
-        chainLinkReqs.put(Material.IRON_BARS, 999);
-        LinkedHashMap<Material, Integer> goldBarReqs = new LinkedHashMap<>();
-        goldBarReqs.put(Material.GOLD_INGOT, 999);
-        LinkedHashMap<Material, Integer> ironBarReqs = new LinkedHashMap<>();
-        ironBarReqs.put(Material.IRON_INGOT, 999);
-
-        // oaken shield
-        LinkedHashMap<Material, Integer> shieldReqs = new LinkedHashMap<>();
-        shieldReqs.put(Material.IRON_INGOT, 8);
-        shieldReqs.put(Material.OAK_LOG, 1);
-
-        // flail
-        LinkedHashMap<Material, Integer> flailReqs = new LinkedHashMap<>();
-        flailReqs.put(Material.GOLD_INGOT, 5);
-        flailReqs.put(Material.IRON_INGOT, 2);
-        flailReqs.put(Material.EMERALD_ORE, 1);
-        flailReqs.put(Material.BIRCH_LOG, 2);
-
-        // wand
-        LinkedHashMap<Material, Integer> wandReqs = new LinkedHashMap<>();
-        wandReqs.put(Material.IRON_INGOT, 5);
-        wandReqs.put(Material.DIAMOND_ORE, 2);
-        wandReqs.put(Material.BIRCH_LOG, 2);
-
-        // dagger
-        LinkedHashMap<Material, Integer> daggerReqs = new LinkedHashMap<>();
-        daggerReqs.put(Material.IRON_INGOT, 2);
-        daggerReqs.put(Material.NETHER_QUARTZ_ORE, 3);
-        daggerReqs.put(Material.OAK_LOG, 2);
-
-        // bastion
-        LinkedHashMap<Material, Integer> bastionReqs = new LinkedHashMap<>();
-        bastionReqs.put(Material.IRON_INGOT, 8);
-        bastionReqs.put(Material.PHANTOM_MEMBRANE, 1);
-
-        // legendary weapons
-        LinkedHashMap<Material, Integer> legendaryReqs = new LinkedHashMap<>();
-        legendaryReqs.put(Material.IRON_INGOT, 5);
-        legendaryReqs.put(Material.NETHER_STAR, 1);
-
-        // legendary off-hands
-        LinkedHashMap<Material, Integer> shieldReqs2 = (LinkedHashMap<Material, Integer>) shieldReqs.clone();
-        shieldReqs2.put(Material.NETHER_STAR, 3);
-
-        LinkedHashMap<Material, Integer> flailReqs2 = (LinkedHashMap<Material, Integer>) flailReqs.clone();
-        flailReqs2.put(Material.NETHER_STAR, 3);
-
-        LinkedHashMap<Material, Integer> wandReqs2 = (LinkedHashMap<Material, Integer>) wandReqs.clone();
-        wandReqs2.put(Material.NETHER_STAR, 3);
-
-        LinkedHashMap<Material, Integer> daggerReqs2 = (LinkedHashMap<Material, Integer>) daggerReqs.clone();
-        daggerReqs2.put(Material.NETHER_STAR, 3);
-
-        ItemGUI forgeMenu = super.craftingMenu(pl, 36);
+        ItemGUI forgeMenu = super.craftingMenu(player, ANVIL_MENU_SIZE);
 
         forgeMenu.setOption(4, new ItemStack(Material.ANVIL), "&eAnvil",
                 "&fClick &7an item to start crafting!"
                         + "\n&fClick &7here to return to the station", 0, false);
 
-        setupItems(forgeMenu, pl);
+        setupItems(forgeMenu, player);
 
         forgeMenu.setHandler(event -> {
 
             if (event.getSlot() == 4) {
 
                 // return to the first menu
-                pl.playSound(pl.getLocation(), Sound.UI_BUTTON_CLICK, 0.5f, 1);
-                setupWorkstation(pl);
-                this.getItemGUI().open(pl);
+                player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 0.5f, 1);
+                setupWorkstation(player);
+                this.getItemGUI().open(player);
                 event.setWillClose(false);
                 event.setWillDestroy(true);
 
@@ -142,142 +86,31 @@ public class AnvilMenu extends Workstation {
                 if (event.isRightClick()) mult = 5;
                 ItemMeta meta = Objects.requireNonNull(event.getCurrentItem()).getItemMeta();
                 if (meta == null) return;
-
                 int slot = event.getSlot();
-                int reqLevel = 0;
-                int reagentAmt = 0;
-                int exp = 0;
-                LinkedHashMap<Material, Integer> reqHashMap = new LinkedHashMap<>();
-
-                if (event.getSlot() == 9) {
-                    reqHashMap = ironBarReqs;
-                    reagentAmt = 2;
-                    exp = 40;
-                } else if (slot == 10) {
-                    reqLevel = 5;
-                    reqHashMap = shieldReqs;
-                    exp = 165;
-                } else if (slot == 11 || slot == 12) {
-                    reqLevel = 10;
-                    reqHashMap = ironBarReqs;
-                    reagentAmt = 5;
-                    exp = 100;
-                } else if (slot == 13) {
-                    reqLevel = 15;
-                    reqHashMap = chainLinkReqs;
-                    reagentAmt = 4;
-                    exp = 80;
-                } else if (slot == 14) {
-                    reqLevel = 15;
-                    reqHashMap = goldBarReqs;
-                    reagentAmt = 4;
-                    exp = 80;
-                } else if (slot == 15) {
-                    reqLevel = 20;
-                    reqHashMap = chainLinkReqs;
-                    reagentAmt = 7;
-                    exp = 140;
-                } else if (slot == 16) {
-                    reqLevel = 20;
-                    reqHashMap = ironBarReqs;
-                    reagentAmt = 7;
-                    exp = 140;
-                } else if (slot == 17) {
-                    reqLevel = 20;
-                    reqHashMap = flailReqs;
-                    exp = 140;
-                } else if (slot == 18) {
-                    reqLevel = 20;
-                    reqHashMap = wandReqs;
-                    exp = 120;
-                } else if (slot == 19) {
-                    reqLevel = 20;
-                    reqHashMap = daggerReqs;
-                    exp = 60;
-                } else if (slot == 20) {
-                    reqLevel = 25;
-                    reqHashMap = ironBarReqs;
-                    reagentAmt = 2;
-                    exp = 40;
-                } else if (slot == 21) {
-                    reqLevel = 30;
-                    reqHashMap = bastionReqs;
-                    exp = 310;
-                } else if (slot == 22 || slot == 23) {
-                    reqLevel = 35;
-                    reqHashMap = ironBarReqs;
-                    reagentAmt = 5;
-                    exp = 100;
-                } else if (slot == 24) {
-                    reqLevel = 40;
-                    reqHashMap = goldBarReqs;
-                    reagentAmt = 8;
-                    exp = 160;
-                } else if (slot == 25) {
-                    reqLevel = 40;
-                    reqHashMap = ironBarReqs;
-                    reagentAmt = 8;
-                    exp = 160;
-                } else if (slot == 26) {
-                    reqLevel = 45;
-                    reqHashMap = chainLinkReqs;
-                    reagentAmt = 5;
-                    exp = 100;
-                } else if (slot == 27) {
-                    reqLevel = 45;
-                    reqHashMap = ironBarReqs;
-                    reagentAmt = 5;
-                    exp = 100;
-                } else if (slot == 28) {
-                    reqLevel = 50;
-                    reqHashMap = legendaryReqs;
-                    exp = 400;
-                } else if (slot == 29) {
-                    reqLevel = 50;
-                    reqHashMap = legendaryReqs;
-                    exp = 400;
-                } else if (slot == 30) {
-                    reqLevel = 50;
-                    reqHashMap = legendaryReqs;
-                    exp = 400;
-                } else if (slot == 31) {
-                    reqLevel = 60;
-                    reqHashMap = shieldReqs2;
-                } else if (slot == 32) {
-                    reqLevel = 60;
-                    reqHashMap = flailReqs2;
-                } else if (slot == 33) {
-                    reqLevel = 60;
-                    reqHashMap = wandReqs2;
-                } else if (slot == 34) {
-                    reqLevel = 60;
-                    reqHashMap = daggerReqs2;
-                }
-
-                // destroy instance of inventory to prevent bugs
+                CraftedResource craftedResource = determineItem(slot);
                 event.setWillClose(true);
                 event.setWillDestroy(true);
-
-                // craft item based on experience and reagent amount
-//                super.startCrafting(pl, cr, reagentAmt, reqLevel, event.getCurrentItem().getType(),
-//                        currentLvl, exp,
-//                        ((Damageable) meta).getDamage(), Particle.FIREWORKS_SPARK,
-//                        Sound.BLOCK_ANVIL_PLACE, Sound.BLOCK_ANVIL_USE, slot, mult, false);
+                startCrafting
+                        (
+                                player, craftedResource, ((Damageable) meta).getDamage(), Particle.FIREWORKS_SPARK,
+                                Sound.BLOCK_ANVIL_PLACE, Sound.BLOCK_ANVIL_USE, mult, false
+                        );
             }
         });
 
         return forgeMenu;
     }
 
-    private void setupItems(ItemGUI forgeMenu, Player pl) {
+    private void setupItems(ItemGUI forgeMenu, Player player) {
+        createMenuItem(forgeMenu, player, CraftedResource.OFFHAND_VIT_10, 9);
 
         // requirements used to generate lore
-        LinkedHashMap<Material, Integer> chainReqs = new LinkedHashMap<>();
-        chainReqs.put(Material.IRON_BARS, 999); // amount is irrelevant
-        LinkedHashMap<Material, Integer> ironReqs = new LinkedHashMap<>();
-        ironReqs.put(Material.IRON_INGOT, 999);
-        LinkedHashMap<Material, Integer> goldReqs = new LinkedHashMap<>();
-        goldReqs.put(Material.GOLD_INGOT, 999);
+//        LinkedHashMap<Material, Integer> chainReqs = new LinkedHashMap<>();
+//        chainReqs.put(Material.IRON_BARS, 999); // amount is irrelevant
+//        LinkedHashMap<Material, Integer> ironReqs = new LinkedHashMap<>();
+//        ironReqs.put(Material.IRON_INGOT, 999);
+//        LinkedHashMap<Material, Integer> goldReqs = new LinkedHashMap<>();
+//        goldReqs.put(Material.GOLD_INGOT, 999);
 
 //        // level 1
 //        super.createMenuItem(forgeMenu, pl, 9, Material.FLINT, "&fWhetstone", ironReqs,
@@ -324,10 +157,10 @@ public class AnvilMenu extends Workstation {
 //        super.createMenuItem(forgeMenu, pl, 18, Material.STONE_HOE, "&fIllusioner's Wand", wandReqs,
 //                "Iron Bar\nUncut Diamond\nElder Log", 999, 120, 20, 0, this.generateItemLore(BlacksmithItems.ILLUSIONERS_WAND));
 //
-        LinkedHashMap<Material, Integer> daggerReqs = new LinkedHashMap<>();
-        daggerReqs.put(Material.IRON_INGOT, 2);
-        daggerReqs.put(Material.NETHER_QUARTZ_ORE, 3);
-        daggerReqs.put(Material.OAK_LOG, 2);
+//        LinkedHashMap<Material, Integer> daggerReqs = new LinkedHashMap<>();
+//        daggerReqs.put(Material.IRON_INGOT, 2);
+//        daggerReqs.put(Material.NETHER_QUARTZ_ORE, 3);
+//        daggerReqs.put(Material.OAK_LOG, 2);
 //        super.createMenuItem(this, pl, 19, Material.STONE_SWORD, "&fEtched Dagger", daggerReqs,
 //                "Iron Bar\nUncut Opal\nOak Log", 999, 60, 20, 0, this.generateItemLore(BlacksmithItems.ETCHED_DAGGER));
 //
@@ -416,67 +249,11 @@ public class AnvilMenu extends Workstation {
 //                this.generateItemLore(BlacksmithItems.BLACK_STEEL_DIRK));
     }
 
-    @Override
-    public void produceResult(Player player, int numberOfItems, int inventorySlot) {
-        ItemStack itemStack = determineItem(inventorySlot);
-        produceResult(player, numberOfItems, itemStack);
-    }
-
-    private ItemStack determineItem(int slot) {
+    private CraftedResource determineItem(int slot) {
         switch (slot) {
             case 9:
-                return BlacksmithItems.WHETSTONE_ITEMSTACK;
-            case 10:
-                return BlacksmithItems.OAKEN_SHIELD_ITEMSTACK;
-            case 11:
-                return BlacksmithItems.FORGED_IRON_BROADSWORD_ITEMSTACK;
-            case 12:
-                return BlacksmithItems.FORGED_IRON_REAVER_ITEMSTACK;
-            case 13:
-                return BlacksmithItems.FORGED_MAIL_GREAVES_ITEMSTACK;
-            case 14:
-                return BlacksmithItems.FORGED_GILDED_BOOTS_ITEMSTACK;
-            case 15:
-                return BlacksmithItems.FORGED_MAIL_TASSEST_ITEMSTACK;
-            case 16:
-                return BlacksmithItems.FORGED_IRON_PLATELEGS_ITEMSTACK;
-            case 17:
-                return BlacksmithItems.FLAIL_OF_RETRIBUTION_ITEMSTACK;
-            case 18:
-                return BlacksmithItems.ILLUSIONERS_WAND_ITEMSTACK;
-            case 19:
-                return BlacksmithItems.ETCHED_DAGGER_ITEMSTACK;
-            case 20:
-                return BlacksmithItems.SHARPENING_STONE_ITEMSTACK;
-            case 21:
-                return BlacksmithItems.BASTION_ITEMSTACK;
-            case 22:
-                return BlacksmithItems.FORGED_IRON_LONGBOW_ITEMSTACK;
-            case 23:
-                return BlacksmithItems.FORGED_IRON_SCEPTER_ITEMSTACK;
-            case 24:
-                return BlacksmithItems.FORGED_GILDED_BODY_ITEMSTACK;
-            case 25:
-                return BlacksmithItems.FORGED_IRON_PLATEBODY_ITEMSTACK;
-            case 26:
-                return BlacksmithItems.FORGED_MAIL_HELM_ITEMSTACK;
-            case 27:
-                return BlacksmithItems.FORGED_IRON_HELM_ITEMSTACK;
-            case 28:
-                return BlacksmithItems.STORMSONG_ITEMSTACK;
-            case 29:
-                return BlacksmithItems.VALKYRIE_ITEMSTACK;
-            case 30:
-                return BlacksmithItems.THE_MINOTAUR_ITEMSTACK;
-            case 31:
-                return BlacksmithItems.FROST_LORDS_BULWARK_ITEMSTACK;
-            case 32:
-                return BlacksmithItems.REDEEMERS_FLAIL_ITEMSTACK;
-            case 33:
-                return BlacksmithItems.ICEFURY_WAND_ITEMSTACK;
-            case 34:
-                return BlacksmithItems.BLACK_STEEL_DIRK_ITEMSTACK;
+                return CraftedResource.OFFHAND_VIT_10;
         }
-        return new ItemStack(Material.STONE); // oops
+        return CraftedResource.OFFHAND_VIT_10;
     }
 }
