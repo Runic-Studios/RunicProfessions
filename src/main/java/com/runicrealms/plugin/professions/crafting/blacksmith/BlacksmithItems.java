@@ -1,17 +1,13 @@
 package com.runicrealms.plugin.professions.crafting.blacksmith;
 
 import com.runicrealms.runicitems.RunicItemsAPI;
-import com.runicrealms.runicitems.item.*;
+import com.runicrealms.runicitems.item.RunicItemArmor;
+import com.runicrealms.runicitems.item.RunicItemGeneric;
+import com.runicrealms.runicitems.item.RunicItemOffhand;
+import com.runicrealms.runicitems.item.RunicItemWeapon;
 import org.bukkit.inventory.ItemStack;
 
 public class BlacksmithItems {
-
-    public static final RunicItemGeneric CHAIN_LINK = (RunicItemGeneric) RunicItemsAPI.generateItemFromTemplate("chain-link");
-    public static final ItemStack CHAIN_LINK_ITEMSTACK = CHAIN_LINK.generateItem();
-    public static final RunicItemGeneric IRON_BAR = (RunicItemGeneric) RunicItemsAPI.generateItemFromTemplate("iron-bar");
-    public static final ItemStack IRON_BAR_ITEMSTACK = IRON_BAR.generateItem();
-    public static final RunicItemGeneric GOLD_BAR = (RunicItemGeneric) RunicItemsAPI.generateItemFromTemplate("gold-bar");
-    public static final ItemStack GOLD_BAR_ITEMSTACK = GOLD_BAR.generateItem();
 
     // level 1
     public static final RunicItemGeneric WHETSTONE = (RunicItemGeneric) RunicItemsAPI.generateItemFromTemplate("whetstone");

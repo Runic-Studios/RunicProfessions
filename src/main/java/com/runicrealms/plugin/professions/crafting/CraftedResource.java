@@ -102,6 +102,22 @@ public enum CraftedResource {
         put("Bottle", 1);
         put("SacredFlame", 3);
         put("Pufferfish", 4);
+    }}),
+
+    /*
+    Blacksmith
+     */
+    CHAIN_LINK("chain-link", ProfessionEnum.BLACKSMITH, new LinkedHashMap<String, Integer>() {{
+        put("iron-ore", 2);
+        put("SpruceWood", 4);
+    }}),
+    IRON_BAR("iron-bar", ProfessionEnum.BLACKSMITH, new LinkedHashMap<String, Integer>() {{
+        put("iron-ore", 3);
+        put("OakWood", 4);
+    }}),
+    GOLD_BAR("gold-bar", ProfessionEnum.BLACKSMITH, new LinkedHashMap<String, Integer>() {{
+        put("gold-ore", 3);
+        put("OakWood", 4);
     }});
 
     private final String templateId;
