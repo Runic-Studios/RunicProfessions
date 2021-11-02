@@ -1,6 +1,7 @@
 package com.runicrealms.plugin.professions.crafting.cooking;
 
 import com.runicrealms.plugin.RunicProfessions;
+import com.runicrealms.plugin.professions.crafting.CraftedResource;
 import com.runicrealms.plugin.spellapi.spellutil.HealUtil;
 import com.runicrealms.runicitems.item.event.RunicItemGenericTriggerEvent;
 import org.bukkit.ChatColor;
@@ -19,7 +20,7 @@ public class CookingListener implements Listener {
      */
     @EventHandler
     public void onCustomFoodEat(RunicItemGenericTriggerEvent e) {
-        if (!e.getItem().getTemplateId().equals(CookingItems.AMBROSIA_STEW.getTemplateId())) return;
+        if (!e.getItem().getTemplateId().equals(CraftedResource.AMBROSIA_STEW.getTemplateId())) return;
         Player pl = e.getPlayer();
         if (pl.getHealth() == pl.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue()) {
             pl.sendMessage(ChatColor.GRAY + "You can't use this item at full health.");

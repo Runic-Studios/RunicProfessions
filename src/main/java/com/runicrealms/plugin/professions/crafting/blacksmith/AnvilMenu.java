@@ -110,9 +110,9 @@ public class AnvilMenu extends Workstation {
         createMenuItem(forgeMenu, player, CraftedResource.OFFHAND_DEX_50, 13);
         createMenuItem(forgeMenu, player, CraftedResource.OFFHAND_DEX_60, 14);
 
-//        createMenuItem(forgeMenu, player, CraftedResource.WEAPON_BOW_20, 15);
-//        createMenuItem(forgeMenu, player, CraftedResource.WEAPON_BOW_30, 16);
-//        createMenuItem(forgeMenu, player, CraftedResource.WEAPON_BOW_40, 17);
+        createMenuItem(forgeMenu, player, CraftedResource.WEAPON_BOW_20, 15);
+        createMenuItem(forgeMenu, player, CraftedResource.WEAPON_BOW_30, 16);
+        createMenuItem(forgeMenu, player, CraftedResource.WEAPON_BOW_40, 17);
 //
 //        createMenuItem(forgeMenu, player, CraftedResource.OFFHAND_WIS_10, 18);
 //        createMenuItem(forgeMenu, player, CraftedResource.OFFHAND_WIS_20, 19);

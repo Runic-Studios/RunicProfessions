@@ -2,20 +2,23 @@ package com.runicrealms.plugin.professions.crafting.cooking;
 
 import com.runicrealms.plugin.item.GUIMenu.ItemGUI;
 import com.runicrealms.plugin.professions.Workstation;
+import com.runicrealms.plugin.professions.crafting.CraftedResource;
+import com.runicrealms.plugin.professions.utilities.ProfUtil;
 import org.bukkit.Material;
+import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import java.util.LinkedHashMap;
 import java.util.Objects;
 
-@SuppressWarnings("FieldCanBeLocal")
 public class CookingMenu extends Workstation {
 
-    private static final int STEW_DURATION = Integer.parseInt(CookingItems.AMBROSIA_STEW.getData().get("duration"));
-    private static final int AMBROSIA_STEW_AMT = Integer.parseInt(CookingItems.AMBROSIA_STEW.getData().get("health-amount"));
+    private static final int COOKING_MENU_SIZE = 54;
+    private static final int STEW_DURATION = ProfUtil.getRunicItemDataFieldInt(CraftedResource.AMBROSIA_STEW.getRunicItem(), "duration");
+    private static final int AMBROSIA_STEW_AMT = ProfUtil.getRunicItemDataFieldInt(CraftedResource.AMBROSIA_STEW.getRunicItem(), "health-amount");
 
     public CookingMenu(Player pl) {
         setupWorkstation(pl);
@@ -67,91 +70,41 @@ public class CookingMenu extends Workstation {
         this.setItemGUI(cookingMenu);
     }
 
-    private ItemGUI cookingMenu(Player pl) {
+    private ItemGUI cookingMenu(Player player) {
 
-        // meat
-        LinkedHashMap<Material, Integer> meatReqs = new LinkedHashMap<>();
-        meatReqs.put(Material.MUTTON, 4);
-        meatReqs.put(Material.OAK_LOG, 2);
-
-        // bread
-        LinkedHashMap<Material, Integer> breadReqs = new LinkedHashMap<>();
-        breadReqs.put(Material.WHEAT, 3);
-        breadReqs.put(Material.SPRUCE_LOG, 1);
-
-        // cod
-        LinkedHashMap<Material, Integer> codReqs = new LinkedHashMap<>();
-        codReqs.put(Material.COD, 1);
-        codReqs.put(Material.OAK_LOG, 1);
-
-        // salmon
-        LinkedHashMap<Material, Integer> salmonReqs = new LinkedHashMap<>();
-        salmonReqs.put(Material.SALMON, 1);
-        salmonReqs.put(Material.OAK_LOG, 1);
-
-        // ambrosia stew
-        LinkedHashMap<Material, Integer> ambrosiaStewReqs = new LinkedHashMap<>();
-        ambrosiaStewReqs.put(Material.GOLDEN_CARROT, 1);
-        ambrosiaStewReqs.put(Material.RABBIT, 4);
-        ambrosiaStewReqs.put(Material.DARK_OAK_LOG, 16);
-
-        ItemGUI cookingMenu = super.craftingMenu(pl, 18);
+        ItemGUI cookingMenu = super.craftingMenu(player, COOKING_MENU_SIZE);
 
         cookingMenu.setOption(4, new ItemStack(Material.FLINT_AND_STEEL), "&eCooking Fire",
                 "&fClick &7an item to start crafting!"
                         + "\n&fClick &7here to return to the station", 0, false);
 
-        setupItems(cookingMenu, pl);
+        setupItems(cookingMenu, player);
 
         cookingMenu.setHandler(event -> {
 
             if (event.getSlot() == 4) {
 
-                // return to the first menu
-                pl.playSound(pl.getLocation(), Sound.UI_BUTTON_CLICK, 0.5f, 1);
-                setupWorkstation(pl);
-                this.getItemGUI().open(pl);
+                player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 0.5f, 1);
+                setupWorkstation(player);
+                this.getItemGUI().open(player);
                 event.setWillClose(false);
                 event.setWillDestroy(true);
 
             } else {
 
-                int exp = 0;
-                LinkedHashMap<Material, Integer> reqs = new LinkedHashMap<>();
-
-                if (event.getSlot() == 9) {
-                    exp = 10;
-                    reqs = meatReqs;
-                } else if (event.getSlot() == 10) {
-                    exp = 10;
-                    reqs = breadReqs;
-                } else if (event.getSlot() == 11) {
-                    exp = 20;
-                    reqs = codReqs;
-                } else if (event.getSlot() == 12) {
-                    exp = 20;
-                    reqs = salmonReqs;
-                } else if (event.getSlot() == 13) {
-                    exp = 100;
-                    reqs = ambrosiaStewReqs;
-                }
-
                 int mult = 1;
                 if (event.isRightClick()) mult = 5;
                 ItemMeta meta = Objects.requireNonNull(event.getCurrentItem()).getItemMeta();
                 if (meta == null) return;
-
-                // destroy instance of inventory to prevent bugs
+                int slot = event.getSlot();
+                CraftedResource craftedResource = determineItem(slot);
                 event.setWillClose(true);
                 event.setWillDestroy(true);
-
-                // craft item based on experience and reagent amount
-//                super.startCrafting
-//                        (
-//                                pl, reqs, 0, 0, event.getCurrentItem().getType(), 0, exp,
-//                                ((Damageable) meta).getDamage(), Particle.SMOKE_NORMAL,
-//                                Sound.ENTITY_GHAST_SHOOT, Sound.BLOCK_LAVA_EXTINGUISH, event.getSlot(), mult, true
-//                        );
+                startCrafting
+                        (
+                                player, craftedResource, ((Damageable) meta).getDamage(), Particle.SMOKE_NORMAL,
+                                Sound.ENTITY_GHAST_SHOOT, Sound.BLOCK_LAVA_EXTINGUISH, mult, true
+                        );
             }
         });
 
@@ -159,58 +112,26 @@ public class CookingMenu extends Workstation {
     }
 
     private void setupItems(ItemGUI cookingFireMenu, Player player) {
-
-//        // meat
-//        LinkedHashMap<Material, Integer> meatReqs = new LinkedHashMap<>();
-//        meatReqs.put(Material.MUTTON, 4);
-//        meatReqs.put(Material.OAK_LOG, 2);
-//        super.createMenuItem(cookingFireMenu, player, 9, Material.COOKED_MUTTON, "&fCooked Meat", meatReqs,
-//                "Raw Meat\nOak Log", 999, 10, 0, 0, "");
-//
-//        // bread
-//        LinkedHashMap<Material, Integer> breadReqs = new LinkedHashMap<>();
-//        breadReqs.put(Material.WHEAT, 3);
-//        breadReqs.put(Material.SPRUCE_LOG, 1);
-//        super.createMenuItem(cookingFireMenu, player, 10, Material.BREAD, "&fBread", breadReqs,
-//                "Wheat\nSpruce Log", 999, 10, 0, 0, "");
-//
-//        // cod
-//        LinkedHashMap<Material, Integer> codReqs = new LinkedHashMap<>();
-//        codReqs.put(Material.COD, 1);
-//        codReqs.put(Material.OAK_LOG, 1);
-//        super.createMenuItem(cookingFireMenu, player, 11, Material.COOKED_COD, "&fCooked Cod", codReqs,
-//                "Cod\nOak Log", 999, 20, 0, 0, "");
-//
-//        // salmon
-//        LinkedHashMap<Material, Integer> salmonReqs = new LinkedHashMap<>();
-//        salmonReqs.put(Material.SALMON, 1);
-//        salmonReqs.put(Material.OAK_LOG, 1);
-//        super.createMenuItem(cookingFireMenu, player, 12, Material.COOKED_SALMON, "&fCooked Salmon", salmonReqs,
-//                "Salmon\nOak Log", 999, 20, 0, 0, "");
-//
-//        // ambrosia stew
-//        LinkedHashMap<Material, Integer> ambrosiaStewReqs = new LinkedHashMap<>();
-//        ambrosiaStewReqs.put(Material.GOLDEN_CARROT, 1);
-//        ambrosiaStewReqs.put(Material.RABBIT, 4);
-//        ambrosiaStewReqs.put(Material.DARK_OAK_LOG, 16);
-//        super.createMenuItem(cookingFireMenu, player, 13, Material.RABBIT_STEW, "&fAmbrosia Stew", ambrosiaStewReqs,
-//                "Ambrosia Root\nUncooked Rabbit\nDark Oak Log", 999, 100, 0, 2,
-//                generateItemLore(CookingItems.AMBROSIA_STEW));
+        createMenuItem(cookingFireMenu, player, CraftedResource.BREAD, 9);
+        createMenuItem(cookingFireMenu, player, CraftedResource.COOKED_MEAT, 10);
+        createMenuItem(cookingFireMenu, player, CraftedResource.COOKED_COD, 11);
+        createMenuItem(cookingFireMenu, player, CraftedResource.COOKED_SALMON, 12);
+        createMenuItem(cookingFireMenu, player, CraftedResource.AMBROSIA_STEW, 13);
     }
 
-    private ItemStack determineItem(int slot) {
+    private CraftedResource determineItem(int slot) {
         switch (slot) {
             case 9:
-                return CookingItems.COOKED_MEAT_ITEMSTACK;
+                return CraftedResource.BREAD;
             case 10:
-                return CookingItems.BREAD_ITEMSTACK;
+                return CraftedResource.COOKED_MEAT;
             case 11:
-                return CookingItems.COOKED_COD_ITEMSTACK;
+                return CraftedResource.COOKED_COD;
             case 12:
-                return CookingItems.COOKED_SALMON_ITEMSTACK;
+                return CraftedResource.COOKED_SALMON;
             case 13:
-                return CookingItems.AMBROSIA_STEW_ITEMSTACK;
+                return CraftedResource.AMBROSIA_STEW;
         }
-        return new ItemStack(Material.STONE); // oops
+        return CraftedResource.BREAD;
     }
 }

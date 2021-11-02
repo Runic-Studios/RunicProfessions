@@ -2,6 +2,7 @@ package com.runicrealms.plugin.professions;
 
 public enum ProfessionEnum {
 
+    ANY("any"),
     ALCHEMIST("alchemist"),
     BLACKSMITH("blacksmith"),
     ENCHANTER("enchanter"),

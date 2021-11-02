@@ -14,6 +14,31 @@ import java.util.LinkedHashMap;
 public enum CraftedResource {
 
     /*
+    Cooking
+     */
+    BREAD("Bread", ProfessionEnum.ANY, new LinkedHashMap<String, Integer>() {{
+        put("Wheat", 5);
+        put("OakWood", 1);
+    }}),
+    COOKED_MEAT("CookedMeat", ProfessionEnum.ANY, new LinkedHashMap<String, Integer>() {{
+        put("RawMeat", 4);
+        put("OakWood", 2);
+    }}),
+    COOKED_COD("CookedCod", ProfessionEnum.ANY, new LinkedHashMap<String, Integer>() {{
+        put("Cod", 1);
+        put("SpruceWood", 1);
+    }}),
+    COOKED_SALMON("CookedSalmon", ProfessionEnum.ANY, new LinkedHashMap<String, Integer>() {{
+        put("Salmon", 1);
+        put("SpruceWood", 1);
+    }}),
+    AMBROSIA_STEW("ambrosia-stew", ProfessionEnum.ANY, new LinkedHashMap<String, Integer>() {{
+        put("AmbrosiaRoot", 1);
+        put("UncookedRabbit", 4);
+        put("BirchWood", 2);
+    }}),
+
+    /*
     Alchemist
      */
     BOTTLE("Bottle", ProfessionEnum.ALCHEMIST, new LinkedHashMap<String, Integer>() {{
@@ -145,6 +170,21 @@ public enum CraftedResource {
         put("crystal-corpus", 16);
     }}),
     OFFHAND_DEX_60("blacksmith-offhand-dex-60", ProfessionEnum.BLACKSMITH, new LinkedHashMap<String, Integer>() {{
+        put("chain-link", 64);
+        put("JungleWood", 256);
+        put("black-matter", 32);
+    }}),
+    WEAPON_BOW_20("blacksmith-weapon-bow-20", ProfessionEnum.BLACKSMITH, new LinkedHashMap<String, Integer>() {{
+        put("chain-link", 64);
+        put("JungleWood", 256);
+        put("black-matter", 32);
+    }}),
+    WEAPON_BOW_30("blacksmith-weapon-bow-30", ProfessionEnum.BLACKSMITH, new LinkedHashMap<String, Integer>() {{
+        put("chain-link", 64);
+        put("JungleWood", 256);
+        put("black-matter", 32);
+    }}),
+    WEAPON_BOW_40("blacksmith-weapon-bow-40", ProfessionEnum.BLACKSMITH, new LinkedHashMap<String, Integer>() {{
         put("chain-link", 64);
         put("JungleWood", 256);
         put("black-matter", 32);
