@@ -119,6 +119,36 @@ public enum CraftedResource {
         put("gold-ore", 4);
         put("OakWood", 4);
     }}),
+    OFFHAND_DEX_10("blacksmith-offhand-dex-10", ProfessionEnum.BLACKSMITH, new LinkedHashMap<String, Integer>() {{
+        put("chain-link", 6);
+        put("OakWood", 24);
+        put("crimson-core", 1);
+    }}),
+    OFFHAND_DEX_20("blacksmith-offhand-dex-20", ProfessionEnum.BLACKSMITH, new LinkedHashMap<String, Integer>() {{
+        put("chain-link", 8);
+        put("SpruceWood", 32);
+        put("sapphirine-shard", 2);
+    }}),
+    OFFHAND_DEX_30("blacksmith-offhand-dex-30", ProfessionEnum.BLACKSMITH, new LinkedHashMap<String, Integer>() {{
+        put("chain-link", 16);
+        put("BirchWood", 64);
+        put("glacial-fragment", 5);
+    }}),
+    OFFHAND_DEX_40("blacksmith-offhand-dex-40", ProfessionEnum.BLACKSMITH, new LinkedHashMap<String, Integer>() {{
+        put("chain-link", 28);
+        put("DarkOakWood", 112);
+        put("jade-gemstone", 9);
+    }}),
+    OFFHAND_DEX_50("blacksmith-offhand-dex-50", ProfessionEnum.BLACKSMITH, new LinkedHashMap<String, Integer>() {{
+        put("chain-link", 40);
+        put("JungleWood", 160);
+        put("crystal-corpus", 16);
+    }}),
+    OFFHAND_DEX_60("blacksmith-offhand-dex-60", ProfessionEnum.BLACKSMITH, new LinkedHashMap<String, Integer>() {{
+        put("chain-link", 64);
+        put("JungleWood", 256);
+        put("black-matter", 32);
+    }}),
     OFFHAND_VIT_10("blacksmith-offhand-vit-10", ProfessionEnum.BLACKSMITH, new LinkedHashMap<String, Integer>() {{
         put("iron-bar", 6);
         put("OakWood", 6);

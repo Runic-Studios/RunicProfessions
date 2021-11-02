@@ -102,158 +102,68 @@ public class AnvilMenu extends Workstation {
     }
 
     private void setupItems(ItemGUI forgeMenu, Player player) {
-        createMenuItem(forgeMenu, player, CraftedResource.OFFHAND_VIT_10, 9);
 
-        // requirements used to generate lore
-//        LinkedHashMap<Material, Integer> chainReqs = new LinkedHashMap<>();
-//        chainReqs.put(Material.IRON_BARS, 999); // amount is irrelevant
-//        LinkedHashMap<Material, Integer> ironReqs = new LinkedHashMap<>();
-//        ironReqs.put(Material.IRON_INGOT, 999);
-//        LinkedHashMap<Material, Integer> goldReqs = new LinkedHashMap<>();
-//        goldReqs.put(Material.GOLD_INGOT, 999);
+        createMenuItem(forgeMenu, player, CraftedResource.OFFHAND_DEX_10, 9);
+        createMenuItem(forgeMenu, player, CraftedResource.OFFHAND_DEX_20, 10);
+        createMenuItem(forgeMenu, player, CraftedResource.OFFHAND_DEX_30, 11);
+        createMenuItem(forgeMenu, player, CraftedResource.OFFHAND_DEX_40, 12);
+        createMenuItem(forgeMenu, player, CraftedResource.OFFHAND_DEX_50, 13);
+        createMenuItem(forgeMenu, player, CraftedResource.OFFHAND_DEX_60, 14);
 
-//        // level 1
-//        super.createMenuItem(forgeMenu, pl, 9, Material.FLINT, "&fWhetstone", ironReqs,
-//                "Iron Bar", 2, 40, 0, 0,
-//                generateItemLore(BlacksmithItems.WHETSTONE));
+//        createMenuItem(forgeMenu, player, CraftedResource.WEAPON_BOW_20, 15);
+//        createMenuItem(forgeMenu, player, CraftedResource.WEAPON_BOW_30, 16);
+//        createMenuItem(forgeMenu, player, CraftedResource.WEAPON_BOW_40, 17);
 //
-//        // level 5
-//        LinkedHashMap<Material, Integer> shieldReqs = new LinkedHashMap<>();
-//        shieldReqs.put(Material.IRON_INGOT, 8);
-//        shieldReqs.put(Material.OAK_LOG, 1);
-//        super.createMenuItem(forgeMenu, pl, 10, Material.SHIELD, "&fOaken Shield", shieldReqs,
-//                "Iron Bar\nOak Log", 999, 165, 5, 0, this.generateItemLore(BlacksmithItems.OAKEN_SHIELD));
+//        createMenuItem(forgeMenu, player, CraftedResource.OFFHAND_WIS_10, 18);
+//        createMenuItem(forgeMenu, player, CraftedResource.OFFHAND_WIS_20, 19);
+//        createMenuItem(forgeMenu, player, CraftedResource.OFFHAND_WIS_30, 20);
+//        createMenuItem(forgeMenu, player, CraftedResource.OFFHAND_WIS_40, 21);
+//        createMenuItem(forgeMenu, player, CraftedResource.OFFHAND_WIS_50, 22);
+//        createMenuItem(forgeMenu, player, CraftedResource.OFFHAND_WIS_60, 23);
 //
-//        // level 10
-//        super.createMenuItem(forgeMenu, pl, 11, Material.WOODEN_SWORD, "&fForged Iron Broadsword", ironReqs,
-//                "Iron Bar", 5, 100, 10, 7, this.generateItemLore(BlacksmithItems.FORGED_IRON_BROADSWORD));
-//        super.createMenuItem(forgeMenu, pl, 12, Material.WOODEN_AXE, "&fForged Iron Reaver", ironReqs,
-//                "Iron Bar", 5, 100, 10, 7, this.generateItemLore(BlacksmithItems.FORGED_IRON_REAVER));
+//        createMenuItem(forgeMenu, player, CraftedResource.WEAPON_MACE_20, 24);
+//        createMenuItem(forgeMenu, player, CraftedResource.WEAPON_MACE_30, 25);
+//        createMenuItem(forgeMenu, player, CraftedResource.WEAPON_MACE_40, 26);
 //
-//        // level 15
-//        super.createMenuItem(forgeMenu, pl, 13, Material.CHAINMAIL_BOOTS, "&fForged Mail Greaves", chainReqs,
-//                "Chain Link", 4, 80, 15, 0, this.generateItemLore(BlacksmithItems.FORGED_MAIL_GREAVES));
-//        super.createMenuItem(forgeMenu, pl, 14, Material.GOLDEN_BOOTS, "&fForged Gilded Boots", goldReqs,
-//                "Gold Bar", 4, 80, 15, 0, this.generateItemLore(BlacksmithItems.FORGED_GILDED_BOOTS));
+//        createMenuItem(forgeMenu, player, CraftedResource.OFFHAND_INT_10, 27);
+//        createMenuItem(forgeMenu, player, CraftedResource.OFFHAND_INT_20, 28);
+//        createMenuItem(forgeMenu, player, CraftedResource.OFFHAND_INT_30, 29);
+//        createMenuItem(forgeMenu, player, CraftedResource.OFFHAND_INT_40, 30);
+//        createMenuItem(forgeMenu, player, CraftedResource.OFFHAND_INT_50, 31);
+//        createMenuItem(forgeMenu, player, CraftedResource.OFFHAND_INT_60, 32);
 //
-//        // level 20
-//        super.createMenuItem(forgeMenu, pl, 15, Material.CHAINMAIL_LEGGINGS, "&fForged Mail Tassets", chainReqs,
-//                "Chain Link", 7, 140, 20, 0, this.generateItemLore(BlacksmithItems.FORGED_MAIL_TASSEST));
-//        super.createMenuItem(forgeMenu, pl, 16, Material.IRON_LEGGINGS, "&fForged Iron Platelegs", ironReqs,
-//                "Iron Bar", 7, 140, 20, 0, this.generateItemLore(BlacksmithItems.FORGED_IRON_PLATELEGS));
+//        createMenuItem(forgeMenu, player, CraftedResource.SHARP_STONE_10, 33);
+//        createMenuItem(forgeMenu, player, CraftedResource.SHARP_STONE_20, 34);
+//        createMenuItem(forgeMenu, player, CraftedResource.SHARP_STONE_30, 35);
 //
-//        LinkedHashMap<Material, Integer> flailReqs = new LinkedHashMap<>();
-//        flailReqs.put(Material.GOLD_INGOT, 5);
-//        flailReqs.put(Material.IRON_INGOT, 2);
-//        flailReqs.put(Material.EMERALD_ORE, 1);
-//        flailReqs.put(Material.BIRCH_LOG, 2);
-//        super.createMenuItem(forgeMenu, pl, 17, Material.STONE_SHOVEL, "&fFlail of Retribution", flailReqs,
-//                "Gold Bar\nIron Bar\nUncut Emerald\nElder Log", 999, 140, 20, 0, this.generateItemLore(BlacksmithItems.FLAIL_OF_RETRIBUTION));
+//        createMenuItem(forgeMenu, player, CraftedResource.OFFHAND_STR_10, 36);
+//        createMenuItem(forgeMenu, player, CraftedResource.OFFHAND_STR_20, 37);
+//        createMenuItem(forgeMenu, player, CraftedResource.OFFHAND_STR_30, 38);
+//        createMenuItem(forgeMenu, player, CraftedResource.OFFHAND_STR_40, 39);
+//        createMenuItem(forgeMenu, player, CraftedResource.OFFHAND_STR_50, 40);
+//        createMenuItem(forgeMenu, player, CraftedResource.OFFHAND_STR_60, 41);
 //
-//        LinkedHashMap<Material, Integer> wandReqs = new LinkedHashMap<>();
-//        wandReqs.put(Material.IRON_INGOT, 5);
-//        wandReqs.put(Material.DIAMOND_ORE, 2);
-//        wandReqs.put(Material.BIRCH_LOG, 2);
-//        super.createMenuItem(forgeMenu, pl, 18, Material.STONE_HOE, "&fIllusioner's Wand", wandReqs,
-//                "Iron Bar\nUncut Diamond\nElder Log", 999, 120, 20, 0, this.generateItemLore(BlacksmithItems.ILLUSIONERS_WAND));
+//        createMenuItem(forgeMenu, player, CraftedResource.WEAPON_SWORD_20, 42);
+//        createMenuItem(forgeMenu, player, CraftedResource.WEAPON_SWORD_30, 43);
+//        createMenuItem(forgeMenu, player, CraftedResource.WEAPON_SWORD_40, 44);
+
+        createMenuItem(forgeMenu, player, CraftedResource.OFFHAND_VIT_10, 45);
+//        createMenuItem(forgeMenu, player, CraftedResource.OFFHAND_VIT_20, 46);
+//        createMenuItem(forgeMenu, player, CraftedResource.OFFHAND_VIT_30, 47);
+//        createMenuItem(forgeMenu, player, CraftedResource.OFFHAND_VIT_40, 48);
+//        createMenuItem(forgeMenu, player, CraftedResource.OFFHAND_VIT_50, 49);
+//        createMenuItem(forgeMenu, player, CraftedResource.OFFHAND_VIT_60, 50);
 //
-//        LinkedHashMap<Material, Integer> daggerReqs = new LinkedHashMap<>();
-//        daggerReqs.put(Material.IRON_INGOT, 2);
-//        daggerReqs.put(Material.NETHER_QUARTZ_ORE, 3);
-//        daggerReqs.put(Material.OAK_LOG, 2);
-//        super.createMenuItem(this, pl, 19, Material.STONE_SWORD, "&fEtched Dagger", daggerReqs,
-//                "Iron Bar\nUncut Opal\nOak Log", 999, 60, 20, 0, this.generateItemLore(BlacksmithItems.ETCHED_DAGGER));
-//
-//        // level 25
-//        super.createMenuItem(forgeMenu, pl, 20, Material.FLINT, "&fSharpening Stone", ironReqs,
-//                "Iron Bar", 2, 40, 25, 0,
-//                generateItemLore(BlacksmithItems.SHARPENING_STONE));
-//
-//        // level 30
-//        LinkedHashMap<Material, Integer> bastionReqs = new LinkedHashMap<>();
-//        bastionReqs.put(Material.IRON_INGOT, 8);
-//        bastionReqs.put(Material.PHANTOM_MEMBRANE, 1);
-//        super.createMenuItem(forgeMenu, pl, 21, Material.SHIELD, "&fBastion", bastionReqs,
-//                "Iron Bar\nFlag of Honor", 999, 310, 30, 0, this.generateItemLore(BlacksmithItems.BASTION));
-//
-//        // level 35
-//        super.createMenuItem(forgeMenu, pl, 22, Material.BOW, "&fForged Iron Longbow", chainReqs,
-//                "Iron Bar", 5, 100, 35, 7, this.generateItemLore(BlacksmithItems.FORGED_IRON_LONGBOW));
-//        super.createMenuItem(forgeMenu, pl, 23, Material.WOODEN_HOE, "&fForged Iron Scepter", ironReqs,
-//                "Iron Bar", 5, 100, 35, 7, this.generateItemLore(BlacksmithItems.FORGED_IRON_SCEPTER));
-//
-//        // level 40
-//        super.createMenuItem(forgeMenu, pl, 24, Material.GOLDEN_CHESTPLATE, "&fForged Gilded Body", goldReqs,
-//                "Gold Bar", 8, 160, 40, 0, this.generateItemLore(BlacksmithItems.FORGED_GILDED_BODY));
-//        super.createMenuItem(forgeMenu, pl, 25, Material.IRON_CHESTPLATE, "&fForged Iron Platebody", ironReqs,
-//                "Iron Bar", 8, 160, 40, 0, this.generateItemLore(BlacksmithItems.FORGED_IRON_PLATEBODY));
-//
-//        // level 45
-//        super.createMenuItem(forgeMenu, pl, 26, Material.CHAINMAIL_HELMET, "&fForged Mail Helm", chainReqs,
-//                "Chain Link", 5, 100, 45, 0, this.generateItemLore(BlacksmithItems.FORGED_MAIL_HELM));
-//        super.createMenuItem(forgeMenu, pl, 27, Material.IRON_HELMET, "&fForged Iron Helm", ironReqs,
-//                "Iron Bar", 5, 100, 45, 0, this.generateItemLore(BlacksmithItems.FORGED_IRON_HELM));
-//
-//        // level 50 - legendary weapons
-//        LinkedHashMap<Material, Integer> legenReqs = new LinkedHashMap<>();
-//        legenReqs.put(Material.IRON_INGOT, 5);
-//        legenReqs.put(Material.NETHER_STAR, 1);
-//        super.createMenuItem(forgeMenu, pl, 28, Material.BOW, "&6Stormsong", legenReqs,
-//                "Iron Bar\nToken of Valor", 999, 400, 50, 10,
-//                this.generateItemLore(BlacksmithItems.STORMSONG),
-//                true, false, false);
-//        super.createMenuItem(forgeMenu, pl, 29, Material.WOODEN_SWORD, "&6Valkyrie", legenReqs,
-//                "Iron Bar\nToken of Valor", 999, 400, 50, 10,
-//                this.generateItemLore(BlacksmithItems.VALKYRIE),
-//                true, false, false);
-//        super.createMenuItem(forgeMenu, pl, 30, Material.WOODEN_AXE, "&6The Minotaur", legenReqs,
-//                "Iron Bar\nToken of Valor", 999, 400, 50, 10,
-//                this.generateItemLore(BlacksmithItems.THE_MINOTAUR),
-//                true, false, false);
-//
-//        // level 60 - legendary off-hands
-//        LinkedHashMap<Material, Integer> shieldReqs2 = new LinkedHashMap<>();
-//        shieldReqs2.put(Material.IRON_INGOT, 8);
-//        shieldReqs2.put(Material.OAK_LOG, 1);
-//        shieldReqs2.put(Material.NETHER_STAR, 3);
-//        super.createMenuItem(forgeMenu, pl, 31, Material.SHIELD, "&6Frost Lord's Bulwark", shieldReqs2,
-//                "Iron Bar\nOak Log\nToken of Valor", 999, 0, 60, 0,
-//                this.generateItemLore(BlacksmithItems.FROST_LORDS_BULWARK));
-//
-//        LinkedHashMap<Material, Integer> flailReqs2 = new LinkedHashMap<>();
-//        flailReqs2.put(Material.GOLD_INGOT, 5);
-//        flailReqs2.put(Material.IRON_INGOT, 2);
-//        flailReqs2.put(Material.EMERALD_ORE, 1);
-//        flailReqs2.put(Material.BIRCH_LOG, 2);
-//        flailReqs2.put(Material.NETHER_STAR, 3);
-//        super.createMenuItem(forgeMenu, pl, 32, Material.STONE_SHOVEL, "&6Redeemer's Flail", flailReqs2,
-//                "Gold Bar\nIron Bar\nUncut Emerald\nElder Log\nToken of Valor", 999, 0, 60, 0,
-//                this.generateItemLore(BlacksmithItems.REDEEMERS_FLAIL));
-//
-//        LinkedHashMap<Material, Integer> wandReqs2 = new LinkedHashMap<>();
-//        wandReqs2.put(Material.IRON_INGOT, 5);
-//        wandReqs2.put(Material.DIAMOND_ORE, 2);
-//        wandReqs2.put(Material.BIRCH_LOG, 2);
-//        wandReqs2.put(Material.NETHER_STAR, 3);
-//        super.createMenuItem(forgeMenu, pl, 33, Material.STONE_HOE, "&6Icefury Wand", wandReqs2,
-//                "Iron Bar\nUncut Diamond\nElder Log\nToken of Valor", 999, 0, 60, 0,
-//                this.generateItemLore(BlacksmithItems.ICEFURY_WAND));
-//
-//        LinkedHashMap<Material, Integer> daggerReqs2 = new LinkedHashMap<>();
-//        daggerReqs2.put(Material.IRON_INGOT, 2);
-//        daggerReqs2.put(Material.NETHER_QUARTZ_ORE, 3);
-//        daggerReqs2.put(Material.OAK_LOG, 2);
-//        daggerReqs2.put(Material.NETHER_STAR, 3);
-//        super.createMenuItem(forgeMenu, pl, 34, Material.STONE_SWORD, "&6Black Steel Dirk", daggerReqs2,
-//                "Iron Bar\nUncut Opal\nOak Log\nToken of Valor", 999, 0, 60, 0,
-//                this.generateItemLore(BlacksmithItems.BLACK_STEEL_DIRK));
+//        createMenuItem(forgeMenu, player, CraftedResource.WEAPON_AXE_20, 51);
+//        createMenuItem(forgeMenu, player, CraftedResource.WEAPON_AXE_30, 52);
+//        createMenuItem(forgeMenu, player, CraftedResource.WEAPON_AXE_40, 53);
     }
 
     private CraftedResource determineItem(int slot) {
         switch (slot) {
             case 9:
-                return CraftedResource.OFFHAND_VIT_10;
+                return CraftedResource.OFFHAND_DEX_10;
         }
-        return CraftedResource.OFFHAND_VIT_10;
+        return CraftedResource.OFFHAND_DEX_10;
     }
 }

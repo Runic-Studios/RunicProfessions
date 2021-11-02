@@ -145,7 +145,16 @@ public abstract class Workstation implements Listener {
 
         desc = new StringBuilder(ColorUtil.format(desc.toString()));
 
-        String name = craftedResource.getRunicItem().getDisplayableItem().getDisplayName();
+        RunicItem runicItem = craftedResource.getRunicItem();
+        ChatColor prefix = ChatColor.WHITE;
+        if (runicItem instanceof RunicItemArmor) {
+            prefix = ((RunicItemArmor) runicItem).getRarity().getChatColor();
+        } else if (runicItem instanceof RunicItemOffhand) {
+            prefix = ((RunicItemOffhand) runicItem).getRarity().getChatColor();
+        } else if (runicItem instanceof RunicItemWeapon) {
+            prefix = ((RunicItemWeapon) runicItem).getRarity().getChatColor();
+        }
+        String name = prefix + runicItem.getDisplayableItem().getDisplayName();
         if (craftedResource.getItemStack().getType() == Material.POTION) {
             Color color;
             if (name.toLowerCase().contains("healing")) {
