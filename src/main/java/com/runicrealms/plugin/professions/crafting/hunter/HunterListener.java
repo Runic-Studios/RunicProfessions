@@ -13,7 +13,7 @@ import com.runicrealms.plugin.events.SpellDamageEvent;
 import com.runicrealms.plugin.events.WeaponDamageEvent;
 import com.runicrealms.plugin.item.util.ItemRemover;
 import com.runicrealms.plugin.player.cache.PlayerCache;
-import com.runicrealms.plugin.professions.ProfessionEnum;
+import com.runicrealms.plugin.professions.Profession;
 import com.runicrealms.plugin.professions.event.ProfessionChangeEvent;
 import com.runicrealms.runicitems.item.event.RunicItemGenericTriggerEvent;
 import io.lumine.xikage.mythicmobs.api.bukkit.events.MythicMobDeathEvent;
@@ -77,7 +77,7 @@ public class HunterListener implements Listener {
 
     @EventHandler
     public void onProfessionChange(ProfessionChangeEvent event) {
-        if (event.getProfession() == ProfessionEnum.HUNTER) {
+        if (event.getProfession() == Profession.HUNTER) {
             this.registerHunter(event.getPlayer());
         }
     }

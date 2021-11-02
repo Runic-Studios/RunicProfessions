@@ -1,6 +1,6 @@
 package com.runicrealms.plugin.professions.event;
 
-import com.runicrealms.plugin.professions.ProfessionEnum;
+import com.runicrealms.plugin.professions.Profession;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
@@ -12,7 +12,7 @@ public class ProfessionChangeEvent extends Event {
 
     private static final HandlerList handlers = new HandlerList();
     private final Player player;
-    private final ProfessionEnum profession;
+    private final Profession profession;
 
     /**
      * Grab the new profession the player swapped to.
@@ -20,7 +20,7 @@ public class ProfessionChangeEvent extends Event {
      * @param player     player who swapped
      * @param profession the profession that was chosen
      */
-    public ProfessionChangeEvent(Player player, ProfessionEnum profession) {
+    public ProfessionChangeEvent(Player player, Profession profession) {
         this.player = player;
         this.profession = profession;
     }
@@ -33,7 +33,7 @@ public class ProfessionChangeEvent extends Event {
         return this.player;
     }
 
-    public ProfessionEnum getProfession() {
+    public Profession getProfession() {
         return this.profession;
     }
 

@@ -2,7 +2,7 @@ package com.runicrealms.plugin.professions.commands;
 
 import com.runicrealms.plugin.api.RunicCoreAPI;
 import com.runicrealms.plugin.item.util.ItemRemover;
-import com.runicrealms.plugin.professions.ProfessionEnum;
+import com.runicrealms.plugin.professions.Profession;
 import com.runicrealms.plugin.professions.api.RunicProfessionsAPI;
 import com.runicrealms.plugin.utilities.CurrencyUtil;
 import org.bukkit.Bukkit;
@@ -42,7 +42,7 @@ public class SetProfCMD implements CommandExecutor {
             return true;
         }
 
-        ProfessionEnum profession = ProfessionEnum.valueOf(profStr.toUpperCase());
+        Profession profession = Profession.valueOf(profStr.toUpperCase());
         String isAdmin = args[2];
 
         if (isAdmin.equalsIgnoreCase("true")) {

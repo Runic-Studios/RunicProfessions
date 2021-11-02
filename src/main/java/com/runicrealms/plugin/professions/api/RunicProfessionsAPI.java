@@ -5,7 +5,7 @@ import com.runicrealms.plugin.api.RunicCoreAPI;
 import com.runicrealms.plugin.database.PlayerMongoData;
 import com.runicrealms.plugin.database.PlayerMongoDataSection;
 import com.runicrealms.plugin.player.cache.PlayerCache;
-import com.runicrealms.plugin.professions.ProfessionEnum;
+import com.runicrealms.plugin.professions.Profession;
 import com.runicrealms.plugin.professions.crafting.hunter.HunterPlayer;
 import com.runicrealms.plugin.professions.event.ProfessionChangeEvent;
 import com.runicrealms.plugin.professions.gathering.GatherPlayer;
@@ -33,7 +33,7 @@ public class RunicProfessionsAPI {
      * @param player     player to update
      * @param profession the new profession
      */
-    public static void changePlayerProfession(Player player, ProfessionEnum profession) {
+    public static void changePlayerProfession(Player player, Profession profession) {
         PlayerCache playerCache = RunicCoreAPI.getPlayerCache(player);
 
         // reset profession, level, exp

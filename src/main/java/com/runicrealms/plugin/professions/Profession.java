@@ -1,6 +1,6 @@
 package com.runicrealms.plugin.professions;
 
-public enum ProfessionEnum {
+public enum Profession {
 
     ANY("any"),
     ALCHEMIST("alchemist"),
@@ -11,7 +11,7 @@ public enum ProfessionEnum {
 
     private final String name;
 
-    ProfessionEnum(String name) {
+    Profession(String name) {
         this.name = name;
     }
 

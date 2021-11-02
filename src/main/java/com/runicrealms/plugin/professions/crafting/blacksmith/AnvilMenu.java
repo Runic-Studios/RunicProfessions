@@ -132,9 +132,9 @@ public class AnvilMenu extends Workstation {
 //        createMenuItem(forgeMenu, player, CraftedResource.OFFHAND_INT_50, 31);
 //        createMenuItem(forgeMenu, player, CraftedResource.OFFHAND_INT_60, 32);
 //
-//        createMenuItem(forgeMenu, player, CraftedResource.SHARP_STONE_10, 33);
-//        createMenuItem(forgeMenu, player, CraftedResource.SHARP_STONE_20, 34);
-//        createMenuItem(forgeMenu, player, CraftedResource.SHARP_STONE_30, 35);
+        createMenuItem(forgeMenu, player, CraftedResource.SHARPSTONE_10, 33);
+        createMenuItem(forgeMenu, player, CraftedResource.SHARPSTONE_20, 34);
+        createMenuItem(forgeMenu, player, CraftedResource.SHARPSTONE_30, 35);
 //
 //        createMenuItem(forgeMenu, player, CraftedResource.OFFHAND_STR_10, 36);
 //        createMenuItem(forgeMenu, player, CraftedResource.OFFHAND_STR_20, 37);
@@ -163,6 +163,12 @@ public class AnvilMenu extends Workstation {
         switch (slot) {
             case 9:
                 return CraftedResource.OFFHAND_DEX_10;
+            case 33:
+                return CraftedResource.SHARPSTONE_10;
+            case 34:
+                return CraftedResource.SHARPSTONE_20;
+            case 35:
+                return CraftedResource.SHARPSTONE_30;
         }
         return CraftedResource.OFFHAND_DEX_10;
     }

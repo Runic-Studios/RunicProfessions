@@ -3,6 +3,7 @@ package com.runicrealms.plugin.professions.crafting.blacksmith;
 import com.runicrealms.plugin.RunicProfessions;
 import com.runicrealms.plugin.events.WeaponDamageEvent;
 import com.runicrealms.plugin.item.util.ItemRemover;
+import com.runicrealms.plugin.professions.crafting.CraftedResource;
 import com.runicrealms.runicitems.item.RunicItem;
 import com.runicrealms.runicitems.item.event.RunicItemGenericTriggerEvent;
 import org.bukkit.Bukkit;
@@ -28,8 +29,9 @@ public class StoneListener implements Listener {
 
     @EventHandler
     public void onRunicClickTrigger(RunicItemGenericTriggerEvent e) {
-        if (!e.getItem().getTemplateId().equals(BlacksmithItems.WHETSTONE.getTemplateId())
-                && !e.getItem().getTemplateId().equals(BlacksmithItems.SHARPENING_STONE.getTemplateId()))
+        if (!(e.getItem().getTemplateId().equals(CraftedResource.SHARPSTONE_10.getTemplateId())
+                || e.getItem().getTemplateId().equals(CraftedResource.SHARPSTONE_20.getTemplateId())
+                || e.getItem().getTemplateId().equals(CraftedResource.SHARPSTONE_30.getTemplateId())))
             return;
 
         RunicItem runicItem = e.getItem();
