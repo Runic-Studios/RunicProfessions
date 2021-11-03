@@ -351,7 +351,11 @@ public abstract class Workstation implements Listener {
 
         stats = stats.concat(ChatColor.RED + "" + item.getHealth() + "❤\n");
         for (Stat stat : item.getStats().keySet()) {
-            stats = stats.concat(stat.getChatColor() + "+" + item.getStats().get(stat).getValue() + stat.getIcon() + "\n");
+            stats = stats.concat
+                    (
+                            stat.getChatColor() + "+" + item.getStats().get(stat).getRange().getMin() +
+                                    "-" + item.getStats().get(stat).getRange().getMax() + stat.getIcon() + "\n"
+                    );
         }
 
         return stats;
@@ -373,7 +377,11 @@ public abstract class Workstation implements Listener {
         String stats = "";
 
         for (Stat stat : item.getStats().keySet()) {
-            stats = stats.concat(stat.getChatColor() + "+" + item.getStats().get(stat).getValue() + stat.getIcon() + "\n");
+            stats = stats.concat
+                    (
+                            stat.getChatColor() + "+" + item.getStats().get(stat).getRange().getMin() +
+                                    "-" + item.getStats().get(stat).getRange().getMax() + stat.getIcon() + "\n"
+                    );
         }
 
         return stats;
