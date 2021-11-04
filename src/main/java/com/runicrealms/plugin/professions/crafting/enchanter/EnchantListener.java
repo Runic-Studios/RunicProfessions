@@ -19,6 +19,7 @@ import java.util.HashMap;
 import java.util.UUID;
 
 public class EnchantListener implements Listener {
+
     private static final double MOVE_CONSTANT = 0.6;
     private static final int WARMUP_TIME = 5;
     private final HashMap<UUID, BukkitTask> currentlyUsing = new HashMap<>();
@@ -27,7 +28,8 @@ public class EnchantListener implements Listener {
     public void onTeleportScrollUse(PlayerInteractEvent e) {
 
         if (e.getAction() != Action.RIGHT_CLICK_AIR && e.getAction() != Action.RIGHT_CLICK_BLOCK) return;
-        if (e.getHand() != EquipmentSlot.HAND) return; // annoying 1.9 feature which makes the event run twice, once for each hand
+        if (e.getHand() != EquipmentSlot.HAND)
+            return; // annoying 1.9 feature which makes the event run twice, once for each hand
         if (currentlyUsing.containsKey(e.getPlayer().getUniqueId())) return;
 
         Material mat = e.getPlayer().getInventory().getItemInMainHand().getType();
@@ -67,6 +69,7 @@ public class EnchantListener implements Listener {
 
         return new BukkitRunnable() {
             int count = 0;
+
             @Override
             public void run() {
 
@@ -110,11 +113,11 @@ public class EnchantListener implements Listener {
                     }
                 }
 
-                pl.getWorld().spawnParticle(Particle.REDSTONE, pl.getLocation().add(0,1,0),
+                pl.getWorld().spawnParticle(Particle.REDSTONE, pl.getLocation().add(0, 1, 0),
                         10, 0.5f, 0.5f, 0.5f, new Particle.DustOptions(Color.AQUA, 3));
 
-                pl.sendMessage(ChatColor.AQUA + "Teleporting... " + ChatColor.WHITE + (WARMUP_TIME -count) + "s");
-                count = count+1;
+                pl.sendMessage(ChatColor.AQUA + "Teleporting... " + ChatColor.WHITE + (WARMUP_TIME - count) + "s");
+                count = count + 1;
 
             }
         }.runTaskTimer(RunicCore.getInstance(), 0, 20);

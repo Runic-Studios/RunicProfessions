@@ -1,5 +1,6 @@
 package com.runicrealms.plugin.professions.crafting.hunter;
 
+import com.runicrealms.api.event.ChatChannelMessageEvent;
 import com.runicrealms.plugin.RunicCore;
 import com.runicrealms.plugin.RunicProfessions;
 import com.runicrealms.plugin.api.RunicCoreAPI;
@@ -22,9 +23,8 @@ import org.bukkit.*;
 import org.bukkit.craftbukkit.v1_16_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.AsyncPlayerChatEvent;
-import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -35,7 +35,6 @@ import java.util.UUID;
 
 public class HunterListener implements Listener {
 
-    private static final Location HUNTERS_GUILD = new Location(Bukkit.getWorld("Alterra"), -6.5, 31, -530.5, 180, 0);
     private static final double MOVE_CONSTANT = 0.6;
     private final HashSet<UUID> cloakers; // for shadowmeld potion
     private final HashSet<UUID> hasDealtDamage; // for shadowmeld potion
@@ -52,10 +51,7 @@ public class HunterListener implements Listener {
 
     @EventHandler
     public void onCharacterLoad(CharacterLoadEvent event) {
-        if (!event.getPlayerCache().getProfName().equals("Hunter")) {
-            return;
-        }
-
+        if (!event.getPlayerCache().getProfName().equals("Hunter")) return;
         this.registerHunter(event.getPlayer());
     }
 
@@ -63,50 +59,29 @@ public class HunterListener implements Listener {
     public void onCacheSave(CacheSaveEvent event) {
         Map<UUID, HunterPlayer> hunters = RunicProfessions.getHunterCache().getPlayers();
         UUID uuid = event.getPlayer().getUniqueId();
-
-        if (!hunters.containsKey(uuid)) {
-            return;
-        }
-
+        if (!hunters.containsKey(uuid)) return;
         hunters.get(uuid).save(event.getMongoData());
-
-        if (event.cacheSaveReason() == CacheSaveReason.LOGOUT) {
+        if (event.cacheSaveReason() == CacheSaveReason.LOGOUT)
             hunters.remove(uuid);
-        }
     }
 
     @EventHandler
     public void onProfessionChange(ProfessionChangeEvent event) {
-        if (event.getProfession() == Profession.HUNTER) {
+        if (event.getProfession() == Profession.HUNTER)
             this.registerHunter(event.getPlayer());
-        }
     }
 
     @EventHandler
     public void onHunterMobDeath(MythicMobDeathEvent e) {
         // verify that a hunter is on-task
-        if (!(e.getKiller() instanceof Player)) {
-            return;
-        }
-
-        Player pl = (Player) e.getKiller();
-
-        if (!RunicProfessions.getHunterCache().getPlayers().containsKey(pl.getUniqueId())) {
-            return;
-        }
-
+        if (!(e.getKiller() instanceof Player)) return;
+        Player player = (Player) e.getKiller();
+        if (!RunicProfessions.getHunterCache().getPlayers().containsKey(player.getUniqueId())) return;
         String mobInternal = e.getMobType().getInternalName();
-        HunterPlayer player = RunicProfessions.getHunterCache().getPlayers().get(pl.getUniqueId());
-
-        if (player.getTask() == null) {
-            return;
-        }
-
-        if (!mobInternal.equals(player.getTask().getInternalName())) {
-            return;
-        }
-
-        player.addKill();
+        HunterPlayer hunterPlayer = RunicProfessions.getHunterCache().getPlayers().get(player.getUniqueId());
+        if (hunterPlayer.getTask() == null) return;
+        if (!mobInternal.equals(hunterPlayer.getTask().getInternalName())) return;
+        hunterPlayer.addKill();
     }
 
     /*
@@ -146,34 +121,34 @@ public class HunterListener implements Listener {
                 || templateID.equals(HunterItems.TRACKING_COMPASS.getTemplateId());
     }
 
-    @EventHandler
-    public void onPlayerChat(AsyncPlayerChatEvent e) {
-        if (!chatters.containsKey(e.getPlayer().getUniqueId())) return;
+    @EventHandler(priority = EventPriority.LOWEST)
+    public void onPlayerChat(ChatChannelMessageEvent e) {
+        if (!chatters.containsKey(e.getMessageSender().getUniqueId())) return;
         e.setCancelled(true);
-        Player pl = e.getPlayer();
+        Player player = e.getMessageSender();
         Player toLookup;
 
-        if (Bukkit.getPlayer(e.getMessage()) == null) {
-            pl.sendMessage(ChatColor.RED + "You must enter a valid player.");
+        if (Bukkit.getPlayer(e.getChatMessage()) == null) {
+            player.sendMessage(ChatColor.RED + "You must enter a valid player.");
             return;
         } else {
-            toLookup = Bukkit.getPlayer(e.getMessage());
+            toLookup = Bukkit.getPlayer(e.getChatMessage());
         }
 
         if (toLookup == null) {
-            pl.sendMessage(ChatColor.RED + "Error: player not found");
+            player.sendMessage(ChatColor.RED + "Error: player not found");
             return;
         }
 
-        if (chatters.get(pl.getUniqueId()).isSimilar(HunterItems.SCRYING_ORB_ITEMSTACK)) {
-            lookupStats(pl, toLookup);
-        } else if (chatters.get(pl.getUniqueId()).isSimilar(HunterItems.TRACKING_SCROLL_ITEMSTACK)) {
-            lookupLocation(pl, toLookup);
-        } else if (chatters.get(pl.getUniqueId()).isSimilar(HunterItems.TRACKING_COMPASS_ITEMSTACK)) {
-            lookupLocation(pl, toLookup);
+        if (chatters.get(player.getUniqueId()).isSimilar(HunterItems.SCRYING_ORB_ITEMSTACK)) {
+            lookupStats(player, toLookup);
+        } else if (chatters.get(player.getUniqueId()).isSimilar(HunterItems.TRACKING_SCROLL_ITEMSTACK)) {
+            lookupLocation(player, toLookup);
+        } else if (chatters.get(player.getUniqueId()).isSimilar(HunterItems.TRACKING_COMPASS_ITEMSTACK)) {
+            lookupLocation(player, toLookup);
         }
 
-        chatters.remove(pl.getUniqueId());
+        chatters.remove(player.getUniqueId());
     }
 
     private void lookupStats(Player player, Player toLookup) {
@@ -198,35 +173,6 @@ public class HunterListener implements Listener {
         Location loc = toLookup.getLocation();
         pl.sendMessage(ChatColor.YELLOW + name + " is in world - " + loc.getWorld().getName());
         pl.sendMessage(ChatColor.YELLOW + name + " can be found at: " + (int) loc.getX() + "x, " + (int) loc.getY() + "y, " + (int) loc.getZ() + "z");
-    }
-
-    /**
-     * For shadowmeld potion
-     */
-    @EventHandler
-    public void onPotionUse(PlayerItemConsumeEvent e) {
-
-//        if (e.getItem().getType() == Material.POTION) {
-//
-//            Player pl = e.getPlayer();
-//            boolean isShadowmeld = AttributeUtil.getCustomString(e.getItem(), "potion.shadowmeld").equals("true");
-//
-//            // remove glass bottle from inventory, main hand or offhand
-//            new BukkitRunnable() {
-//                @Override
-//                public void run() {
-//                    if (pl.getInventory().getItemInOffHand().getType() == Material.GLASS_BOTTLE) {
-//                        pl.getInventory().setItemInOffHand(new ItemStack(Material.AIR));
-//                    } else {
-//                        pl.getInventory().setItemInMainHand(new ItemStack(Material.AIR));
-//                    }
-//                }
-//            }.runTaskLaterAsynchronously(RunicProfessions.getInstance(), 1L);
-//
-//            if (isShadowmeld) {
-//                shadowmeld(pl);
-//            }
-//        }
     }
 
     private void shadowmeld(Player pl) {

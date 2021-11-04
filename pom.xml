@@ -111,6 +111,14 @@
             <version>1.16.4-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
+        <!-- RunicChat -->
+        <dependency>
+            <groupId>com.runicrealms.plugin</groupId>
+            <artifactId>RunicChat</artifactId>
+            <version>1.16.4</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/../lib/RunicChat-1.16.4.jar</systemPath>
+        </dependency>
         <!-- RunicCore -->
         <dependency>
             <groupId>com.runicrealms.plugin</groupId>

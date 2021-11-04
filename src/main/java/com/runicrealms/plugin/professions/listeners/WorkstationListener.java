@@ -1,5 +1,6 @@
 package com.runicrealms.plugin.professions.listeners;
 
+import com.runicrealms.api.event.ChatChannelMessageEvent;
 import com.runicrealms.plugin.RunicProfessions;
 import com.runicrealms.plugin.api.RunicCoreAPI;
 import com.runicrealms.plugin.item.GUIMenu.ItemGUI;
@@ -18,9 +19,9 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
-import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 
@@ -33,6 +34,15 @@ import java.util.UUID;
 public class WorkstationListener implements Listener {
 
     private static final HashMap<UUID, Location> stationLocation = new HashMap<>();
+    /**
+     * This event adds a new workstation to the file, so long as the player is opped and holding a green wool.
+     * The event then listens for the player's chat response, and adds the block to the file accordingly.
+     */
+    private final ArrayList<UUID> chatters = new ArrayList<>();
+
+    public static HashMap<UUID, Location> getStationLocation() {
+        return stationLocation;
+    }
 
     /**
      * This class communicates with the 'workstations.yml' data file
@@ -198,12 +208,6 @@ public class WorkstationListener implements Listener {
         stationLocation.put(uuid, loc);
     }
 
-    /**
-     * This event adds a new workstation to the file, so long as the player is opped and holding a green wool.
-     * The event then listens for the player's chat response, and adds the block to the file accordingly.
-     */
-    private ArrayList<UUID> chatters = new ArrayList<>();
-
     @EventHandler
     public void onLocationAdd(PlayerInteractEvent e) {
 
@@ -250,50 +254,49 @@ public class WorkstationListener implements Listener {
         }
     }
 
-    @EventHandler
-    public void onChat(AsyncPlayerChatEvent e) {
-        Player pl = e.getPlayer();
-        if (this.chatters.contains(pl.getUniqueId())) {
+    @EventHandler(priority = EventPriority.LOWEST)
+    public void onChat(ChatChannelMessageEvent e) {
 
-            e.setCancelled(true);
+        Player pl = e.getMessageSender();
+        if (!this.chatters.contains(pl.getUniqueId())) return;
+        e.setCancelled(true);
 
-            // retrieve chat message
-            String stationType = e.getMessage().toLowerCase();
+        // retrieve chat message
+        String stationType = e.getChatMessage().toLowerCase();
 
-            // verify input
-            if (!(stationType.equals("anvil")
-                    || stationType.equals("cauldron")
-                    || stationType.equals("cooking fire")
-                    || stationType.equals("furnace")
-                    || stationType.equals("gemcutting bench")
-                    || stationType.equals("enchanting table")
-                    || stationType.equals("hunting board")
-                    || stationType.equals("shrine"))) {
-                pl.sendMessage(ChatColor.RED + "Please specify a correct input.");
-                return;
-            }
+        // verify input
+        if (!(stationType.equals("anvil")
+                || stationType.equals("cauldron")
+                || stationType.equals("cooking fire")
+                || stationType.equals("furnace")
+                || stationType.equals("gemcutting bench")
+                || stationType.equals("enchanting table")
+                || stationType.equals("hunting board")
+                || stationType.equals("shrine"))) {
+            pl.sendMessage(ChatColor.RED + "Please specify a correct input.");
+            return;
+        }
 
-            // retrieve the data file
-            File workstations = new File(Bukkit.getServer().getPluginManager().getPlugin("RunicProfessions").getDataFolder(),
-                    "workstations.yml");
-            FileConfiguration stationConfig = YamlConfiguration.loadConfiguration(workstations);
+        // retrieve the data file
+        File workstations = new File(Bukkit.getServer().getPluginManager().getPlugin("RunicProfessions").getDataFolder(),
+                "workstations.yml");
+        FileConfiguration stationConfig = YamlConfiguration.loadConfiguration(workstations);
 
-            if (!stationConfig.isSet("Workstations.NEXT_ID")) {
-                stationConfig.set("Workstations.NEXT_ID", 0);
-            }
-            int nextID = stationConfig.getInt("Workstations.NEXT_ID");
+        if (!stationConfig.isSet("Workstations.NEXT_ID")) {
+            stationConfig.set("Workstations.NEXT_ID", 0);
+        }
+        int nextID = stationConfig.getInt("Workstations.NEXT_ID");
 
-            stationConfig.set("Workstations.Locations." + nextID + ".type", stationType);
-            stationConfig.set("Workstations.NEXT_ID", nextID + 1);
-            pl.sendMessage(ChatColor.GREEN + "Workstation type set to: " + ChatColor.YELLOW + stationType);
-            chatters.remove(pl.getUniqueId());
+        stationConfig.set("Workstations.Locations." + nextID + ".type", stationType);
+        stationConfig.set("Workstations.NEXT_ID", nextID + 1);
+        pl.sendMessage(ChatColor.GREEN + "Workstation type set to: " + ChatColor.YELLOW + stationType);
+        chatters.remove(pl.getUniqueId());
 
-            // save data file
-            try {
-                stationConfig.save(workstations);
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
+        // save data file
+        try {
+            stationConfig.save(workstations);
+        } catch (IOException ex) {
+            ex.printStackTrace();
         }
     }
 
@@ -319,9 +322,5 @@ public class WorkstationListener implements Listener {
                 || b.getType() == Material.LECTERN) {
             e.setCancelled(true);
         }
-    }
-
-    public static HashMap<UUID, Location> getStationLocation() {
-        return stationLocation;
     }
 }

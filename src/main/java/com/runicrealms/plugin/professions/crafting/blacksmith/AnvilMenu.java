@@ -110,9 +110,9 @@ public class AnvilMenu extends Workstation {
         createMenuItem(forgeMenu, player, CraftedResource.OFFHAND_DEX_50, 13);
         createMenuItem(forgeMenu, player, CraftedResource.OFFHAND_DEX_60, 14);
 
-        createMenuItem(forgeMenu, player, CraftedResource.WEAPON_BOW_20, 15);
-        createMenuItem(forgeMenu, player, CraftedResource.WEAPON_BOW_30, 16);
-        createMenuItem(forgeMenu, player, CraftedResource.WEAPON_BOW_40, 17);
+        createMenuItem(forgeMenu, player, CraftedResource.WEAPON_BOW_20, 15, CraftedResource.WEAPON_BOW_20.getRunicItem().getDisplayableItem().getDamage());
+        createMenuItem(forgeMenu, player, CraftedResource.WEAPON_BOW_30, 16, CraftedResource.WEAPON_BOW_30.getRunicItem().getDisplayableItem().getDamage());
+        createMenuItem(forgeMenu, player, CraftedResource.WEAPON_BOW_40, 17, CraftedResource.WEAPON_BOW_40.getRunicItem().getDisplayableItem().getDamage());
 
         createMenuItem(forgeMenu, player, CraftedResource.OFFHAND_WIS_10, 18);
         createMenuItem(forgeMenu, player, CraftedResource.OFFHAND_WIS_20, 19);
@@ -121,9 +121,9 @@ public class AnvilMenu extends Workstation {
         createMenuItem(forgeMenu, player, CraftedResource.OFFHAND_WIS_50, 22);
         createMenuItem(forgeMenu, player, CraftedResource.OFFHAND_WIS_60, 23);
 
-        createMenuItem(forgeMenu, player, CraftedResource.WEAPON_MACE_20, 24);
-        createMenuItem(forgeMenu, player, CraftedResource.WEAPON_MACE_30, 25);
-        createMenuItem(forgeMenu, player, CraftedResource.WEAPON_MACE_40, 26);
+        createMenuItem(forgeMenu, player, CraftedResource.WEAPON_MACE_20, 24, CraftedResource.WEAPON_MACE_20.getRunicItem().getDisplayableItem().getDamage());
+        createMenuItem(forgeMenu, player, CraftedResource.WEAPON_MACE_30, 25, CraftedResource.WEAPON_MACE_30.getRunicItem().getDisplayableItem().getDamage());
+        createMenuItem(forgeMenu, player, CraftedResource.WEAPON_MACE_40, 26, CraftedResource.WEAPON_MACE_40.getRunicItem().getDisplayableItem().getDamage());
 //
 //        createMenuItem(forgeMenu, player, CraftedResource.OFFHAND_INT_10, 27);
 //        createMenuItem(forgeMenu, player, CraftedResource.OFFHAND_INT_20, 28);
@@ -163,12 +163,24 @@ public class AnvilMenu extends Workstation {
         switch (slot) {
             case 9:
                 return CraftedResource.OFFHAND_DEX_10;
+            case 10:
+                return CraftedResource.OFFHAND_DEX_20;
+            case 11:
+                return CraftedResource.OFFHAND_DEX_30;
+            case 12:
+                return CraftedResource.OFFHAND_DEX_40;
+            case 13:
+                return CraftedResource.OFFHAND_DEX_50;
+            case 14:
+                return CraftedResource.OFFHAND_DEX_60;
             case 33:
                 return CraftedResource.SHARPSTONE_10;
             case 34:
                 return CraftedResource.SHARPSTONE_20;
             case 35:
                 return CraftedResource.SHARPSTONE_30;
+            case 45:
+                return CraftedResource.OFFHAND_VIT_10;
         }
         return CraftedResource.OFFHAND_DEX_10;
     }

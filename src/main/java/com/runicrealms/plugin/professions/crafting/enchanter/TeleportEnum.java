@@ -10,8 +10,8 @@ public enum TeleportEnum {
     ZENYTH("Zenyth", zenythWarp()),
     FROSTS_END("Frost's End", frostsEndWarp());
 
-    private String name;
-    private Location location;
+    private final String name;
+    private final Location location;
 
     TeleportEnum(String name, Location location) {
         this.name = name;
@@ -19,20 +19,12 @@ public enum TeleportEnum {
     }
 
     public static TeleportEnum getEnum(String value) {
-        for(TeleportEnum teleportEnum : values()) {
+        for (TeleportEnum teleportEnum : values()) {
             if (teleportEnum.getName().equalsIgnoreCase(value)) {
                 return teleportEnum;
             }
         }
         return null;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public Location getLocation() {
-        return location;
     }
 
     private static Location azanaWarp() {
@@ -49,5 +41,13 @@ public enum TeleportEnum {
 
     private static Location frostsEndWarp() {
         return new Location(Bukkit.getWorld("Alterra"), 1027.5, 32, 2558.5, 0, 0);
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public Location getLocation() {
+        return location;
     }
 }
