@@ -21,68 +21,68 @@ public class HunterShop {
     private static final int SCROLL_PRICE = 50;
     private static final int COMPASS_PRICE = 1000;
     private static final int ARMOR_PRICE = 150;
-    private static final String HUNTER_POINTS = " Hunter Points";
+    private static final String HUNTER_POINTS = "Hunter Points";
 
     public HunterShop() {
         LinkedHashSet<RunicShopItem> shopItems = new LinkedHashSet<>();
         shopItems.add
                 (
                         new RunicShopItem(ORB_PRICE, "Coin",
-                                HunterItems.SCRYING_ORB_ITEMSTACK, ORB_PRICE + HUNTER_POINTS,
+                                HunterItems.SCRYING_ORB_ITEMSTACK, HUNTER_POINTS,
                                 runShopBuy(HunterItems.SCRYING_ORB_ITEMSTACK, ORB_PRICE))
                 );
         shopItems.add
                 (
                         new RunicShopItem(POTION_PRICE, "Coin",
-                                HunterItems.SHADOWMELD_POTION_ITEMSTACK, POTION_PRICE + HUNTER_POINTS,
+                                HunterItems.SHADOWMELD_POTION_ITEMSTACK, HUNTER_POINTS,
                                 runShopBuy(HunterItems.SHADOWMELD_POTION_ITEMSTACK, POTION_PRICE))
                 );
         shopItems.add
                 (
                         new RunicShopItem(TELEPORT_SCROLL_PRICE, "Coin",
-                                HunterItems.TELEPORT_OUTLAW_GUILD_ITEMSTACK, TELEPORT_SCROLL_PRICE + HUNTER_POINTS,
+                                HunterItems.TELEPORT_OUTLAW_GUILD_ITEMSTACK, HUNTER_POINTS,
                                 runShopBuy(HunterItems.TELEPORT_OUTLAW_GUILD_ITEMSTACK, TELEPORT_SCROLL_PRICE))
                 );
         shopItems.add
                 (
                         new RunicShopItem(SCROLL_PRICE, "Coin",
-                                HunterItems.TRACKING_SCROLL_ITEMSTACK, SCROLL_PRICE + HUNTER_POINTS,
+                                HunterItems.TRACKING_SCROLL_ITEMSTACK, HUNTER_POINTS,
                                 runShopBuy(HunterItems.TRACKING_SCROLL_ITEMSTACK, SCROLL_PRICE))
                 );
         shopItems.add
                 (
                         new RunicShopItem(COMPASS_PRICE, "Coin",
-                                HunterItems.TRACKING_COMPASS_ITEMSTACK, COMPASS_PRICE + HUNTER_POINTS,
+                                HunterItems.TRACKING_COMPASS_ITEMSTACK, HUNTER_POINTS,
                                 runShopBuy(HunterItems.TRACKING_COMPASS_ITEMSTACK, COMPASS_PRICE))
                 );
         shopItems.add
                 (
                         new RunicShopItem(ARMOR_PRICE, "Coin",
-                                HunterItems.HUNTER_CHEST_ARCHER_ITEMSTACK, ARMOR_PRICE + HUNTER_POINTS,
+                                HunterItems.HUNTER_CHEST_ARCHER_ITEMSTACK, HUNTER_POINTS,
                                 runShopBuy(HunterItems.HUNTER_CHEST_ARCHER_ITEMSTACK, ARMOR_PRICE))
                 );
         shopItems.add
                 (
                         new RunicShopItem(ARMOR_PRICE, "Coin",
-                                HunterItems.HUNTER_CHEST_CLERIC_ITEMSTACK, ARMOR_PRICE + HUNTER_POINTS,
+                                HunterItems.HUNTER_CHEST_CLERIC_ITEMSTACK, HUNTER_POINTS,
                                 runShopBuy(HunterItems.HUNTER_CHEST_CLERIC_ITEMSTACK, ARMOR_PRICE))
                 );
         shopItems.add
                 (
                         new RunicShopItem(ARMOR_PRICE, "Coin",
-                                HunterItems.HUNTER_CHEST_MAGE_ITEMSTACK, ARMOR_PRICE + HUNTER_POINTS,
+                                HunterItems.HUNTER_CHEST_MAGE_ITEMSTACK, HUNTER_POINTS,
                                 runShopBuy(HunterItems.HUNTER_CHEST_MAGE_ITEMSTACK, ARMOR_PRICE))
                 );
         shopItems.add
                 (
                         new RunicShopItem(ARMOR_PRICE, "Coin",
-                                HunterItems.HUNTER_CHEST_ROGUE_ITEMSTACK, ARMOR_PRICE + HUNTER_POINTS,
+                                HunterItems.HUNTER_CHEST_ROGUE_ITEMSTACK, HUNTER_POINTS,
                                 runShopBuy(HunterItems.HUNTER_CHEST_ROGUE_ITEMSTACK, ARMOR_PRICE))
                 );
         shopItems.add
                 (
                         new RunicShopItem(ARMOR_PRICE, "Coin",
-                                HunterItems.HUNTER_CHEST_WARRIOR_ITEMSTACK, ARMOR_PRICE + HUNTER_POINTS,
+                                HunterItems.HUNTER_CHEST_WARRIOR_ITEMSTACK, HUNTER_POINTS,
                                 runShopBuy(HunterItems.HUNTER_CHEST_WARRIOR_ITEMSTACK, ARMOR_PRICE))
                 );
         // we're using hunter points, so we disable default currency functionality
