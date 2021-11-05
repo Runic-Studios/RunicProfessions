@@ -234,6 +234,90 @@ public enum CraftedResource {
         put("DarkOakWood", 84);
         put("crystal-corpus", 5);
     }}),
+    OFFHAND_INT_10("blacksmith-offhand-int-10", Profession.BLACKSMITH, new LinkedHashMap<String, Integer>() {{
+        put("gold-bar", 6);
+        put("OakWood", 6);
+        put("crimson-core", 1);
+    }}),
+    OFFHAND_INT_20("blacksmith-offhand-int-20", Profession.BLACKSMITH, new LinkedHashMap<String, Integer>() {{
+        put("gold-bar", 8);
+        put("SpruceWood", 24);
+        put("sapphirine-shard", 2);
+    }}),
+    OFFHAND_INT_30("blacksmith-offhand-int-30", Profession.BLACKSMITH, new LinkedHashMap<String, Integer>() {{
+        put("gold-bar", 16);
+        put("BirchWood", 48);
+        put("glacial-fragment", 5);
+    }}),
+    OFFHAND_INT_40("blacksmith-offhand-int-40", Profession.BLACKSMITH, new LinkedHashMap<String, Integer>() {{
+        put("gold-bar", 28);
+        put("DarkOakWood", 84);
+        put("jade-gemstone", 9);
+    }}),
+    OFFHAND_INT_50("blacksmith-offhand-int-50", Profession.BLACKSMITH, new LinkedHashMap<String, Integer>() {{
+        put("gold-bar", 40);
+        put("JungleWood", 120);
+        put("crystal-corpus", 16);
+    }}),
+    OFFHAND_INT_60("blacksmith-offhand-int-60", Profession.BLACKSMITH, new LinkedHashMap<String, Integer>() {{
+        put("gold-bar", 64);
+        put("JungleWood", 192);
+        put("black-matter", 32);
+    }}),
+    SHARPSTONE_10("blacksmith-sharpstone-10", Profession.BLACKSMITH, new LinkedHashMap<String, Integer>() {{
+        put("iron-bar", 3);
+    }}),
+    SHARPSTONE_20("blacksmith-sharpstone-20", Profession.BLACKSMITH, new LinkedHashMap<String, Integer>() {{
+        put("iron-bar", 6);
+    }}),
+    SHARPSTONE_30("blacksmith-sharpstone-30", Profession.BLACKSMITH, new LinkedHashMap<String, Integer>() {{
+        put("iron-bar", 10);
+    }}),
+    OFFHAND_STR_10("blacksmith-offhand-str-10", Profession.BLACKSMITH, new LinkedHashMap<String, Integer>() {{
+        put("iron-bar", 6);
+        put("OakWood", 6);
+        put("crimson-core", 1);
+    }}),
+    OFFHAND_STR_20("blacksmith-offhand-str-20", Profession.BLACKSMITH, new LinkedHashMap<String, Integer>() {{
+        put("iron-bar", 8);
+        put("SpruceWood", 24);
+        put("sapphirine-shard", 2);
+    }}),
+    OFFHAND_STR_30("blacksmith-offhand-str-30", Profession.BLACKSMITH, new LinkedHashMap<String, Integer>() {{
+        put("iron-bar", 16);
+        put("BirchWood", 48);
+        put("glacial-fragment", 5);
+    }}),
+    OFFHAND_STR_40("blacksmith-offhand-str-40", Profession.BLACKSMITH, new LinkedHashMap<String, Integer>() {{
+        put("iron-bar", 28);
+        put("DarkOakWood", 84);
+        put("jade-gemstone", 9);
+    }}),
+    OFFHAND_STR_50("blacksmith-offhand-str-50", Profession.BLACKSMITH, new LinkedHashMap<String, Integer>() {{
+        put("iron-bar", 40);
+        put("JungleWood", 120);
+        put("crystal-corpus", 16);
+    }}),
+    OFFHAND_STR_60("blacksmith-offhand-str-60", Profession.BLACKSMITH, new LinkedHashMap<String, Integer>() {{
+        put("iron-bar", 64);
+        put("JungleWood", 192);
+        put("black-matter", 32);
+    }}),
+    WEAPON_SWORD_20("blacksmith-weapon-sword-20", Profession.BLACKSMITH, new LinkedHashMap<String, Integer>() {{
+        put("iron-bar", 8);
+        put("SpruceWood", 24);
+        put("glacial-fragment", 1);
+    }}),
+    WEAPON_SWORD_30("blacksmith-weapon-sword-30", Profession.BLACKSMITH, new LinkedHashMap<String, Integer>() {{
+        put("iron-bar", 16);
+        put("BirchWood", 48);
+        put("jade-gemstone", 3);
+    }}),
+    WEAPON_SWORD_40("blacksmith-weapon-sword-40", Profession.BLACKSMITH, new LinkedHashMap<String, Integer>() {{
+        put("iron-bar", 28);
+        put("DarkOakWood", 84);
+        put("crystal-corpus", 5);
+    }}),
     OFFHAND_VIT_10("blacksmith-offhand-vit-10", Profession.BLACKSMITH, new LinkedHashMap<String, Integer>() {{
         put("iron-bar", 6);
         put("OakWood", 6);
@@ -264,14 +348,20 @@ public enum CraftedResource {
         put("JungleWood", 192);
         put("black-matter", 32);
     }}),
-    SHARPSTONE_10("blacksmith-sharpstone-10", Profession.BLACKSMITH, new LinkedHashMap<String, Integer>() {{
-        put("iron-bar", 3);
+    WEAPON_AXE_20("blacksmith-weapon-axe-20", Profession.BLACKSMITH, new LinkedHashMap<String, Integer>() {{
+        put("iron-bar", 8);
+        put("SpruceWood", 24);
+        put("glacial-fragment", 1);
     }}),
-    SHARPSTONE_20("blacksmith-sharpstone-20", Profession.BLACKSMITH, new LinkedHashMap<String, Integer>() {{
-        put("iron-bar", 6);
+    WEAPON_AXE_30("blacksmith-weapon-axe-30", Profession.BLACKSMITH, new LinkedHashMap<String, Integer>() {{
+        put("iron-bar", 16);
+        put("BirchWood", 48);
+        put("jade-gemstone", 3);
     }}),
-    SHARPSTONE_30("blacksmith-sharpstone-30", Profession.BLACKSMITH, new LinkedHashMap<String, Integer>() {{
-        put("iron-bar", 10);
+    WEAPON_AXE_40("blacksmith-weapon-axe-40", Profession.BLACKSMITH, new LinkedHashMap<String, Integer>() {{
+        put("iron-bar", 28);
+        put("DarkOakWood", 84);
+        put("crystal-corpus", 5);
     }});
 
     private final String templateId;
