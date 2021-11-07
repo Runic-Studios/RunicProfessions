@@ -362,6 +362,13 @@ public enum CraftedResource {
         put("iron-bar", 28);
         put("DarkOakWood", 84);
         put("crystal-corpus", 5);
+    }}),
+
+    /*
+    Jeweler
+     */
+    CUT_RUBY_I("cut-ruby-i", Profession.JEWELER, new LinkedHashMap<String, Integer>() {{
+        put("uncut-ruby", 16);
     }});
 
     private final String templateId;

@@ -14,6 +14,7 @@ import com.runicrealms.plugin.utilities.FloatingItemUtil;
 import com.runicrealms.runicitems.RunicItemsAPI;
 import com.runicrealms.runicitems.Stat;
 import com.runicrealms.runicitems.item.*;
+import com.runicrealms.runicitems.item.stats.GemBonus;
 import com.runicrealms.runicitems.item.stats.RunicItemStatRange;
 import org.bukkit.*;
 import org.bukkit.enchantments.Enchantment;
@@ -321,16 +322,20 @@ public abstract class Workstation implements Listener {
             return this.generateGenericItemLore((RunicItemGeneric) item);
         }
 
+        if (item instanceof RunicItemGem) {
+            return this.generateGemItemLore((RunicItemGem) item);
+        }
+
         if (item instanceof RunicItemArmor) {
-            return this.generateArmorItemLore(((RunicItemArmor) item));
+            return this.generateArmorItemLore((RunicItemArmor) item);
         }
 
         if (item instanceof RunicItemWeapon) {
-            return this.generateWeaponItemLore(((RunicItemWeapon) item));
+            return this.generateWeaponItemLore((RunicItemWeapon) item);
         }
 
         if (item instanceof RunicItemOffhand) {
-            return this.generateOffhandItemLore(((RunicItemOffhand) item));
+            return this.generateOffhandItemLore((RunicItemOffhand) item);
         }
 
         return null;
@@ -344,6 +349,22 @@ public abstract class Workstation implements Listener {
         }
 
         return lore;
+    }
+
+    private String generateGemItemLore(RunicItemGem item) {
+        String stats = "";
+
+        GemBonus gemBonus = item.getBonus();
+        for (Stat stat : gemBonus.getStats().keySet()) {
+            int value = gemBonus.getStats().get(stat);
+            if (value == 0) continue;
+            stats = stats.concat(stat.getChatColor()
+                    + (value < 0 ? "-" : "+")
+                    + value
+                    + stat.getIcon() + "\n");
+        }
+
+        return stats;
     }
 
     private String generateArmorItemLore(RunicItemArmor item) {
