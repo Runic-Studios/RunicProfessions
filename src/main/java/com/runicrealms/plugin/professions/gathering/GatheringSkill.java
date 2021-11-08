@@ -23,6 +23,14 @@ public enum GatheringSkill {
         return identifier;
     }
 
+    public GatheringSkill getFromIdentifier(String identifier) {
+        for (GatheringSkill gatheringSkill : GatheringSkill.values()) {
+            if (gatheringSkill.getIdentifier().equals(identifier))
+                return gatheringSkill;
+        }
+        return null;
+    }
+
     public String getFormattedIdentifier() {
         return identifier.substring(0, 1).toUpperCase() + identifier.substring(1);
     }

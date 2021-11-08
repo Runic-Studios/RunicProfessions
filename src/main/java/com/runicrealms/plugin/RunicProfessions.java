@@ -65,20 +65,21 @@ public final class RunicProfessions extends JavaPlugin {
     }
 
     private void registerEvents() {
-        PluginManager pm = this.getServer().getPluginManager();
-        pm.registerEvents(new WorkstationListener(), this);
-        pm.registerEvents(new FishingListener(), this);
-        pm.registerEvents(new PotionListener(), this);
-        pm.registerEvents(new CookingListener(), this);
-        pm.registerEvents(new StationClickListener(), this);
-        pm.registerEvents(new HunterListener(), this);
-        pm.registerEvents(new StoneListener(), this);
-        pm.registerEvents(new EnchantListener(), this);
-        pm.registerEvents(new CustomFishListener(), this);
-        pm.registerEvents(new CropTrampleListener(), this);
-        pm.registerEvents(new GatherPlayerListener(), this);
-        pm.registerEvents(new GatheringListener(), this);
-        pm.registerEvents(new GatheringGUIListener(), this);
+        PluginManager pluginManager = this.getServer().getPluginManager();
+        pluginManager.registerEvents(new WorkstationListener(), this);
+        pluginManager.registerEvents(new FishingListener(), this);
+        pluginManager.registerEvents(new PotionListener(), this);
+        pluginManager.registerEvents(new CookingListener(), this);
+        pluginManager.registerEvents(new StationClickListener(), this);
+        pluginManager.registerEvents(new HunterListener(), this);
+        pluginManager.registerEvents(new StoneListener(), this);
+        pluginManager.registerEvents(new EnchantListener(), this);
+        pluginManager.registerEvents(new CustomFishListener(), this);
+        pluginManager.registerEvents(new CropTrampleListener(), this);
+        pluginManager.registerEvents(new GatherPlayerListener(), this);
+        pluginManager.registerEvents(new GatheringListener(), this);
+        pluginManager.registerEvents(new GatheringGUIListener(), this);
+        pluginManager.registerEvents(new HarvestingListener(), this);
     }
 
     private void initializeShops() {

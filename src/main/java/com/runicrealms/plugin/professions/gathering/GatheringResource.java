@@ -29,10 +29,6 @@ public enum GatheringResource {
     PUFFERFISH("Pufferfish", GatheringSkill.FISHING, GatheringRegion.POND, Material.PUFFERFISH, Material.AIR, "+ Pufferfish"),
 
     /*
-    Harvesting
-     */
-
-    /*
     Mining
      */
     IRON_ORE("iron-ore", GatheringSkill.MINING, GatheringRegion.MINE, Material.IRON_ORE, Material.COBBLESTONE, "+ Iron"),
