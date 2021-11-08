@@ -369,6 +369,128 @@ public enum CraftedResource {
      */
     CUT_RUBY_I("cut-ruby-i", Profession.JEWELER, new LinkedHashMap<String, Integer>() {{
         put("uncut-ruby", 16);
+        put("AnimalHide", 4);
+        put("Comfrey", 4);
+    }}),
+    CUT_RUBY_II("cut-ruby-ii", Profession.JEWELER, new LinkedHashMap<String, Integer>() {{
+        put("uncut-ruby", 32);
+        put("AnimalHide", 8);
+        put("Wintercress", 8);
+    }}),
+    CUT_RUBY_III("cut-ruby-iii", Profession.JEWELER, new LinkedHashMap<String, Integer>() {{
+        put("uncut-ruby", 64);
+        put("ancient-matter", 4);
+        put("Lavender", 12);
+    }}),
+    CUT_RUBY_IV("cut-ruby-iv", Profession.JEWELER, new LinkedHashMap<String, Integer>() {{
+        put("uncut-ruby", 128);
+        put("ancient-matter", 3);
+        put("Lavender", 16);
+    }}),
+    CUT_RUBY_V("cut-ruby-v", Profession.JEWELER, new LinkedHashMap<String, Integer>() {{
+        put("uncut-ruby", 192);
+        put("ancient-matter", 8);
+        put("ancient-core", 1);
+    }}),
+    CUT_SAPPHIRE_I("cut-sapphire-i", Profession.JEWELER, new LinkedHashMap<String, Integer>() {{
+        put("uncut-sapphire", 16);
+        put("AnimalHide", 4);
+        put("Comfrey", 4);
+    }}),
+    CUT_SAPPHIRE_II("cut-sapphire-ii", Profession.JEWELER, new LinkedHashMap<String, Integer>() {{
+        put("uncut-sapphire", 32);
+        put("AnimalHide", 8);
+        put("Wintercress", 8);
+    }}),
+    CUT_SAPPHIRE_III("cut-sapphire-iii", Profession.JEWELER, new LinkedHashMap<String, Integer>() {{
+        put("uncut-sapphire", 64);
+        put("ancient-matter", 4);
+        put("Lavender", 12);
+    }}),
+    CUT_SAPPHIRE_IV("cut-sapphire-iv", Profession.JEWELER, new LinkedHashMap<String, Integer>() {{
+        put("uncut-sapphire", 128);
+        put("ancient-matter", 3);
+        put("Lavender", 16);
+    }}),
+    CUT_SAPPHIRE_V("cut-sapphire-v", Profession.JEWELER, new LinkedHashMap<String, Integer>() {{
+        put("uncut-sapphire", 192);
+        put("ancient-matter", 8);
+        put("ancient-core", 1);
+    }}),
+    CUT_DIAMOND_I("cut-diamond-i", Profession.JEWELER, new LinkedHashMap<String, Integer>() {{
+        put("uncut-diamond", 16);
+        put("AnimalHide", 4);
+        put("Comfrey", 4);
+    }}),
+    CUT_DIAMOND_II("cut-diamond-ii", Profession.JEWELER, new LinkedHashMap<String, Integer>() {{
+        put("uncut-diamond", 32);
+        put("AnimalHide", 8);
+        put("Wintercress", 8);
+    }}),
+    CUT_DIAMOND_III("cut-diamond-iii", Profession.JEWELER, new LinkedHashMap<String, Integer>() {{
+        put("uncut-diamond", 64);
+        put("ancient-matter", 4);
+        put("Lavender", 12);
+    }}),
+    CUT_DIAMOND_IV("cut-diamond-iv", Profession.JEWELER, new LinkedHashMap<String, Integer>() {{
+        put("uncut-diamond", 128);
+        put("ancient-matter", 3);
+        put("Lavender", 16);
+    }}),
+    CUT_DIAMOND_V("cut-diamond-v", Profession.JEWELER, new LinkedHashMap<String, Integer>() {{
+        put("uncut-diamond", 192);
+        put("ancient-matter", 8);
+        put("ancient-core", 1);
+    }}),
+    CUT_EMERALD_I("cut-emerald-i", Profession.JEWELER, new LinkedHashMap<String, Integer>() {{
+        put("uncut-emerald", 16);
+        put("AnimalHide", 4);
+        put("Comfrey", 4);
+    }}),
+    CUT_EMERALD_II("cut-emerald-ii", Profession.JEWELER, new LinkedHashMap<String, Integer>() {{
+        put("uncut-emerald", 32);
+        put("AnimalHide", 8);
+        put("Wintercress", 8);
+    }}),
+    CUT_EMERALD_III("cut-emerald-iii", Profession.JEWELER, new LinkedHashMap<String, Integer>() {{
+        put("uncut-emerald", 64);
+        put("ancient-matter", 4);
+        put("Lavender", 12);
+    }}),
+    CUT_EMERALD_IV("cut-emerald-iv", Profession.JEWELER, new LinkedHashMap<String, Integer>() {{
+        put("uncut-emerald", 128);
+        put("ancient-matter", 3);
+        put("Lavender", 16);
+    }}),
+    CUT_EMERALD_V("cut-emerald-v", Profession.JEWELER, new LinkedHashMap<String, Integer>() {{
+        put("uncut-emerald", 192);
+        put("ancient-matter", 8);
+        put("ancient-core", 1);
+    }}),
+    CUT_OPAL_I("cut-opal-i", Profession.JEWELER, new LinkedHashMap<String, Integer>() {{
+        put("uncut-opal", 16);
+        put("AnimalHide", 4);
+        put("Comfrey", 4);
+    }}),
+    CUT_OPAL_II("cut-opal-ii", Profession.JEWELER, new LinkedHashMap<String, Integer>() {{
+        put("uncut-opal", 32);
+        put("AnimalHide", 8);
+        put("Wintercress", 8);
+    }}),
+    CUT_OPAL_III("cut-opal-iii", Profession.JEWELER, new LinkedHashMap<String, Integer>() {{
+        put("uncut-opal", 64);
+        put("ancient-matter", 4);
+        put("Lavender", 12);
+    }}),
+    CUT_OPAL_IV("cut-opal-iv", Profession.JEWELER, new LinkedHashMap<String, Integer>() {{
+        put("uncut-opal", 128);
+        put("ancient-matter", 3);
+        put("Lavender", 16);
+    }}),
+    CUT_OPAL_V("cut-opal-v", Profession.JEWELER, new LinkedHashMap<String, Integer>() {{
+        put("uncut-opal", 192);
+        put("ancient-matter", 8);
+        put("ancient-core", 1);
     }});
 
     private final String templateId;

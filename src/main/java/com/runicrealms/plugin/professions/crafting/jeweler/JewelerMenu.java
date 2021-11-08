@@ -101,12 +101,88 @@ public class JewelerMenu extends Workstation {
 
     private void setupItems(ItemGUI forgeMenu, Player player) {
         createMenuItem(forgeMenu, player, CraftedResource.CUT_RUBY_I, 9);
+        createMenuItem(forgeMenu, player, CraftedResource.CUT_RUBY_II, 10);
+        createMenuItem(forgeMenu, player, CraftedResource.CUT_RUBY_III, 11);
+        createMenuItem(forgeMenu, player, CraftedResource.CUT_RUBY_IV, 12);
+        createMenuItem(forgeMenu, player, CraftedResource.CUT_RUBY_V, 13);
+
+        createMenuItem(forgeMenu, player, CraftedResource.CUT_SAPPHIRE_I, 18);
+        createMenuItem(forgeMenu, player, CraftedResource.CUT_SAPPHIRE_II, 19);
+        createMenuItem(forgeMenu, player, CraftedResource.CUT_SAPPHIRE_III, 20);
+        createMenuItem(forgeMenu, player, CraftedResource.CUT_SAPPHIRE_IV, 21);
+        createMenuItem(forgeMenu, player, CraftedResource.CUT_SAPPHIRE_V, 22);
+
+        createMenuItem(forgeMenu, player, CraftedResource.CUT_DIAMOND_I, 27);
+        createMenuItem(forgeMenu, player, CraftedResource.CUT_DIAMOND_II, 28);
+        createMenuItem(forgeMenu, player, CraftedResource.CUT_DIAMOND_III, 29);
+        createMenuItem(forgeMenu, player, CraftedResource.CUT_DIAMOND_IV, 30);
+        createMenuItem(forgeMenu, player, CraftedResource.CUT_DIAMOND_V, 31);
+
+        createMenuItem(forgeMenu, player, CraftedResource.CUT_EMERALD_I, 36);
+        createMenuItem(forgeMenu, player, CraftedResource.CUT_EMERALD_II, 37);
+        createMenuItem(forgeMenu, player, CraftedResource.CUT_EMERALD_III, 38);
+        createMenuItem(forgeMenu, player, CraftedResource.CUT_EMERALD_IV, 39);
+        createMenuItem(forgeMenu, player, CraftedResource.CUT_EMERALD_V, 40);
+
+        createMenuItem(forgeMenu, player, CraftedResource.CUT_OPAL_I, 45);
+        createMenuItem(forgeMenu, player, CraftedResource.CUT_OPAL_II, 46);
+        createMenuItem(forgeMenu, player, CraftedResource.CUT_OPAL_III, 47);
+        createMenuItem(forgeMenu, player, CraftedResource.CUT_OPAL_IV, 48);
+        createMenuItem(forgeMenu, player, CraftedResource.CUT_OPAL_V, 49);
     }
 
     private CraftedResource determineItem(int slot) {
         switch (slot) {
             case 9:
                 return CraftedResource.CUT_RUBY_I;
+            case 10:
+                return CraftedResource.CUT_RUBY_II;
+            case 11:
+                return CraftedResource.CUT_RUBY_III;
+            case 12:
+                return CraftedResource.CUT_RUBY_IV;
+            case 13:
+                return CraftedResource.CUT_RUBY_V;
+            case 18:
+                return CraftedResource.CUT_SAPPHIRE_I;
+            case 19:
+                return CraftedResource.CUT_SAPPHIRE_II;
+            case 20:
+                return CraftedResource.CUT_SAPPHIRE_III;
+            case 21:
+                return CraftedResource.CUT_SAPPHIRE_IV;
+            case 22:
+                return CraftedResource.CUT_SAPPHIRE_V;
+            case 27:
+                return CraftedResource.CUT_DIAMOND_I;
+            case 28:
+                return CraftedResource.CUT_DIAMOND_II;
+            case 29:
+                return CraftedResource.CUT_DIAMOND_III;
+            case 30:
+                return CraftedResource.CUT_DIAMOND_IV;
+            case 31:
+                return CraftedResource.CUT_DIAMOND_V;
+            case 36:
+                return CraftedResource.CUT_EMERALD_I;
+            case 37:
+                return CraftedResource.CUT_EMERALD_II;
+            case 38:
+                return CraftedResource.CUT_EMERALD_III;
+            case 39:
+                return CraftedResource.CUT_EMERALD_IV;
+            case 40:
+                return CraftedResource.CUT_EMERALD_V;
+            case 45:
+                return CraftedResource.CUT_OPAL_I;
+            case 46:
+                return CraftedResource.CUT_OPAL_II;
+            case 47:
+                return CraftedResource.CUT_OPAL_III;
+            case 48:
+                return CraftedResource.CUT_OPAL_IV;
+            case 49:
+                return CraftedResource.CUT_OPAL_V;
         }
         return CraftedResource.CUT_RUBY_I;
     }

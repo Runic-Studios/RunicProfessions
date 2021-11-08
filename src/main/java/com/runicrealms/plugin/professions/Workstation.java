@@ -352,19 +352,12 @@ public abstract class Workstation implements Listener {
     }
 
     private String generateGemItemLore(RunicItemGem item) {
-        String stats = "";
-
         GemBonus gemBonus = item.getBonus();
-        for (Stat stat : gemBonus.getStats().keySet()) {
-            int value = gemBonus.getStats().get(stat);
-            if (value == 0) continue;
-            stats = stats.concat(stat.getChatColor()
-                    + (value < 0 ? "-" : "+")
-                    + value
-                    + stat.getIcon() + "\n");
-        }
-
-        return stats;
+        return
+                ChatColor.YELLOW + "Primary Stat: " +
+                        gemBonus.getMainStat().getChatColor() +
+                        gemBonus.getMainStat().getPrefix() +
+                        gemBonus.getMainStat().getIcon() + "\n";
     }
 
     private String generateArmorItemLore(RunicItemArmor item) {

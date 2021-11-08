@@ -1,9 +1,11 @@
-package com.runicrealms.plugin.professions.crafting.hunter;
+package com.runicrealms.plugin.professions.shop;
 
 import com.runicrealms.plugin.RunicProfessions;
 import com.runicrealms.plugin.item.shops.RunicItemRunnable;
 import com.runicrealms.plugin.item.shops.RunicShopGeneric;
 import com.runicrealms.plugin.item.shops.RunicShopItem;
+import com.runicrealms.plugin.professions.crafting.hunter.HunterItems;
+import com.runicrealms.plugin.professions.crafting.hunter.HunterPlayer;
 import com.runicrealms.plugin.utilities.ColorUtil;
 import org.bukkit.ChatColor;
 import org.bukkit.Sound;

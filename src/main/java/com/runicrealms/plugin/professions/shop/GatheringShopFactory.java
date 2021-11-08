@@ -1,4 +1,4 @@
-package com.runicrealms.plugin.professions.gathering;
+package com.runicrealms.plugin.professions.shop;
 
 import com.runicrealms.plugin.item.shops.RunicShopGeneric;
 import com.runicrealms.plugin.item.shops.RunicShopItem;

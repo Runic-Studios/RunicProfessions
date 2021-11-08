@@ -9,11 +9,11 @@ import com.runicrealms.plugin.professions.crafting.cooking.CookingListener;
 import com.runicrealms.plugin.professions.crafting.enchanter.EnchantListener;
 import com.runicrealms.plugin.professions.crafting.hunter.HunterCache;
 import com.runicrealms.plugin.professions.crafting.hunter.HunterListener;
-import com.runicrealms.plugin.professions.crafting.hunter.HunterShop;
 import com.runicrealms.plugin.professions.gathering.GatherPlayerManager;
 import com.runicrealms.plugin.professions.gathering.GatheringGUIListener;
-import com.runicrealms.plugin.professions.gathering.GatheringShopFactory;
 import com.runicrealms.plugin.professions.listeners.*;
+import com.runicrealms.plugin.professions.shop.GatheringShopFactory;
+import com.runicrealms.plugin.professions.shop.HunterShop;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
