@@ -13,15 +13,15 @@ public enum GatheringRegion {
         this.identifier = identifier;
     }
 
-    public String getIdentifier() {
-        return identifier;
-    }
-
-    public GatheringRegion getFromIdentifier(String identifier) {
+    public static GatheringRegion getFromIdentifier(String identifier) {
         for (GatheringRegion gatheringRegion : GatheringRegion.values()) {
             if (gatheringRegion.getIdentifier().equals(identifier))
                 return gatheringRegion;
         }
         return null;
+    }
+
+    public String getIdentifier() {
+        return identifier;
     }
 }

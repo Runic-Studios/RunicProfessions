@@ -19,16 +19,16 @@ public enum GatheringSkill {
         this.noToolMessage = noToolMessage;
     }
 
-    public String getIdentifier() {
-        return identifier;
-    }
-
-    public GatheringSkill getFromIdentifier(String identifier) {
+    public static GatheringSkill getFromIdentifier(String identifier) {
         for (GatheringSkill gatheringSkill : GatheringSkill.values()) {
             if (gatheringSkill.getIdentifier().equals(identifier))
                 return gatheringSkill;
         }
         return null;
+    }
+
+    public String getIdentifier() {
+        return identifier;
     }
 
     public String getFormattedIdentifier() {
