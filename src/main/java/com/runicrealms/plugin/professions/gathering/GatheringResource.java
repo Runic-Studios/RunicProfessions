@@ -4,6 +4,7 @@ import com.runicrealms.plugin.professions.utilities.GatheringUtil;
 import com.runicrealms.plugin.professions.utilities.ProfUtil;
 import com.runicrealms.runicitems.RunicItemsAPI;
 import org.bukkit.Material;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Set;
 
@@ -27,6 +28,22 @@ public enum GatheringResource {
     COD("Cod", GatheringSkill.FISHING, GatheringRegion.POND, Material.COD, Material.AIR, "+ Cod"),
     TROPICAL_FISH("Tropical", GatheringSkill.FISHING, GatheringRegion.POND, Material.TROPICAL_FISH, Material.AIR, "+ Tropical"),
     PUFFERFISH("Pufferfish", GatheringSkill.FISHING, GatheringRegion.POND, Material.PUFFERFISH, Material.AIR, "+ Pufferfish"),
+
+    /*
+    Harvesting
+     */
+    COMFREY("Comfrey", GatheringSkill.HARVESTING, null, Material.AIR, Material.AIR, ""),
+    TURMERIC("Turmeric", GatheringSkill.HARVESTING, null, Material.AIR, Material.AIR, ""),
+    PSYLLIUM("Psyllium", GatheringSkill.HARVESTING, null, Material.AIR, Material.AIR, ""),
+    PETUNIA("Petunia", GatheringSkill.HARVESTING, null, Material.AIR, Material.AIR, ""),
+    VALERIAN("Valerian", GatheringSkill.HARVESTING, null, Material.AIR, Material.AIR, ""),
+    SNOWDROP("Snowdrop", GatheringSkill.HARVESTING, null, Material.AIR, Material.AIR, ""),
+    CHAMOMILE("Chamomile", GatheringSkill.HARVESTING, null, Material.AIR, Material.AIR, ""),
+    WINTERCRESS("Wintercress", GatheringSkill.HARVESTING, null, Material.AIR, Material.AIR, ""),
+    HIBISCUS("Hibiscus", GatheringSkill.HARVESTING, null, Material.AIR, Material.AIR, ""),
+    LAVENDER("Lavender", GatheringSkill.HARVESTING, null, Material.AIR, Material.AIR, ""),
+    BOSWELLIA("Boswellia", GatheringSkill.HARVESTING, null, Material.AIR, Material.AIR, ""),
+    ARUGULA("Arugula", GatheringSkill.HARVESTING, null, Material.AIR, Material.AIR, ""),
 
     /*
     Mining
@@ -70,7 +87,7 @@ public enum GatheringResource {
      *                              requiredLevel - the min. level for the required gathering skill
      *                              experience - the experience earned per unit
      */
-    GatheringResource(String templateId, GatheringSkill gatheringSkill, GatheringRegion gatheringRegion,
+    GatheringResource(String templateId, GatheringSkill gatheringSkill, @Nullable GatheringRegion gatheringRegion,
                       Material resourceBlockType, Material placeholderBlockType, String hologramDisplayString) {
         this.templateId = templateId;
         this.gatheringSkill = gatheringSkill;
