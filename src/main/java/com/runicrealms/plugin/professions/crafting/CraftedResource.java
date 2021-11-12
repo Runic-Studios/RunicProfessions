@@ -17,8 +17,8 @@ public enum CraftedResource {
     Cooking
      */
     BREAD("Bread", Profession.ANY, new LinkedHashMap<String, Integer>() {{
-        put("Wheat", 5);
-        put("OakWood", 1);
+        put("Wheat", 9);
+        put("OakWood", 2);
     }}),
     COOKED_MEAT("CookedMeat", Profession.ANY, new LinkedHashMap<String, Integer>() {{
         put("RawMeat", 4);
