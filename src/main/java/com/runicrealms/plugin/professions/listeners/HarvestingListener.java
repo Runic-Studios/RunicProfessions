@@ -21,6 +21,7 @@ public class HarvestingListener implements Listener {
         if (!MythicMobs.inst().getMobManager().isActiveMob(e.getVictim().getUniqueId())) return;
         ActiveMob activeMob = MythicMobs.inst().getAPIHelper().getMythicMobInstance(e.getVictim());
         String faction = activeMob.getFaction();
+        if (faction == null) return;
         if (!faction.equals(HERB_FACTION)) return;
         if (!verifyPlayerHarvestingLevel(e.getPlayer(), activeMob))
             e.setCancelled(true);
@@ -31,6 +32,7 @@ public class HarvestingListener implements Listener {
         if (!MythicMobs.inst().getMobManager().isActiveMob(e.getVictim().getUniqueId())) return;
         ActiveMob activeMob = MythicMobs.inst().getAPIHelper().getMythicMobInstance(e.getVictim());
         String faction = activeMob.getFaction();
+        if (faction == null) return;
         if (!faction.equals(HERB_FACTION)) return;
         if (!verifyPlayerHarvestingLevel(e.getPlayer(), activeMob))
             e.setCancelled(true);
