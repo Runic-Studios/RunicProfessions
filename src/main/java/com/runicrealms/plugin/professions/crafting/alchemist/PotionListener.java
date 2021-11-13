@@ -44,6 +44,9 @@ public class PotionListener implements Listener {
         add(CraftedResource.GREATER_POTION_HEALING.getTemplateId());
     }};
     private final HashSet<String> craftedManaPotions = new HashSet<String>() {{
+        add("minor-potion-mana");
+        add("major-potion-mana");
+        add("greater-potion-mana");
         add(CraftedResource.LESSER_POTION_MANA.getTemplateId());
         add(CraftedResource.MINOR_POTION_MANA.getTemplateId());
         add(CraftedResource.MAJOR_POTION_MANA.getTemplateId());
