@@ -8,10 +8,7 @@ import com.runicrealms.plugin.player.cache.PlayerCache;
 import com.runicrealms.plugin.professions.Profession;
 import com.runicrealms.plugin.professions.crafting.hunter.HunterPlayer;
 import com.runicrealms.plugin.professions.event.ProfessionChangeEvent;
-import com.runicrealms.plugin.professions.gathering.GatherPlayer;
-import com.runicrealms.plugin.professions.gathering.GatheringGUI;
-import com.runicrealms.plugin.professions.gathering.GatheringRegion;
-import com.runicrealms.plugin.professions.gathering.GatheringSkill;
+import com.runicrealms.plugin.professions.gathering.*;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.protection.ApplicableRegionSet;
@@ -133,5 +130,15 @@ public class RunicProfessionsAPI {
      */
     public static void openGatheringGUI(Player player) {
         player.openInventory(new GatheringGUI(player).getInventory());
+    }
+
+    /**
+     * Display skill-specific menu for given gathering skill
+     *
+     * @param player         to display menu to
+     * @param gatheringSkill to select
+     */
+    public static void openGatheringSkillGUI(Player player, GatheringSkill gatheringSkill) {
+        player.openInventory(new GatheringSkillGUI(player, gatheringSkill).getInventory());
     }
 }

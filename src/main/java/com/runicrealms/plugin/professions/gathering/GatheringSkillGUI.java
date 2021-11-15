@@ -10,6 +10,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
+import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 public class GatheringSkillGUI implements InventoryHolder {
@@ -25,18 +26,10 @@ public class GatheringSkillGUI implements InventoryHolder {
         openMenu();
     }
 
-//    private static String[] gatheringSkillDescription(GatherPlayer gatherPlayer, GatheringSkill gatheringSkill) {
-//        String[] unlockMessageArray = ProfExpUtil.nextReagentUnlockMessage(gatheringSkill,
-//                gatherPlayer.getGatheringLevel(gatheringSkill), true).toArray(new String[0]);
-//        String[] descriptionArray = new String[]{
-//                buildProgressBar(gatherPlayer, gatheringSkill),
-//                "",
-//                ChatColor.GRAY + "Level: " + ChatColor.WHITE + gatherPlayer.getGatheringLevel(gatheringSkill),
-//                ChatColor.GRAY + "Exp: " + ChatColor.WHITE + gatherPlayer.getGatheringExp(gatheringSkill),
-//                "",
-//        };
-//        return (String[]) ArrayUtils.addAll(descriptionArray, unlockMessageArray); // append formatted unlock message
-//    }
+    private static ItemStack foo(ItemStack itemStack) {
+        ItemStack reagentWithLore = itemStack.clone();
+        return reagentWithLore;
+    }
 
     @NotNull
     @Override
@@ -58,20 +51,12 @@ public class GatheringSkillGUI implements InventoryHolder {
     private void openMenu() {
         GatherPlayer gatherPlayer = RunicProfessionsAPI.getGatherPlayer(player.getUniqueId());
         this.inventory.clear();
-        this.inventory.setItem(0, GUIUtil.closeButton());
+        this.inventory.setItem(0, GUIUtil.backButton());
         this.inventory.setItem(4, GUIUtil.dispItem(
                 Material.PAPER,
-                ChatColor.YELLOW + "Skills Info",
-                new String[]{
-                        "",
-                        ChatColor.YELLOW + "Cooking " + ChatColor.GRAY + gatherPlayer.getGatheringLevel(GatheringSkill.COOKING),
-                        ChatColor.YELLOW + "Farming " + ChatColor.GRAY + gatherPlayer.getGatheringLevel(GatheringSkill.FARMING),
-                        ChatColor.YELLOW + "Fishing " + ChatColor.GRAY + gatherPlayer.getGatheringLevel(GatheringSkill.FISHING),
-                        ChatColor.YELLOW + "Harvesting " + ChatColor.GRAY + gatherPlayer.getGatheringLevel(GatheringSkill.HARVESTING),
-                        ChatColor.YELLOW + "Mining " + ChatColor.GRAY + gatherPlayer.getGatheringLevel(GatheringSkill.MINING),
-                        ChatColor.YELLOW + "Woodcutting " + ChatColor.GRAY + gatherPlayer.getGatheringLevel(GatheringSkill.WOODCUTTING),
-                        "",
-                }
+                ChatColor.YELLOW + gatheringSkill.getFormattedIdentifier() +
+                        ChatColor.GRAY + " Level " + gatherPlayer.getGatheringLevel(gatheringSkill),
+                new String[]{}
         ));
         int i = 9;
         for (GatheringResource gatheringResource : GatheringResource.values()) {

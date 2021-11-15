@@ -11,6 +11,7 @@ import com.runicrealms.plugin.professions.crafting.hunter.HunterCache;
 import com.runicrealms.plugin.professions.crafting.hunter.HunterListener;
 import com.runicrealms.plugin.professions.gathering.GatherPlayerManager;
 import com.runicrealms.plugin.professions.gathering.GatheringGUIListener;
+import com.runicrealms.plugin.professions.gathering.GatheringSkillGUIListener;
 import com.runicrealms.plugin.professions.listeners.*;
 import com.runicrealms.plugin.professions.shop.GatheringShopFactory;
 import com.runicrealms.plugin.professions.shop.HunterShop;
@@ -79,6 +80,7 @@ public final class RunicProfessions extends JavaPlugin {
         pluginManager.registerEvents(new GatherPlayerListener(), this);
         pluginManager.registerEvents(new GatheringListener(), this);
         pluginManager.registerEvents(new GatheringGUIListener(), this);
+        pluginManager.registerEvents(new GatheringSkillGUIListener(), this);
         pluginManager.registerEvents(new HarvestingListener(), this);
         pluginManager.registerEvents(new VanillaStationListener(), this);
     }

@@ -16,7 +16,6 @@ import org.jetbrains.annotations.NotNull;
 
 public class GatheringGUI implements InventoryHolder {
 
-    private static final Integer[] SKILL_SLOTS = new Integer[]{20, 22, 24, 29, 31, 33};
     private final Inventory inventory;
     private final Player player;
 
@@ -61,10 +60,6 @@ public class GatheringGUI implements InventoryHolder {
         return totalLevel;
     }
 
-    public static Integer[] getSkillSlots() {
-        return SKILL_SLOTS;
-    }
-
     @NotNull
     @Override
     public Inventory getInventory() {
@@ -97,39 +92,39 @@ public class GatheringGUI implements InventoryHolder {
                         ChatColor.GRAY + "Total Level " + calculateTotalLevel(gatherPlayer)
                 }
         ));
-        this.inventory.setItem(SKILL_SLOTS[0], GUIUtil.dispItem
+        this.inventory.setItem(GatheringSkill.COOKING.getMenuSlot(), GUIUtil.dispItem
                 (
                         Material.COOKED_MUTTON,
                         ChatColor.YELLOW + "Cooking",
                         gatheringSkillDescription(gatherPlayer, GatheringSkill.COOKING)
                 ));
-        this.inventory.setItem(SKILL_SLOTS[1], GUIUtil.dispItem
+        this.inventory.setItem(GatheringSkill.FARMING.getMenuSlot(), GUIUtil.dispItem
                 (
                         Material.IRON_HOE,
                         ChatColor.YELLOW + "Farming",
                         gatheringSkillDescription(gatherPlayer, GatheringSkill.FARMING),
                         3
                 ));
-        this.inventory.setItem(SKILL_SLOTS[2], GUIUtil.dispItem
+        this.inventory.setItem(GatheringSkill.FISHING.getMenuSlot(), GUIUtil.dispItem
                 (
                         Material.FISHING_ROD,
                         ChatColor.YELLOW + "Fishing",
                         gatheringSkillDescription(gatherPlayer, GatheringSkill.FISHING)
                 ));
-        this.inventory.setItem(SKILL_SLOTS[3], GUIUtil.dispItem
+        this.inventory.setItem(GatheringSkill.HARVESTING.getMenuSlot(), GUIUtil.dispItem
                 (
                         Material.POPPY,
                         ChatColor.YELLOW + "Harvesting",
                         gatheringSkillDescription(gatherPlayer, GatheringSkill.HARVESTING)
                 ));
-        this.inventory.setItem(SKILL_SLOTS[4], GUIUtil.dispItem
+        this.inventory.setItem(GatheringSkill.MINING.getMenuSlot(), GUIUtil.dispItem
                 (
                         Material.IRON_PICKAXE,
                         ChatColor.YELLOW + "Mining",
                         gatheringSkillDescription(gatherPlayer, GatheringSkill.MINING),
                         3
                 ));
-        this.inventory.setItem(SKILL_SLOTS[5], GUIUtil.dispItem
+        this.inventory.setItem(GatheringSkill.WOODCUTTING.getMenuSlot(), GUIUtil.dispItem
                 (
                         Material.IRON_AXE,
                         ChatColor.YELLOW + "Woodcutting",
