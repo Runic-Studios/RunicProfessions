@@ -80,6 +80,7 @@ public final class RunicProfessions extends JavaPlugin {
         pluginManager.registerEvents(new GatheringListener(), this);
         pluginManager.registerEvents(new GatheringGUIListener(), this);
         pluginManager.registerEvents(new HarvestingListener(), this);
+        pluginManager.registerEvents(new VanillaStationListener(), this);
     }
 
     private void initializeShops() {

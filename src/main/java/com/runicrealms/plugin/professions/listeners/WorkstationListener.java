@@ -27,44 +27,18 @@ import org.bukkit.inventory.EquipmentSlot;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
 
 public class WorkstationListener implements Listener {
 
-    private static final HashMap<UUID, Location> stationLocation = new HashMap<>();
-    /**
-     * This event adds a new workstation to the file, so long as the player is opped and holding a green wool.
-     * The event then listens for the player's chat response, and adds the block to the file accordingly.
-     */
-    private final ArrayList<UUID> chatters = new ArrayList<>();
+    private static final HashMap<UUID, Location> CURRENT_WORKSTATION = new HashMap<>();
+    private final HashMap<UUID, Location> chatters;
+    private final HashMap<Location, String> storedStationLocations;
 
-    public static HashMap<UUID, Location> getStationLocation() {
-        return stationLocation;
-    }
-
-    /**
-     * This class communicates with the 'workstations.yml' data file
-     * to manage all five profession workstations and bring up their respective GUIS/
-     * play their respective sounds
-     *
-     * @author Skyfallin_
-     */
-    @EventHandler
-    public void onOpenInventory(PlayerInteractEvent e) {
-
-        if (e.getAction() != Action.RIGHT_CLICK_BLOCK) return;
-        if (e.getHand() != EquipmentSlot.HAND) return;
-        if (!e.hasBlock()) return;
-
-        Player pl = e.getPlayer();
-        Block block = e.getClickedBlock();
-        Location blockLoc = block.getLocation();
-        World world = block.getWorld();
-        double x = blockLoc.getX();
-        double y = blockLoc.getY();
-        double z = blockLoc.getZ();
+    public WorkstationListener() {
+        chatters = new HashMap<>();
+        storedStationLocations = new HashMap<>();
 
         // retrieve the data file
         File workstations = new File(Bukkit.getServer().getPluginManager().getPlugin("RunicProfessions").getDataFolder(),
@@ -74,42 +48,57 @@ public class WorkstationListener implements Listener {
 
         if (stationLocs == null) return;
 
-        // iterate through data file, if it finds a saved station w/ same world, x, y, and z, then
-        // it checks 'type' and switch statement opens correct ItemGUI
-        String stationType = "";
+        /*
+        Iterate through all workstations and add them to memory
+         */
         for (String stationID : stationLocs.getKeys(false)) {
-
             World savedWorld = Bukkit.getServer().getWorld(stationLocs.getString(stationID + ".world"));
             double savedX = stationLocs.getDouble(stationID + ".x");
             double savedY = stationLocs.getDouble(stationID + ".y");
             double savedZ = stationLocs.getDouble(stationID + ".z");
-
-            // if this particular location is saved, check what kind of workstation it is
-            if (world == savedWorld && x == savedX && y == savedY && z == savedZ) {
-                String savedStation = stationLocs.getString(stationID + ".type");
-                if (savedStation == null) return;
-                stationType = savedStation;
-            }
-        }
-
-        // if we've found a workstation, open the associated ItemGUI
-        if (!stationType.equals("")) {
-            e.setCancelled(true);
-            tryOpenGUI(pl, block, stationType);
+            Location stationLocation = new Location(savedWorld, savedX, savedY, savedZ);
+            String stationType = stationLocs.getString(stationID + ".type");
+            storedStationLocations.put(stationLocation, stationType);
         }
     }
 
-    private void tryOpenGUI(Player pl, Block block, String stationType) {
+    public static HashMap<UUID, Location> getCurrentWorkstation() {
+        return CURRENT_WORKSTATION;
+    }
 
-        UUID uuid = pl.getUniqueId();
+    @EventHandler(priority = EventPriority.LOWEST) // first
+    public void onOpenInventory(PlayerInteractEvent e) {
+        if (e.getAction() != Action.RIGHT_CLICK_BLOCK) return;
+        if (e.getHand() != EquipmentSlot.HAND) return;
+        if (!e.hasBlock()) return;
+        if (e.getClickedBlock() == null) return;
+        Player player = e.getPlayer();
+        Block block = e.getClickedBlock();
+        Location blockLocation = block.getLocation();
+        if (storedStationLocations.containsKey(blockLocation)) {
+            e.setCancelled(true);
+            tryOpenGUI(player, block, storedStationLocations.get(blockLocation));
+        }
+    }
+
+    /**
+     * This...
+     *
+     * @param player
+     * @param block
+     * @param stationType
+     */
+    private void tryOpenGUI(Player player, Block block, String stationType) {
+
+        UUID uuid = player.getUniqueId();
 
         // determine the player's profession
-        String className = RunicCoreAPI.getPlayerCache(pl).getProfName();
+        String className = RunicCoreAPI.getPlayerCache(player).getProfName();
 
         // stop the listener if the player is already crafting
-        if (RunicProfessions.getProfManager().getCurrentCrafters().contains(pl)) {
-            pl.playSound(pl.getLocation(), Sound.ENTITY_GENERIC_EXTINGUISH_FIRE, 0.5f, 1.0f);
-            pl.sendMessage(ChatColor.RED + "You are currently crafting.");
+        if (RunicProfessions.getProfManager().getCurrentCrafters().contains(player)) {
+            player.playSound(player.getLocation(), Sound.ENTITY_GENERIC_EXTINGUISH_FIRE, 0.5f, 1.0f);
+            player.sendMessage(ChatColor.RED + "You are currently crafting.");
             return;
         }
 
@@ -117,110 +106,116 @@ public class WorkstationListener implements Listener {
         switch (stationType) {
             case "anvil":
                 if (className.equals("Blacksmith")) {
-                    pl.playSound(pl.getLocation(), Sound.BLOCK_ANVIL_PLACE, 0.5f, 1.0f);
-                    RunicProfessions.getProfManager().setPlayerWorkstation(pl, new AnvilMenu(pl));
-                    ItemGUI bMenu = ((RunicProfessions.getProfManager().getPlayerWorkstation(pl))).getItemGUI();
-                    bMenu.open(pl);
+                    player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_PLACE, 0.5f, 1.0f);
+                    RunicProfessions.getProfManager().setPlayerWorkstation(player, new AnvilMenu(player));
+                    ItemGUI bMenu = ((RunicProfessions.getProfManager().getPlayerWorkstation(player))).getItemGUI();
+                    bMenu.open(player);
                 } else {
-                    pl.playSound(pl.getLocation(), Sound.ENTITY_GENERIC_EXTINGUISH_FIRE, 0.5f, 1.0f);
-                    pl.sendMessage(ChatColor.RED + "A blacksmith would know how to use this.");
+                    player.playSound(player.getLocation(), Sound.ENTITY_GENERIC_EXTINGUISH_FIRE, 0.5f, 1.0f);
+                    player.sendMessage(ChatColor.RED + "A blacksmith would know how to use this.");
                 }
                 break;
             case "cauldron":
                 if (className.equals("Alchemist")) {
-                    pl.playSound(pl.getLocation(), Sound.BLOCK_BREWING_STAND_BREW, 0.5f, 0.25f);
-                    RunicProfessions.getProfManager().setPlayerWorkstation(pl, new CauldronMenu(pl));
-                    ItemGUI cMenu = ((RunicProfessions.getProfManager().getPlayerWorkstation(pl))).getItemGUI();
-                    cMenu.open(pl);
+                    player.playSound(player.getLocation(), Sound.BLOCK_BREWING_STAND_BREW, 0.5f, 0.25f);
+                    RunicProfessions.getProfManager().setPlayerWorkstation(player, new CauldronMenu(player));
+                    ItemGUI cMenu = ((RunicProfessions.getProfManager().getPlayerWorkstation(player))).getItemGUI();
+                    cMenu.open(player);
                 } else {
-                    pl.playSound(pl.getLocation(), Sound.ENTITY_GENERIC_EXTINGUISH_FIRE, 0.5f, 1.0f);
-                    pl.sendMessage(ChatColor.RED + "An alchemist would know how to use this.");
+                    player.playSound(player.getLocation(), Sound.ENTITY_GENERIC_EXTINGUISH_FIRE, 0.5f, 1.0f);
+                    player.sendMessage(ChatColor.RED + "An alchemist would know how to use this.");
                 }
                 break;
             case "cooking fire":
-                pl.playSound(pl.getLocation(), Sound.BLOCK_FURNACE_FIRE_CRACKLE, 0.5f, 0.5f);
-                pl.playSound(pl.getLocation(), Sound.ENTITY_GENERIC_EXTINGUISH_FIRE, 0.5f, 1.5f);
-                RunicProfessions.getProfManager().setPlayerWorkstation(pl, new CookingMenu(pl));
-                ItemGUI cMenu = ((RunicProfessions.getProfManager().getPlayerWorkstation(pl))).getItemGUI();
-                cMenu.open(pl);
+                player.playSound(player.getLocation(), Sound.BLOCK_FURNACE_FIRE_CRACKLE, 0.5f, 0.5f);
+                player.playSound(player.getLocation(), Sound.ENTITY_GENERIC_EXTINGUISH_FIRE, 0.5f, 1.5f);
+                RunicProfessions.getProfManager().setPlayerWorkstation(player, new CookingMenu(player));
+                ItemGUI cMenu = ((RunicProfessions.getProfManager().getPlayerWorkstation(player))).getItemGUI();
+                cMenu.open(player);
                 break;
             case "furnace":
                 if (className.equals("Blacksmith")) {
-                    pl.playSound(pl.getLocation(), Sound.ENTITY_BLAZE_SHOOT, 0.5f, 0.5f);
-                    pl.playSound(pl.getLocation(), Sound.ITEM_BUCKET_FILL_LAVA, 0.5f, 1.0f);
-                    pl.playSound(pl.getLocation(), Sound.BLOCK_LAVA_POP, 0.5f, 1.0f);
-                    RunicProfessions.getProfManager().setPlayerWorkstation(pl, new FurnaceMenu(pl));
-                    ItemGUI fMenu = ((RunicProfessions.getProfManager().getPlayerWorkstation(pl))).getItemGUI();
-                    fMenu.open(pl);
+                    player.playSound(player.getLocation(), Sound.ENTITY_BLAZE_SHOOT, 0.5f, 0.5f);
+                    player.playSound(player.getLocation(), Sound.ITEM_BUCKET_FILL_LAVA, 0.5f, 1.0f);
+                    player.playSound(player.getLocation(), Sound.BLOCK_LAVA_POP, 0.5f, 1.0f);
+                    RunicProfessions.getProfManager().setPlayerWorkstation(player, new FurnaceMenu(player));
+                    ItemGUI fMenu = ((RunicProfessions.getProfManager().getPlayerWorkstation(player))).getItemGUI();
+                    fMenu.open(player);
                 } else {
-                    pl.playSound(pl.getLocation(), Sound.ENTITY_GENERIC_EXTINGUISH_FIRE, 0.5f, 1.0f);
-                    pl.sendMessage(ChatColor.RED + "A blacksmith would know how to use this.");
+                    player.playSound(player.getLocation(), Sound.ENTITY_GENERIC_EXTINGUISH_FIRE, 0.5f, 1.0f);
+                    player.sendMessage(ChatColor.RED + "A blacksmith would know how to use this.");
                 }
                 break;
             case "enchanting table":
             case "spinning wheel":
                 if (className.equals("Enchanter")) {
-                    pl.playSound(pl.getLocation(), Sound.BLOCK_WET_GRASS_BREAK, 2.0f, 1.2f);
-                    RunicProfessions.getProfManager().setPlayerWorkstation(pl, new EnchantingTableMenu(pl));
-                    ItemGUI eMenu = ((RunicProfessions.getProfManager().getPlayerWorkstation(pl))).getItemGUI();
-                    eMenu.open(pl);
+                    player.playSound(player.getLocation(), Sound.BLOCK_WET_GRASS_BREAK, 2.0f, 1.2f);
+                    RunicProfessions.getProfManager().setPlayerWorkstation(player, new EnchantingTableMenu(player));
+                    ItemGUI eMenu = ((RunicProfessions.getProfManager().getPlayerWorkstation(player))).getItemGUI();
+                    eMenu.open(player);
                 } else {
-                    pl.playSound(pl.getLocation(), Sound.ENTITY_GENERIC_EXTINGUISH_FIRE, 0.5f, 1.0f);
-                    pl.sendMessage(ChatColor.RED + "An enchanter would know how to use this.");
+                    player.playSound(player.getLocation(), Sound.ENTITY_GENERIC_EXTINGUISH_FIRE, 0.5f, 1.0f);
+                    player.sendMessage(ChatColor.RED + "An enchanter would know how to use this.");
                 }
                 break;
             case "gemcutting bench":
                 if (className.equals("Jeweler")) {
-                    pl.playSound(pl.getLocation(), Sound.BLOCK_ANVIL_USE, 0.5f, 2.0f);
-                    RunicProfessions.getProfManager().setPlayerWorkstation(pl, new JewelerMenu(pl));
-                    ItemGUI jMenu = ((RunicProfessions.getProfManager().getPlayerWorkstation(pl))).getItemGUI();
-                    jMenu.open(pl);
+                    player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 0.5f, 2.0f);
+                    RunicProfessions.getProfManager().setPlayerWorkstation(player, new JewelerMenu(player));
+                    ItemGUI jMenu = ((RunicProfessions.getProfManager().getPlayerWorkstation(player))).getItemGUI();
+                    jMenu.open(player);
                 } else {
-                    pl.playSound(pl.getLocation(), Sound.ENTITY_GENERIC_EXTINGUISH_FIRE, 0.5f, 1.0f);
-                    pl.sendMessage(ChatColor.RED + "A jeweler would know how to use this.");
+                    player.playSound(player.getLocation(), Sound.ENTITY_GENERIC_EXTINGUISH_FIRE, 0.5f, 1.0f);
+                    player.sendMessage(ChatColor.RED + "A jeweler would know how to use this.");
                 }
                 break;
             case "hunting board":
             case "tanning rack":
                 if (className.equals("Hunter")) {
-                    pl.playSound(pl.getLocation(), Sound.ITEM_ARMOR_EQUIP_LEATHER, 2.0f, 0.8f);
-                    RunicProfessions.getProfManager().setPlayerWorkstation(pl, new HunterMenu(pl));
-                    ItemGUI hMenu = ((RunicProfessions.getProfManager().getPlayerWorkstation(pl))).getItemGUI();
-                    hMenu.open(pl);
+                    player.playSound(player.getLocation(), Sound.ITEM_ARMOR_EQUIP_LEATHER, 2.0f, 0.8f);
+                    RunicProfessions.getProfManager().setPlayerWorkstation(player, new HunterMenu(player));
+                    ItemGUI hMenu = ((RunicProfessions.getProfManager().getPlayerWorkstation(player))).getItemGUI();
+                    hMenu.open(player);
                 } else {
-                    pl.playSound(pl.getLocation(), Sound.ENTITY_GENERIC_EXTINGUISH_FIRE, 0.5f, 1.0f);
-                    pl.sendMessage(ChatColor.RED + "A hunter would know how to use this.");
+                    player.playSound(player.getLocation(), Sound.ENTITY_GENERIC_EXTINGUISH_FIRE, 0.5f, 1.0f);
+                    player.sendMessage(ChatColor.RED + "A hunter would know how to use this.");
                 }
                 break;
             case "shrine":
                 if (className.equals("Enchanter")) {
                     //play sound
-                    RunicProfessions.getProfManager().setPlayerWorkstation(pl, new ShrineMenu(pl));
-                    ItemGUI eMenu = ((RunicProfessions.getProfManager().getPlayerWorkstation(pl))).getItemGUI();
-                    eMenu.open(pl);
+                    RunicProfessions.getProfManager().setPlayerWorkstation(player, new ShrineMenu(player));
+                    ItemGUI eMenu = ((RunicProfessions.getProfManager().getPlayerWorkstation(player))).getItemGUI();
+                    eMenu.open(player);
                 }
                 break;
         }
 
         // add station location to the hashmap for item display purposes
         Location loc = block.getLocation().add(0.5, 1.0, 0.5);
-        stationLocation.remove(uuid);
-        stationLocation.put(uuid, loc);
+        CURRENT_WORKSTATION.remove(uuid);
+        CURRENT_WORKSTATION.put(uuid, loc);
     }
 
+    /**
+     * This event adds a new workstation to the file, so long as the player is opped and holding a green wool.
+     * The event then listens for the player's chat response, and adds the block to the file accordingly.
+     */
     @EventHandler
     public void onLocationAdd(PlayerInteractEvent e) {
 
-        Player pl = e.getPlayer();
-        if (!pl.isOp()) return;
+        Player player = e.getPlayer();
+        if (!player.isOp()) return;
 
-        if (pl.getInventory().getItemInMainHand().getType() == Material.AIR) return;
-        Material heldItemType = pl.getInventory().getItemInMainHand().getType();
+        if (player.getInventory().getItemInMainHand().getType() == Material.AIR) return;
+        Material heldItemType = player.getInventory().getItemInMainHand().getType();
         if (heldItemType != Material.GREEN_WOOL) return;
         if (!e.getAction().equals(Action.RIGHT_CLICK_BLOCK)) return;
         if (e.getHand() != EquipmentSlot.HAND) return;
         if (!e.hasBlock()) return;
-        Block b = e.getClickedBlock();
+        if (e.getClickedBlock() == null) return;
+        Block block = e.getClickedBlock();
+        Location blockLocation = block.getLocation();
 
         // retrieve the data file
         File workstations = new File(Bukkit.getServer().getPluginManager().getPlugin("RunicProfessions").getDataFolder(),
@@ -238,13 +233,13 @@ public class WorkstationListener implements Listener {
             stationConfig.set("Workstations.NEXT_ID", 0);
         }
         int nextID = stationConfig.getInt("Workstations.NEXT_ID");
-        stationConfig.set("Workstations.Locations." + nextID + ".world", b.getWorld().getName());
-        stationConfig.set("Workstations.Locations." + nextID + ".x", b.getLocation().getBlockX());
-        stationConfig.set("Workstations.Locations." + nextID + ".y", b.getLocation().getBlockY());
-        stationConfig.set("Workstations.Locations." + nextID + ".z", b.getLocation().getBlockZ());
-        pl.sendMessage(ChatColor.GREEN + "Workstation saved! Now please specify the type of this workstation:\n"
+        stationConfig.set("Workstations.Locations." + nextID + ".world", block.getWorld().getName());
+        stationConfig.set("Workstations.Locations." + nextID + ".x", blockLocation.getBlockX());
+        stationConfig.set("Workstations.Locations." + nextID + ".y", blockLocation.getBlockY());
+        stationConfig.set("Workstations.Locations." + nextID + ".z", blockLocation.getBlockZ());
+        player.sendMessage(ChatColor.GREEN + "Workstation saved! Now please specify the type of this workstation:\n"
                 + "Anvil, cauldron, cooking fire, furnace, gemcutting bench, enchanting table, shrine, or hunting board?");
-        chatters.add(pl.getUniqueId());
+        chatters.put(player.getUniqueId(), blockLocation);
 
         // save data file
         try {
@@ -257,8 +252,8 @@ public class WorkstationListener implements Listener {
     @EventHandler(priority = EventPriority.LOWEST)
     public void onChat(ChatChannelMessageEvent e) {
 
-        Player pl = e.getMessageSender();
-        if (!this.chatters.contains(pl.getUniqueId())) return;
+        Player player = e.getMessageSender();
+        if (!chatters.containsKey(player.getUniqueId())) return;
         e.setCancelled(true);
 
         // retrieve chat message
@@ -273,7 +268,7 @@ public class WorkstationListener implements Listener {
                 || stationType.equals("enchanting table")
                 || stationType.equals("hunting board")
                 || stationType.equals("shrine"))) {
-            pl.sendMessage(ChatColor.RED + "Please specify a correct input.");
+            player.sendMessage(ChatColor.RED + "Please specify a correct input.");
             return;
         }
 
@@ -286,41 +281,19 @@ public class WorkstationListener implements Listener {
             stationConfig.set("Workstations.NEXT_ID", 0);
         }
         int nextID = stationConfig.getInt("Workstations.NEXT_ID");
-
         stationConfig.set("Workstations.Locations." + nextID + ".type", stationType);
         stationConfig.set("Workstations.NEXT_ID", nextID + 1);
-        pl.sendMessage(ChatColor.GREEN + "Workstation type set to: " + ChatColor.YELLOW + stationType);
-        chatters.remove(pl.getUniqueId());
+        player.sendMessage(ChatColor.GREEN + "Workstation type set to: " + ChatColor.YELLOW + stationType);
+
+        // add workstation to memory
+        storedStationLocations.put(chatters.get(player.getUniqueId()), stationType);
+        chatters.remove(player.getUniqueId());
 
         // save data file
         try {
             stationConfig.save(workstations);
         } catch (IOException ex) {
             ex.printStackTrace();
-        }
-    }
-
-    /**
-     * This event disables the vanilla functionality of: anvils, brewing stands, cauldrons,
-     * crafting tables,  furnaces.
-     */
-    @EventHandler
-    public void onDefaultStationUse(PlayerInteractEvent e) {
-
-        if (e.getPlayer().getGameMode() == GameMode.CREATIVE) return;
-        if (!e.hasBlock()) return;
-        Block b = e.getClickedBlock();
-        if (b == null) return;
-        if (b.getType() == Material.ANVIL
-                || b.getType() == Material.CHIPPED_ANVIL
-                || b.getType() == Material.DAMAGED_ANVIL
-                || b.getType() == Material.BREWING_STAND
-                || b.getType() == Material.CAULDRON
-                || b.getType() == Material.CRAFTING_TABLE
-                || b.getType() == Material.ENCHANTING_TABLE
-                || b.getType() == Material.FURNACE
-                || b.getType() == Material.LECTERN) {
-            e.setCancelled(true);
         }
     }
 }

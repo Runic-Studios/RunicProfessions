@@ -201,7 +201,7 @@ public abstract class Workstation implements Listener {
         Material craftedItemType = craftedResource.getItemStack().getType();
 
         // grab the location of the anvil
-        Location stationLoc = WorkstationListener.getStationLocation().get(player.getUniqueId());
+        Location stationLoc = WorkstationListener.getCurrentWorkstation().get(player.getUniqueId());
 
         // check that the player has reached the req. lv
         if (currentLvl < reqLevel) {
