@@ -34,6 +34,8 @@ public class GatheringGUI implements InventoryHolder {
                 ChatColor.GRAY + "Level: " + ChatColor.WHITE + gatherPlayer.getGatheringLevel(gatheringSkill),
                 ChatColor.GRAY + "Exp: " + ChatColor.WHITE + gatherPlayer.getGatheringExp(gatheringSkill),
                 "",
+                ChatColor.GOLD + "" + ChatColor.BOLD + "CLICK " + ChatColor.GRAY + "to view all available reagents",
+                ""
         };
         return (String[]) ArrayUtils.addAll(descriptionArray, unlockMessageArray); // append formatted unlock message
     }
