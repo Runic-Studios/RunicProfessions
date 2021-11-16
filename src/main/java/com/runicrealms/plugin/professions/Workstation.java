@@ -114,7 +114,7 @@ public abstract class Workstation implements Listener {
         StringBuilder desc = new StringBuilder();
 
         if (currentLvl < reqLevel) {
-            desc.append("&4Req. Lv: ").append(reqLevel).append("\n");
+            desc.append("&4Lv. Min ").append(reqLevel).append("\n");
         }
 
         if (!itemStats.equals("")) {
@@ -141,7 +141,7 @@ public abstract class Workstation implements Listener {
                 .append(ChatColor.DARK_GRAY).append("to craft 5");
 
         if (exp > 0) {
-            desc.append("\n\n&7&oRewards &f&o").append(exp).append(" &7&oExperience");
+            desc.append("\n\n&7&oRewards &f&o").append(exp).append(" &7&oexperience");
         }
 
         desc = new StringBuilder(ColorUtil.format(desc.toString()));

@@ -29,7 +29,7 @@ public class GatheringSkillGUI implements InventoryHolder {
         openMenu();
     }
 
-    private static ItemStack reagentWithLore(ItemStack itemStack, int requiredLevel, boolean isUnlocked) {
+    private static ItemStack reagentWithLore(ItemStack itemStack, GatheringResource gatheringResource, boolean isUnlocked) {
         ItemStack reagentWithLore = itemStack.clone();
         ItemMeta meta = reagentWithLore.getItemMeta();
         assert meta != null;
@@ -40,7 +40,13 @@ public class GatheringSkillGUI implements InventoryHolder {
         List<String> lore = meta.getLore();
         assert lore != null;
         lore.add("");
-        lore.add(ChatColor.GRAY + "Lv. Min " + ChatColor.WHITE + requiredLevel);
+        lore.add(ChatColor.GRAY + "Lv. Min " + ChatColor.WHITE + gatheringResource.getRequiredLevel());
+        lore.add("");
+        lore.add
+                (
+                        ChatColor.GRAY + "" + ChatColor.ITALIC + "Rewards " +
+                                ChatColor.WHITE + ChatColor.ITALIC + gatheringResource.getExperience() +
+                                ChatColor.GRAY + ChatColor.ITALIC + " experience");
         meta.setLore(lore);
         reagentWithLore.setItemMeta(meta);
         return reagentWithLore;
@@ -80,7 +86,7 @@ public class GatheringSkillGUI implements InventoryHolder {
             this.inventory.setItem(i, reagentWithLore
                     (
                             itemStack,
-                            gatheringResource.getRequiredLevel(),
+                            gatheringResource,
                             (gatherPlayer.getGatheringLevel(gatheringResource.getGatheringSkill()) >= gatheringResource.getRequiredLevel())
                     ));
             i++;
