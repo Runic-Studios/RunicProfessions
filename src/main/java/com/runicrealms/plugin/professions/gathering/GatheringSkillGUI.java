@@ -40,7 +40,11 @@ public class GatheringSkillGUI implements InventoryHolder {
         List<String> lore = meta.getLore();
         assert lore != null;
         lore.add("");
-        lore.add(ChatColor.GRAY + "Lv. Min " + ChatColor.WHITE + gatheringResource.getRequiredLevel());
+        lore.add
+                (
+                        ChatColor.GRAY + "Requires " +
+                                ChatColor.YELLOW + gatheringResource.getGatheringSkill().getFormattedIdentifier() + " " +
+                                ChatColor.WHITE + gatheringResource.getRequiredLevel());
         lore.add("");
         lore.add
                 (
