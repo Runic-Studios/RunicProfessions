@@ -11,7 +11,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
 
 public class GatheringSkillGUI implements InventoryHolder {
 
@@ -26,8 +29,20 @@ public class GatheringSkillGUI implements InventoryHolder {
         openMenu();
     }
 
-    private static ItemStack foo(ItemStack itemStack) {
+    private static ItemStack reagentWithLore(ItemStack itemStack, int requiredLevel, boolean isUnlocked) {
         ItemStack reagentWithLore = itemStack.clone();
+        ItemMeta meta = reagentWithLore.getItemMeta();
+        assert meta != null;
+        if (isUnlocked)
+            meta.setDisplayName(ChatColor.GREEN + ChatColor.stripColor(meta.getDisplayName()) + " - UNLOCKED");
+        else
+            meta.setDisplayName(ChatColor.RED + ChatColor.stripColor(meta.getDisplayName()) + " - LOCKED");
+        List<String> lore = meta.getLore();
+        assert lore != null;
+        lore.add("");
+        lore.add(ChatColor.GRAY + "Lv. Min " + ChatColor.WHITE + requiredLevel);
+        meta.setLore(lore);
+        reagentWithLore.setItemMeta(meta);
         return reagentWithLore;
     }
 
@@ -61,7 +76,13 @@ public class GatheringSkillGUI implements InventoryHolder {
         int i = 9;
         for (GatheringResource gatheringResource : GatheringResource.values()) {
             if (gatheringResource.getGatheringSkill() != this.gatheringSkill) continue;
-            this.inventory.setItem(i, RunicItemsAPI.generateItemFromTemplate(gatheringResource.getTemplateId()).generateItem());
+            ItemStack itemStack = RunicItemsAPI.generateItemFromTemplate(gatheringResource.getTemplateId()).generateItem();
+            this.inventory.setItem(i, reagentWithLore
+                    (
+                            itemStack,
+                            gatheringResource.getRequiredLevel(),
+                            (gatherPlayer.getGatheringLevel(gatheringResource.getGatheringSkill()) >= gatheringResource.getRequiredLevel())
+                    ));
             i++;
         }
     }
