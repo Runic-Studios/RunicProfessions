@@ -100,13 +100,12 @@ public class CauldronMenu extends Workstation {
         createMenuItem(forgeMenu, player, CraftedResource.MINOR_POTION_LOOTING, 16);
         createMenuItem(forgeMenu, player, CraftedResource.MAJOR_POTION_HEALING, 17);
         createMenuItem(forgeMenu, player, CraftedResource.MAJOR_POTION_MANA, 18);
-        createMenuItem(forgeMenu, player, CraftedResource.MAJOR_POTION_LOOTING, 19);
-        createMenuItem(forgeMenu, player, CraftedResource.MAJOR_POTION_SLAYING, 20);
-        createMenuItem(forgeMenu, player, CraftedResource.GREATER_POTION_HEALING, 21);
-        createMenuItem(forgeMenu, player, CraftedResource.GREATER_POTION_MANA, 22);
-        createMenuItem(forgeMenu, player, CraftedResource.GREATER_POTION_LOOTING, 23);
-        createMenuItem(forgeMenu, player, CraftedResource.GREATER_POTION_SLAYING, 24);
-        createMenuItem(forgeMenu, player, CraftedResource.POTION_SACRED_FIRE, 25);
+        createMenuItem(forgeMenu, player, CraftedResource.MAJOR_POTION_SLAYING, 19);
+        createMenuItem(forgeMenu, player, CraftedResource.GREATER_POTION_HEALING, 20);
+        createMenuItem(forgeMenu, player, CraftedResource.GREATER_POTION_MANA, 21);
+        createMenuItem(forgeMenu, player, CraftedResource.GREATER_POTION_LOOTING, 22);
+        createMenuItem(forgeMenu, player, CraftedResource.GREATER_POTION_SLAYING, 23);
+        createMenuItem(forgeMenu, player, CraftedResource.POTION_SACRED_FIRE, 24);
     }
 
     private CraftedResource determineItem(int slot) {
@@ -134,16 +133,14 @@ public class CauldronMenu extends Workstation {
             case 19:
                 return CraftedResource.MAJOR_POTION_SLAYING;
             case 20:
-                return CraftedResource.MAJOR_POTION_LOOTING;
-            case 21:
                 return CraftedResource.GREATER_POTION_HEALING;
-            case 22:
+            case 21:
                 return CraftedResource.GREATER_POTION_MANA;
-            case 23:
+            case 22:
                 return CraftedResource.GREATER_POTION_SLAYING;
-            case 24:
+            case 23:
                 return CraftedResource.GREATER_POTION_LOOTING;
-            case 25:
+            case 24:
                 return CraftedResource.POTION_SACRED_FIRE;
         }
         return CraftedResource.BOTTLE;

@@ -60,7 +60,6 @@ public class PotionListener implements Listener {
     }};
     private final HashSet<String> craftedLootingPotions = new HashSet<String>() {{
         add(CraftedResource.MINOR_POTION_LOOTING.getTemplateId());
-        add(CraftedResource.MAJOR_POTION_LOOTING.getTemplateId());
         add(CraftedResource.GREATER_POTION_LOOTING.getTemplateId());
     }};
 

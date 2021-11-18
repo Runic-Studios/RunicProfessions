@@ -46,87 +46,93 @@ public enum CraftedResource {
     }}),
     LESSER_POTION_HEALING("lesser-crafted-potion-healing", Profession.ALCHEMIST, new LinkedHashMap<String, Integer>() {{
         put("Bottle", 1);
-        put("uncut-ruby", 4);
         put("Salmon", 3);
+        put("uncut-ruby", 3);
+        put("Petunia", 2);
     }}),
     LESSER_POTION_MANA("lesser-crafted-potion-mana", Profession.ALCHEMIST, new LinkedHashMap<String, Integer>() {{
         put("Bottle", 1);
-        put("uncut-sapphire", 4);
         put("Cod", 3);
+        put("uncut-sapphire", 3);
+        put("Psyllium", 2);
     }}),
     LESSER_POTION_SLAYING("lesser-crafted-potion-slaying", Profession.ALCHEMIST, new LinkedHashMap<String, Integer>() {{
         put("Bottle", 1);
-        put("uncut-opal", 4);
-        put("uncut-diamond", 3);
-        put("Tropical", 4);
+        put("Tropical", 3);
+        put("uncut-opal", 2);
+        put("Wintercress", 2);
     }}),
     MINOR_POTION_HEALING("minor-crafted-potion-healing", Profession.ALCHEMIST, new LinkedHashMap<String, Integer>() {{
         put("Bottle", 1);
-        put("uncut-ruby", 4);
-        put("Salmon", 3);
+        put("Salmon", 7);
+        put("uncut-ruby", 9);
+        put("green_goo", 1);
     }}),
     MINOR_POTION_MANA("minor-crafted-potion-mana", Profession.ALCHEMIST, new LinkedHashMap<String, Integer>() {{
         put("Bottle", 1);
-        put("uncut-sapphire", 4);
-        put("Cod", 3);
+        put("Cod", 7);
+        put("uncut-sapphire", 9);
+        put("green_goo", 1);
     }}),
     MINOR_POTION_SLAYING("minor-crafted-potion-slaying", Profession.ALCHEMIST, new LinkedHashMap<String, Integer>() {{
         put("Bottle", 1);
+        put("Tropical", 6);
         put("uncut-opal", 4);
-        put("uncut-diamond", 3);
-        put("Tropical", 4);
+        put("gelatinous_jelly", 1);
     }}),
     MINOR_POTION_LOOTING("minor-crafted-potion-looting", Profession.ALCHEMIST, new LinkedHashMap<String, Integer>() {{
         put("Bottle", 1);
-        put("AmbrosiaRoot", 1);
-        put("Pufferfish", 4);
+        put("Pufferfish", 3);
+        put("Lavender", 8);
+        put("sacred_sludge", 5);
     }}),
     MAJOR_POTION_HEALING("major-crafted-potion-healing", Profession.ALCHEMIST, new LinkedHashMap<String, Integer>() {{
         put("Bottle", 1);
-        put("uncut-ruby", 4);
-        put("Salmon", 3);
+        put("Salmon", 9);
+        put("uncut-ruby", 12);
+        put("gelatinous_jelly", 1);
     }}),
     MAJOR_POTION_MANA("major-crafted-potion-mana", Profession.ALCHEMIST, new LinkedHashMap<String, Integer>() {{
         put("Bottle", 1);
-        put("uncut-sapphire", 4);
-        put("Cod", 3);
+        put("Cod", 9);
+        put("uncut-sapphire", 12);
+        put("gelatinous_jelly", 1);
     }}),
     MAJOR_POTION_SLAYING("major-crafted-potion-slaying", Profession.ALCHEMIST, new LinkedHashMap<String, Integer>() {{
         put("Bottle", 1);
-        put("uncut-opal", 4);
-        put("uncut-diamond", 3);
-        put("Tropical", 4);
-    }}),
-    MAJOR_POTION_LOOTING("major-crafted-potion-looting", Profession.ALCHEMIST, new LinkedHashMap<String, Integer>() {{
-        put("Bottle", 1);
-        put("AmbrosiaRoot", 1);
-        put("Pufferfish", 4);
+        put("Tropical", 10);
+        put("crystal-corpus", 1);
+        put("gelatinous_jelly", 2);
     }}),
     GREATER_POTION_HEALING("greater-crafted-potion-healing", Profession.ALCHEMIST, new LinkedHashMap<String, Integer>() {{
         put("Bottle", 1);
-        put("uncut-ruby", 4);
-        put("Salmon", 3);
+        put("Salmon", 12);
+        put("crimson-core", 1);
+        put("sacred_sludge", 2);
     }}),
     GREATER_POTION_MANA("greater-crafted-potion-mana", Profession.ALCHEMIST, new LinkedHashMap<String, Integer>() {{
         put("Bottle", 1);
-        put("uncut-sapphire", 4);
-        put("Cod", 3);
+        put("Cod", 12);
+        put("sapphirine-shard", 1);
+        put("sacred_sludge", 2);
     }}),
     GREATER_POTION_SLAYING("greater-crafted-potion-slaying", Profession.ALCHEMIST, new LinkedHashMap<String, Integer>() {{
         put("Bottle", 1);
-        put("uncut-opal", 4);
-        put("uncut-diamond", 3);
-        put("Tropical", 4);
+        put("Tropical", 14);
+        put("crystal-corpus", 2);
+        put("gelatinous_jelly", 5);
     }}),
     GREATER_POTION_LOOTING("greater-crafted-potion-looting", Profession.ALCHEMIST, new LinkedHashMap<String, Integer>() {{
         put("Bottle", 1);
-        put("AmbrosiaRoot", 1);
-        put("Pufferfish", 4);
+        put("Pufferfish", 7);
+        put("Lavender", 20);
+        put("sacred_sludge", 12);
     }}),
     POTION_SACRED_FIRE("crafted-potion-sacred-fire", Profession.ALCHEMIST, new LinkedHashMap<String, Integer>() {{
         put("Bottle", 1);
-        put("SacredFlame", 3);
-        put("Pufferfish", 4);
+        put("Pufferfish", 7);
+        put("Hibiscus", 20);
+        put("SacredFlame", 12);
     }}),
 
     /*
