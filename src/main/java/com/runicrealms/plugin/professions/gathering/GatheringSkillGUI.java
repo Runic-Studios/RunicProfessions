@@ -14,6 +14,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 
 public class GatheringSkillGUI implements InventoryHolder {
@@ -84,7 +86,9 @@ public class GatheringSkillGUI implements InventoryHolder {
                 new String[]{}
         ));
         int i = 9;
-        for (GatheringResource gatheringResource : GatheringResource.values()) {
+        GatheringResource[] sorted = GatheringResource.values();
+        Arrays.sort(sorted, Comparator.comparing(GatheringResource::getRequiredLevel)); // sort in ascending order of level
+        for (GatheringResource gatheringResource : sorted) {
             if (gatheringResource.getGatheringSkill() != this.gatheringSkill) continue;
             ItemStack itemStack = RunicItemsAPI.generateItemFromTemplate(gatheringResource.getTemplateId()).generateItem();
             this.inventory.setItem(i, reagentWithLore
