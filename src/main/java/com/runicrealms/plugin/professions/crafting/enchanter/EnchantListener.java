@@ -1,16 +1,12 @@
 package com.runicrealms.plugin.professions.crafting.enchanter;
 
 import com.runicrealms.plugin.RunicCore;
-import com.runicrealms.plugin.api.RunicCoreAPI;
-import com.runicrealms.plugin.attributes.AttributeUtil;
 import com.runicrealms.plugin.item.util.ItemRemover;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
@@ -27,38 +23,38 @@ public class EnchantListener implements Listener {
     @EventHandler
     public void onTeleportScrollUse(PlayerInteractEvent e) {
 
-        if (e.getAction() != Action.RIGHT_CLICK_AIR && e.getAction() != Action.RIGHT_CLICK_BLOCK) return;
-        if (e.getHand() != EquipmentSlot.HAND)
-            return; // annoying 1.9 feature which makes the event run twice, once for each hand
-        if (currentlyUsing.containsKey(e.getPlayer().getUniqueId())) return;
-
-        Material mat = e.getPlayer().getInventory().getItemInMainHand().getType();
-        if (mat != Material.PURPLE_DYE) return;
-
-        // summoning scroll
-        if (e.getPlayer().getInventory().getItemInMainHand().equals(EnchantingTableMenu.partySummonScroll())) {
-            if (RunicCore.getPartyManager().getPlayerParty(e.getPlayer()) == null) {
-                e.getPlayer().playSound(e.getPlayer().getLocation(), Sound.ENTITY_GENERIC_EXTINGUISH_FIRE, 0.5f, 1.0f);
-                e.getPlayer().sendMessage(ChatColor.RED + "You must be in a party to use this scroll!");
-            } else {
-                currentlyUsing.put(e.getPlayer().getUniqueId(), warmupScroll(e.getPlayer(), e.getPlayer().getInventory().getItemInMainHand()));
-            }
-            return;
-        }
-
-        if (AttributeUtil.getCustomString(e.getPlayer().getInventory().getItemInMainHand(),
-                "scroll.location").equals("")) return;
-
-        ItemStack scroll = e.getPlayer().getInventory().getItemInMainHand();
-
-        int reqLevel = (int) AttributeUtil.getCustomDouble(scroll, "required.level");
-        if (RunicCoreAPI.getPlayerCache(e.getPlayer()).getClassLevel() < reqLevel) {
-            e.getPlayer().playSound(e.getPlayer().getLocation(), Sound.BLOCK_FIRE_EXTINGUISH, 0.5f, 1.0f);
-            e.getPlayer().sendMessage(ChatColor.RED + "Your level is too low to use this!");
-            return;
-        }
-
-        currentlyUsing.put(e.getPlayer().getUniqueId(), warmupScroll(e.getPlayer(), scroll));
+//        if (e.getAction() != Action.RIGHT_CLICK_AIR && e.getAction() != Action.RIGHT_CLICK_BLOCK) return;
+//        if (e.getHand() != EquipmentSlot.HAND)
+//            return; // annoying 1.9 feature which makes the event run twice, once for each hand
+//        if (currentlyUsing.containsKey(e.getPlayer().getUniqueId())) return;
+//
+//        Material mat = e.getPlayer().getInventory().getItemInMainHand().getType();
+//        if (mat != Material.PURPLE_DYE) return;
+//
+//        // summoning scroll
+//        if (e.getPlayer().getInventory().getItemInMainHand().equals(EnchantingTableMenu.partySummonScroll())) {
+//            if (RunicCore.getPartyManager().getPlayerParty(e.getPlayer()) == null) {
+//                e.getPlayer().playSound(e.getPlayer().getLocation(), Sound.ENTITY_GENERIC_EXTINGUISH_FIRE, 0.5f, 1.0f);
+//                e.getPlayer().sendMessage(ChatColor.RED + "You must be in a party to use this scroll!");
+//            } else {
+//                currentlyUsing.put(e.getPlayer().getUniqueId(), warmupScroll(e.getPlayer(), e.getPlayer().getInventory().getItemInMainHand()));
+//            }
+//            return;
+//        }
+//
+//        if (AttributeUtil.getCustomString(e.getPlayer().getInventory().getItemInMainHand(),
+//                "scroll.location").equals("")) return;
+//
+//        ItemStack scroll = e.getPlayer().getInventory().getItemInMainHand();
+//
+//        int reqLevel = (int) AttributeUtil.getCustomDouble(scroll, "required.level");
+//        if (RunicCoreAPI.getPlayerCache(e.getPlayer()).getClassLevel() < reqLevel) {
+//            e.getPlayer().playSound(e.getPlayer().getLocation(), Sound.BLOCK_FIRE_EXTINGUISH, 0.5f, 1.0f);
+//            e.getPlayer().sendMessage(ChatColor.RED + "Your level is too low to use this!");
+//            return;
+//        }
+//
+//        currentlyUsing.put(e.getPlayer().getUniqueId(), warmupScroll(e.getPlayer(), scroll));
     }
 
     private BukkitTask warmupScroll(Player pl, ItemStack scroll) {
@@ -105,11 +101,11 @@ public class EnchantListener implements Listener {
                         }
 
                     } else {
-                        pl.teleport(TeleportEnum.getEnum(
-                                (AttributeUtil.getCustomString(scroll, "scroll.location"))).getLocation());
-                        pl.playSound(pl.getLocation(), Sound.BLOCK_PORTAL_TRAVEL, 0.5f, 1.0f);
-                        pl.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "You've have been teleported!");
-                        return;
+//                        pl.teleport(TeleportEnum.getEnum(
+//                                (AttributeUtil.getCustomString(scroll, "scroll.location"))).getLocation());
+//                        pl.playSound(pl.getLocation(), Sound.BLOCK_PORTAL_TRAVEL, 0.5f, 1.0f);
+//                        pl.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "You've have been teleported!");
+//                        return;
                     }
                 }
 

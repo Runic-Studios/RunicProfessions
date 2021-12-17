@@ -1,8 +1,5 @@
 package com.runicrealms.plugin.professions.crafting.enchanter;
 
-import com.runicrealms.plugin.attributes.AttributeUtil;
-import com.runicrealms.plugin.item.LoreGenerator;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -24,14 +21,14 @@ public class TeleportScroll {
         ItemMeta meta = item.getItemMeta();
         item.setItemMeta(meta);
         item = applyStats(item);
-        LoreGenerator.generateItemLore(item, ChatColor.WHITE,
-                "Teleport Scroll: " + location.getName(), "", false, "");
+//        LoreGenerator.generateItemLore(item, ChatColor.WHITE,
+//                "Teleport Scroll: " + location.getName(), "", false, "");
         setItem(item);
     }
 
     private ItemStack applyStats(ItemStack item) {
-        if (reqLevel != 0) item = AttributeUtil.addCustomStat(item, "required.level", reqLevel);
-        if (location != null) item = AttributeUtil.addCustomStat(item, "scroll.location", location.getName());
+//        if (reqLevel != 0) item = AttributeUtil.addCustomStat(item, "required.level", reqLevel);
+//        if (location != null) item = AttributeUtil.addCustomStat(item, "scroll.location", location.getName());
         return item;
     }
 

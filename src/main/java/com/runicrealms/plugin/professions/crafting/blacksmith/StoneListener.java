@@ -61,7 +61,7 @@ public class StoneListener implements Listener {
 
     @EventHandler
     public void onWeaponDamage(WeaponDamageEvent e) {
-        if (!e.isAutoAttack()) return;
+        if (!e.isBasicAttack()) return;
         if (!boostedPlayers.containsKey(e.getPlayer().getUniqueId())) return;
         double bonus = boostedPlayers.get(e.getPlayer().getUniqueId());
         e.setAmount((int) (e.getAmount() + bonus));
