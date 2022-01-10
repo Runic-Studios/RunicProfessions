@@ -12,7 +12,11 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Arrays;
 
 public class GatheringGUI implements InventoryHolder {
 
@@ -94,44 +98,29 @@ public class GatheringGUI implements InventoryHolder {
                         ChatColor.GRAY + "Total Level " + calculateTotalLevel(gatherPlayer)
                 }
         ));
-        this.inventory.setItem(GatheringSkill.COOKING.getMenuSlot(), GUIUtil.dispItem
-                (
-                        Material.COOKED_MUTTON,
-                        ChatColor.YELLOW + "Cooking",
-                        gatheringSkillDescription(gatherPlayer, GatheringSkill.COOKING)
-                ));
-        this.inventory.setItem(GatheringSkill.FARMING.getMenuSlot(), GUIUtil.dispItem
-                (
-                        Material.IRON_HOE,
-                        ChatColor.YELLOW + "Farming",
-                        gatheringSkillDescription(gatherPlayer, GatheringSkill.FARMING),
-                        3
-                ));
-        this.inventory.setItem(GatheringSkill.FISHING.getMenuSlot(), GUIUtil.dispItem
-                (
-                        Material.FISHING_ROD,
-                        ChatColor.YELLOW + "Fishing",
-                        gatheringSkillDescription(gatherPlayer, GatheringSkill.FISHING)
-                ));
-        this.inventory.setItem(GatheringSkill.HARVESTING.getMenuSlot(), GUIUtil.dispItem
-                (
-                        Material.POPPY,
-                        ChatColor.YELLOW + "Harvesting",
-                        gatheringSkillDescription(gatherPlayer, GatheringSkill.HARVESTING)
-                ));
-        this.inventory.setItem(GatheringSkill.MINING.getMenuSlot(), GUIUtil.dispItem
-                (
-                        Material.IRON_PICKAXE,
-                        ChatColor.YELLOW + "Mining",
-                        gatheringSkillDescription(gatherPlayer, GatheringSkill.MINING),
-                        3
-                ));
-        this.inventory.setItem(GatheringSkill.WOODCUTTING.getMenuSlot(), GUIUtil.dispItem
-                (
-                        Material.IRON_AXE,
-                        ChatColor.YELLOW + "Woodcutting",
-                        gatheringSkillDescription(gatherPlayer, GatheringSkill.WOODCUTTING),
-                        3
-                ));
+        this.inventory.setItem(GatheringSkill.COOKING.getMenuSlot(), gatheringItem(gatherPlayer, GatheringSkill.COOKING));
+        this.inventory.setItem(GatheringSkill.FARMING.getMenuSlot(), gatheringItem(gatherPlayer, GatheringSkill.FARMING));
+        this.inventory.setItem(GatheringSkill.FISHING.getMenuSlot(), gatheringItem(gatherPlayer, GatheringSkill.FISHING));
+        this.inventory.setItem(GatheringSkill.HARVESTING.getMenuSlot(), gatheringItem(gatherPlayer, GatheringSkill.HARVESTING));
+        this.inventory.setItem(GatheringSkill.MINING.getMenuSlot(), gatheringItem(gatherPlayer, GatheringSkill.MINING));
+        this.inventory.setItem(GatheringSkill.WOODCUTTING.getMenuSlot(), gatheringItem(gatherPlayer, GatheringSkill.WOODCUTTING));
+    }
+
+    /**
+     * Helper method to create the visual menu item for the given gathering skill
+     *
+     * @param gatherPlayer   the wrapper for the gathering player
+     * @param gatheringSkill the gathering skill to display item for
+     * @return an ItemStack that can be used for a UI menu
+     */
+    private ItemStack gatheringItem(GatherPlayer gatherPlayer, GatheringSkill gatheringSkill) {
+        String displayName = gatheringSkill.getFormattedIdentifier();
+        ItemStack menuItem = gatheringSkill.getMenuItem();
+        ItemMeta meta = menuItem.getItemMeta();
+        if (meta == null) return menuItem;
+        meta.setDisplayName(ChatColor.YELLOW + displayName);
+        meta.setLore(Arrays.asList(gatheringSkillDescription(gatherPlayer, gatheringSkill)));
+        menuItem.setItemMeta(meta);
+        return menuItem;
     }
 }

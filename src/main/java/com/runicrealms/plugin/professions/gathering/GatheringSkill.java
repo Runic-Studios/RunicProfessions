@@ -1,27 +1,31 @@
 package com.runicrealms.plugin.professions.gathering;
 
+import com.runicrealms.plugin.item.util.ItemUtils;
 import org.bukkit.ChatColor;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.HashSet;
 import java.util.Set;
 
 public enum GatheringSkill {
 
-    COOKING(20, "cooking", ""),
-    FARMING(22, "farming", "You need a farming hoe to do that!"),
-    FISHING(24, "fishing", "You need a fishing rod to do that!"),
-    HARVESTING(29, "harvesting", ""),
-    MINING(31, "mining", "You need a mining pickaxe to do that!"),
-    WOODCUTTING(33, "woodcutting", "You need a woodcutting axe to do that!");
+    COOKING(20, "cooking", "", cookingItem()),
+    FARMING(22, "farming", "You need a farming hoe to do that!", farmingItem()),
+    FISHING(24, "fishing", "You need a fishing rod to do that!", fishingItem()),
+    HARVESTING(29, "harvesting", "", harvestingItem()),
+    MINING(31, "mining", "You need a mining pickaxe to do that!", miningItem()),
+    WOODCUTTING(33, "woodcutting", "You need a woodcutting axe to do that!", woodcuttingItem());
 
     private final int menuSlot;
     private final String identifier;
     private final String noToolMessage;
+    private final ItemStack menuItem;
 
-    GatheringSkill(int menuSlot, String identifier, String noToolMessage) {
+    GatheringSkill(int menuSlot, String identifier, String noToolMessage, ItemStack menuItem) {
         this.menuSlot = menuSlot;
         this.identifier = identifier;
         this.noToolMessage = noToolMessage;
+        this.menuItem = menuItem;
     }
 
     public static GatheringSkill getFromIdentifier(String identifier) {
@@ -59,6 +63,36 @@ public enum GatheringSkill {
         return gatheringSkillMenuSlots;
     }
 
+    private static ItemStack cookingItem() {
+        return ItemUtils.getHead("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3R" +
+                "leHR1cmUvZDNlMjBhMjZjYmI1NzQwYTE1OGRhOTkxZWY5NGRjZDMyZDQ0N2U5YWMwM2FhMGU4ZjgyOWE0OTgzMDYxOWExMCJ9fX0=");
+    }
+
+    private static ItemStack farmingItem() {
+        return ItemUtils.getHead("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3R" +
+                "leHR1cmUvMzVmNzViYWUxMzQ5NmI5N2Y1NWRjNDJmYzM3MjQyYTg4MTU4OTUyYjZjY2U5M2MwNTdhYjAyOGFjYmE4MGIyMCJ9fX0=");
+    }
+
+    private static ItemStack fishingItem() {
+        return ItemUtils.getHead("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3R" +
+                "leHR1cmUvODVlYWY4N2NmYmMyM2NjZmNkYWUwZmM4ZGY4NDc3MTFhNmJlMDRiYjNjZWFmODBlMjcxZmRlZGZkMjUzNWU4In19fQ==");
+    }
+
+    private static ItemStack harvestingItem() {
+        return ItemUtils.getHead("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3R" +
+                "leHR1cmUvYmYxOTI2OTZiZjRjNzkwMWIzNjE2MjQ1MTA0NzEzNjhlMDE2NDI3NTk3NTY3MTgzMjdmNDhhYjI1YzUwMjY1In19fQ==");
+    }
+
+    private static ItemStack miningItem() {
+        return ItemUtils.getHead("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3R" +
+                "leHR1cmUvMjNkNjM2YjA0Zjk1N2ExZGVhMmJhYzRhNzgzOTVmNzFhNTM4ZmJlMTMxMDgyNDdiMWU4YWI4YmQwYmE0YTlkNyJ9fX0=");
+    }
+
+    private static ItemStack woodcuttingItem() {
+        return ItemUtils.getHead("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3R" +
+                "leHR1cmUvNWFlODI2ZTdkYjg0NDdmYmQ2Mjk4OGZlZTBlODNiYmRkNjk0Mzc4YWVmMTJkMjU3MmU5NzVmMDU5YTU0OTkwIn19fQ==");
+    }
+
     public int getMenuSlot() {
         return menuSlot;
     }
@@ -73,5 +107,9 @@ public enum GatheringSkill {
 
     public String getNoToolMessage() {
         return ChatColor.RED + noToolMessage;
+    }
+
+    public ItemStack getMenuItem() {
+        return menuItem;
     }
 }
