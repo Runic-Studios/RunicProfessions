@@ -78,6 +78,7 @@ public class GatheringSkillGUI implements InventoryHolder {
     private void openMenu() {
         GatherPlayer gatherPlayer = RunicProfessionsAPI.getGatherPlayer(player.getUniqueId());
         this.inventory.clear();
+        GUIUtil.fillInventoryBorders(this.inventory);
         this.inventory.setItem(0, GUIUtil.backButton());
         this.inventory.setItem(4, GUIUtil.dispItem(
                 Material.PAPER,
@@ -85,19 +86,17 @@ public class GatheringSkillGUI implements InventoryHolder {
                         ChatColor.GRAY + " Level " + gatherPlayer.getGatheringLevel(gatheringSkill),
                 new String[]{}
         ));
-        int i = 9;
         GatheringResource[] sorted = GatheringResource.values();
         Arrays.sort(sorted, Comparator.comparing(GatheringResource::getRequiredLevel)); // sort in ascending order of level
         for (GatheringResource gatheringResource : sorted) {
             if (gatheringResource.getGatheringSkill() != this.gatheringSkill) continue;
             ItemStack itemStack = RunicItemsAPI.generateItemFromTemplate(gatheringResource.getTemplateId()).generateItem();
-            this.inventory.setItem(i, reagentWithLore
+            this.inventory.setItem(this.inventory.firstEmpty(), reagentWithLore
                     (
                             itemStack,
                             gatheringResource,
                             (gatherPlayer.getGatheringLevel(gatheringResource.getGatheringSkill()) >= gatheringResource.getRequiredLevel())
                     ));
-            i++;
         }
     }
 }

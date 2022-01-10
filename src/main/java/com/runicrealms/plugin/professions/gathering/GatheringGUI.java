@@ -82,6 +82,7 @@ public class GatheringGUI implements InventoryHolder {
     private void openMenu() {
         GatherPlayer gatherPlayer = RunicProfessionsAPI.getGatherPlayer(player.getUniqueId());
         this.inventory.clear();
+        GUIUtil.fillInventoryBorders(this.inventory);
         this.inventory.setItem(0, GUIUtil.closeButton());
         this.inventory.setItem(4, GUIUtil.dispItem(
                 Material.PAPER,
@@ -98,12 +99,9 @@ public class GatheringGUI implements InventoryHolder {
                         ChatColor.GRAY + "Total Level " + calculateTotalLevel(gatherPlayer)
                 }
         ));
-        this.inventory.setItem(GatheringSkill.COOKING.getMenuSlot(), gatheringItem(gatherPlayer, GatheringSkill.COOKING));
-        this.inventory.setItem(GatheringSkill.FARMING.getMenuSlot(), gatheringItem(gatherPlayer, GatheringSkill.FARMING));
-        this.inventory.setItem(GatheringSkill.FISHING.getMenuSlot(), gatheringItem(gatherPlayer, GatheringSkill.FISHING));
-        this.inventory.setItem(GatheringSkill.HARVESTING.getMenuSlot(), gatheringItem(gatherPlayer, GatheringSkill.HARVESTING));
-        this.inventory.setItem(GatheringSkill.MINING.getMenuSlot(), gatheringItem(gatherPlayer, GatheringSkill.MINING));
-        this.inventory.setItem(GatheringSkill.WOODCUTTING.getMenuSlot(), gatheringItem(gatherPlayer, GatheringSkill.WOODCUTTING));
+        for (GatheringSkill gatheringSkill : GatheringSkill.values()) {
+            this.inventory.setItem(gatheringSkill.getMenuSlot(), gatheringItem(gatherPlayer, gatheringSkill));
+        }
     }
 
     /**
