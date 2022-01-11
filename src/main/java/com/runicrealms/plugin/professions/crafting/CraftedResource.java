@@ -16,23 +16,23 @@ public enum CraftedResource {
     /*
     Cooking
      */
-    BREAD("Bread", Profession.ANY, new LinkedHashMap<String, Integer>() {{
+    BREAD("Bread", Profession.COOKING, new LinkedHashMap<String, Integer>() {{
         put("Wheat", 9);
         put("OakWood", 2);
     }}),
-    COOKED_MEAT("CookedMeat", Profession.ANY, new LinkedHashMap<String, Integer>() {{
+    COOKED_MEAT("CookedMeat", Profession.COOKING, new LinkedHashMap<String, Integer>() {{
         put("RawMeat", 4);
         put("OakWood", 2);
     }}),
-    COOKED_COD("CookedCod", Profession.ANY, new LinkedHashMap<String, Integer>() {{
+    COOKED_COD("CookedCod", Profession.COOKING, new LinkedHashMap<String, Integer>() {{
         put("Cod", 1);
         put("SpruceWood", 1);
     }}),
-    COOKED_SALMON("CookedSalmon", Profession.ANY, new LinkedHashMap<String, Integer>() {{
+    COOKED_SALMON("CookedSalmon", Profession.COOKING, new LinkedHashMap<String, Integer>() {{
         put("Salmon", 1);
         put("SpruceWood", 1);
     }}),
-    AMBROSIA_STEW("ambrosia-stew", Profession.ANY, new LinkedHashMap<String, Integer>() {{
+    AMBROSIA_STEW("ambrosia-stew", Profession.COOKING, new LinkedHashMap<String, Integer>() {{
         put("AmbrosiaRoot", 1);
         put("UncookedRabbit", 4);
         put("BirchWood", 2);
@@ -529,7 +529,7 @@ public enum CraftedResource {
         return templateId;
     }
 
-    public Profession getProfessionEnum() {
+    public Profession getProfession() {
         return profession;
     }
 

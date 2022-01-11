@@ -5,6 +5,7 @@ import com.runicrealms.plugin.api.RunicCoreAPI;
 import com.runicrealms.plugin.item.GUIMenu.ItemGUI;
 import com.runicrealms.plugin.item.shops.RunicItemShopManager;
 import com.runicrealms.plugin.item.util.ItemRemover;
+import com.runicrealms.plugin.professions.api.RunicProfessionsAPI;
 import com.runicrealms.plugin.professions.crafting.CraftedResource;
 import com.runicrealms.plugin.professions.gathering.GatheringSkill;
 import com.runicrealms.plugin.professions.listeners.WorkstationListener;
@@ -104,7 +105,11 @@ public abstract class Workstation implements Listener {
     protected void createMenuItem(ItemGUI gui, Player player, CraftedResource craftedResource, int slot, int... durability) {
 
         // grab the player's current profession level, progress toward that level
-        int currentLvl = RunicCoreAPI.getPlayerCache(player).getProfLevel();
+        int currentLvl;
+        if (craftedResource.getProfession() == Profession.COOKING)
+            currentLvl = RunicProfessionsAPI.getGatherPlayer(player.getUniqueId()).getCookingLevel();
+        else
+            currentLvl = RunicCoreAPI.getPlayerCache(player).getProfLevel();
         int reqLevel = craftedResource.getRequiredLevel();
         int exp = craftedResource.getExperience();
         LinkedHashMap<ItemStack, Integer> reagents = craftedResource.getReagents();
@@ -114,7 +119,7 @@ public abstract class Workstation implements Listener {
         StringBuilder desc = new StringBuilder();
 
         if (currentLvl < reqLevel) {
-            desc.append("&4Lv. Min ").append(reqLevel).append("\n");
+            desc.append("&cLv. Min ").append(reqLevel).append("\n");
         }
 
         if (!itemStats.equals("")) {
@@ -194,7 +199,11 @@ public abstract class Workstation implements Listener {
                                  Sound soundCraft, Sound soundDone, int numOfItems, boolean isCooking) {
 
         if (RunicProfessions.getProfManager().getCurrentCrafters().contains(player)) return;
-        int currentLvl = RunicCoreAPI.getPlayerCache(player).getProfLevel();
+        int currentLvl;
+        if (craftedResource.getProfession() == Profession.COOKING)
+            currentLvl = RunicProfessionsAPI.getGatherPlayer(player.getUniqueId()).getCookingLevel();
+        else
+            currentLvl = RunicCoreAPI.getPlayerCache(player).getProfLevel();
         int reqLevel = craftedResource.getRequiredLevel();
         int exp = craftedResource.getExperience();
         LinkedHashMap<ItemStack, Integer> reagents = craftedResource.getReagents();

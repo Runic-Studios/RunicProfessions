@@ -5,6 +5,7 @@ public enum Profession {
     ANY("any"),
     ALCHEMIST("alchemist"),
     BLACKSMITH("blacksmith"),
+    COOKING("cooking"),
     ENCHANTER("enchanter"),
     HUNTER("hunter"),
     JEWELER("jeweler");
