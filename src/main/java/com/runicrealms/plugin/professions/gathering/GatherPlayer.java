@@ -8,6 +8,7 @@ import com.runicrealms.plugin.player.cache.PlayerCache;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
 
@@ -21,35 +22,30 @@ public class GatherPlayer {
     private static final String LEVEL_SECTION = ".level";
 
     private final PlayerCache playerCache;
-    private int cookingExp;
-    private int cookingLevel;
-    private int farmingExp;
-    private int farmingLevel;
-    private int fishingExp;
-    private int fishingLevel;
-    private int harvestingExp;
-    private int harvestingLevel;
-    private int miningExp;
-    private int miningLevel;
-    private int woodcuttingExp;
-    private int woodcuttingLevel;
+    private final GatheringData gatheringData;
+    private final boolean hasSpecializations;
 
-    public GatherPlayer(PlayerCache playerCache, int cookingExp, int cookingLevel, int farmingExp,
-                        int farmingLevel, int fishingExp, int fishingLevel, int harvestingExp, int harvestingLevel,
-                        int miningExp, int miningLevel, int woodcuttingExp, int woodcuttingLevel) {
+    /**
+     * This...
+     *
+     * @param playerCache
+     * @param gatheringData
+     */
+    public GatherPlayer(PlayerCache playerCache, GatheringData gatheringData, boolean hasSpecializations) {
         this.playerCache = playerCache;
-        this.cookingExp = cookingExp;
-        this.cookingLevel = cookingLevel;
-        this.farmingExp = farmingExp;
-        this.farmingLevel = farmingLevel;
-        this.fishingExp = fishingExp;
-        this.fishingLevel = fishingLevel;
-        this.harvestingExp = harvestingExp;
-        this.harvestingLevel = harvestingLevel;
-        this.miningExp = miningExp;
-        this.miningLevel = miningLevel;
-        this.woodcuttingExp = woodcuttingExp;
-        this.woodcuttingLevel = woodcuttingLevel;
+        this.gatheringData = gatheringData;
+        this.hasSpecializations = hasSpecializations;
+    }
+
+    /**
+     * This...
+     *
+     * @param gatheringData
+     * @return
+     */
+    public static boolean hasSpecializations(GatheringData gatheringData) {
+        return gatheringData.getGatheringSpecializations().getFirstSpecialization() != null
+                || gatheringData.getGatheringSpecializations().getSecondSpecialization() != null;
     }
 
     /**
@@ -97,23 +93,25 @@ public class GatherPlayer {
             j++;
         }
 
+        // todo: specialization data
+        GatheringData gatheringData = new GatheringData
+                (
+                        gatheringSkillsExp[0],
+                        gatheringSkillsLevel[0],
+                        gatheringSkillsExp[1],
+                        gatheringSkillsLevel[1],
+                        gatheringSkillsExp[2],
+                        gatheringSkillsLevel[2],
+                        gatheringSkillsExp[3],
+                        gatheringSkillsLevel[3],
+                        gatheringSkillsExp[4],
+                        gatheringSkillsLevel[4],
+                        gatheringSkillsExp[5],
+                        gatheringSkillsLevel[5],
+                        new GatheringData.GatheringSpecializations(null, null)
+                );
         RunicProfessions.getGatherPlayerManager().getGatherPlayers().put(uuid,
-                new GatherPlayer
-                        (
-                                playerCache,
-                                gatheringSkillsExp[0],
-                                gatheringSkillsLevel[0],
-                                gatheringSkillsExp[1],
-                                gatheringSkillsLevel[1],
-                                gatheringSkillsExp[2],
-                                gatheringSkillsLevel[2],
-                                gatheringSkillsExp[3],
-                                gatheringSkillsLevel[3],
-                                gatheringSkillsExp[4],
-                                gatheringSkillsLevel[4],
-                                gatheringSkillsExp[5],
-                                gatheringSkillsLevel[5]
-                        ));
+                new GatherPlayer(playerCache, gatheringData, hasSpecializations(gatheringData))); // todo: update
     }
 
     /**
@@ -123,18 +121,19 @@ public class GatherPlayer {
      */
     public void save(CacheSaveEvent event) {
         PlayerMongoData data = event.getMongoData();
-        data.set(DATA_SECTION + GatheringSkill.COOKING.getIdentifier() + EXP_SECTION, this.getCookingExp());
-        data.set(DATA_SECTION + GatheringSkill.COOKING.getIdentifier() + LEVEL_SECTION, this.getCookingLevel());
-        data.set(DATA_SECTION + GatheringSkill.FARMING.getIdentifier() + EXP_SECTION, this.getFarmingExp());
-        data.set(DATA_SECTION + GatheringSkill.FARMING.getIdentifier() + LEVEL_SECTION, this.getFarmingLevel());
-        data.set(DATA_SECTION + GatheringSkill.FISHING.getIdentifier() + EXP_SECTION, this.getFishingExp());
-        data.set(DATA_SECTION + GatheringSkill.FISHING.getIdentifier() + LEVEL_SECTION, this.getFishingLevel());
-        data.set(DATA_SECTION + GatheringSkill.HARVESTING.getIdentifier() + EXP_SECTION, this.getHarvestingExp());
-        data.set(DATA_SECTION + GatheringSkill.HARVESTING.getIdentifier() + LEVEL_SECTION, this.getHarvestingLevel());
-        data.set(DATA_SECTION + GatheringSkill.MINING.getIdentifier() + EXP_SECTION, this.getMiningExp());
-        data.set(DATA_SECTION + GatheringSkill.MINING.getIdentifier() + LEVEL_SECTION, this.getMiningLevel());
-        data.set(DATA_SECTION + GatheringSkill.WOODCUTTING.getIdentifier() + EXP_SECTION, this.getWoodcuttingExp());
-        data.set(DATA_SECTION + GatheringSkill.WOODCUTTING.getIdentifier() + LEVEL_SECTION, this.getWoodcuttingLevel());
+        data.set(DATA_SECTION + GatheringSkill.COOKING.getIdentifier() + EXP_SECTION, this.getGatheringData().getCookingExp());
+        data.set(DATA_SECTION + GatheringSkill.COOKING.getIdentifier() + LEVEL_SECTION, this.getGatheringData().getCookingLevel());
+        data.set(DATA_SECTION + GatheringSkill.FARMING.getIdentifier() + EXP_SECTION, this.getGatheringData().getFarmingExp());
+        data.set(DATA_SECTION + GatheringSkill.FARMING.getIdentifier() + LEVEL_SECTION, this.getGatheringData().getFarmingLevel());
+        data.set(DATA_SECTION + GatheringSkill.FISHING.getIdentifier() + EXP_SECTION, this.getGatheringData().getFishingExp());
+        data.set(DATA_SECTION + GatheringSkill.FISHING.getIdentifier() + LEVEL_SECTION, this.getGatheringData().getFishingLevel());
+        data.set(DATA_SECTION + GatheringSkill.HARVESTING.getIdentifier() + EXP_SECTION, this.getGatheringData().getHarvestingExp());
+        data.set(DATA_SECTION + GatheringSkill.HARVESTING.getIdentifier() + LEVEL_SECTION, this.getGatheringData().getHarvestingLevel());
+        data.set(DATA_SECTION + GatheringSkill.MINING.getIdentifier() + EXP_SECTION, this.getGatheringData().getMiningExp());
+        data.set(DATA_SECTION + GatheringSkill.MINING.getIdentifier() + LEVEL_SECTION, this.getGatheringData().getMiningLevel());
+        data.set(DATA_SECTION + GatheringSkill.WOODCUTTING.getIdentifier() + EXP_SECTION, this.getGatheringData().getWoodcuttingExp());
+        data.set(DATA_SECTION + GatheringSkill.WOODCUTTING.getIdentifier() + LEVEL_SECTION, this.getGatheringData().getWoodcuttingLevel());
+        // todo: chosen professions
     }
 
     public Player getPlayer() {
@@ -150,6 +149,10 @@ public class GatherPlayer {
         return this.playerCache;
     }
 
+    public GatheringData getGatheringData() {
+        return this.gatheringData;
+    }
+
     /**
      * A handy general method for grabbing the gathering exp which corresponds to the skill
      *
@@ -159,17 +162,17 @@ public class GatherPlayer {
     public int getGatheringExp(GatheringSkill gatheringSkill) {
         switch (gatheringSkill) {
             case COOKING:
-                return this.getCookingExp();
+                return this.getGatheringData().getCookingExp();
             case FARMING:
-                return this.getFarmingExp();
+                return this.getGatheringData().getFarmingExp();
             case FISHING:
-                return this.getFishingExp();
+                return this.getGatheringData().getFishingExp();
             case HARVESTING:
-                return this.getHarvestingExp();
+                return this.getGatheringData().getHarvestingExp();
             case MINING:
-                return this.getMiningExp();
+                return this.getGatheringData().getMiningExp();
             case WOODCUTTING:
-                return this.getWoodcuttingExp();
+                return this.getGatheringData().getWoodcuttingExp();
             default:
                 return 0;
         }
@@ -184,17 +187,17 @@ public class GatherPlayer {
     public int getGatheringLevel(GatheringSkill gatheringSkill) {
         switch (gatheringSkill) {
             case COOKING:
-                return this.getCookingLevel();
+                return this.getGatheringData().getCookingLevel();
             case FARMING:
-                return this.getFarmingLevel();
+                return this.getGatheringData().getFarmingLevel();
             case FISHING:
-                return this.getFishingLevel();
+                return this.getGatheringData().getFishingLevel();
             case HARVESTING:
-                return this.getHarvestingLevel();
+                return this.getGatheringData().getHarvestingLevel();
             case MINING:
-                return this.getMiningLevel();
+                return this.getGatheringData().getMiningLevel();
             case WOODCUTTING:
-                return this.getWoodcuttingLevel();
+                return this.getGatheringData().getWoodcuttingLevel();
             default:
                 return 0;
         }
@@ -209,22 +212,22 @@ public class GatherPlayer {
     public void setGatheringExp(GatheringSkill gatheringSkill, int gatheringExp) {
         switch (gatheringSkill) {
             case COOKING:
-                this.setCookingExp(gatheringExp);
+                this.getGatheringData().setCookingExp(gatheringExp);
                 break;
             case FARMING:
-                this.setFarmingExp(gatheringExp);
+                this.getGatheringData().setFarmingExp(gatheringExp);
                 break;
             case FISHING:
-                this.setFishingExp(gatheringExp);
+                this.getGatheringData().setFishingExp(gatheringExp);
                 break;
             case HARVESTING:
-                this.setHarvestingExp(gatheringExp);
+                this.getGatheringData().setHarvestingExp(gatheringExp);
                 break;
             case MINING:
-                this.setMiningExp(gatheringExp);
+                this.getGatheringData().setMiningExp(gatheringExp);
                 break;
             case WOODCUTTING:
-                this.setWoodcuttingExp(gatheringExp);
+                this.getGatheringData().setWoodcuttingExp(gatheringExp);
                 break;
         }
     }
@@ -238,120 +241,211 @@ public class GatherPlayer {
     public void setGatheringLevel(GatheringSkill gatheringSkill, int gatheringLevel) {
         switch (gatheringSkill) {
             case COOKING:
-                this.setCookingLevel(gatheringLevel);
+                this.getGatheringData().setCookingLevel(gatheringLevel);
                 break;
             case FARMING:
-                this.setFarmingLevel(gatheringLevel);
+                this.getGatheringData().setFarmingLevel(gatheringLevel);
                 break;
             case FISHING:
-                this.setFishingLevel(gatheringLevel);
+                this.getGatheringData().setFishingLevel(gatheringLevel);
                 break;
             case HARVESTING:
-                this.setHarvestingLevel(gatheringLevel);
+                this.getGatheringData().setHarvestingLevel(gatheringLevel);
                 break;
             case MINING:
-                this.setMiningLevel(gatheringLevel);
+                this.getGatheringData().setMiningLevel(gatheringLevel);
                 break;
             case WOODCUTTING:
-                this.setWoodcuttingLevel(gatheringLevel);
+                this.getGatheringData().setWoodcuttingLevel(gatheringLevel);
                 break;
         }
     }
 
-    public int getCookingExp() {
-        return cookingExp;
-    }
+    /**
+     *
+     */
+    public static class GatheringData {
+        private final GatheringSpecializations gatheringSpecializations;
+        private int cookingExp;
+        private int cookingLevel;
+        private int farmingExp;
+        private int farmingLevel;
+        private int fishingExp;
+        private int fishingLevel;
+        private int harvestingExp;
+        private int harvestingLevel;
+        private int miningExp;
+        private int miningLevel;
+        private int woodcuttingExp;
+        private int woodcuttingLevel;
 
-    public void setCookingExp(int cookingExp) {
-        this.cookingExp = cookingExp;
-    }
+        /**
+         * @param cookingExp
+         * @param cookingLevel
+         * @param farmingExp
+         * @param farmingLevel
+         * @param fishingExp
+         * @param fishingLevel
+         * @param harvestingExp
+         * @param harvestingLevel
+         * @param miningExp
+         * @param miningLevel
+         * @param woodcuttingExp
+         * @param woodcuttingLevel
+         * @param gatheringSpecializations
+         */
+        public GatheringData(int cookingExp, int cookingLevel, int farmingExp,
+                             int farmingLevel, int fishingExp, int fishingLevel, int harvestingExp, int harvestingLevel,
+                             int miningExp, int miningLevel, int woodcuttingExp, int woodcuttingLevel,
+                             GatheringSpecializations gatheringSpecializations) {
+            this.cookingExp = cookingExp;
+            this.cookingLevel = cookingLevel;
+            this.farmingExp = farmingExp;
+            this.farmingLevel = farmingLevel;
+            this.fishingExp = fishingExp;
+            this.fishingLevel = fishingLevel;
+            this.harvestingExp = harvestingExp;
+            this.harvestingLevel = harvestingLevel;
+            this.miningExp = miningExp;
+            this.miningLevel = miningLevel;
+            this.woodcuttingExp = woodcuttingExp;
+            this.woodcuttingLevel = woodcuttingLevel;
+            this.gatheringSpecializations = gatheringSpecializations;
+        }
 
-    public int getCookingLevel() {
-        return cookingLevel;
-    }
+        public int getCookingExp() {
+            return cookingExp;
+        }
 
-    public void setCookingLevel(int cookingLevel) {
-        this.cookingLevel = cookingLevel;
-    }
+        public void setCookingExp(int cookingExp) {
+            this.cookingExp = cookingExp;
+        }
 
-    public int getFarmingExp() {
-        return farmingExp;
-    }
+        public int getCookingLevel() {
+            return cookingLevel;
+        }
 
-    public void setFarmingExp(int farmingExp) {
-        this.farmingExp = farmingExp;
-    }
+        public void setCookingLevel(int cookingLevel) {
+            this.cookingLevel = cookingLevel;
+        }
 
-    public int getFarmingLevel() {
-        return farmingLevel;
-    }
+        public int getFarmingExp() {
+            return farmingExp;
+        }
 
-    public void setFarmingLevel(int farmingLevel) {
-        this.farmingLevel = farmingLevel;
-    }
+        public void setFarmingExp(int farmingExp) {
+            this.farmingExp = farmingExp;
+        }
 
-    public int getFishingExp() {
-        return fishingExp;
-    }
+        public int getFarmingLevel() {
+            return farmingLevel;
+        }
 
-    public void setFishingExp(int fishingExp) {
-        this.fishingExp = fishingExp;
-    }
+        public void setFarmingLevel(int farmingLevel) {
+            this.farmingLevel = farmingLevel;
+        }
 
-    public int getFishingLevel() {
-        return fishingLevel;
-    }
+        public int getFishingExp() {
+            return fishingExp;
+        }
 
-    public void setFishingLevel(int fishingLevel) {
-        this.fishingLevel = fishingLevel;
-    }
+        public void setFishingExp(int fishingExp) {
+            this.fishingExp = fishingExp;
+        }
 
-    public int getHarvestingExp() {
-        return harvestingExp;
-    }
+        public int getFishingLevel() {
+            return fishingLevel;
+        }
 
-    public void setHarvestingExp(int harvestingExp) {
-        this.harvestingExp = harvestingExp;
-    }
+        public void setFishingLevel(int fishingLevel) {
+            this.fishingLevel = fishingLevel;
+        }
 
-    public int getHarvestingLevel() {
-        return harvestingLevel;
-    }
+        public int getHarvestingExp() {
+            return harvestingExp;
+        }
 
-    public void setHarvestingLevel(int harvestingLevel) {
-        this.harvestingLevel = harvestingLevel;
-    }
+        public void setHarvestingExp(int harvestingExp) {
+            this.harvestingExp = harvestingExp;
+        }
 
-    public int getMiningExp() {
-        return miningExp;
-    }
+        public int getHarvestingLevel() {
+            return harvestingLevel;
+        }
 
-    public void setMiningExp(int miningExp) {
-        this.miningExp = miningExp;
-    }
+        public void setHarvestingLevel(int harvestingLevel) {
+            this.harvestingLevel = harvestingLevel;
+        }
 
-    public int getMiningLevel() {
-        return miningLevel;
-    }
+        public int getMiningExp() {
+            return miningExp;
+        }
 
-    public void setMiningLevel(int miningLevel) {
-        this.miningLevel = miningLevel;
-    }
+        public void setMiningExp(int miningExp) {
+            this.miningExp = miningExp;
+        }
 
-    public int getWoodcuttingExp() {
-        return woodcuttingExp;
-    }
+        public int getMiningLevel() {
+            return miningLevel;
+        }
 
-    public void setWoodcuttingExp(int woodcuttingExp) {
-        this.woodcuttingExp = woodcuttingExp;
-    }
+        public void setMiningLevel(int miningLevel) {
+            this.miningLevel = miningLevel;
+        }
 
-    public int getWoodcuttingLevel() {
-        return woodcuttingLevel;
-    }
+        public int getWoodcuttingExp() {
+            return woodcuttingExp;
+        }
 
-    public void setWoodcuttingLevel(int woodcuttingLevel) {
-        this.woodcuttingLevel = woodcuttingLevel;
+        public void setWoodcuttingExp(int woodcuttingExp) {
+            this.woodcuttingExp = woodcuttingExp;
+        }
+
+        public int getWoodcuttingLevel() {
+            return woodcuttingLevel;
+        }
+
+        public void setWoodcuttingLevel(int woodcuttingLevel) {
+            this.woodcuttingLevel = woodcuttingLevel;
+        }
+
+        public GatheringSpecializations getGatheringSpecializations() {
+            return gatheringSpecializations;
+        }
+
+        /**
+         *
+         */
+        public static class GatheringSpecializations {
+            private GatheringSkill firstSpecialization;
+            private GatheringSkill secondSpecialization;
+
+            /**
+             * @param firstSpecialization
+             * @param secondSpecialization
+             */
+            public GatheringSpecializations(@Nullable GatheringSkill firstSpecialization,
+                                            @Nullable GatheringSkill secondSpecialization) {
+                this.firstSpecialization = firstSpecialization;
+                this.secondSpecialization = secondSpecialization;
+            }
+
+            public GatheringSkill getFirstSpecialization() {
+                return firstSpecialization;
+            }
+
+            public void setFirstSpecialization(GatheringSkill gatheringSkill) {
+                this.firstSpecialization = gatheringSkill;
+            }
+
+            public GatheringSkill getSecondSpecialization() {
+                return secondSpecialization;
+            }
+
+            public void setSecondSpecialization(GatheringSkill gatheringSkill) {
+                this.secondSpecialization = gatheringSkill;
+            }
+        }
     }
 
 }

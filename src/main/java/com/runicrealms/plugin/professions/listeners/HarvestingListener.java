@@ -47,7 +47,7 @@ public class HarvestingListener implements Listener {
      */
     private boolean verifyPlayerHarvestingLevel(Player player, ActiveMob activeMob) {
         int level = (int) activeMob.getLevel();
-        int harvestingLevel = RunicProfessionsAPI.getGatherPlayer(player.getUniqueId()).getHarvestingLevel();
+        int harvestingLevel = RunicProfessionsAPI.getGatherPlayer(player.getUniqueId()).getGatheringData().getHarvestingLevel();
         if (harvestingLevel < level) {
             player.playSound(player.getLocation(), Sound.ENTITY_GENERIC_EXTINGUISH_FIRE, 0.5f, 1.0f);
             player.sendMessage(ChatColor.RED + "Your harvesting level is too low to gather this!");

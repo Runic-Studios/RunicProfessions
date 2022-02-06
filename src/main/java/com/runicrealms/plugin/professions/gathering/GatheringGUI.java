@@ -9,9 +9,11 @@ import org.apache.commons.lang.ArrayUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
@@ -35,7 +37,7 @@ public class GatheringGUI implements InventoryHolder {
         String[] descriptionArray = new String[]{
                 buildProgressBar(gatherPlayer, gatheringSkill),
                 "",
-                ChatColor.GRAY + "Level: " + ChatColor.WHITE + gatherPlayer.getGatheringLevel(gatheringSkill),
+                ChatColor.GRAY + "Level: " + ChatColor.WHITE + gatherPlayer.getGatheringLevel(gatheringSkill) + (!RunicProfessionsAPI.isSpecializedInGatheringSkill(gatherPlayer, gatheringSkill) ? " (Cap Reached)" : ""),
                 ChatColor.GRAY + "Exp: " + ChatColor.WHITE + gatherPlayer.getGatheringExp(gatheringSkill),
                 "",
                 ChatColor.GOLD + "" + ChatColor.BOLD + "CLICK " + ChatColor.GRAY + "to view all available reagents",
@@ -116,8 +118,14 @@ public class GatheringGUI implements InventoryHolder {
         ItemStack menuItem = gatheringSkill.getMenuItem();
         ItemMeta meta = menuItem.getItemMeta();
         if (meta == null) return menuItem;
-        meta.setDisplayName(ChatColor.YELLOW + displayName);
+        if (!RunicProfessionsAPI.isSpecializedInGatheringSkill(gatherPlayer, gatheringSkill))
+            meta.setDisplayName(ChatColor.YELLOW + displayName);
+        else
+            meta.setDisplayName(ChatColor.GREEN + displayName + " - SPECIALIZED");
         meta.setLore(Arrays.asList(gatheringSkillDescription(gatherPlayer, gatheringSkill)));
+        if (RunicProfessionsAPI.isSpecializedInGatheringSkill(gatherPlayer, gatheringSkill))
+            meta.addEnchant(Enchantment.DURABILITY, 1, true);
+        meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
         menuItem.setItemMeta(meta);
         return menuItem;
     }

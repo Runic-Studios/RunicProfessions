@@ -107,7 +107,7 @@ public abstract class Workstation implements Listener {
         // grab the player's current profession level, progress toward that level
         int currentLvl;
         if (craftedResource.getProfession() == Profession.COOKING)
-            currentLvl = RunicProfessionsAPI.getGatherPlayer(player.getUniqueId()).getCookingLevel();
+            currentLvl = RunicProfessionsAPI.getGatherPlayer(player.getUniqueId()).getGatheringData().getCookingLevel();
         else
             currentLvl = RunicCoreAPI.getPlayerCache(player).getProfLevel();
         int reqLevel = craftedResource.getRequiredLevel();
@@ -201,7 +201,7 @@ public abstract class Workstation implements Listener {
         if (RunicProfessions.getProfManager().getCurrentCrafters().contains(player)) return;
         int currentLvl;
         if (craftedResource.getProfession() == Profession.COOKING)
-            currentLvl = RunicProfessionsAPI.getGatherPlayer(player.getUniqueId()).getCookingLevel();
+            currentLvl = RunicProfessionsAPI.getGatherPlayer(player.getUniqueId()).getGatheringData().getCookingLevel();
         else
             currentLvl = RunicCoreAPI.getPlayerCache(player).getProfLevel();
         int reqLevel = craftedResource.getRequiredLevel();

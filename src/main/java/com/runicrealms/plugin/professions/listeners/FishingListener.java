@@ -50,7 +50,7 @@ public class FishingListener implements Listener {
         Location hookLoc = e.getHook().getLocation();
 
         // ensure the proper type of block is being mined
-        GatheringResource gatheringResource = getFishFromRoll(fishRoll, RunicProfessionsAPI.getGatherPlayer(player.getUniqueId()).getFishingLevel());
+        GatheringResource gatheringResource = getFishFromRoll(fishRoll, RunicProfessionsAPI.getGatherPlayer(player.getUniqueId()).getGatheringData().getFishingLevel());
         String templateId = gatheringResource.getTemplateId();
         String holoString = gatheringResource.getHologramDisplayString();
         ItemStack heldItem = player.getInventory().getItemInMainHand();

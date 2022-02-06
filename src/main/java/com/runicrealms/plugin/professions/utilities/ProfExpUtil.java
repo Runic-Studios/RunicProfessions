@@ -24,6 +24,7 @@ import java.util.List;
 public class ProfExpUtil {
 
     private static final int MAX_CRAFTING_PROF_LEVEL = 60;
+    private static final int MAX_CAPPED_GATHERING_PROF_LEVEL = 60;
     private static final int MAX_GATHERING_PROF_LEVEL = 100;
 
     /**
@@ -51,12 +52,15 @@ public class ProfExpUtil {
                                 (totalExpToLevel - totalExpAtLevel) + ")",
                         3
                 );
-        if (calculateProfessionLevel(newTotalExp) == currentLevel) return;
+        int newLevel = calculateProfessionLevel(newTotalExp);
+        if (newLevel == currentLevel) return;
+        if (newLevel > MAX_CRAFTING_PROF_LEVEL) // fixed a bug 59 --> 61
+            newLevel = MAX_CRAFTING_PROF_LEVEL;
         // player has earned a level!
-        playerCache.setProfLevel(calculateProfessionLevel(newTotalExp));
+        playerCache.setProfLevel(newLevel);
         currentLevel = playerCache.getProfLevel();
         player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 0.5f, 1.0f);
-        if (currentLevel == MAX_GATHERING_PROF_LEVEL) {
+        if (currentLevel == MAX_CRAFTING_PROF_LEVEL) {
             player.sendTitle(
                     ChatColor.GOLD + "Max Level!",
                     ChatColor.GOLD + profession + " Level " + ChatColor.WHITE + currentLevel, 10, 40, 10);
@@ -78,7 +82,10 @@ public class ProfExpUtil {
         GatherPlayer gatherPlayer = RunicProfessionsAPI.getGatherPlayer(player.getUniqueId());
         int currentExp = gatherPlayer.getGatheringExp(gatheringSkill);
         int currentLevel = gatherPlayer.getGatheringLevel(gatheringSkill);
-        if (currentLevel >= MAX_GATHERING_PROF_LEVEL) return;
+        int maxLevelForGatheringSkill = RunicProfessionsAPI.isSpecializedInGatheringSkill(gatherPlayer, gatheringSkill)
+                ? MAX_GATHERING_PROF_LEVEL
+                : MAX_CAPPED_GATHERING_PROF_LEVEL;
+        if (currentLevel >= maxLevelForGatheringSkill) return;
         gatherPlayer.setGatheringExp(gatheringSkill, currentExp + expGained);
         int newTotalExp = gatherPlayer.getGatheringExp(gatheringSkill);
         int totalExpAtLevel = calculateTotalExperience(currentLevel);
@@ -92,12 +99,15 @@ public class ProfExpUtil {
                                 (totalExpToLevel - totalExpAtLevel) + ")",
                         3
                 );
-        if (calculateProfessionLevel(newTotalExp) == currentLevel) return;
+        int newLevel = calculateProfessionLevel(newTotalExp);
+        if (newLevel == currentLevel) return;
+        if (newLevel > maxLevelForGatheringSkill) // fixed a bug 59 --> 61
+            newLevel = maxLevelForGatheringSkill;
         // player has earned a level!
-        gatherPlayer.setGatheringLevel(gatheringSkill, calculateProfessionLevel(newTotalExp));
+        gatherPlayer.setGatheringLevel(gatheringSkill, newLevel);
         currentLevel = gatherPlayer.getGatheringLevel(gatheringSkill);
         player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 0.5f, 1.0f);
-        if (currentLevel == MAX_GATHERING_PROF_LEVEL) {
+        if (currentLevel == maxLevelForGatheringSkill) {
             player.sendTitle(
                     ChatColor.GOLD + "Max Level!",
                     ChatColor.GOLD + gatheringSkill.getFormattedIdentifier() + " Level " + ChatColor.WHITE + currentLevel, 10, 40, 10);

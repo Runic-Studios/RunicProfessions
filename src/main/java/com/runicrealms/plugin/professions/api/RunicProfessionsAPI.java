@@ -68,17 +68,17 @@ public class RunicProfessionsAPI {
         GatherPlayer gatherPlayer = RunicProfessionsAPI.getGatherPlayer(player.getUniqueId());
         switch (gatheringSkill) {
             case COOKING:
-                return gatherPlayer.getCookingLevel();
+                return gatherPlayer.getGatheringData().getCookingLevel();
             case FARMING:
-                return gatherPlayer.getFarmingLevel();
+                return gatherPlayer.getGatheringData().getFarmingLevel();
             case FISHING:
-                return gatherPlayer.getFishingLevel();
+                return gatherPlayer.getGatheringData().getFishingLevel();
             case HARVESTING:
-                return gatherPlayer.getHarvestingLevel();
+                return gatherPlayer.getGatheringData().getHarvestingLevel();
             case MINING:
-                return gatherPlayer.getMiningLevel();
+                return gatherPlayer.getGatheringData().getMiningLevel();
             case WOODCUTTING:
-                return gatherPlayer.getWoodcuttingLevel();
+                return gatherPlayer.getGatheringData().getWoodcuttingLevel();
             default:
                 return 0;
         }
@@ -92,6 +92,26 @@ public class RunicProfessionsAPI {
      */
     public static GatherPlayer getGatherPlayer(UUID uuid) {
         return RunicProfessions.getGatherPlayerManager().getGatherPlayers().get(uuid);
+    }
+
+    /**
+     * @param gatherPlayer
+     * @param gatheringSkill
+     * @return
+     */
+    public static boolean isSpecializedInGatheringSkill(GatherPlayer gatherPlayer, GatheringSkill gatheringSkill) {
+        GatherPlayer.GatheringData.GatheringSpecializations gatheringSpecializations = gatherPlayer.getGatheringData().getGatheringSpecializations();
+        return gatheringSpecializations.getFirstSpecialization() == gatheringSkill || gatheringSpecializations.getSecondSpecialization() == gatheringSkill;
+    }
+
+    /**
+     * Yes...
+     *
+     * @param gatherPlayer
+     * @return
+     */
+    public static GatherPlayer.GatheringData.GatheringSpecializations getGatheringSpecializations(GatherPlayer gatherPlayer) {
+        return gatherPlayer.getGatheringData().getGatheringSpecializations();
     }
 
     /**
