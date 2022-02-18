@@ -34,10 +34,13 @@ public class GatheringGUI implements InventoryHolder {
     private static String[] gatheringSkillDescription(GatherPlayer gatherPlayer, GatheringSkill gatheringSkill) {
         String[] unlockMessageArray = ProfExpUtil.nextReagentUnlockMessage(gatheringSkill,
                 gatherPlayer.getGatheringLevel(gatheringSkill), true).toArray(new String[0]);
+        int level = gatherPlayer.getGatheringLevel(gatheringSkill);
+        boolean isSpecialized = RunicProfessionsAPI.isSpecializedInGatheringSkill(gatherPlayer, gatheringSkill);
+        boolean professionIsMaxed = (level == 60 && !isSpecialized) || (level == 100 && isSpecialized);
         String[] descriptionArray = new String[]{
                 buildProgressBar(gatherPlayer, gatheringSkill),
                 "",
-                ChatColor.GRAY + "Level: " + ChatColor.WHITE + gatherPlayer.getGatheringLevel(gatheringSkill) + (!RunicProfessionsAPI.isSpecializedInGatheringSkill(gatherPlayer, gatheringSkill) ? " (Cap Reached)" : ""),
+                ChatColor.GRAY + "Level: " + ChatColor.WHITE + level + (professionIsMaxed ? " (Cap Reached)" : ""),
                 ChatColor.GRAY + "Exp: " + ChatColor.WHITE + gatherPlayer.getGatheringExp(gatheringSkill),
                 "",
                 ChatColor.GOLD + "" + ChatColor.BOLD + "CLICK " + ChatColor.GRAY + "to view all available reagents",
