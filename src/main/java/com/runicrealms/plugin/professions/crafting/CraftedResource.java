@@ -375,12 +375,12 @@ public enum CraftedResource {
      */
     CUT_RUBY_I("cut-ruby-i", Profession.JEWELER, new LinkedHashMap<String, Integer>() {{
         put("uncut-ruby", 16);
-        put("AnimalHide", 4);
+        put("AnimalHide", 2);
         put("Comfrey", 4);
     }}),
     CUT_RUBY_II("cut-ruby-ii", Profession.JEWELER, new LinkedHashMap<String, Integer>() {{
         put("uncut-ruby", 32);
-        put("AnimalHide", 8);
+        put("AnimalHide", 4);
         put("Wintercress", 8);
     }}),
     CUT_RUBY_III("cut-ruby-iii", Profession.JEWELER, new LinkedHashMap<String, Integer>() {{
@@ -400,12 +400,12 @@ public enum CraftedResource {
     }}),
     CUT_SAPPHIRE_I("cut-sapphire-i", Profession.JEWELER, new LinkedHashMap<String, Integer>() {{
         put("uncut-sapphire", 16);
-        put("AnimalHide", 4);
+        put("AnimalHide", 2);
         put("Comfrey", 4);
     }}),
     CUT_SAPPHIRE_II("cut-sapphire-ii", Profession.JEWELER, new LinkedHashMap<String, Integer>() {{
         put("uncut-sapphire", 32);
-        put("AnimalHide", 8);
+        put("AnimalHide", 4);
         put("Wintercress", 8);
     }}),
     CUT_SAPPHIRE_III("cut-sapphire-iii", Profession.JEWELER, new LinkedHashMap<String, Integer>() {{
@@ -425,12 +425,12 @@ public enum CraftedResource {
     }}),
     CUT_DIAMOND_I("cut-diamond-i", Profession.JEWELER, new LinkedHashMap<String, Integer>() {{
         put("uncut-diamond", 16);
-        put("AnimalHide", 4);
+        put("AnimalHide", 2);
         put("Comfrey", 4);
     }}),
     CUT_DIAMOND_II("cut-diamond-ii", Profession.JEWELER, new LinkedHashMap<String, Integer>() {{
         put("uncut-diamond", 32);
-        put("AnimalHide", 8);
+        put("AnimalHide", 4);
         put("Wintercress", 8);
     }}),
     CUT_DIAMOND_III("cut-diamond-iii", Profession.JEWELER, new LinkedHashMap<String, Integer>() {{
@@ -450,12 +450,12 @@ public enum CraftedResource {
     }}),
     CUT_EMERALD_I("cut-emerald-i", Profession.JEWELER, new LinkedHashMap<String, Integer>() {{
         put("uncut-emerald", 16);
-        put("AnimalHide", 4);
+        put("AnimalHide", 2);
         put("Comfrey", 4);
     }}),
     CUT_EMERALD_II("cut-emerald-ii", Profession.JEWELER, new LinkedHashMap<String, Integer>() {{
         put("uncut-emerald", 32);
-        put("AnimalHide", 8);
+        put("AnimalHide", 4);
         put("Wintercress", 8);
     }}),
     CUT_EMERALD_III("cut-emerald-iii", Profession.JEWELER, new LinkedHashMap<String, Integer>() {{
@@ -475,12 +475,12 @@ public enum CraftedResource {
     }}),
     CUT_OPAL_I("cut-opal-i", Profession.JEWELER, new LinkedHashMap<String, Integer>() {{
         put("uncut-opal", 16);
-        put("AnimalHide", 4);
+        put("AnimalHide", 2);
         put("Comfrey", 4);
     }}),
     CUT_OPAL_II("cut-opal-ii", Profession.JEWELER, new LinkedHashMap<String, Integer>() {{
         put("uncut-opal", 32);
-        put("AnimalHide", 8);
+        put("AnimalHide", 4);
         put("Wintercress", 8);
     }}),
     CUT_OPAL_III("cut-opal-iii", Profession.JEWELER, new LinkedHashMap<String, Integer>() {{

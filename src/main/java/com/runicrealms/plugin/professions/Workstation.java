@@ -146,7 +146,7 @@ public abstract class Workstation implements Listener {
                 .append(ChatColor.DARK_GRAY).append("to craft 5");
 
         if (exp > 0) {
-            desc.append("\n\n&7&oRewards &f&o").append(exp).append(" &7&oexperience");
+            desc.append("\n\n&7&oRewards &f&o").append(exp).append(" &7&ocrafting experience");
         }
 
         desc = new StringBuilder(ColorUtil.format(desc.toString()));
