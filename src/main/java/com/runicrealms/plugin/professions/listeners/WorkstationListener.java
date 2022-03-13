@@ -9,7 +9,6 @@ import com.runicrealms.plugin.professions.crafting.blacksmith.AnvilMenu;
 import com.runicrealms.plugin.professions.crafting.blacksmith.FurnaceMenu;
 import com.runicrealms.plugin.professions.crafting.cooking.CookingMenu;
 import com.runicrealms.plugin.professions.crafting.enchanter.EnchantingTableMenu;
-import com.runicrealms.plugin.professions.crafting.enchanter.ShrineMenu;
 import com.runicrealms.plugin.professions.crafting.hunter.HunterMenu;
 import com.runicrealms.plugin.professions.crafting.jeweler.JewelerMenu;
 import org.bukkit.*;
@@ -181,14 +180,14 @@ public class WorkstationListener implements Listener {
                     player.sendMessage(ChatColor.RED + "A hunter would know how to use this.");
                 }
                 break;
-            case "shrine":
-                if (className.equals("Enchanter")) {
-                    //play sound
-                    RunicProfessions.getProfManager().setPlayerWorkstation(player, new ShrineMenu(player));
-                    ItemGUI eMenu = ((RunicProfessions.getProfManager().getPlayerWorkstation(player))).getItemGUI();
-                    eMenu.open(player);
-                }
-                break;
+//            case "shrine":
+//                if (className.equals("Enchanter")) {
+//                    //play sound
+//                    RunicProfessions.getProfManager().setPlayerWorkstation(player, new ShrineMenu(player));
+//                    ItemGUI eMenu = ((RunicProfessions.getProfManager().getPlayerWorkstation(player))).getItemGUI();
+//                    eMenu.open(player);
+//                }
+//                break;
         }
 
         // add station location to the hashmap for item display purposes

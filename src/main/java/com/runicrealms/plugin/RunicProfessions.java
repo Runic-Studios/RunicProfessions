@@ -6,7 +6,7 @@ import com.runicrealms.plugin.professions.commands.SetProfCMD;
 import com.runicrealms.plugin.professions.crafting.alchemist.PotionListener;
 import com.runicrealms.plugin.professions.crafting.blacksmith.StoneListener;
 import com.runicrealms.plugin.professions.crafting.cooking.CookingListener;
-import com.runicrealms.plugin.professions.crafting.enchanter.EnchantListener;
+import com.runicrealms.plugin.professions.crafting.enchanter.PowderListener;
 import com.runicrealms.plugin.professions.crafting.hunter.HunterCache;
 import com.runicrealms.plugin.professions.crafting.hunter.HunterListener;
 import com.runicrealms.plugin.professions.gathering.GatherPlayerManager;
@@ -74,7 +74,7 @@ public final class RunicProfessions extends JavaPlugin {
         pluginManager.registerEvents(new StationClickListener(), this);
         pluginManager.registerEvents(new HunterListener(), this);
         pluginManager.registerEvents(new StoneListener(), this);
-        pluginManager.registerEvents(new EnchantListener(), this);
+        pluginManager.registerEvents(new PowderListener(), this);
         pluginManager.registerEvents(new CustomFishListener(), this);
         pluginManager.registerEvents(new CropTrampleListener(), this);
         pluginManager.registerEvents(new GatherPlayerListener(), this);
