@@ -4,7 +4,7 @@ import com.runicrealms.api.event.ChatChannelMessageEvent;
 import com.runicrealms.plugin.RunicCore;
 import com.runicrealms.plugin.RunicProfessions;
 import com.runicrealms.plugin.api.RunicCoreAPI;
-import com.runicrealms.plugin.character.api.CharacterLoadEvent;
+import com.runicrealms.plugin.character.api.CharacterSelectEvent;
 import com.runicrealms.plugin.database.PlayerMongoData;
 import com.runicrealms.plugin.database.PlayerMongoDataSection;
 import com.runicrealms.plugin.database.event.CacheSaveEvent;
@@ -50,7 +50,7 @@ public class HunterListener implements Listener {
     }
 
     @EventHandler
-    public void onCharacterLoad(CharacterLoadEvent event) {
+    public void onCharacterLoad(CharacterSelectEvent event) {
         if (!event.getPlayerCache().getProfName().equals("Hunter")) return;
         this.registerHunter(event.getPlayer());
     }

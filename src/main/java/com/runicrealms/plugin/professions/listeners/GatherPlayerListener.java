@@ -1,7 +1,7 @@
 package com.runicrealms.plugin.professions.listeners;
 
 import com.runicrealms.plugin.RunicProfessions;
-import com.runicrealms.plugin.character.api.CharacterLoadEvent;
+import com.runicrealms.plugin.character.api.CharacterSelectEvent;
 import com.runicrealms.plugin.database.event.CacheSaveEvent;
 import com.runicrealms.plugin.database.event.CacheSaveReason;
 import com.runicrealms.plugin.professions.gathering.GatherPlayer;
@@ -18,7 +18,7 @@ import java.util.UUID;
 public class GatherPlayerListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST) // run event last
-    public void onCharacterLoad(CharacterLoadEvent event) {
+    public void onCharacterLoad(CharacterSelectEvent event) {
         GatherPlayer.registerGatherPlayer(event.getPlayer());
     }
 
