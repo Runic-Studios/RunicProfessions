@@ -1,8 +1,9 @@
 package com.runicrealms.plugin.professions.listeners;
 
-import com.runicrealms.plugin.events.SpellDamageEvent;
-import com.runicrealms.plugin.events.WeaponDamageEvent;
-import com.runicrealms.plugin.professions.api.RunicProfessionsAPI;
+import com.runicrealms.plugin.RunicProfessions;
+import com.runicrealms.plugin.events.MagicDamageEvent;
+import com.runicrealms.plugin.events.PhysicalDamageEvent;
+import com.runicrealms.plugin.professions.model.GatheringData;
 import io.lumine.xikage.mythicmobs.MythicMobs;
 import io.lumine.xikage.mythicmobs.mobs.ActiveMob;
 import org.bukkit.ChatColor;
@@ -17,7 +18,7 @@ public class HarvestingListener implements Listener {
     private static final String HERB_FACTION = "Herb";
 
     @EventHandler
-    public void onMythicMobHerbDeath(SpellDamageEvent e) {
+    public void onMythicMobHerbDeath(MagicDamageEvent e) {
         if (!MythicMobs.inst().getMobManager().isActiveMob(e.getVictim().getUniqueId())) return;
         ActiveMob activeMob = MythicMobs.inst().getAPIHelper().getMythicMobInstance(e.getVictim());
         String faction = activeMob.getFaction();
@@ -28,7 +29,7 @@ public class HarvestingListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.LOWEST) // fires first
-    public void onMythicMobHerbDeath(WeaponDamageEvent e) {
+    public void onMythicMobHerbDeath(PhysicalDamageEvent e) {
         if (!MythicMobs.inst().getMobManager().isActiveMob(e.getVictim().getUniqueId())) return;
         ActiveMob activeMob = MythicMobs.inst().getAPIHelper().getMythicMobInstance(e.getVictim());
         String faction = activeMob.getFaction();
@@ -46,8 +47,9 @@ public class HarvestingListener implements Listener {
      * @return true if the player has met the harvesting level requirement
      */
     private boolean verifyPlayerHarvestingLevel(Player player, ActiveMob activeMob) {
+        GatheringData gatheringData = RunicProfessions.getDataAPI().loadGatheringData(player.getUniqueId());
         int level = (int) activeMob.getLevel();
-        int harvestingLevel = RunicProfessionsAPI.getGatherPlayer(player.getUniqueId()).getGatheringData().getHarvestingLevel();
+        int harvestingLevel = gatheringData.getHarvestingLevel();
         if (harvestingLevel < level) {
             player.playSound(player.getLocation(), Sound.ENTITY_GENERIC_EXTINGUISH_FIRE, 0.5f, 1.0f);
             player.sendMessage(ChatColor.RED + "Your harvesting level is too low to gather this!");
@@ -55,5 +57,6 @@ public class HarvestingListener implements Listener {
         } else {
             return true;
         }
+
     }
 }

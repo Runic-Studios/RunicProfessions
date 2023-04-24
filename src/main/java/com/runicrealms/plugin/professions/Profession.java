@@ -7,8 +7,8 @@ public enum Profession {
     BLACKSMITH("blacksmith", "Forge armor, weapons, and off-hand weapons!"),
     COOKING("cooking", ""),
     ENCHANTER("enchanter", "Enchant scrolls and perform rituals to aid your allies in combat!"),
-    HUNTER("hunter", "Hunt specific monsters to gain hunter shop rewards!"),
-    JEWELER("jeweler", "Cut unique gemstones to increase your combat stats!");
+    JEWELER("jeweler", "Cut unique gemstones to increase your combat stats!"),
+    NONE("None", "");
 
     private final String name;
     private final String description;
@@ -18,6 +18,18 @@ public enum Profession {
         this.description = description;
     }
 
+    public static Profession getFromName(String name) {
+        for (Profession profession : Profession.values()) {
+            if (profession.name.equalsIgnoreCase(name))
+                return profession;
+        }
+        return NONE;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
     /**
      * Formats the profession name w/ an uppercase first letter for scoreboard purposes.
      *
@@ -25,9 +37,5 @@ public enum Profession {
      */
     public String getName() {
         return this.name.substring(0, 1).toUpperCase() + this.name.substring(1);
-    }
-
-    public String getDescription() {
-        return description;
     }
 }

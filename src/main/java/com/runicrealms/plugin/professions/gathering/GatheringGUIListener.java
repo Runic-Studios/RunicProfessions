@@ -1,6 +1,6 @@
 package com.runicrealms.plugin.professions.gathering;
 
-import com.runicrealms.plugin.professions.api.RunicProfessionsAPI;
+import com.runicrealms.plugin.RunicProfessions;
 import com.runicrealms.plugin.utilities.GUIUtil;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -14,31 +14,31 @@ import org.bukkit.inventory.ItemStack;
 public class GatheringGUIListener implements Listener {
 
     @EventHandler
-    public void onInventoryClick(InventoryClickEvent e) {
-        if (e.getClickedInventory() == null) return;
-        if (!(e.getView().getTopInventory().getHolder() instanceof GatheringGUI)) return;
+    public void onInventoryClick(InventoryClickEvent event) {
+        if (event.getClickedInventory() == null) return;
+        if (!(event.getView().getTopInventory().getHolder() instanceof GatheringGUI)) return;
         // prevent clicking items in player inventory
-        if (e.getClickedInventory().getType() == InventoryType.PLAYER) {
-            e.setCancelled(true);
+        if (event.getClickedInventory().getType() == InventoryType.PLAYER) {
+            event.setCancelled(true);
             return;
         }
-        GatheringGUI gatheringGUI = (GatheringGUI) e.getClickedInventory().getHolder();
+        GatheringGUI gatheringGUI = (GatheringGUI) event.getClickedInventory().getHolder();
         // insurance
-        if (!e.getWhoClicked().equals(gatheringGUI.getPlayer())) {
-            e.setCancelled(true);
-            e.getWhoClicked().closeInventory();
+        if (!event.getWhoClicked().equals(gatheringGUI.getPlayer())) {
+            event.setCancelled(true);
+            event.getWhoClicked().closeInventory();
             return;
         }
-        Player player = (Player) e.getWhoClicked();
-        if (e.getCurrentItem() == null) return;
-        if (gatheringGUI.getInventory().getItem(e.getRawSlot()) == null) return;
-        ItemStack item = e.getCurrentItem();
+        Player player = (Player) event.getWhoClicked();
+        if (event.getCurrentItem() == null) return;
+        if (gatheringGUI.getInventory().getItem(event.getRawSlot()) == null) return;
+        ItemStack item = event.getCurrentItem();
         Material material = item.getType();
         player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 0.5f, 1.0f);
-        e.setCancelled(true);
-        if (material == GUIUtil.closeButton().getType())
-            e.getWhoClicked().closeInventory();
-        if (GatheringSkill.getGatheringSkillMenuSlots().contains(e.getRawSlot()))
-            RunicProfessionsAPI.openGatheringSkillGUI(player, GatheringSkill.getFromMenuSlot(e.getSlot()));
+        event.setCancelled(true);
+        if (material == GUIUtil.CLOSE_BUTTON.getType())
+            event.getWhoClicked().closeInventory();
+        if (GatheringSkill.getGatheringSkillMenuSlots().contains(event.getRawSlot()))
+            RunicProfessions.getAPI().openGatheringSkillGUI(player, GatheringSkill.getFromMenuSlot(event.getSlot()));
     }
 }

@@ -1,20 +1,18 @@
 package com.runicrealms.plugin.professions.utilities;
 
-import com.runicrealms.plugin.api.RunicCoreAPI;
-import com.runicrealms.plugin.player.cache.PlayerCache;
-import com.runicrealms.plugin.professions.api.RunicProfessionsAPI;
-import com.runicrealms.plugin.professions.gathering.GatherPlayer;
-import com.runicrealms.plugin.professions.gathering.GatheringResource;
+import com.runicrealms.plugin.RunicCore;
+import com.runicrealms.plugin.RunicProfessions;
+import com.runicrealms.plugin.professions.Profession;
+import com.runicrealms.plugin.professions.event.GatheringLevelChangeEvent;
+import com.runicrealms.plugin.professions.event.ProfessionLevelChangeEvent;
 import com.runicrealms.plugin.professions.gathering.GatheringSkill;
+import com.runicrealms.plugin.professions.model.CraftingData;
+import com.runicrealms.plugin.professions.model.GatheringData;
 import com.runicrealms.plugin.utilities.ActionBarUtil;
-import com.runicrealms.plugin.utilities.ChatUtils;
-import com.runicrealms.runicitems.RunicItemsAPI;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Sound;
 import org.bukkit.entity.Player;
-
-import java.util.Collections;
-import java.util.List;
+import redis.clients.jedis.Jedis;
 
 /**
  * Utility to grant player profession experience and keep track of it.
@@ -23,52 +21,54 @@ import java.util.List;
  */
 public class ProfExpUtil {
 
-    private static final int MAX_CRAFTING_PROF_LEVEL = 60;
-    private static final int MAX_CAPPED_GATHERING_PROF_LEVEL = 60;
-    private static final int MAX_GATHERING_PROF_LEVEL = 100;
+    public static final int MAX_CRAFTING_PROF_LEVEL = 60;
+    public static final int MAX_CAPPED_GATHERING_PROF_LEVEL = 60;
 
     /**
-     * Gives the given player experience toward their crafting profession (alchemist, blacksmith, etc.)
+     * Asynchronously gives the given player experience toward their crafting profession (alchemist, blacksmith, etc.)
      *
      * @param player    to be given experience
      * @param expGained amount of experience gained
      */
     public static void giveCraftingExperience(Player player, int expGained) {
-        PlayerCache playerCache = RunicCoreAPI.getPlayerCache(player);
-        String profession = playerCache.getProfName();
-        int currentExp = playerCache.getProfExp();
-        int currentLevel = playerCache.getProfLevel();
-        if (currentLevel >= MAX_CRAFTING_PROF_LEVEL) return;
-        playerCache.setProfExp(currentExp + expGained);
-        int newTotalExp = playerCache.getProfExp();
-        int totalExpAtLevel = calculateTotalExperience(currentLevel);
-        int totalExpToLevel = calculateTotalExperience(currentLevel + 1);
-        ActionBarUtil.sendTimedMessage
-                (
-                        player,
-                        ChatColor.GREEN + "+ " + ChatColor.WHITE + expGained + ChatColor.GREEN + " " +
-                                profession + " exp " + ChatColor.GRAY + "(" +
-                                ChatColor.WHITE + (newTotalExp - totalExpAtLevel) + ChatColor.GRAY + "/" +
-                                (totalExpToLevel - totalExpAtLevel) + ")",
-                        3
-                );
-        int newLevel = calculateProfessionLevel(newTotalExp);
-        if (newLevel == currentLevel) return;
-        if (newLevel > MAX_CRAFTING_PROF_LEVEL) // fixed a bug 59 --> 61
-            newLevel = MAX_CRAFTING_PROF_LEVEL;
-        // player has earned a level!
-        playerCache.setProfLevel(newLevel);
-        currentLevel = playerCache.getProfLevel();
-        player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 0.5f, 1.0f);
-        if (currentLevel == MAX_CRAFTING_PROF_LEVEL) {
-            player.sendTitle(
-                    ChatColor.GOLD + "Max Level!",
-                    ChatColor.GOLD + profession + " Level " + ChatColor.WHITE + currentLevel, 10, 40, 10);
-        } else {
-            player.sendTitle(
-                    ChatColor.GREEN + "Level Up!",
-                    ChatColor.GREEN + profession + " Level " + ChatColor.WHITE + currentLevel, 10, 40, 10);
-        }
+        Bukkit.getScheduler().runTaskAsynchronously(RunicProfessions.getInstance(), () -> {
+            try (Jedis jedis = RunicCore.getRedisAPI().getNewJedisResource()) {
+                int slot = RunicCore.getCharacterAPI().getCharacterSlot(player.getUniqueId());
+                CraftingData craftingData = RunicProfessions.getDataAPI().loadCraftingData(player.getUniqueId(), slot);
+                Profession profession = RunicProfessions.getAPI().getPlayerProfession(player.getUniqueId(), slot);
+                int currentExp = RunicProfessions.getAPI().getPlayerProfessionExp(player.getUniqueId(), slot);
+                int currentLevel = RunicProfessions.getAPI().getPlayerProfessionLevel(player.getUniqueId(), slot);
+                if (currentLevel >= MAX_CRAFTING_PROF_LEVEL) return;
+                int newTotalExp = currentExp + expGained;
+                craftingData.setProfExp(newTotalExp);
+                craftingData.writeToJedis(player.getUniqueId(), jedis, slot);
+                int totalExpAtLevel = calculateTotalExperience(currentLevel);
+                int totalExpToLevel = calculateTotalExperience(currentLevel + 1);
+                ActionBarUtil.sendTimedMessage
+                        (
+                                player,
+                                ChatColor.GREEN + "+ " + ChatColor.WHITE + expGained + ChatColor.GREEN + " " +
+                                        profession.getName() + " exp " + ChatColor.GRAY + "(" +
+                                        ChatColor.WHITE + (newTotalExp - totalExpAtLevel) + ChatColor.GRAY + "/" +
+                                        (totalExpToLevel - totalExpAtLevel) + ")",
+                                3
+                        );
+                int newLevel = calculateProfessionLevel(newTotalExp);
+                if (newLevel == currentLevel) return;
+                if (newLevel > MAX_CRAFTING_PROF_LEVEL) // fixed a bug 59 --> 61
+                    newLevel = MAX_CRAFTING_PROF_LEVEL;
+                // player has earned a profession level!
+                ProfessionLevelChangeEvent professionLevelChangeEvent = new ProfessionLevelChangeEvent
+                        (
+                                player,
+                                profession,
+                                currentLevel,
+                                newLevel,
+                                jedis
+                        );
+                Bukkit.getScheduler().runTask(RunicProfessions.getInstance(), () -> Bukkit.getPluginManager().callEvent(professionLevelChangeEvent));
+            }
+        });
     }
 
     /**
@@ -79,44 +79,52 @@ public class ProfExpUtil {
      * @param expGained      amount of experience gained
      */
     public static void giveGatheringExperience(Player player, GatheringSkill gatheringSkill, int expGained) {
-        GatherPlayer gatherPlayer = RunicProfessionsAPI.getGatherPlayer(player.getUniqueId());
-        int currentExp = gatherPlayer.getGatheringExp(gatheringSkill);
-        int currentLevel = gatherPlayer.getGatheringLevel(gatheringSkill);
-        int maxLevelForGatheringSkill = RunicProfessionsAPI.isSpecializedInGatheringSkill(gatherPlayer, gatheringSkill)
-                ? MAX_GATHERING_PROF_LEVEL
-                : MAX_CAPPED_GATHERING_PROF_LEVEL;
-        if (currentLevel >= maxLevelForGatheringSkill) return;
-        gatherPlayer.setGatheringExp(gatheringSkill, currentExp + expGained);
-        int newTotalExp = gatherPlayer.getGatheringExp(gatheringSkill);
-        int totalExpAtLevel = calculateTotalExperience(currentLevel);
-        int totalExpToLevel = calculateTotalExperience(currentLevel + 1);
-        ActionBarUtil.sendTimedMessage
-                (
-                        player,
-                        ChatColor.GREEN + "+ " + ChatColor.WHITE + expGained + ChatColor.GREEN + " " +
-                                gatheringSkill.getFormattedIdentifier() + " exp " + ChatColor.GRAY + "(" +
-                                ChatColor.WHITE + (newTotalExp - totalExpAtLevel) + ChatColor.GRAY + "/" +
-                                (totalExpToLevel - totalExpAtLevel) + ")",
-                        3
-                );
-        int newLevel = calculateProfessionLevel(newTotalExp);
-        if (newLevel == currentLevel) return;
-        if (newLevel > maxLevelForGatheringSkill) // fixed a bug 59 --> 61
-            newLevel = maxLevelForGatheringSkill;
-        // player has earned a level!
-        gatherPlayer.setGatheringLevel(gatheringSkill, newLevel);
-        currentLevel = gatherPlayer.getGatheringLevel(gatheringSkill);
-        player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 0.5f, 1.0f);
-        if (currentLevel == maxLevelForGatheringSkill) {
-            player.sendTitle(
-                    ChatColor.GOLD + "Max Level!",
-                    ChatColor.GOLD + gatheringSkill.getFormattedIdentifier() + " Level " + ChatColor.WHITE + currentLevel, 10, 40, 10);
-        } else {
-            player.sendTitle(
-                    ChatColor.GREEN + "Level Up!",
-                    ChatColor.GREEN + gatheringSkill.getFormattedIdentifier() + " Level " + ChatColor.WHITE + currentLevel, 10, 40, 10);
-        }
-        sendLevelUpMessage(player, gatheringSkill, currentLevel);
+        Bukkit.getScheduler().runTaskAsynchronously(RunicProfessions.getInstance(), () -> {
+            try (Jedis jedis = RunicCore.getRedisAPI().getNewJedisResource()) {
+                GatheringData gatheringData = RunicProfessions.getDataAPI().loadGatheringData(player.getUniqueId());
+                int currentExp = gatheringData.getGatheringExp(gatheringSkill);
+                int currentLevel = ProfExpUtil.calculateProfessionLevel(currentExp);
+                int maxLevelForGatheringSkill = MAX_CAPPED_GATHERING_PROF_LEVEL;
+                if (currentLevel >= maxLevelForGatheringSkill) return;
+                gatheringData.setGatheringExp(gatheringSkill, currentExp + expGained);
+                int newTotalExp = gatheringData.getGatheringExp(gatheringSkill);
+                int totalExpAtLevel = calculateTotalExperience(currentLevel);
+                int totalExpToLevel = calculateTotalExperience(currentLevel + 1);
+                int combatExp = (int) (expGained * gatheringSkill.getCombatExpMult());
+                ActionBarUtil.sendTimedMessage
+                        (
+                                player,
+                                ChatColor.GREEN + "+ " + ChatColor.WHITE + expGained + ChatColor.GREEN + " " +
+                                        gatheringSkill.getFormattedIdentifier() + " exp " + ChatColor.GRAY + "(" +
+                                        ChatColor.WHITE + (newTotalExp - totalExpAtLevel) + ChatColor.GRAY + "/" +
+                                        (totalExpToLevel - totalExpAtLevel) + ")" +
+
+                                        ChatColor.YELLOW + " | " +
+
+                                        ChatColor.GREEN + "+ " + ChatColor.WHITE + combatExp + ChatColor.GREEN + " " +
+                                        "combat exp",
+                                3
+                        );
+                int newLevel = calculateProfessionLevel(newTotalExp);
+                RunicCore.getCombatAPI().giveCombatExp(player, combatExp);
+                gatheringData.writeToJedis(player.getUniqueId(), jedis);
+                if (newLevel == currentLevel) return;
+                // Player has earned a gathering level!
+                if (newLevel > maxLevelForGatheringSkill) // fixed a bug 59 --> 61
+                    newLevel = maxLevelForGatheringSkill;
+                GatheringLevelChangeEvent gatheringLevelChangeEvent = new GatheringLevelChangeEvent
+                        (
+                                player,
+                                gatheringData,
+                                gatheringSkill,
+                                currentLevel,
+                                newLevel
+                        );
+                // Call level change event SYNC
+                Bukkit.getScheduler().runTask(RunicProfessions.getInstance(),
+                        () -> Bukkit.getPluginManager().callEvent(gatheringLevelChangeEvent));
+            }
+        });
     }
 
     /**
@@ -126,7 +134,7 @@ public class ProfExpUtil {
      * @param experience the total experience of the player in profession (gathering or crafting)
      * @return the level at which they should be (e.g., ~500000 experience should be level 60)
      */
-    private static int calculateProfessionLevel(double experience) {
+    public static int calculateProfessionLevel(double experience) {
         return (int) ((Math.cbrt((1125 + (5 * experience)) / 9)) - 5);
     }
 
@@ -142,45 +150,5 @@ public class ProfExpUtil {
     public static int calculateTotalExperience(int currentLevel) {
         int cubed = (int) Math.pow((currentLevel + 5), 3);
         return ((9 * cubed) / 5) - 225;
-    }
-
-    /**
-     * Helpful level-up message for informing players when they can unlock a new resource
-     *
-     * @param player         who is gathering
-     * @param gatheringSkill the skill the player has leveled-up
-     * @param gatheringLevel level the player just reached
-     */
-    private static void sendLevelUpMessage(Player player, GatheringSkill gatheringSkill, int gatheringLevel) {
-        ChatUtils.sendCenteredMessage(player, "");
-        ChatUtils.sendCenteredMessage(
-                player, nextReagentUnlockMessage(gatheringSkill, gatheringLevel, false).get(0));
-        ChatUtils.sendCenteredMessage(player, "");
-    }
-
-    /**
-     * Helpful level-up message for informing players when they can unlock a new resource
-     *
-     * @param gatheringSkill the skill the player has leveled-up
-     * @param gatheringLevel level the player just reached
-     * @param formatText     boolean value to determine whether the string will be formatted (for menu uis)
-     * @return a list of strings (only contains 1 if it's not formatted) with reagent unlock info
-     */
-    public static List<String> nextReagentUnlockMessage(GatheringSkill gatheringSkill, int gatheringLevel, boolean formatText) {
-        for (GatheringResource gatheringResource : GatheringResource.values()) {
-            if (gatheringResource.getGatheringSkill() != gatheringSkill) continue;
-            if (gatheringLevel < gatheringResource.getRequiredLevel()) {
-                String result = ChatColor.YELLOW + "You have " + ChatColor.WHITE +
-                        (gatheringResource.getRequiredLevel() - gatheringLevel) + ChatColor.YELLOW +
-                        " levels remaining until you can gather " +
-                        RunicItemsAPI.generateItemFromTemplate(gatheringResource.getTemplateId()).getDisplayableItem().getDisplayName() +
-                        ChatColor.YELLOW + "!";
-                if (formatText) return ChatUtils.formattedText(result);
-                return Collections.singletonList(result);
-            }
-        }
-        String noUnlocks = ChatColor.GREEN + "You have unlocked all reagents for this skill!";
-        if (formatText) return ChatUtils.formattedText(noUnlocks);
-        return Collections.singletonList(noUnlocks);
     }
 }

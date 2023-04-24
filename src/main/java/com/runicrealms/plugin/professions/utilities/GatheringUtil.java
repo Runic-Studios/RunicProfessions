@@ -3,14 +3,9 @@ package com.runicrealms.plugin.professions.utilities;
 import com.runicrealms.plugin.professions.gathering.GatheringTool;
 import com.runicrealms.runicitems.RunicItemsAPI;
 import com.runicrealms.runicitems.item.RunicItemDynamic;
-import net.minecraft.server.v1_16_R3.EntityFishingHook;
-import org.bukkit.craftbukkit.v1_16_R3.entity.CraftEntity;
-import org.bukkit.entity.FishHook;
 import org.bukkit.inventory.ItemStack;
 
-import java.lang.reflect.Field;
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
 
 public class GatheringUtil {
@@ -18,6 +13,8 @@ public class GatheringUtil {
     /*
     Axes
      */
+    public static final RunicItemDynamic GATHERING_AXE_TUTORIAL = (RunicItemDynamic) RunicItemsAPI.generateItemFromTemplate("gathering-axe-tutorial");
+    public static final ItemStack GATHERING_AXE_TUTORIAL_ITEMSTACK = GATHERING_AXE_TUTORIAL.generateItem();
     public static final RunicItemDynamic GATHERING_AXE_APPRENTICE = (RunicItemDynamic) RunicItemsAPI.generateItemFromTemplate("gathering-axe-apprentice");
     public static final ItemStack GATHERING_AXE_APPRENTICE_ITEMSTACK = GATHERING_AXE_APPRENTICE.generateItem();
     public static final RunicItemDynamic GATHERING_AXE_ADEPT = (RunicItemDynamic) RunicItemsAPI.generateItemFromTemplate("gathering-axe-adept");
@@ -33,43 +30,28 @@ public class GatheringUtil {
     Hoes
      */
     public static final RunicItemDynamic GATHERING_HOE_APPRENTICE = (RunicItemDynamic) RunicItemsAPI.generateItemFromTemplate("gathering-hoe-apprentice");
-    public static final ItemStack GATHERING_HOE_APPRENTICE_ITEMSTACK = GATHERING_HOE_APPRENTICE.generateItem();
     public static final RunicItemDynamic GATHERING_HOE_ADEPT = (RunicItemDynamic) RunicItemsAPI.generateItemFromTemplate("gathering-hoe-adept");
-    public static final ItemStack GATHERING_HOE_ADEPT_ITEMSTACK = GATHERING_HOE_ADEPT.generateItem();
     public static final RunicItemDynamic GATHERING_HOE_REFINED = (RunicItemDynamic) RunicItemsAPI.generateItemFromTemplate("gathering-hoe-refined");
-    public static final ItemStack GATHERING_HOE_REFINED_ITEMSTACK = GATHERING_HOE_REFINED.generateItem();
     public static final RunicItemDynamic GATHERING_HOE_MASTER = (RunicItemDynamic) RunicItemsAPI.generateItemFromTemplate("gathering-hoe-master");
-    public static final ItemStack GATHERING_HOE_MASTER_ITEMSTACK = GATHERING_HOE_MASTER.generateItem();
     public static final RunicItemDynamic GATHERING_HOE_ARTISAN = (RunicItemDynamic) RunicItemsAPI.generateItemFromTemplate("gathering-hoe-artisan");
-    public static final ItemStack GATHERING_HOE_ARTISAN_ITEMSTACK = GATHERING_HOE_ARTISAN.generateItem();
 
     /*
     Pickaxes
      */
     public static final RunicItemDynamic GATHERING_PICKAXE_APPRENTICE = (RunicItemDynamic) RunicItemsAPI.generateItemFromTemplate("gathering-pickaxe-apprentice");
-    public static final ItemStack GATHERING_PICKAXE_APPRENTICE_ITEMSTACK = GATHERING_PICKAXE_APPRENTICE.generateItem();
     public static final RunicItemDynamic GATHERING_PICKAXE_ADEPT = (RunicItemDynamic) RunicItemsAPI.generateItemFromTemplate("gathering-pickaxe-adept");
-    public static final ItemStack GATHERING_PICKAXE_ADEPT_ITEMSTACK = GATHERING_PICKAXE_ADEPT.generateItem();
     public static final RunicItemDynamic GATHERING_PICKAXE_REFINED = (RunicItemDynamic) RunicItemsAPI.generateItemFromTemplate("gathering-pickaxe-refined");
-    public static final ItemStack GATHERING_PICKAXE_REFINED_ITEMSTACK = GATHERING_PICKAXE_REFINED.generateItem();
     public static final RunicItemDynamic GATHERING_PICKAXE_MASTER = (RunicItemDynamic) RunicItemsAPI.generateItemFromTemplate("gathering-pickaxe-master");
-    public static final ItemStack GATHERING_PICKAXE_MASTER_ITEMSTACK = GATHERING_PICKAXE_MASTER.generateItem();
     public static final RunicItemDynamic GATHERING_PICKAXE_ARTISAN = (RunicItemDynamic) RunicItemsAPI.generateItemFromTemplate("gathering-pickaxe-artisan");
-    public static final ItemStack GATHERING_PICKAXE_ARTISAN_ITEMSTACK = GATHERING_PICKAXE_ARTISAN.generateItem();
 
     /*
     Rods
      */
     public static final RunicItemDynamic GATHERING_ROD_APPRENTICE = (RunicItemDynamic) RunicItemsAPI.generateItemFromTemplate("gathering-rod-apprentice");
-    public static final ItemStack GATHERING_ROD_APPRENTICE_ITEMSTACK = GATHERING_ROD_APPRENTICE.generateItem();
     public static final RunicItemDynamic GATHERING_ROD_ADEPT = (RunicItemDynamic) RunicItemsAPI.generateItemFromTemplate("gathering-rod-adept");
-    public static final ItemStack GATHERING_ROD_ADEPT_ITEMSTACK = GATHERING_ROD_ADEPT.generateItem();
     public static final RunicItemDynamic GATHERING_ROD_REFINED = (RunicItemDynamic) RunicItemsAPI.generateItemFromTemplate("gathering-rod-refined");
-    public static final ItemStack GATHERING_ROD_REFINED_ITEMSTACK = GATHERING_ROD_REFINED.generateItem();
     public static final RunicItemDynamic GATHERING_ROD_MASTER = (RunicItemDynamic) RunicItemsAPI.generateItemFromTemplate("gathering-rod-master");
-    public static final ItemStack GATHERING_ROD_MASTER_ITEMSTACK = GATHERING_ROD_MASTER.generateItem();
     public static final RunicItemDynamic GATHERING_ROD_ARTISAN = (RunicItemDynamic) RunicItemsAPI.generateItemFromTemplate("gathering-rod-artisan");
-    public static final ItemStack GATHERING_ROD_ARTISAN_ITEMSTACK = GATHERING_ROD_ARTISAN.generateItem();
 
     /**
      * Grabs a set of gathering axes to ensure player is holding the right item
@@ -78,6 +60,7 @@ public class GatheringUtil {
      */
     public static Set<GatheringTool> getAxes() {
         Set<GatheringTool> woodcuttingAxes = new HashSet<>();
+        woodcuttingAxes.add(GatheringTool.GATHERING_AXE_TUTORIAL);
         woodcuttingAxes.add(GatheringTool.GATHERING_AXE_APPRENTICE);
         woodcuttingAxes.add(GatheringTool.GATHERING_AXE_ADEPT);
         woodcuttingAxes.add(GatheringTool.GATHERING_AXE_REFINED);
@@ -129,31 +112,5 @@ public class GatheringUtil {
         fishingRods.add(GatheringTool.GATHERING_ROD_MASTER);
         fishingRods.add(GatheringTool.GATHERING_ROD_ARTISAN);
         return fishingRods;
-    }
-
-    /**
-     * A bit of nms magic to modify the rate of fishing on the server
-     *
-     * @param hook the player's fishing hook
-     * @param time (in seconds) before a fish bites
-     */
-    public static void setBiteTime(FishHook hook, int time) {
-        net.minecraft.server.v1_16_R3.EntityFishingHook hookCopy = (EntityFishingHook) ((CraftEntity) hook).getHandle();
-
-        Field fishCatchTime = null;
-
-        try {
-            fishCatchTime = net.minecraft.server.v1_16_R3.EntityFishingHook.class.getDeclaredField("ah");
-        } catch (NoSuchFieldException | SecurityException e) {
-            e.printStackTrace();
-        }
-
-        Objects.requireNonNull(fishCatchTime).setAccessible(true);
-
-        try {
-            fishCatchTime.setInt(hookCopy, time);
-        } catch (IllegalArgumentException | IllegalAccessException e) {
-            e.printStackTrace();
-        }
     }
 }

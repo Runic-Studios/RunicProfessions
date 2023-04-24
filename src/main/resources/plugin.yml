@@ -3,10 +3,5 @@ version: ${project.version}
 main: com.runicrealms.plugin.RunicProfessions
 api-version: 1.13
 depend: [ MythicMobs, RunicCore, RunicItems ]
-commands:
-  setprof:
-    usage: /<commands>
-    description: Give a gathering tool
-  proflevel:
-    usage: /<commands>
-    description: Open hunter shop
+softdepend:
+  - RunicRestart

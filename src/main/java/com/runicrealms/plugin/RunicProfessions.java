@@ -1,68 +1,140 @@
 package com.runicrealms.plugin;
 
+import com.runicrealms.libs.acf.ConditionFailedException;
+import com.runicrealms.libs.acf.PaperCommandManager;
+import com.runicrealms.libs.taskchain.BukkitTaskChainFactory;
+import com.runicrealms.libs.taskchain.TaskChain;
+import com.runicrealms.libs.taskchain.TaskChainFactory;
 import com.runicrealms.plugin.professions.ProfManager;
-import com.runicrealms.plugin.professions.commands.ProfLevelCMD;
-import com.runicrealms.plugin.professions.commands.SetProfCMD;
+import com.runicrealms.plugin.professions.api.DataAPI;
+import com.runicrealms.plugin.professions.api.ProfessionsAPI;
+import com.runicrealms.plugin.professions.commands.ProfGiveCMD;
+import com.runicrealms.plugin.professions.commands.ProfSetCMD;
+import com.runicrealms.plugin.professions.config.WorkstationLoader;
 import com.runicrealms.plugin.professions.crafting.alchemist.PotionListener;
 import com.runicrealms.plugin.professions.crafting.blacksmith.StoneListener;
 import com.runicrealms.plugin.professions.crafting.cooking.CookingListener;
 import com.runicrealms.plugin.professions.crafting.enchanter.PowderListener;
-import com.runicrealms.plugin.professions.crafting.hunter.HunterCache;
-import com.runicrealms.plugin.professions.crafting.hunter.HunterListener;
-import com.runicrealms.plugin.professions.gathering.GatherPlayerManager;
 import com.runicrealms.plugin.professions.gathering.GatheringGUIListener;
 import com.runicrealms.plugin.professions.gathering.GatheringSkillGUIListener;
 import com.runicrealms.plugin.professions.listeners.*;
-import com.runicrealms.plugin.professions.shop.GatheringShopFactory;
-import com.runicrealms.plugin.professions.shop.HunterShop;
+import com.runicrealms.plugin.professions.model.DataManager;
+import com.runicrealms.plugin.professions.model.MongoTask;
+import com.runicrealms.plugin.professions.shop.JewelRemoverListener;
+import com.runicrealms.plugin.professions.shop.ProfessionTutorHelper;
+import com.runicrealms.plugin.professions.utilities.LootTableHelper;
+import org.bukkit.Bukkit;
+import org.bukkit.command.ConsoleCommandSender;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class RunicProfessions extends JavaPlugin {
-
     private static RunicProfessions plugin;
-    private static ProfManager profManager;
-    private static GatherPlayerManager gatherPlayerManager;
-    private static HunterCache hunterCache;
+    private static TaskChainFactory taskChainFactory;
+    private static ProfessionsAPI professionsAPI;
+    private static DataAPI dataAPI;
+    private static MongoTask mongoTask;
+    private static PaperCommandManager commandManager;
 
     public static RunicProfessions getInstance() {
         return plugin;
     }
 
-    public static ProfManager getProfManager() {
-        return profManager;
+    public static ProfessionsAPI getAPI() {
+        return professionsAPI;
     }
 
-    public static GatherPlayerManager getGatherPlayerManager() {
-        return gatherPlayerManager;
+    public static DataAPI getDataAPI() {
+        return dataAPI;
     }
 
-    public static HunterCache getHunterCache() {
-        return hunterCache;
+    public static PaperCommandManager getCommandManager() {
+        return commandManager;
     }
 
-    @Override
-    public void onEnable() {
-        plugin = this;
-        profManager = new ProfManager();
-        gatherPlayerManager = new GatherPlayerManager();
-        hunterCache = new HunterCache();
+    public static MongoTask getMongoTask() {
+        return mongoTask;
+    }
 
-        // register commands
-        getCommand("setprof").setExecutor(new SetProfCMD());
-        getCommand("proflevel").setExecutor(new ProfLevelCMD());
+    /**
+     * ?
+     *
+     * @param <T>
+     * @return
+     */
+    public static <T> TaskChain<T> newChain() {
+        return taskChainFactory.newChain();
+    }
 
-        this.initializeShops();
-        this.registerEvents();
+    /**
+     * ?
+     *
+     * @param name
+     * @param <T>
+     * @return
+     */
+    public static <T> TaskChain<T> newSharedChain(String name) {
+        return taskChainFactory.newSharedChain(name);
+    }
 
-        getLogger().info(" §aRunic§2Professions §ahas been enabled.");
+    /**
+     * Load workstation contents from file storage
+     */
+    private void initializeWorkstations() {
+        Bukkit.getScheduler().scheduleSyncDelayedTask(RunicProfessions.getInstance(), WorkstationLoader::init, 10 * 20L);
     }
 
     @Override
     public void onDisable() {
         plugin.saveConfig();
         plugin = null;
-        profManager = null;
+        professionsAPI = null;
+        dataAPI = null;
+        mongoTask = null;
+        commandManager = null;
+        taskChainFactory = null;
+    }
+
+    @Override
+    public void onEnable() {
+        plugin = this;
+        taskChainFactory = BukkitTaskChainFactory.create(this);
+        professionsAPI = new ProfManager();
+        dataAPI = new DataManager();
+        mongoTask = new MongoTask();
+        commandManager = new PaperCommandManager(this);
+
+        new LootTableHelper().setupLootTables(); // update loot tables
+        new ProfessionTutorHelper(); // initialize profession tutors
+
+        this.registerCommandCompletions();
+        this.registerCommands();
+        this.registerEvents();
+
+        this.initializeWorkstations();
+
+        getLogger().info(" §aRunic§2Professions §ahas been enabled.");
+    }
+
+    private void registerCommandCompletions() {
+        commandManager.getCommandConditions().addCondition("is-console-or-op", context -> {
+            if (!(context.getIssuer().getIssuer() instanceof ConsoleCommandSender) && !context.getIssuer().getIssuer().isOp()) // ops can execute console commands
+                throw new ConditionFailedException("Only the console may run this command!");
+        });
+        commandManager.getCommandConditions().addCondition("is-op", context -> {
+            if (!context.getIssuer().getIssuer().isOp())
+                throw new ConditionFailedException("You must be an operator to run this command!");
+        });
+        commandManager.getCommandConditions().addCondition("is-player", context -> {
+            if (!(context.getIssuer().getIssuer() instanceof Player))
+                throw new ConditionFailedException("This command cannot be run from console!");
+        });
+    }
+
+    private void registerCommands() {
+        commandManager.registerCommand(new ProfGiveCMD());
+        commandManager.registerCommand(new ProfSetCMD());
     }
 
     private void registerEvents() {
@@ -72,21 +144,19 @@ public final class RunicProfessions extends JavaPlugin {
         pluginManager.registerEvents(new PotionListener(), this);
         pluginManager.registerEvents(new CookingListener(), this);
         pluginManager.registerEvents(new StationClickListener(), this);
-        pluginManager.registerEvents(new HunterListener(), this);
         pluginManager.registerEvents(new StoneListener(), this);
         pluginManager.registerEvents(new PowderListener(), this);
-        pluginManager.registerEvents(new CustomFishListener(), this);
         pluginManager.registerEvents(new CropTrampleListener(), this);
-        pluginManager.registerEvents(new GatherPlayerListener(), this);
         pluginManager.registerEvents(new GatheringListener(), this);
         pluginManager.registerEvents(new GatheringGUIListener(), this);
         pluginManager.registerEvents(new GatheringSkillGUIListener(), this);
         pluginManager.registerEvents(new HarvestingListener(), this);
         pluginManager.registerEvents(new VanillaStationListener(), this);
-    }
-
-    private void initializeShops() {
-        new HunterShop();
-        new GatheringShopFactory();
+        pluginManager.registerEvents(new ProfessionLevelChangeListener(), this);
+        pluginManager.registerEvents(new GatheringLevelChangeListener(), this);
+        pluginManager.registerEvents(new PlayerMenuListener(), this);
+        pluginManager.registerEvents(new ProfessionChangeListener(), this);
+        pluginManager.registerEvents(new ScoreboardListener(), this);
+        pluginManager.registerEvents(new JewelRemoverListener(), this);
     }
 }
