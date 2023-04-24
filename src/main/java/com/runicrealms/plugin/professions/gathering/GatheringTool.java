@@ -39,13 +39,14 @@ public enum GatheringTool {
     /*
     Woodcutting
      */
+    GATHERING_AXE_TUTORIAL(GatheringUtil.GATHERING_AXE_TUTORIAL, GatheringSkill.WOODCUTTING),
     GATHERING_AXE_APPRENTICE(GatheringUtil.GATHERING_AXE_APPRENTICE, GatheringSkill.WOODCUTTING),
     GATHERING_AXE_ADEPT(GatheringUtil.GATHERING_AXE_ADEPT, GatheringSkill.WOODCUTTING),
     GATHERING_AXE_REFINED(GatheringUtil.GATHERING_AXE_REFINED, GatheringSkill.WOODCUTTING),
     GATHERING_AXE_MASTER(GatheringUtil.GATHERING_AXE_MASTER, GatheringSkill.WOODCUTTING),
     GATHERING_AXE_ARTISAN(GatheringUtil.GATHERING_AXE_ARTISAN, GatheringSkill.WOODCUTTING);
 
-    private static final String REQUIRED_LEVEL_KEY = "requiredLevel";
+    private static final String REQUIRED_LEVEL_KEY = "requiredLevelForUse";
     private static final String BONUS_LOOT_CEILING_KEY = "bonusLootCeiling";
     private static final String BONUS_LOOT_CHANCE_KEY = "bonusLootChance";
     private final RunicItemDynamic runicItemDynamic;

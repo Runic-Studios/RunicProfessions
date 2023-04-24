@@ -1,10 +1,13 @@
 package com.runicrealms.plugin.professions.listeners;
 
-import com.runicrealms.plugin.professions.api.RunicProfessionsAPI;
+import com.runicrealms.plugin.RunicCore;
+import com.runicrealms.plugin.RunicProfessions;
+import com.runicrealms.plugin.api.WeightedRandomBag;
 import com.runicrealms.plugin.professions.event.GatheringEvent;
 import com.runicrealms.plugin.professions.gathering.GatheringRegion;
 import com.runicrealms.plugin.professions.gathering.GatheringResource;
 import com.runicrealms.plugin.professions.gathering.GatheringTool;
+import com.runicrealms.plugin.professions.model.GatheringData;
 import com.runicrealms.plugin.professions.utilities.GatheringUtil;
 import com.runicrealms.runicitems.RunicItemsAPI;
 import com.runicrealms.runicitems.item.RunicItem;
@@ -12,10 +15,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.Fish;
-import org.bukkit.entity.FishHook;
-import org.bukkit.entity.Player;
+import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
@@ -24,8 +24,8 @@ import org.bukkit.event.player.PlayerFishEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.List;
 import java.util.Optional;
-import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
@@ -35,26 +35,84 @@ import java.util.concurrent.ThreadLocalRandom;
  */
 public class FishingListener implements Listener {
 
+    /**
+     * @param hotspotResources a string array of templateIDs for fish
+     * @param fishingLevel     of the player
+     * @return the selected fish from the drop table
+     */
+    private GatheringResource determineFish(String[] hotspotResources, int fishingLevel) {
+        WeightedRandomBag<GatheringResource> oreDropTable = new WeightedRandomBag<>();
+        oreDropTable.addEntry(GatheringResource.SALMON, 400);
+        oreDropTable.addEntry(GatheringResource.COD, 400);
+        for (String string : hotspotResources) {
+            GatheringResource gatheringResource = GatheringResource.getFromTemplateId(string);
+            if (gatheringResource == null) continue;
+            int reqLevel = gatheringResource.getRequiredLevel();
+            if (fishingLevel < reqLevel) continue;
+            int weight = 100 + (10 * fishingLevel);
+            oreDropTable.addEntry(gatheringResource, weight);
+        }
+        return oreDropTable.getRandom();
+    }
+
+    /**
+     * Determine the fish to give the player based on the region they are fishing in
+     *
+     * @param regionIds    the list of region ids the fishhook is standing in
+     * @param fishingLevel of the player
+     * @return the appropriate fish to gather
+     */
+    private GatheringResource determineFishFromRegion(List<String> regionIds, int fishingLevel) {
+        try {
+            Optional<String> fishingRegion = regionIds.stream().filter(region -> region.contains("pond")).findFirst();
+            if (fishingRegion.isPresent()) {
+                String fishingRegionName = fishingRegion.get();
+                String[] availableFish = fishingRegionName.split("/");
+                return determineFish(availableFish, fishingLevel);
+            }
+        } catch (Exception ex) {
+            Bukkit.getLogger().warning("Error: There was an error getting fish from roll!");
+        }
+        return GatheringResource.COD;
+    }
+
+    /**
+     * Handle logic for fishing
+     */
     @EventHandler
-    public void onFishCatch(PlayerFishEvent e) {
-        // disable default exp
-        e.setExpToDrop(0);
-        e.setCancelled(false);
-        if (e.getCaught() != null) e.getCaught().remove();
-        if (e.getState() != PlayerFishEvent.State.BITE) return;
-        Player player = e.getPlayer();
+    public void onFishCatch(PlayerFishEvent event) {
+        // Set the time required to catch the fish
+        FishHook fishHook = event.getHook();
+        fishHook.setMinWaitTime(0); // in ticks (0s)
+        fishHook.setMaxWaitTime(20); // in ticks (1s)
+
+        // Disable default exp
+        event.setExpToDrop(0);
+        event.setCancelled(false);
+        // Prevent hooking mobs
+        if (event.getCaught() instanceof LivingEntity) {
+            event.getHook().remove();
+            return;
+        }
+
+        if (event.getCaught() != null) event.getCaught().remove();
+        if (event.getState() != PlayerFishEvent.State.BITE) return;
+        Player player = event.getPlayer();
         double chance = ThreadLocalRandom.current().nextDouble();
+        Location hookLoc = event.getHook().getLocation();
 
-        // roll to see what kind of fish they will receive
-        double fishRoll = ThreadLocalRandom.current().nextDouble();
-        Location hookLoc = e.getHook().getLocation();
+        // ensure the player has reached the req level to obtain the fish
+        GatheringData gatheringData = RunicProfessions.getDataAPI().loadGatheringData(player.getUniqueId());
+        int fishingLevel = gatheringData.getFishingLevel();
+        GatheringResource gatheringResource = determineFishFromRegion(RunicCore.getRegionAPI().getRegionIds(hookLoc), fishingLevel);
+        int requiredLevel = gatheringResource.getRequiredLevel();
+        if (fishingLevel < requiredLevel) {
+            player.sendMessage(ChatColor.RED + "You are not skilled enough to catch this fish!");
+            return;
+        }
 
-        // ensure the proper type of block is being mined
-        GatheringResource gatheringResource = getFishFromRoll(fishRoll, RunicProfessionsAPI.getGatherPlayer(player.getUniqueId()).getGatheringData().getFishingLevel());
         String templateId = gatheringResource.getTemplateId();
-        String holoString = gatheringResource.getHologramDisplayString();
         ItemStack heldItem = player.getInventory().getItemInMainHand();
-        // ItemStack fish = RunicItemsAPI.generateItemFromTemplate(gatheringResource.getTemplateId()).generateItem();
 
         // verify the player is holding a tool
         if (player.getInventory().getItemInMainHand().getType() == Material.AIR) {
@@ -65,12 +123,16 @@ public class FishingListener implements Listener {
         // verify held tool is a fishing rod
         RunicItem runicItem = RunicItemsAPI.getRunicItemFromItemStack(heldItem);
         String templateIdHeldItem = runicItem.getTemplateId();
-        Optional<GatheringTool> gatheringTool = GatheringUtil.getRods().stream().filter(tool -> tool.getRunicItemDynamic().getTemplateId().equals(templateIdHeldItem)).findFirst();
+        Optional<GatheringTool> gatheringTool = GatheringUtil.getRods().stream().filter
+                (
+                        tool -> tool.getRunicItemDynamic().getTemplateId().equals(templateIdHeldItem)
+                ).findFirst();
         if (!gatheringTool.isPresent()) {
             player.sendMessage(gatheringResource.getGatheringSkill().getNoToolMessage());
             return;
         }
 
+        event.getHook().remove();
         GatheringEvent gatheringEvent = new GatheringEvent
                 (
                         player,
@@ -81,7 +143,6 @@ public class FishingListener implements Listener {
                         hookLoc,
                         null,
                         gatheringResource.getResourceBlockType(),
-                        holoString,
                         chance,
                         gatheringResource.getResourceBlockType()
                 );
@@ -89,71 +150,31 @@ public class FishingListener implements Listener {
     }
 
     /**
-     * Prevents players from fishing outside of ponds
-     */
-    @EventHandler
-    public void onRodUse(PlayerInteractEvent e) {
-        if (e.getAction() != Action.RIGHT_CLICK_AIR && e.getAction() != Action.RIGHT_CLICK_BLOCK) return;
-        Player player = e.getPlayer();
-        Material mainHand = player.getInventory().getItemInMainHand().getType();
-        Material offHand = player.getInventory().getItemInOffHand().getType();
-        if (mainHand != Material.FISHING_ROD && offHand != Material.FISHING_ROD) return;
-        boolean canFish = RunicProfessionsAPI.isInGatheringRegion(GatheringRegion.POND, player.getLocation());
-        if (!canFish) {
-            e.setCancelled(true);
-            player.sendMessage(ChatColor.RED + "You can't fish here.");
-        }
-    }
-
-    /**
      * Prevent fish from spawning naturally.
      * We'll spawn them in ponds as NPCs, but not out in the ocean.
      */
     @EventHandler
-    public void onFishSpawn(CreatureSpawnEvent e) {
-        Entity spawned = e.getEntity();
-        if (e.getSpawnReason() == CreatureSpawnEvent.SpawnReason.CUSTOM) return;
-        if (spawned instanceof Fish) e.setCancelled(true);
+    public void onFishSpawn(CreatureSpawnEvent event) {
+        Entity spawned = event.getEntity();
+        if (event.getSpawnReason() == CreatureSpawnEvent.SpawnReason.CUSTOM) return;
+        if (spawned instanceof Fish) event.setCancelled(true);
     }
 
     /**
-     * Reduces fishing time using NMS
-     * Time for a 'bite' will be between 5-25 seconds
+     * Prevents players from fishing outside of ponds
      */
     @EventHandler
-    public void onPlayerFish(PlayerFishEvent e) {
-        FishHook plHook = e.getHook();
-        Random rand = new Random();
-        int time = rand.nextInt(25 - 5) + 5;
-        GatheringUtil.setBiteTime(plHook, time);
-    }
-
-    /**
-     * Roll a die to determine which fish the player should receive
-     * If they have not reached the necessary level for that fish,
-     * they will receive the default fish instead (salmon)
-     *
-     * @param roll               random double between 0-1
-     * @param playerFishingLevel the level of fishing
-     * @return the appropriate fish to gather
-     */
-    private GatheringResource getFishFromRoll(double roll, int playerFishingLevel) {
-        GatheringResource gatheringResource = GatheringResource.SALMON;
-        if (roll < .5) {
-            return gatheringResource;
-        } else if (roll < .75) {
-            gatheringResource = GatheringResource.COD;
-            if (playerFishingLevel >= gatheringResource.getRequiredLevel())
-                return GatheringResource.COD;
-        } else if (roll < .95) {
-            gatheringResource = GatheringResource.TROPICAL_FISH;
-            if (playerFishingLevel >= gatheringResource.getRequiredLevel())
-                return GatheringResource.TROPICAL_FISH;
-        } else {
-            gatheringResource = GatheringResource.PUFFERFISH;
-            if (playerFishingLevel >= gatheringResource.getRequiredLevel())
-                return GatheringResource.PUFFERFISH;
+    public void onRodUse(PlayerInteractEvent event) {
+        if (event.getAction() != Action.RIGHT_CLICK_AIR && event.getAction() != Action.RIGHT_CLICK_BLOCK)
+            return;
+        Player player = event.getPlayer();
+        Material mainHand = player.getInventory().getItemInMainHand().getType();
+        Material offHand = player.getInventory().getItemInOffHand().getType();
+        if (mainHand != Material.FISHING_ROD && offHand != Material.FISHING_ROD) return;
+        boolean canFish = RunicProfessions.getAPI().isInGatheringRegion(GatheringRegion.POND, player.getLocation());
+        if (!canFish) {
+            event.setCancelled(true);
+            player.sendMessage(ChatColor.RED + "You can't fish here.");
         }
-        return GatheringResource.SALMON;
     }
 }

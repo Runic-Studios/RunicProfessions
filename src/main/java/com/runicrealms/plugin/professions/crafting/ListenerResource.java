@@ -3,15 +3,28 @@ package com.runicrealms.plugin.professions.crafting;
 import com.runicrealms.plugin.professions.Profession;
 import com.runicrealms.plugin.professions.utilities.ProfUtil;
 import com.runicrealms.runicitems.RunicItemsAPI;
+import com.runicrealms.runicitems.item.RunicItem;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.LinkedHashMap;
 
-public class CraftedResource {
+/**
+ * An enum of crafted resources that are used in listeners
+ */
+public enum ListenerResource {
+    /*
+    Cooking
+     */
+    AMBROSIA_STEW("ambrosia-stew", Profession.COOKING, new LinkedHashMap<>() {{
+        put("ambrosia-root", 1);
+        put("uncooked-rabbit", 4);
+        put("birch-wood", 2);
+    }});
+
     private final String templateId;
     private final Profession profession;
-    private final int page;
-    private final int slot;
+    private final RunicItem runicItem;
+    private final ItemStack itemStack;
     private final LinkedHashMap<ItemStack, Integer> reagents;
     private final int requiredLevel;
     private final int experience;
@@ -22,11 +35,11 @@ public class CraftedResource {
      * @param templateId the template of the runic item
      * @param profession which crafting profession the item corresponds to
      */
-    public CraftedResource(String templateId, Profession profession, int page, int slot, LinkedHashMap<String, Integer> reagents) {
+    ListenerResource(String templateId, Profession profession, LinkedHashMap<String, Integer> reagents) {
         this.templateId = templateId;
         this.profession = profession;
-        this.page = page;
-        this.slot = slot;
+        this.runicItem = RunicItemsAPI.generateItemFromTemplate(templateId);
+        this.itemStack = this.runicItem.generateItem();
         this.reagents = new LinkedHashMap<>();
         for (String key : reagents.keySet())
             this.reagents.put(RunicItemsAPI.generateItemFromTemplate(key).generateItem(), reagents.get(key));
@@ -38,8 +51,8 @@ public class CraftedResource {
         return experience;
     }
 
-    public int getPage() {
-        return page;
+    public ItemStack getItemStack() {
+        return itemStack;
     }
 
     public Profession getProfession() {
@@ -54,8 +67,8 @@ public class CraftedResource {
         return requiredLevel;
     }
 
-    public int getSlot() {
-        return slot;
+    public RunicItem getRunicItem() {
+        return runicItem;
     }
 
     public String getTemplateId() {

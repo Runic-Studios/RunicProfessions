@@ -2,19 +2,17 @@ package com.runicrealms.plugin.professions.crafting.alchemist;
 
 import com.runicrealms.plugin.RunicCore;
 import com.runicrealms.plugin.RunicProfessions;
-import com.runicrealms.plugin.api.RunicCoreAPI;
-import com.runicrealms.plugin.events.LootEvent;
-import com.runicrealms.plugin.events.SpellCastEvent;
-import com.runicrealms.plugin.events.SpellDamageEvent;
-import com.runicrealms.plugin.events.WeaponDamageEvent;
+import com.runicrealms.plugin.events.MagicDamageEvent;
+import com.runicrealms.plugin.events.PhysicalDamageEvent;
 import com.runicrealms.plugin.item.util.ItemRemover;
-import com.runicrealms.plugin.professions.crafting.CraftedResource;
-import com.runicrealms.plugin.spellapi.spellutil.HealUtil;
 import com.runicrealms.plugin.utilities.ColorUtil;
-import com.runicrealms.runicitems.RunicItemsAPI;
 import com.runicrealms.runicitems.item.RunicItem;
 import com.runicrealms.runicitems.item.event.RunicItemGenericTriggerEvent;
-import org.bukkit.*;
+import com.runicrealms.runicitems.item.stats.RunicItemTag;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.Particle;
+import org.bukkit.Sound;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -22,126 +20,90 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class PotionListener implements Listener {
-
     private static final String DATA_KEY_AMOUNT = "amount";
     private static final String DATA_KEY_DURATION = "duration";
+    private static final String DATA_KEY_MULTIPLIER = "multiplier";
     private static final Set<UUID> npcClickers = new HashSet<>();
-    private static final Map<UUID, Double> looters = new HashMap<>();
     private static final Map<UUID, Double> slayers = new HashMap<>();
     private static final Map<UUID, Pair> pyromaniacs = new HashMap<>();
     private final HashSet<String> healingPotions = new HashSet<String>() {{
         add("minor-potion-healing");
         add("major-potion-healing");
         add("greater-potion-healing");
-        add(CraftedResource.LESSER_POTION_HEALING.getTemplateId());
-        add(CraftedResource.MINOR_POTION_HEALING.getTemplateId());
-        add(CraftedResource.MAJOR_POTION_HEALING.getTemplateId());
-        add(CraftedResource.GREATER_POTION_HEALING.getTemplateId());
+        add("lesser-crafted-potion-healing");
+        add("minor-crafted-potion-healing");
+        add("major-crafted-potion-healing");
+        add("greater-crafted-potion-healing");
     }};
     private final HashSet<String> craftedManaPotions = new HashSet<String>() {{
         add("minor-potion-mana");
         add("major-potion-mana");
         add("greater-potion-mana");
-        add(CraftedResource.LESSER_POTION_MANA.getTemplateId());
-        add(CraftedResource.MINOR_POTION_MANA.getTemplateId());
-        add(CraftedResource.MAJOR_POTION_MANA.getTemplateId());
-        add(CraftedResource.GREATER_POTION_MANA.getTemplateId());
+        add("lesser-crafted-potion-mana");
+        add("minor-crafted-potion-mana");
+        add("major-crafted-potion-mana");
+        add("greater-crafted-potion-mana");
+    }};
+    private final HashSet<String> craftedHastePotions = new HashSet<String>() {{
+        add("lesser-crafted-potion-haste");
+        add("minor-crafted-potion-haste");
+        add("major-crafted-potion-haste");
+        add("greater-crafted-potion-haste");
     }};
     private final HashSet<String> craftedSlayingPotions = new HashSet<String>() {{
-        add(CraftedResource.LESSER_POTION_SLAYING.getTemplateId());
-        add(CraftedResource.MINOR_POTION_SLAYING.getTemplateId());
-        add(CraftedResource.MAJOR_POTION_SLAYING.getTemplateId());
-        add(CraftedResource.GREATER_POTION_SLAYING.getTemplateId());
-    }};
-    private final HashSet<String> craftedLootingPotions = new HashSet<String>() {{
-        add(CraftedResource.MINOR_POTION_LOOTING.getTemplateId());
-        add(CraftedResource.GREATER_POTION_LOOTING.getTemplateId());
+        add("lesser-crafted-potion-slaying");
+        add("minor-crafted-potion-slaying");
+        add("major-crafted-potion-slaying");
+        add("greater-crafted-potion-slaying");
     }};
 
     /**
-     * This disables potion drinking if a player is talking to an NPC
+     * @param player    who used the potion
+     * @param runicItem of the potion item
      */
-    @EventHandler
-    public void onNPCInteract(PlayerInteractEntityEvent e) {
-        if (!e.getRightClicked().hasMetadata("NPC")) return;
-        npcClickers.add(e.getPlayer().getUniqueId());
-        Bukkit.getScheduler().runTaskLaterAsynchronously(RunicProfessions.getInstance(),
-                () -> npcClickers.remove(e.getPlayer().getUniqueId()), 20L);
+    private void handlePotionHaste(Player player, RunicItem runicItem) {
+        int multiplier = Integer.parseInt(runicItem.getData().get(DATA_KEY_MULTIPLIER));
+        int duration = Integer.parseInt(runicItem.getData().get(DATA_KEY_DURATION));
+        player.addPotionEffect(new PotionEffect(PotionEffectType.FAST_DIGGING, duration * 20,
+                multiplier));
+        int amount = multiplier > 0 ? 40 : 20;
+        player.sendMessage(ColorUtil.format("&eYou've gained &f" + amount + "% " +
+                "&emining speed &f" + duration + " &eseconds!"));
+//        Bukkit.getScheduler().runTaskLaterAsynchronously(RunicProfessions.getInstance(), () -> {
+//            slayers.remove(player.getUniqueId());
+//            player.sendMessage(ChatColor.GRAY + "Your potion of slaying has expired.");
+//        }, slayingDuration * 20L);
     }
 
     /**
-     * Handles custom potions
+     * @param player    who used the potion
+     * @param runicItem of the potion item
      */
-    @EventHandler(priority = EventPriority.HIGHEST) // last
-    public void onPotionUse(RunicItemGenericTriggerEvent e) {
-
-        if (e.isCancelled()) return;
-        if (e.getItem() == null) return;
-        if (e.getItem().getDisplayableItem().getMaterial() != Material.POTION) return;
-        if (npcClickers.contains(e.getPlayer().getUniqueId())) return; // for quest interactions
-
-        Player player = e.getPlayer();
-        ItemStack itemStack = e.getItemStack();
-        ItemRemover.takeItem(player, itemStack, 1);
-        player.playSound(player.getLocation(), Sound.ENTITY_GENERIC_DRINK, 0.5f, 1.0f);
-
-        if (healingPotions.contains(e.getItem().getTemplateId())) {
-            handlePotionHealing(player, e.getItem());
-        } else if (craftedManaPotions.contains(e.getItem().getTemplateId())) {
-            handlePotionMana(player, e.getItem());
-        } else if (craftedSlayingPotions.contains(e.getItem().getTemplateId())) {
-            handlePotionSlaying(player, e.getItem());
-        } else if (craftedLootingPotions.contains(e.getItem().getTemplateId())) {
-            handlePotionLooting(player, e.getItem());
-        } else if (e.getItem().getTemplateId().equals("crafted-potion-sacred-fire")) {
-            handlePotionSacredFire(player, e.getItem());
-        }
-    }
-
-    private void applyPotionCooldown(Player player) {
-        SpellCastEvent event = new SpellCastEvent(player, RunicCoreAPI.getSpell("Potion"));
-        Bukkit.getPluginManager().callEvent(event);
-    }
-
     private void handlePotionHealing(Player player, RunicItem runicItem) {
         int healAmt = Integer.parseInt(runicItem.getData().get(DATA_KEY_AMOUNT));
-        HealUtil.healPlayer(healAmt, player, player, false);
-        applyPotionCooldown(player);
+        RunicCore.getSpellAPI().healPlayer(player, player, healAmt);
     }
 
+    /**
+     * @param player    who used the potion
+     * @param runicItem of the potion item
+     */
     private void handlePotionMana(Player player, RunicItem runicItem) {
         int manaAmt = Integer.parseInt(runicItem.getData().get(DATA_KEY_AMOUNT));
         RunicCore.getRegenManager().addMana(player, manaAmt);
-        applyPotionCooldown(player);
     }
 
-    private void handlePotionSlaying(Player player, RunicItem runicItem) {
-        double amount = Double.parseDouble(runicItem.getData().get(DATA_KEY_AMOUNT)) / 100.0;
-        int slayingDuration = Integer.parseInt(runicItem.getData().get(DATA_KEY_DURATION));
-        slayers.put(player.getUniqueId(), amount);
-        player.sendMessage(ColorUtil.format("&eYou've gained a &f" + (int) (amount * 100) + "% &edamage bonus vs. monsters for &f" + slayingDuration + " &eseconds!"));
-        Bukkit.getScheduler().runTaskLaterAsynchronously(RunicProfessions.getInstance(), () -> {
-            slayers.remove(player.getUniqueId());
-            player.sendMessage(ChatColor.GRAY + "Your potion of slaying has expired.");
-        }, slayingDuration * 20L);
-    }
-
-    private void handlePotionLooting(Player player, RunicItem runicItem) {
-        double amount = Double.parseDouble(runicItem.getData().get(DATA_KEY_AMOUNT)) / 100.0;
-        int lootingDuration = Integer.parseInt(runicItem.getData().get(DATA_KEY_DURATION));
-        looters.put(player.getUniqueId(), amount);
-        player.sendMessage(ColorUtil.format("&eYou've gained a &f" + (int) (amount * 100) + "% &echance of &ndouble loot&r &efor &f" + lootingDuration + " &eseconds!"));
-        Bukkit.getScheduler().runTaskLaterAsynchronously(RunicProfessions.getInstance(), () -> {
-            looters.remove(player.getUniqueId());
-            player.sendMessage(ChatColor.GRAY + "Your potion of looting has expired.");
-        }, lootingDuration * 20L);
-    }
-
+    /**
+     * @param player    who used the potion
+     * @param runicItem of the potion item
+     */
     private void handlePotionSacredFire(Player player, RunicItem runicItem) {
         int amount = Integer.parseInt(runicItem.getData().get(DATA_KEY_AMOUNT));
         double chance = Double.parseDouble(runicItem.getData().get("chance")) / 100.0;
@@ -155,57 +117,96 @@ public class PotionListener implements Listener {
     }
 
     /**
+     * @param player    who used the potion
+     * @param runicItem of the potion item
+     */
+    private void handlePotionSlaying(Player player, RunicItem runicItem) {
+        double amount = Double.parseDouble(runicItem.getData().get(DATA_KEY_AMOUNT)) / 100.0;
+        int slayingDuration = Integer.parseInt(runicItem.getData().get(DATA_KEY_DURATION));
+        slayers.put(player.getUniqueId(), amount);
+        player.sendMessage(ColorUtil.format("&eYou've gained a &f" + (int) (amount * 100) + "% &edamage bonus vs. monsters for &f" + slayingDuration + " &eseconds!"));
+        Bukkit.getScheduler().runTaskLaterAsynchronously(RunicProfessions.getInstance(), () -> {
+            slayers.remove(player.getUniqueId());
+            player.sendMessage(ChatColor.GRAY + "Your potion of slaying has expired.");
+        }, slayingDuration * 20L);
+    }
+
+    /**
      * Logic for slayer potions
      */
     @EventHandler(priority = EventPriority.HIGHEST)
-    public void onMeleeDamage(WeaponDamageEvent e) {
-        if (!slayers.containsKey(e.getPlayer().getUniqueId())) return;
-        double percent = slayers.get(e.getPlayer().getUniqueId());
-        int extraAmt = (int) (e.getAmount() * percent);
+    public void onMeleeDamage(PhysicalDamageEvent event) {
+        if (!slayers.containsKey(event.getPlayer().getUniqueId())) return;
+        double percent = slayers.get(event.getPlayer().getUniqueId());
+        int extraAmt = (int) (event.getAmount() * percent);
         if (extraAmt < 1) {
             extraAmt = 1;
         }
-        e.setAmount(e.getAmount() + extraAmt);
+        event.setAmount(event.getAmount() + extraAmt);
+    }
+
+    /**
+     * This disables potion drinking if a player is talking to an NPC
+     */
+    @EventHandler
+    public void onNPCInteract(PlayerInteractEntityEvent event) {
+        if (!event.getRightClicked().hasMetadata("NPC")) return;
+        npcClickers.add(event.getPlayer().getUniqueId());
+        Bukkit.getScheduler().runTaskLaterAsynchronously(RunicProfessions.getInstance(),
+                () -> npcClickers.remove(event.getPlayer().getUniqueId()), 20L);
+    }
+
+    /**
+     * Handles custom potions
+     */
+    @EventHandler(priority = EventPriority.HIGHEST) // last
+    public void onPotionUse(RunicItemGenericTriggerEvent event) {
+
+        if (event.isCancelled()) return;
+        if (event.getItem() == null) return;
+        if (!event.getItem().getTags().contains(RunicItemTag.POTION)) return;
+        if (npcClickers.contains(event.getPlayer().getUniqueId())) return; // for quest interactions
+
+        Player player = event.getPlayer();
+        ItemStack itemStack = event.getItemStack();
+        ItemRemover.takeItem(player, itemStack, 1);
+        player.playSound(player.getLocation(), Sound.ENTITY_GENERIC_DRINK, 0.5f, 1.0f);
+
+        if (healingPotions.contains(event.getItem().getTemplateId())) {
+            handlePotionHealing(player, event.getItem());
+        } else if (craftedManaPotions.contains(event.getItem().getTemplateId())) {
+            handlePotionMana(player, event.getItem());
+        } else if (craftedHastePotions.contains(event.getItem().getTemplateId())) {
+            handlePotionHaste(player, event.getItem());
+        } else if (craftedSlayingPotions.contains(event.getItem().getTemplateId())) {
+            handlePotionSlaying(player, event.getItem());
+        } else if (event.getItem().getTemplateId().equals("crafted-potion-sacred-fire")) {
+            handlePotionSacredFire(player, event.getItem());
+        }
     }
 
     /**
      * Logic for sacred fire and slayer potions
      */
     @EventHandler(priority = EventPriority.HIGHEST)
-    public void onSpellDamage(SpellDamageEvent e) {
-        if (pyromaniacs.containsKey(e.getPlayer().getUniqueId())) {
+    public void onSpellDamage(MagicDamageEvent event) {
+        if (pyromaniacs.containsKey(event.getPlayer().getUniqueId())) {
             double chance = ThreadLocalRandom.current().nextDouble();
             // 20% chance for burn
-            if (chance > pyromaniacs.get(e.getPlayer().getUniqueId()).getChance()) return;
-            e.setAmount(e.getAmount() + pyromaniacs.get(e.getPlayer().getUniqueId()).getAmount());
-            LivingEntity victim = e.getVictim();
+            if (chance > pyromaniacs.get(event.getPlayer().getUniqueId()).getChance()) return;
+            event.setAmount(event.getAmount() + pyromaniacs.get(event.getPlayer().getUniqueId()).getAmount());
+            LivingEntity victim = event.getVictim();
             victim.getWorld().playSound(victim.getLocation(), Sound.ENTITY_GHAST_SHOOT, 0.25f, 1.25f);
             victim.getWorld().spawnParticle(Particle.FLAME, victim.getEyeLocation(), 5, 0.5F, 0.5F, 0.5F, 0);
         }
-        if (slayers.containsKey(e.getPlayer().getUniqueId())) {
-            double percent = slayers.get(e.getPlayer().getUniqueId());
-            int extraAmt = (int) (e.getAmount() * percent);
+        if (slayers.containsKey(event.getPlayer().getUniqueId())) {
+            double percent = slayers.get(event.getPlayer().getUniqueId());
+            int extraAmt = (int) (event.getAmount() * percent);
             if (extraAmt < 1) {
                 extraAmt = 1;
             }
-            e.setAmount(e.getAmount() + extraAmt);
+            event.setAmount(event.getAmount() + extraAmt);
         }
-    }
-
-    /**
-     * Logic for looting potions
-     */
-    @EventHandler
-    public void onLoot(LootEvent e) {
-        if (!looters.containsKey(e.getPlayer().getUniqueId())) return;
-        Player player = e.getPlayer();
-        double chance = ThreadLocalRandom.current().nextDouble();
-        // 20% chance for item
-        if (chance > looters.get(e.getPlayer().getUniqueId())) return;
-        player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 0.5f, 1.0f);
-        player.sendMessage(ChatColor.GREEN + "You've received double loot from your potion of looting!");
-        ItemStack item = e.getItemStack();
-        RunicItemsAPI.addItem(player.getInventory(), item, true);
     }
 
     static class Pair {

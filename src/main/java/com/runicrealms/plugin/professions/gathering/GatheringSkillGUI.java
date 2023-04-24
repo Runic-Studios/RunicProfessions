@@ -1,6 +1,9 @@
 package com.runicrealms.plugin.professions.gathering;
 
-import com.runicrealms.plugin.professions.api.RunicProfessionsAPI;
+import com.runicrealms.plugin.RunicProfessions;
+import com.runicrealms.plugin.professions.Profession;
+import com.runicrealms.plugin.professions.crafting.ListenerResource;
+import com.runicrealms.plugin.professions.model.GatheringData;
 import com.runicrealms.plugin.utilities.ColorUtil;
 import com.runicrealms.plugin.utilities.GUIUtil;
 import com.runicrealms.runicitems.RunicItemsAPI;
@@ -31,7 +34,15 @@ public class GatheringSkillGUI implements InventoryHolder {
         openMenu();
     }
 
-    private static ItemStack reagentWithLore(ItemStack itemStack, GatheringResource gatheringResource, boolean isUnlocked) {
+    /**
+     * @param itemStack       the ui item
+     * @param skillIdentifier the string to identify the skill "fishing"
+     * @param requiredLevel   the required level to gather the material
+     * @param experience      the experience given by the material
+     * @param isUnlocked      true if player has unlocked material
+     * @return an item for display
+     */
+    private static ItemStack reagentWithLore(ItemStack itemStack, String skillIdentifier, int requiredLevel, int experience, boolean isUnlocked) {
         ItemStack reagentWithLore = itemStack.clone();
         ItemMeta meta = reagentWithLore.getItemMeta();
         assert meta != null;
@@ -45,17 +56,55 @@ public class GatheringSkillGUI implements InventoryHolder {
         lore.add
                 (
                         ChatColor.GRAY + "Requires " +
-                                ChatColor.YELLOW + gatheringResource.getGatheringSkill().getFormattedIdentifier() + " " +
-                                ChatColor.WHITE + gatheringResource.getRequiredLevel());
+                                ChatColor.YELLOW + skillIdentifier + " " +
+                                ChatColor.WHITE + requiredLevel);
         lore.add("");
         lore.add
                 (
                         ChatColor.GRAY + "" + ChatColor.ITALIC + "Rewards " +
-                                ChatColor.WHITE + ChatColor.ITALIC + gatheringResource.getExperience() +
+                                ChatColor.WHITE + ChatColor.ITALIC + experience +
                                 ChatColor.GRAY + ChatColor.ITALIC + " experience");
         meta.setLore(lore);
         reagentWithLore.setItemMeta(meta);
         return reagentWithLore;
+    }
+
+    private void addCraftingResources(GatheringData gatheringData) {
+        ListenerResource[] craftedResources = ListenerResource.values();
+        Arrays.sort(craftedResources, Comparator.comparing(ListenerResource::getRequiredLevel)); // sort in ascending order of level
+        for (ListenerResource craftedResource : craftedResources) {
+            if (craftedResource.getProfession() != Profession.COOKING) continue;
+            ItemStack itemStack = RunicItemsAPI.generateItemFromTemplate(craftedResource.getTemplateId()).generateGUIItem();
+            this.inventory.setItem(this.inventory.firstEmpty(), reagentWithLore
+                    (
+                            itemStack,
+                            GatheringSkill.COOKING.getFormattedIdentifier(),
+                            craftedResource.getRequiredLevel(),
+                            craftedResource.getExperience(),
+                            (gatheringData.getGatheringLevel(GatheringSkill.COOKING) >= craftedResource.getRequiredLevel())
+                    ));
+        }
+    }
+
+    private void addGatheringResources(GatheringData gatheringData) {
+        GatheringResource[] gatheringResources = GatheringResource.values();
+        Arrays.sort(gatheringResources, Comparator.comparing(GatheringResource::getRequiredLevel)); // sort in ascending order of level
+        for (GatheringResource gatheringResource : gatheringResources) {
+            if (gatheringResource.getGatheringSkill() != this.gatheringSkill) continue;
+            ItemStack itemStack = RunicItemsAPI.generateItemFromTemplate(gatheringResource.getTemplateId()).generateGUIItem();
+            this.inventory.setItem(this.inventory.firstEmpty(), reagentWithLore
+                    (
+                            itemStack,
+                            gatheringResource.getGatheringSkill().getFormattedIdentifier(),
+                            gatheringResource.getRequiredLevel(),
+                            gatheringResource.getExperience(),
+                            (gatheringData.getGatheringLevel(gatheringResource.getGatheringSkill()) >= gatheringResource.getRequiredLevel())
+                    ));
+        }
+    }
+
+    public GatheringSkill getGatheringSkill() {
+        return gatheringSkill;
     }
 
     @NotNull
@@ -68,35 +117,24 @@ public class GatheringSkillGUI implements InventoryHolder {
         return player;
     }
 
-    public GatheringSkill getGatheringSkill() {
-        return gatheringSkill;
-    }
-
     /**
      * Opens the inventory associated w/ this GUI, ordering perks
      */
     private void openMenu() {
-        GatherPlayer gatherPlayer = RunicProfessionsAPI.getGatherPlayer(player.getUniqueId());
+        GatheringData gatheringData = RunicProfessions.getDataAPI().loadGatheringData(player.getUniqueId());
         this.inventory.clear();
         GUIUtil.fillInventoryBorders(this.inventory);
-        this.inventory.setItem(0, GUIUtil.backButton());
+        this.inventory.setItem(0, GUIUtil.BACK_BUTTON);
         this.inventory.setItem(4, GUIUtil.dispItem(
                 Material.PAPER,
                 ChatColor.YELLOW + gatheringSkill.getFormattedIdentifier() +
-                        ChatColor.GRAY + " Level " + gatherPlayer.getGatheringLevel(gatheringSkill),
+                        ChatColor.GRAY + " Level " + gatheringData.getGatheringLevel(gatheringSkill),
                 new String[]{}
         ));
-        GatheringResource[] sorted = GatheringResource.values();
-        Arrays.sort(sorted, Comparator.comparing(GatheringResource::getRequiredLevel)); // sort in ascending order of level
-        for (GatheringResource gatheringResource : sorted) {
-            if (gatheringResource.getGatheringSkill() != this.gatheringSkill) continue;
-            ItemStack itemStack = RunicItemsAPI.generateItemFromTemplate(gatheringResource.getTemplateId()).generateItem();
-            this.inventory.setItem(this.inventory.firstEmpty(), reagentWithLore
-                    (
-                            itemStack,
-                            gatheringResource,
-                            (gatherPlayer.getGatheringLevel(gatheringResource.getGatheringSkill()) >= gatheringResource.getRequiredLevel())
-                    ));
+        if (gatheringSkill == GatheringSkill.COOKING) {
+            addCraftingResources(gatheringData);
+        } else {
+            addGatheringResources(gatheringData);
         }
     }
 }

@@ -9,20 +9,22 @@ import java.util.Set;
 
 public enum GatheringSkill {
 
-    COOKING(20, "cooking", "", cookingItem()),
-    FARMING(22, "farming", "You need a farming hoe to do that!", farmingItem()),
-    FISHING(24, "fishing", "You need a fishing rod to do that!", fishingItem()),
-    HARVESTING(29, "harvesting", "", harvestingItem()),
-    MINING(31, "mining", "You need a mining pickaxe to do that!", miningItem()),
-    WOODCUTTING(33, "woodcutting", "You need a woodcutting axe to do that!", woodcuttingItem());
+    COOKING(20, .5, "cooking", "", cookingItem()),
+    FARMING(22, .25, "farming", "You need a farming hoe to do that!", farmingItem()),
+    FISHING(24, .5, "fishing", "You need a fishing rod to do that!", fishingItem()),
+    HARVESTING(29, .25, "harvesting", "", harvestingItem()),
+    MINING(31, .5, "mining", "You need a mining pickaxe to do that!", miningItem()),
+    WOODCUTTING(33, .5, "woodcutting", "You need a woodcutting axe to do that!", woodcuttingItem());
 
     private final int menuSlot;
+    private final double combatExpMult;
     private final String identifier;
     private final String noToolMessage;
     private final ItemStack menuItem;
 
-    GatheringSkill(int menuSlot, String identifier, String noToolMessage, ItemStack menuItem) {
+    GatheringSkill(int menuSlot, double combatExpMult, String identifier, String noToolMessage, ItemStack menuItem) {
         this.menuSlot = menuSlot;
+        this.combatExpMult = combatExpMult;
         this.identifier = identifier;
         this.noToolMessage = noToolMessage;
         this.menuItem = menuItem;
@@ -95,6 +97,10 @@ public enum GatheringSkill {
 
     public int getMenuSlot() {
         return menuSlot;
+    }
+
+    public double getCombatExpMult() {
+        return combatExpMult;
     }
 
     public String getIdentifier() {
