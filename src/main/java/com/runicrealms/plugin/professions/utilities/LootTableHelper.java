@@ -22,7 +22,7 @@ public class LootTableHelper {
         lootTableTierI.addEntry(gatheringAxe, 4.0);
         lootTableTierI.addEntry(gatheringHoe, 4.0);
         lootTableTierI.addEntry(gatheringPick, 4.0);
-        lootTableTierI.addEntry(gatheringRod, 6.0);
+        lootTableTierI.addEntry(gatheringRod, 4.0);
     }
 
     private void setupEpicLootTable() {
@@ -36,7 +36,7 @@ public class LootTableHelper {
         lootTableTierIV.addEntry(gatheringAxe, 2.0);
         lootTableTierIV.addEntry(gatheringHoe, 2.0);
         lootTableTierIV.addEntry(gatheringPick, 2.0);
-        lootTableTierIV.addEntry(gatheringRod, 4.0);
+        lootTableTierIV.addEntry(gatheringRod, 2.0);
     }
 
     /**
@@ -59,10 +59,10 @@ public class LootTableHelper {
         ChestItem gatheringPick = new ChestItem(GatheringUtil.GATHERING_PICKAXE_REFINED.getTemplateId(), 1, 1);
         ChestItem gatheringRod = new ChestItem(GatheringUtil.GATHERING_ROD_REFINED.getTemplateId(), 1, 1);
 
-        lootTableTierIII.addEntry(gatheringAxe, 2.0);
-        lootTableTierIII.addEntry(gatheringHoe, 2.0);
-        lootTableTierIII.addEntry(gatheringPick, 2.0);
-        lootTableTierIII.addEntry(gatheringRod, 4.0);
+        lootTableTierIII.addEntry(gatheringAxe, 1.5);
+        lootTableTierIII.addEntry(gatheringHoe, 1.5);
+        lootTableTierIII.addEntry(gatheringPick, 1.5);
+        lootTableTierIII.addEntry(gatheringRod, 1.5);
     }
 
     private void setupUncommonLootTable() {
@@ -73,9 +73,9 @@ public class LootTableHelper {
         ChestItem gatheringPick = new ChestItem(GatheringUtil.GATHERING_PICKAXE_ADEPT.getTemplateId(), 1, 1);
         ChestItem gatheringRod = new ChestItem(GatheringUtil.GATHERING_ROD_ADEPT.getTemplateId(), 1, 1);
 
-        lootTableTierII.addEntry(gatheringAxe, 3.0);
-        lootTableTierII.addEntry(gatheringHoe, 3.0);
-        lootTableTierII.addEntry(gatheringPick, 3.0);
-        lootTableTierII.addEntry(gatheringRod, 5.0);
+        lootTableTierII.addEntry(gatheringAxe, 1.5);
+        lootTableTierII.addEntry(gatheringHoe, 1.5);
+        lootTableTierII.addEntry(gatheringPick, 1.5);
+        lootTableTierII.addEntry(gatheringRod, 1.5);
     }
 }
