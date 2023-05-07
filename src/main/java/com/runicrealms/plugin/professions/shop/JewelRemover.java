@@ -101,9 +101,8 @@ public class JewelRemover implements RunicShop {
             if (inventory.getItem(slot) == null) continue;
             ItemStack itemStack = inventory.getItem(slot);
             RunicItem runicItem = RunicItemsAPI.getRunicItemFromItemStack(itemStack);
-            if (!(runicItem instanceof RunicItemArmor)) continue;
+            if (!(runicItem instanceof RunicItemArmor runicItemArmor)) continue;
             storedItems.get(player.getUniqueId()).add(itemStack);
-            RunicItemArmor runicItemArmor = (RunicItemArmor) runicItem;
             runicItemArmor.getGems().clear(); // Remove all gems
             ItemStack newItem = runicItemArmor.generateItem();
             RunicItemsAPI.addItem(player.getInventory(), newItem);
@@ -111,10 +110,10 @@ public class JewelRemover implements RunicShop {
         }
 
         if (placedValidItem) {
-            Map<String, Integer> requiredItems = new HashMap<String, Integer>() {{
+            Map<String, Integer> requiredItems = new HashMap<>() {{
                 put("coin", PRICE);
             }};
-            boolean result = RunicCore.getShopAPI().completeTransaction(player, requiredItems, "",
+            boolean result = RunicCore.getShopAPI().checkItemRequirement(player, requiredItems, "",
                     true);
             if (result) {
                 player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 0.5f, 1.0f);
