@@ -85,12 +85,27 @@ public class ProfExpUtil {
                 int currentExp = gatheringData.getGatheringExp(gatheringSkill);
                 int currentLevel = ProfExpUtil.calculateProfessionLevel(currentExp);
                 int maxLevelForGatheringSkill = MAX_CAPPED_GATHERING_PROF_LEVEL;
-                if (currentLevel >= maxLevelForGatheringSkill) return;
+                int combatExp = ExperienceConverter.calculateCombatExperience(expGained, gatheringSkill.getCombatExpMult());
+                RunicCore.getCombatAPI().giveCombatExp(player, combatExp);
+                if (currentLevel >= maxLevelForGatheringSkill) {
+                    ActionBarUtil.sendTimedMessage
+                            (
+                                    player,
+                                    ChatColor.GREEN + "+ " + ChatColor.WHITE + expGained + ChatColor.GREEN + " " +
+                                            gatheringSkill.getFormattedIdentifier() + " exp " + ChatColor.GRAY + "(" +
+                                            ChatColor.WHITE + "0" + ChatColor.GRAY + "/" +
+                                            "0)" + ChatColor.YELLOW + " | " +
+                                            ChatColor.GREEN + "+ " + ChatColor.WHITE + combatExp + ChatColor.GREEN + " " +
+                                            "combat exp",
+                                    3
+                            );
+                    return;
+                }
                 gatheringData.setGatheringExp(gatheringSkill, currentExp + expGained);
                 int newTotalExp = gatheringData.getGatheringExp(gatheringSkill);
                 int totalExpAtLevel = calculateTotalExperience(currentLevel);
                 int totalExpToLevel = calculateTotalExperience(currentLevel + 1);
-                int combatExp = ExperienceConverter.calculateCombatExperience(expGained, gatheringSkill.getCombatExpMult());
+//                int combatExp = ExperienceConverter.calculateCombatExperience(expGained, gatheringSkill.getCombatExpMult());
                 ActionBarUtil.sendTimedMessage
                         (
                                 player,
@@ -106,7 +121,7 @@ public class ProfExpUtil {
                                 3
                         );
                 int newLevel = calculateProfessionLevel(newTotalExp);
-                RunicCore.getCombatAPI().giveCombatExp(player, combatExp);
+//                RunicCore.getCombatAPI().giveCombatExp(player, combatExp);
                 gatheringData.writeToJedis(player.getUniqueId(), jedis);
                 if (newLevel == currentLevel) return;
                 // Player has earned a gathering level!
