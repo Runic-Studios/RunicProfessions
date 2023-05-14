@@ -9,12 +9,12 @@ import java.util.Set;
 
 public enum GatheringSkill {
 
-    COOKING(20, .5, "cooking", "", cookingItem()),
-    FARMING(22, .25, "farming", "You need a farming hoe to do that!", farmingItem()),
-    FISHING(24, .5, "fishing", "You need a fishing rod to do that!", fishingItem()),
-    HARVESTING(29, .25, "harvesting", "", harvestingItem()),
-    MINING(31, .5, "mining", "You need a mining pickaxe to do that!", miningItem()),
-    WOODCUTTING(33, .5, "woodcutting", "You need a woodcutting axe to do that!", woodcuttingItem());
+    COOKING(20, 10, "cooking", "", cookingItem()),
+    FARMING(22, 10, "farming", "You need a farming hoe to do that!", farmingItem()),
+    FISHING(24, 10, "fishing", "You need a fishing rod to do that!", fishingItem()),
+    HARVESTING(29, 10, "harvesting", "", harvestingItem()),
+    MINING(31, 10, "mining", "You need a mining pickaxe to do that!", miningItem()),
+    WOODCUTTING(33, 10, "woodcutting", "You need a woodcutting axe to do that!", woodcuttingItem());
 
     private final int menuSlot;
     private final double combatExpMult;
@@ -95,27 +95,27 @@ public enum GatheringSkill {
                 "leHR1cmUvNWFlODI2ZTdkYjg0NDdmYmQ2Mjk4OGZlZTBlODNiYmRkNjk0Mzc4YWVmMTJkMjU3MmU5NzVmMDU5YTU0OTkwIn19fQ==");
     }
 
-    public int getMenuSlot() {
-        return menuSlot;
-    }
-
     public double getCombatExpMult() {
         return combatExpMult;
-    }
-
-    public String getIdentifier() {
-        return identifier;
     }
 
     public String getFormattedIdentifier() {
         return identifier.substring(0, 1).toUpperCase() + identifier.substring(1);
     }
 
-    public String getNoToolMessage() {
-        return ChatColor.RED + noToolMessage;
+    public String getIdentifier() {
+        return identifier;
     }
 
     public ItemStack getMenuItem() {
         return menuItem;
+    }
+
+    public int getMenuSlot() {
+        return menuSlot;
+    }
+
+    public String getNoToolMessage() {
+        return ChatColor.RED + noToolMessage;
     }
 }

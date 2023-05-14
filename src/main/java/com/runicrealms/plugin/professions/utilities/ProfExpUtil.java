@@ -90,7 +90,7 @@ public class ProfExpUtil {
                 int newTotalExp = gatheringData.getGatheringExp(gatheringSkill);
                 int totalExpAtLevel = calculateTotalExperience(currentLevel);
                 int totalExpToLevel = calculateTotalExperience(currentLevel + 1);
-                int combatExp = (int) (expGained * gatheringSkill.getCombatExpMult());
+                int combatExp = ExperienceConverter.calculateCombatExperience(expGained, gatheringSkill.getCombatExpMult());
                 ActionBarUtil.sendTimedMessage
                         (
                                 player,
