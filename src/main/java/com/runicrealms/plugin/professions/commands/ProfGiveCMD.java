@@ -1,7 +1,11 @@
 package com.runicrealms.plugin.professions.commands;
 
-import com.runicrealms.libs.acf.BaseCommand;
-import com.runicrealms.libs.acf.annotation.*;
+import co.aikar.commands.BaseCommand;
+import co.aikar.commands.annotation.CommandAlias;
+import co.aikar.commands.annotation.CommandCompletion;
+import co.aikar.commands.annotation.Conditions;
+import co.aikar.commands.annotation.Subcommand;
+import co.aikar.commands.annotation.Syntax;
 import com.runicrealms.plugin.RunicProfessions;
 import com.runicrealms.plugin.professions.gathering.GatheringSkill;
 import com.runicrealms.plugin.professions.utilities.ProfExpUtil;

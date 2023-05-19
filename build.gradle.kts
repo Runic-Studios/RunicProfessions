@@ -1,7 +1,6 @@
 plugins {
     `java-library`
     `maven-publish`
-    id("com.github.johnrengelman.shadow") version "7.1.2"
 }
 
 group = "com.runicrealms.plugin"
@@ -10,8 +9,13 @@ version = "1.0-SNAPSHOT"
 dependencies {
     compileOnly(commonLibs.spigot)
     compileOnly(commonLibs.craftbukkit)
-    implementation(commonLibs.acf)
+    compileOnly(commonLibs.acf)
+    compileOnly(commonLibs.taskchain)
     compileOnly(commonLibs.paper)
+    compileOnly(commonLibs.jedis)
+    compileOnly(commonLibs.springdatamongodb)
+    compileOnly(commonLibs.mongodbdriversync)
+    compileOnly(commonLibs.mongodbdrivercore)
     compileOnly(project(":Projects:Chat"))
     compileOnly(project(":Projects:Core"))
     compileOnly(project(":Projects:Items"))

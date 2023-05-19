@@ -4,7 +4,11 @@ import com.runicrealms.plugin.RunicCore;
 import com.runicrealms.plugin.model.SessionDataRedis;
 import redis.clients.jedis.Jedis;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 public class CraftingData implements SessionDataRedis {
     public static final List<String> FIELDS = new ArrayList<String>() {{

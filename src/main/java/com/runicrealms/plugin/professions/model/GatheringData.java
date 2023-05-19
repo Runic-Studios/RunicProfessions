@@ -6,7 +6,11 @@ import com.runicrealms.plugin.professions.gathering.GatheringSkill;
 import com.runicrealms.plugin.professions.utilities.ProfExpUtil;
 import redis.clients.jedis.Jedis;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 /**
  * Wrapper for player gathering levels

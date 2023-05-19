@@ -1,7 +1,7 @@
 package com.runicrealms.plugin.professions.model;
 
-import com.runicrealms.libs.taskchain.TaskChain;
-import com.runicrealms.libs.taskchain.TaskChainAbortAction;
+import co.aikar.taskchain.TaskChain;
+import co.aikar.taskchain.TaskChainAbortAction;
 import com.runicrealms.plugin.RunicCore;
 import com.runicrealms.plugin.RunicProfessions;
 import com.runicrealms.plugin.character.api.CharacterDeleteEvent;

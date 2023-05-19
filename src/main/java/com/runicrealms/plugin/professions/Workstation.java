@@ -14,12 +14,22 @@ import com.runicrealms.plugin.utilities.ColorUtil;
 import com.runicrealms.plugin.utilities.FloatingItemUtil;
 import com.runicrealms.runicitems.RunicItemsAPI;
 import com.runicrealms.runicitems.Stat;
-import com.runicrealms.runicitems.item.*;
+import com.runicrealms.runicitems.item.RunicItem;
+import com.runicrealms.runicitems.item.RunicItemArmor;
+import com.runicrealms.runicitems.item.RunicItemGem;
+import com.runicrealms.runicitems.item.RunicItemGeneric;
+import com.runicrealms.runicitems.item.RunicItemOffhand;
+import com.runicrealms.runicitems.item.RunicItemWeapon;
 import com.runicrealms.runicitems.item.stats.GemBonus;
 import com.runicrealms.runicitems.item.stats.RunicItemStatRange;
 import com.runicrealms.runicitems.item.stats.RunicItemTag;
 import com.runicrealms.runicitems.util.DataUtil;
-import org.bukkit.*;
+import org.bukkit.ChatColor;
+import org.bukkit.Color;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.Particle;
+import org.bukkit.Sound;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
@@ -28,7 +38,11 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * Basic workstation class with some handy methods
