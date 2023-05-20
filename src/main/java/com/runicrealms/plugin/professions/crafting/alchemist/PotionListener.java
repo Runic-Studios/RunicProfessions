@@ -2,13 +2,13 @@ package com.runicrealms.plugin.professions.crafting.alchemist;
 
 import com.runicrealms.plugin.RunicCore;
 import com.runicrealms.plugin.RunicProfessions;
+import com.runicrealms.plugin.common.util.ColorUtil;
 import com.runicrealms.plugin.events.MagicDamageEvent;
 import com.runicrealms.plugin.events.PhysicalDamageEvent;
-import com.runicrealms.plugin.item.util.ItemRemover;
-import com.runicrealms.plugin.utilities.ColorUtil;
 import com.runicrealms.runicitems.item.RunicItem;
 import com.runicrealms.runicitems.item.event.RunicItemGenericTriggerEvent;
 import com.runicrealms.runicitems.item.stats.RunicItemTag;
+import com.runicrealms.runicitems.util.ItemUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Particle;
@@ -173,7 +173,7 @@ public class PotionListener implements Listener {
 
         Player player = event.getPlayer();
         ItemStack itemStack = event.getItemStack();
-        ItemRemover.takeItem(player, itemStack, 1);
+        ItemUtils.takeItem(player, itemStack, 1);
         player.playSound(player.getLocation(), Sound.ENTITY_GENERIC_DRINK, 0.5f, 1.0f);
 
         if (healingPotions.contains(event.getItem().getTemplateId())) {

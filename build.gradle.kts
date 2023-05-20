@@ -16,12 +16,15 @@ dependencies {
     compileOnly(commonLibs.springdatamongodb)
     compileOnly(commonLibs.mongodbdriversync)
     compileOnly(commonLibs.mongodbdrivercore)
+    compileOnly(commonLibs.mythicmobs)
     compileOnly(project(":Projects:Chat"))
     compileOnly(project(":Projects:Core"))
     compileOnly(project(":Projects:Items"))
     compileOnly(project(":Projects:Npcs"))
     compileOnly(project(":Projects:Restart"))
+    compileOnly(project(":Projects:Database"))
     compileOnly(commonLibs.holographicdisplays)
+    compileOnly(project(":Projects:Common"))
 }
 
 java {

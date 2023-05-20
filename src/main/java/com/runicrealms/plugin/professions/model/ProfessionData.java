@@ -1,7 +1,7 @@
 package com.runicrealms.plugin.professions.model;
 
-import com.runicrealms.plugin.RunicCore;
-import com.runicrealms.plugin.model.SessionDataMongo;
+import com.runicrealms.plugin.rdb.RunicDatabase;
+import com.runicrealms.plugin.rdb.model.SessionDataMongo;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -48,7 +48,7 @@ public class ProfessionData implements SessionDataMongo {
     @SuppressWarnings("unchecked")
     @Override
     public ProfessionData addDocumentToMongo() {
-        MongoTemplate mongoTemplate = RunicCore.getDataAPI().getMongoTemplate();
+        MongoTemplate mongoTemplate = RunicDatabase.getAPI().getDataAPI().getMongoTemplate();
         return mongoTemplate.save(this);
     }
 

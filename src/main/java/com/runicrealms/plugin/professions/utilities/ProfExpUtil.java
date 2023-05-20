@@ -8,6 +8,7 @@ import com.runicrealms.plugin.professions.event.ProfessionLevelChangeEvent;
 import com.runicrealms.plugin.professions.gathering.GatheringSkill;
 import com.runicrealms.plugin.professions.model.CraftingData;
 import com.runicrealms.plugin.professions.model.GatheringData;
+import com.runicrealms.plugin.rdb.RunicDatabase;
 import com.runicrealms.plugin.utilities.ActionBarUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -32,8 +33,8 @@ public class ProfExpUtil {
      */
     public static void giveCraftingExperience(Player player, int expGained) {
         Bukkit.getScheduler().runTaskAsynchronously(RunicProfessions.getInstance(), () -> {
-            try (Jedis jedis = RunicCore.getRedisAPI().getNewJedisResource()) {
-                int slot = RunicCore.getCharacterAPI().getCharacterSlot(player.getUniqueId());
+            try (Jedis jedis = RunicDatabase.getAPI().getRedisAPI().getNewJedisResource()) {
+                int slot = RunicDatabase.getAPI().getCharacterAPI().getCharacterSlot(player.getUniqueId());
                 CraftingData craftingData = RunicProfessions.getDataAPI().loadCraftingData(player.getUniqueId(), slot);
                 Profession profession = RunicProfessions.getAPI().getPlayerProfession(player.getUniqueId(), slot);
                 int currentExp = RunicProfessions.getAPI().getPlayerProfessionExp(player.getUniqueId(), slot);
@@ -80,7 +81,7 @@ public class ProfExpUtil {
      */
     public static void giveGatheringExperience(Player player, GatheringSkill gatheringSkill, int expGained) {
         Bukkit.getScheduler().runTaskAsynchronously(RunicProfessions.getInstance(), () -> {
-            try (Jedis jedis = RunicCore.getRedisAPI().getNewJedisResource()) {
+            try (Jedis jedis = RunicDatabase.getAPI().getRedisAPI().getNewJedisResource()) {
                 GatheringData gatheringData = RunicProfessions.getDataAPI().loadGatheringData(player.getUniqueId());
                 int currentExp = gatheringData.getGatheringExp(gatheringSkill);
                 int currentLevel = ProfExpUtil.calculateProfessionLevel(currentExp);

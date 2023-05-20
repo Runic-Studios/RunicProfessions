@@ -1,6 +1,6 @@
 package com.runicrealms.plugin.professions.gathering;
 
-import com.runicrealms.plugin.item.util.ItemUtils;
+import com.runicrealms.runicitems.util.ItemUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.inventory.ItemStack;
 

@@ -5,6 +5,7 @@ import com.runicrealms.plugin.RunicProfessions;
 import com.runicrealms.plugin.professions.event.ProfessionLevelChangeEvent;
 import com.runicrealms.plugin.professions.model.CraftingData;
 import com.runicrealms.plugin.professions.utilities.ProfExpUtil;
+import com.runicrealms.plugin.rdb.RunicDatabase;
 import org.bukkit.ChatColor;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -18,7 +19,7 @@ public class ProfessionLevelChangeListener implements Listener {
     @EventHandler
     public void onProfessionLevelChange(ProfessionLevelChangeEvent event) {
         UUID uuid = event.getPlayer().getUniqueId();
-        int slot = RunicCore.getCharacterAPI().getCharacterSlot(uuid);
+        int slot = RunicDatabase.getAPI().getCharacterAPI().getCharacterSlot(uuid);
         CraftingData craftingData = RunicProfessions.getDataAPI().loadCraftingData(uuid, slot);
         Player player = event.getPlayer();
         String profession = event.getProfession().getName();

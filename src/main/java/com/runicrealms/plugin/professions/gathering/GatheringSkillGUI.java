@@ -1,10 +1,10 @@
 package com.runicrealms.plugin.professions.gathering;
 
 import com.runicrealms.plugin.RunicProfessions;
+import com.runicrealms.plugin.common.util.ColorUtil;
 import com.runicrealms.plugin.professions.Profession;
 import com.runicrealms.plugin.professions.crafting.ListenerResource;
 import com.runicrealms.plugin.professions.model.GatheringData;
-import com.runicrealms.plugin.utilities.ColorUtil;
 import com.runicrealms.plugin.utilities.GUIUtil;
 import com.runicrealms.runicitems.RunicItemsAPI;
 import org.bukkit.Bukkit;

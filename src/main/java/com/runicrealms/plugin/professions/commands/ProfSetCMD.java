@@ -6,7 +6,6 @@ import co.aikar.commands.annotation.CommandCompletion;
 import co.aikar.commands.annotation.Conditions;
 import co.aikar.commands.annotation.Subcommand;
 import co.aikar.commands.annotation.Syntax;
-import com.runicrealms.plugin.RunicCore;
 import com.runicrealms.plugin.RunicProfessions;
 import com.runicrealms.plugin.professions.Profession;
 import com.runicrealms.plugin.professions.event.GatheringLevelChangeEvent;
@@ -14,6 +13,7 @@ import com.runicrealms.plugin.professions.gathering.GatheringSkill;
 import com.runicrealms.plugin.professions.model.CraftingData;
 import com.runicrealms.plugin.professions.model.GatheringData;
 import com.runicrealms.plugin.professions.utilities.ProfExpUtil;
+import com.runicrealms.plugin.rdb.RunicDatabase;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Sound;
@@ -30,7 +30,7 @@ public class ProfSetCMD extends BaseCommand {
     public ProfSetCMD() {
         RunicProfessions.getCommandManager().getCommandCompletions().registerAsyncCompletion("online", context -> {
             Set<String> onlinePlayers = new HashSet<>();
-            for (UUID uuid : RunicCore.getCharacterAPI().getLoadedCharacters()) {
+            for (UUID uuid : RunicDatabase.getAPI().getCharacterAPI().getLoadedCharacters()) {
                 Player player = Bukkit.getPlayer(uuid);
                 if (player == null) continue;
                 onlinePlayers.add(player.getName());
@@ -132,7 +132,7 @@ public class ProfSetCMD extends BaseCommand {
         if (player == null) return;
         int level = Integer.parseInt(args[1]);
         int exp = ProfExpUtil.calculateTotalExperience(level + 1);
-        int slot = RunicCore.getCharacterAPI().getCharacterSlot(player.getUniqueId());
+        int slot = RunicDatabase.getAPI().getCharacterAPI().getCharacterSlot(player.getUniqueId());
         CraftingData craftingData = RunicProfessions.getDataAPI().loadCraftingData(player.getUniqueId(), slot);
         craftingData.setProfExp(0);
         ProfExpUtil.giveCraftingExperience(player, exp);
