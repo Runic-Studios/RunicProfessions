@@ -5,6 +5,7 @@ plugins {
 
 group = "com.runicrealms.plugin"
 version = "1.0-SNAPSHOT"
+val artifactName = "professions"
 
 dependencies {
     compileOnly(commonLibs.spigot)
@@ -17,13 +18,13 @@ dependencies {
     compileOnly(commonLibs.mongodbdriversync)
     compileOnly(commonLibs.mongodbdrivercore)
     compileOnly(commonLibs.mythicmobs)
+    compileOnly(commonLibs.holographicdisplays)
     compileOnly(project(":Projects:Chat"))
     compileOnly(project(":Projects:Core"))
     compileOnly(project(":Projects:Items"))
     compileOnly(project(":Projects:Npcs"))
     compileOnly(project(":Projects:Restart"))
     compileOnly(project(":Projects:Database"))
-    compileOnly(commonLibs.holographicdisplays)
     compileOnly(project(":Projects:Common"))
 }
 
@@ -35,12 +36,9 @@ publishing {
     publications {
         create<MavenPublication>("maven") {
             groupId = "com.runicrealms.plugin"
-            artifactId = "professions"
+            artifactId = artifactName
             version = "1.0-SNAPSHOT"
             from(components["java"])
         }
     }
 }
-
-tasks.register("wrapper")
-tasks.register("prepareKotlinBuildScriptModel")
