@@ -2,6 +2,4 @@ name: RunicProfessions
 version: ${project.version}
 main: com.runicrealms.plugin.RunicProfessions
 api-version: 1.13
-depend: [ MythicMobs, RunicCore, RunicItems, RunicCommon ]
-softdepend:
-  - RunicRestart
+depend: [ MythicMobs, RunicCore, RunicItems, RunicCommon, RunicDatabase, RunicRestart ]
