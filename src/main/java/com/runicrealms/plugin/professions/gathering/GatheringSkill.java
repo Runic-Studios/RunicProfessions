@@ -8,7 +8,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 public enum GatheringSkill {
-
     COOKING(20, 10, "cooking", "", cookingItem()),
     FARMING(22, 2, "farming", "You need a farming hoe to do that!", farmingItem()),
     FISHING(24, 10, "fishing", "You need a fishing rod to do that!", fishingItem()),
@@ -17,14 +16,14 @@ public enum GatheringSkill {
     WOODCUTTING(33, 10, "woodcutting", "You need a woodcutting axe to do that!", woodcuttingItem());
 
     private final int menuSlot;
-    private final double combatExpMult;
+    private final double combatExpMultiplier;
     private final String identifier;
     private final String noToolMessage;
     private final ItemStack menuItem;
 
-    GatheringSkill(int menuSlot, double combatExpMult, String identifier, String noToolMessage, ItemStack menuItem) {
+    GatheringSkill(int menuSlot, double combatExpMultiplier, String identifier, String noToolMessage, ItemStack menuItem) {
         this.menuSlot = menuSlot;
-        this.combatExpMult = combatExpMult;
+        this.combatExpMultiplier = combatExpMultiplier;
         this.identifier = identifier;
         this.noToolMessage = noToolMessage;
         this.menuItem = menuItem;
@@ -95,8 +94,8 @@ public enum GatheringSkill {
                 "leHR1cmUvNWFlODI2ZTdkYjg0NDdmYmQ2Mjk4OGZlZTBlODNiYmRkNjk0Mzc4YWVmMTJkMjU3MmU5NzVmMDU5YTU0OTkwIn19fQ==");
     }
 
-    public double getCombatExpMult() {
-        return combatExpMult;
+    public double getCombatExpMultiplier() {
+        return combatExpMultiplier;
     }
 
     public String getFormattedIdentifier() {

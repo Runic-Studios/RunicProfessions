@@ -86,7 +86,7 @@ public class ProfExpUtil {
                 int currentExp = gatheringData.getGatheringExp(gatheringSkill);
                 int currentLevel = ProfExpUtil.calculateProfessionLevel(currentExp);
                 int maxLevelForGatheringSkill = MAX_CAPPED_GATHERING_PROF_LEVEL;
-                int combatExp = ExperienceConverter.calculateCombatExperience(expGained, gatheringSkill.getCombatExpMult());
+                int combatExp = ExperienceConverter.calculateCombatExperience(expGained, gatheringSkill.getCombatExpMultiplier());
                 RunicCore.getCombatAPI().giveCombatExp(player, combatExp);
                 if (currentLevel >= maxLevelForGatheringSkill) {
                     ActionBarUtil.sendTimedMessage
