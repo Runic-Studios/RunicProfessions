@@ -10,7 +10,7 @@ import java.util.Set;
 public enum GatheringSkill {
 
     COOKING(20, 10, "cooking", "", cookingItem()),
-    FARMING(22, 10, "farming", "You need a farming hoe to do that!", farmingItem()),
+    FARMING(22, 2, "farming", "You need a farming hoe to do that!", farmingItem()),
     FISHING(24, 10, "fishing", "You need a fishing rod to do that!", fishingItem()),
     HARVESTING(29, 10, "harvesting", "", harvestingItem()),
     MINING(31, 10, "mining", "You need a mining pickaxe to do that!", miningItem()),
