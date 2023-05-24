@@ -2,15 +2,15 @@ package com.runicrealms.plugin.professions;
 
 import com.runicrealms.plugin.RunicCore;
 import com.runicrealms.plugin.RunicProfessions;
+import com.runicrealms.plugin.common.util.ColorUtil;
 import com.runicrealms.plugin.item.GUIMenu.ItemGUI;
-import com.runicrealms.plugin.item.util.ItemRemover;
 import com.runicrealms.plugin.professions.config.WorkstationLoader;
 import com.runicrealms.plugin.professions.crafting.CraftedResource;
 import com.runicrealms.plugin.professions.gathering.GatheringSkill;
 import com.runicrealms.plugin.professions.listeners.WorkstationListener;
 import com.runicrealms.plugin.professions.model.GatheringData;
 import com.runicrealms.plugin.professions.utilities.ProfExpUtil;
-import com.runicrealms.plugin.utilities.ColorUtil;
+import com.runicrealms.plugin.rdb.RunicDatabase;
 import com.runicrealms.plugin.utilities.FloatingItemUtil;
 import com.runicrealms.runicitems.RunicItemsAPI;
 import com.runicrealms.runicitems.Stat;
@@ -24,6 +24,7 @@ import com.runicrealms.runicitems.item.stats.GemBonus;
 import com.runicrealms.runicitems.item.stats.RunicItemStatRange;
 import com.runicrealms.runicitems.item.stats.RunicItemTag;
 import com.runicrealms.runicitems.util.DataUtil;
+import com.runicrealms.runicitems.util.ItemUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Color;
 import org.bukkit.Location;
@@ -101,7 +102,7 @@ public abstract class Workstation implements Listener {
     protected void createMenuItem(ItemGUI gui, Player player, CraftedResource craftedResource, int slot, int... durability) {
         // grab the player's current profession level, progress toward that level
         int currentLvl;
-        int characterSlot = RunicCore.getCharacterAPI().getCharacterSlot(player.getUniqueId());
+        int characterSlot = RunicDatabase.getAPI().getCharacterAPI().getCharacterSlot(player.getUniqueId());
         GatheringData gatheringData = RunicProfessions.getDataAPI().loadGatheringData(player.getUniqueId());
         if (craftedResource.getProfession() == Profession.COOKING) {
             currentLvl = gatheringData.getCookingLevel();
@@ -384,7 +385,7 @@ public abstract class Workstation implements Listener {
         if (RunicProfessions.getAPI().getCurrentCrafters().contains(player)) return;
         GatheringData gatheringData = RunicProfessions.getDataAPI().loadGatheringData(player.getUniqueId());
         int currentLvl;
-        int characterSlot = RunicCore.getCharacterAPI().getCharacterSlot(player.getUniqueId());
+        int characterSlot = RunicDatabase.getAPI().getCharacterAPI().getCharacterSlot(player.getUniqueId());
         if (craftedResource.getProfession() == Profession.COOKING) {
             currentLvl = gatheringData.getCookingLevel();
         } else {
@@ -442,7 +443,7 @@ public abstract class Workstation implements Listener {
         player.sendMessage(ChatColor.GRAY + "Crafting...");
         for (ItemStack itemStack : reagents.keySet()) {
             int amt = reagents.get(itemStack) * numOfItems;
-            ItemRemover.takeItem(player, itemStack, amt);
+            ItemUtils.takeItem(player, itemStack, amt);
         }
 
         // spawn item on workstation for visual

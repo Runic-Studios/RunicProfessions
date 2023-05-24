@@ -1,7 +1,7 @@
 package com.runicrealms.plugin.professions.model;
 
-import com.runicrealms.plugin.RunicCore;
-import com.runicrealms.plugin.model.SessionDataRedis;
+import com.runicrealms.plugin.rdb.RunicDatabase;
+import com.runicrealms.plugin.rdb.model.SessionDataRedis;
 import redis.clients.jedis.Jedis;
 
 import java.util.ArrayList;
@@ -51,7 +51,7 @@ public class CraftingData implements SessionDataRedis {
 
     @Override
     public Map<String, String> getDataMapFromJedis(UUID uuid, Jedis jedis, int... slot) {
-        String database = RunicCore.getDataAPI().getMongoDatabase().getName();
+        String database = RunicDatabase.getAPI().getDataAPI().getMongoDatabase().getName();
         Map<String, String> fieldsMap = new HashMap<>();
         List<String> fields = new ArrayList<>(getFields());
         String[] fieldsToArray = fields.toArray(new String[0]);
@@ -83,12 +83,12 @@ public class CraftingData implements SessionDataRedis {
 
     @Override
     public void writeToJedis(UUID uuid, Jedis jedis, int... slot) {
-        String database = RunicCore.getDataAPI().getMongoDatabase().getName();
+        String database = RunicDatabase.getAPI().getDataAPI().getMongoDatabase().getName();
         // Inform the server that this player should be saved to mongo on next task (jedis data is refreshed)
         jedis.sadd(database + ":" + "markedForSave:professions", uuid.toString());
         String key = getJedisKey(uuid, slot[0]);
         jedis.hmset(database + ":" + key, this.toMap(uuid));
-        jedis.expire(database + ":" + key, RunicCore.getRedisAPI().getExpireTime());
+        jedis.expire(database + ":" + key, RunicDatabase.getAPI().getRedisAPI().getExpireTime());
     }
 
     public int getProfExp() {

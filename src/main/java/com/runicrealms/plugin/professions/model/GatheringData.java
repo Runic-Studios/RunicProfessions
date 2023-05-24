@@ -1,9 +1,9 @@
 package com.runicrealms.plugin.professions.model;
 
-import com.runicrealms.plugin.RunicCore;
-import com.runicrealms.plugin.model.SessionDataRedis;
 import com.runicrealms.plugin.professions.gathering.GatheringSkill;
 import com.runicrealms.plugin.professions.utilities.ProfExpUtil;
+import com.runicrealms.plugin.rdb.RunicDatabase;
+import com.runicrealms.plugin.rdb.model.SessionDataRedis;
 import redis.clients.jedis.Jedis;
 
 import java.util.ArrayList;
@@ -80,7 +80,7 @@ public class GatheringData implements SessionDataRedis {
 
     @Override
     public Map<String, String> getDataMapFromJedis(UUID uuid, Jedis jedis, int... ints) {
-        String database = RunicCore.getDataAPI().getMongoDatabase().getName();
+        String database = RunicDatabase.getAPI().getDataAPI().getMongoDatabase().getName();
         Map<String, String> fieldsMap = new HashMap<>();
         String[] fieldsToArray = FIELDS.toArray(new String[0]);
         List<String> values = jedis.hmget(database + ":" + uuid.toString() + ":" + DATA_SECTION_JEDIS, fieldsToArray);
@@ -114,11 +114,11 @@ public class GatheringData implements SessionDataRedis {
      */
     @Override
     public void writeToJedis(UUID uuid, Jedis jedis, int... ignored) {
-        String database = RunicCore.getDataAPI().getMongoDatabase().getName();
+        String database = RunicDatabase.getAPI().getDataAPI().getMongoDatabase().getName();
         // Inform the server that this player should be saved to mongo on next task (jedis data is refreshed)
         jedis.sadd(database + ":" + "markedForSave:professions", uuid.toString());
         jedis.hmset(database + ":" + uuid + ":" + DATA_SECTION_JEDIS, this.toMap(uuid));
-        jedis.expire(database + ":" + uuid + ":" + DATA_SECTION_JEDIS, RunicCore.getRedisAPI().getExpireTime());
+        jedis.expire(database + ":" + uuid + ":" + DATA_SECTION_JEDIS, RunicDatabase.getAPI().getRedisAPI().getExpireTime());
     }
 
     public int getFarmingExp() {

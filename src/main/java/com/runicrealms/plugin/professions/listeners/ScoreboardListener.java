@@ -1,9 +1,9 @@
 package com.runicrealms.plugin.professions.listeners;
 
-import com.runicrealms.plugin.RunicCore;
 import com.runicrealms.plugin.RunicProfessions;
 import com.runicrealms.plugin.api.event.ScoreboardUpdateEvent;
 import com.runicrealms.plugin.professions.model.CraftingData;
+import com.runicrealms.plugin.rdb.RunicDatabase;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -17,7 +17,7 @@ public class ScoreboardListener implements Listener {
     public void onScoreboardUpdate(ScoreboardUpdateEvent event) {
         try {
             UUID uuid = event.getPlayer().getUniqueId();
-            int slot = RunicCore.getCharacterAPI().getCharacterSlot(event.getPlayer().getUniqueId());
+            int slot = RunicDatabase.getAPI().getCharacterAPI().getCharacterSlot(event.getPlayer().getUniqueId());
             CraftingData craftingData = RunicProfessions.getDataAPI().loadCraftingData(uuid, slot);
             event.setProfession(craftingData.getProfName());
             event.setProfessionLevel(craftingData.getProfLevel());

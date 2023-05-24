@@ -1,10 +1,14 @@
+val artifactName = "professions"
+val rrGroup: String by rootProject.extra
+val rrVersion: String by rootProject.extra
+
 plugins {
     `java-library`
     `maven-publish`
 }
 
-group = "com.runicrealms.plugin"
-version = "1.0-SNAPSHOT"
+group = rrGroup
+version = rrVersion
 
 dependencies {
     compileOnly(commonLibs.spigot)
@@ -16,12 +20,15 @@ dependencies {
     compileOnly(commonLibs.springdatamongodb)
     compileOnly(commonLibs.mongodbdriversync)
     compileOnly(commonLibs.mongodbdrivercore)
+    compileOnly(commonLibs.mythicmobs)
+    compileOnly(commonLibs.holographicdisplays)
     compileOnly(project(":Projects:Chat"))
     compileOnly(project(":Projects:Core"))
     compileOnly(project(":Projects:Items"))
     compileOnly(project(":Projects:Npcs"))
     compileOnly(project(":Projects:Restart"))
-    compileOnly(commonLibs.holographicdisplays)
+    compileOnly(project(":Projects:Database"))
+    compileOnly(project(":Projects:Common"))
 }
 
 java {
@@ -31,13 +38,10 @@ java {
 publishing {
     publications {
         create<MavenPublication>("maven") {
-            groupId = "com.runicrealms.plugin"
-            artifactId = "professions"
-            version = "1.0-SNAPSHOT"
+            groupId = rrGroup
+            artifactId = artifactName
+            version = rrVersion
             from(components["java"])
         }
     }
 }
-
-tasks.register("wrapper")
-tasks.register("prepareKotlinBuildScriptModel")

@@ -2,9 +2,9 @@ package com.runicrealms.plugin.professions.crafting.blacksmith;
 
 import com.runicrealms.plugin.RunicProfessions;
 import com.runicrealms.plugin.events.PhysicalDamageEvent;
-import com.runicrealms.plugin.item.util.ItemRemover;
 import com.runicrealms.runicitems.item.RunicItem;
 import com.runicrealms.runicitems.item.event.RunicItemGenericTriggerEvent;
+import com.runicrealms.runicitems.util.ItemUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Particle;
@@ -54,7 +54,7 @@ public class StoneListener implements Listener {
         int durationInt = Integer.parseInt(duration);
         Player player = event.getPlayer();
 
-        ItemRemover.takeItem(player, event.getItemStack(), 1);
+        ItemUtils.takeItem(player, event.getItemStack(), 1);
         boostedPlayers.put(player.getUniqueId(), Integer.valueOf(bonus));
         player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_PLACE, 0.5f, 2.0f);
 

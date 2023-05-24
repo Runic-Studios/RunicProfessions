@@ -2,15 +2,15 @@ package com.runicrealms.plugin.professions.model;
 
 import co.aikar.taskchain.TaskChain;
 import co.aikar.taskchain.TaskChainAbortAction;
-import com.runicrealms.plugin.RunicCore;
 import com.runicrealms.plugin.RunicProfessions;
-import com.runicrealms.plugin.character.api.CharacterDeleteEvent;
-import com.runicrealms.plugin.character.api.CharacterQuitEvent;
-import com.runicrealms.plugin.character.api.CharacterSelectEvent;
-import com.runicrealms.plugin.database.event.MongoSaveEvent;
-import com.runicrealms.plugin.model.CharacterField;
 import com.runicrealms.plugin.professions.Profession;
 import com.runicrealms.plugin.professions.api.DataAPI;
+import com.runicrealms.plugin.rdb.RunicDatabase;
+import com.runicrealms.plugin.rdb.event.CharacterDeleteEvent;
+import com.runicrealms.plugin.rdb.event.CharacterQuitEvent;
+import com.runicrealms.plugin.rdb.event.CharacterSelectEvent;
+import com.runicrealms.plugin.rdb.event.MongoSaveEvent;
+import com.runicrealms.plugin.rdb.model.CharacterField;
 import org.bson.types.ObjectId;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -60,9 +60,9 @@ public class DataManager implements DataAPI, Listener {
      * @return a GatheringData object if it is found in redis
      */
     public GatheringData checkRedisForGatheringData(UUID uuid, Jedis jedis) {
-        String database = RunicCore.getDataAPI().getMongoDatabase().getName();
+        String database = RunicDatabase.getAPI().getDataAPI().getMongoDatabase().getName();
         if (jedis.exists(database + ":" + uuid + ":gathering:data")) {
-            jedis.expire(database + ":" + uuid, RunicCore.getRedisAPI().getExpireTime());
+            jedis.expire(database + ":" + uuid, RunicDatabase.getAPI().getRedisAPI().getExpireTime());
             return new GatheringData(uuid, jedis);
         }
         return null;
@@ -77,10 +77,10 @@ public class DataManager implements DataAPI, Listener {
      * @return a CraftingData object if it is found in redis
      */
     public CraftingData checkRedisForProfessionData(UUID uuid, int slot, Jedis jedis) {
-        String database = RunicCore.getDataAPI().getMongoDatabase().getName();
+        String database = RunicDatabase.getAPI().getDataAPI().getMongoDatabase().getName();
         String key = CraftingData.getJedisKey(uuid, slot);
         if (jedis.exists(database + ":" + key)) {
-            jedis.expire(database + ":" + key, RunicCore.getRedisAPI().getExpireTime());
+            jedis.expire(database + ":" + key, RunicDatabase.getAPI().getRedisAPI().getExpireTime());
             return new CraftingData(uuid, slot, jedis);
         }
         return null;
@@ -106,7 +106,7 @@ public class DataManager implements DataAPI, Listener {
                         0
                 );
         professionData.getCraftingDataMap().put(slot, craftingData);
-        try (Jedis jedis = RunicCore.getRedisAPI().getNewJedisResource()) {
+        try (Jedis jedis = RunicDatabase.getAPI().getRedisAPI().getNewJedisResource()) {
             craftingData.writeToJedis(uuid, jedis, slot);
         }
         return professionData.getCraftingDataMap().get(slot);
@@ -123,7 +123,7 @@ public class DataManager implements DataAPI, Listener {
         // Step 2: Create new crafting data (this should never run?)
         gatheringData = new GatheringData();
         professionData.setGatheringData(gatheringData);
-        try (Jedis jedis = RunicCore.getRedisAPI().getNewJedisResource()) {
+        try (Jedis jedis = RunicDatabase.getAPI().getRedisAPI().getNewJedisResource()) {
             gatheringData.writeToJedis(uuid, jedis);
         }
         return gatheringData;
@@ -132,13 +132,13 @@ public class DataManager implements DataAPI, Listener {
     @Override
     public ProfessionData loadProfessionData(UUID uuid) {
         // Step 1: Check redis
-        try (Jedis jedis = RunicCore.getRedisAPI().getNewJedisResource()) {
+        try (Jedis jedis = RunicDatabase.getAPI().getRedisAPI().getNewJedisResource()) {
             GatheringData gatheringData = checkRedisForGatheringData(uuid, jedis);
             // Gathering data is acc-wide, so if this exists, we'll build a new data object here
             // Then, we build all the crafting data we need
             if (gatheringData != null) {
                 HashMap<Integer, CraftingData> craftingDataMap = new HashMap<>();
-                for (int i = 1; i <= RunicCore.getDataAPI().getMaxCharacterSlot(); i++) {
+                for (int i = 1; i <= RunicDatabase.getAPI().getDataAPI().getMaxCharacterSlot(); i++) {
                     CraftingData craftingData = checkRedisForProfessionData(uuid, i, jedis);
                     if (craftingData != null) {
                         craftingDataMap.put(i, craftingData);
@@ -149,7 +149,7 @@ public class DataManager implements DataAPI, Listener {
             // Step 2: Check the mongo database
             Query query = new Query();
             query.addCriteria(Criteria.where(CharacterField.PLAYER_UUID.getField()).is(uuid));
-            MongoTemplate mongoTemplate = RunicCore.getDataAPI().getMongoTemplate();
+            MongoTemplate mongoTemplate = RunicDatabase.getAPI().getDataAPI().getMongoTemplate();
             List<ProfessionData> results = mongoTemplate.find(query, ProfessionData.class);
             if (results.size() > 0) {
                 ProfessionData result = results.get(0);
@@ -177,8 +177,8 @@ public class DataManager implements DataAPI, Listener {
         UUID uuid = player.getUniqueId();
         int slot = event.getSlot();
         // Removes player from the save task
-        try (Jedis jedis = RunicCore.getRedisAPI().getNewJedisResource()) {
-            String database = RunicCore.getDataAPI().getMongoDatabase().getName();
+        try (Jedis jedis = RunicDatabase.getAPI().getRedisAPI().getNewJedisResource()) {
+            String database = RunicDatabase.getAPI().getDataAPI().getMongoDatabase().getName();
             jedis.srem(database + ":markedForSave:professions", String.valueOf(player.getUniqueId()));
         }
         // Delete from Mongo
@@ -186,7 +186,7 @@ public class DataManager implements DataAPI, Listener {
         query.addCriteria(Criteria.where(CharacterField.PLAYER_UUID.getField()).is(uuid));
         Update update = new Update();
         update.unset("craftingDataMap." + slot);
-        MongoTemplate mongoTemplate = RunicCore.getDataAPI().getMongoTemplate();
+        MongoTemplate mongoTemplate = RunicDatabase.getAPI().getDataAPI().getMongoTemplate();
         mongoTemplate.updateFirst(query, update, ProfessionData.class);
         // Mark this deletion as complete
         event.getPluginsToDeleteData().remove("professions");
@@ -195,7 +195,7 @@ public class DataManager implements DataAPI, Listener {
     @EventHandler
     public void onCharacterQuit(CharacterQuitEvent event) {
         UUID uuid = event.getPlayer().getUniqueId();
-        try (Jedis jedis = RunicCore.getRedisAPI().getNewJedisResource()) {
+        try (Jedis jedis = RunicDatabase.getAPI().getRedisAPI().getNewJedisResource()) {
             if (professionDataMap.get(uuid) != null) {
                 // Write gathering data to redis on logout
                 GatheringData gatheringData = professionDataMap.get(uuid).getGatheringData();

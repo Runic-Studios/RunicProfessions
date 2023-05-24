@@ -1,7 +1,6 @@
 package com.runicrealms.plugin.professions.listeners;
 
 import com.runicrealms.api.event.ChatChannelMessageEvent;
-import com.runicrealms.plugin.RunicCore;
 import com.runicrealms.plugin.RunicProfessions;
 import com.runicrealms.plugin.professions.Profession;
 import com.runicrealms.plugin.professions.crafting.alchemist.CauldronMenu;
@@ -9,6 +8,7 @@ import com.runicrealms.plugin.professions.crafting.blacksmith.AnvilMenu;
 import com.runicrealms.plugin.professions.crafting.blacksmith.FurnaceMenu;
 import com.runicrealms.plugin.professions.crafting.cooking.CookingMenu;
 import com.runicrealms.plugin.professions.crafting.jeweler.JewelerMenu;
+import com.runicrealms.plugin.rdb.RunicDatabase;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -198,7 +198,7 @@ public class WorkstationListener implements Listener {
         UUID uuid = player.getUniqueId();
 
         // determine the player's profession
-        int slot = RunicCore.getCharacterAPI().getCharacterSlot(player.getUniqueId());
+        int slot = RunicDatabase.getAPI().getCharacterAPI().getCharacterSlot(player.getUniqueId());
         Profession profession = RunicProfessions.getAPI().getPlayerProfession(player.getUniqueId(), slot);
 
         // stop the listener if the player is already crafting
