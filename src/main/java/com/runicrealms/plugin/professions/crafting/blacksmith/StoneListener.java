@@ -23,10 +23,10 @@ public class StoneListener implements Listener {
 
     private static final String DATA_DAMAGE_STRING = "damage-buff"; // used in the runic item config
     private static final String DATA_DURATION_STRING = "duration";
-    private static final Collection<String> SHARP_STONES = new HashSet<String>() {{
-        add("blacksmith-sharpstone-10");
-        add("blacksmith-sharpstone-20");
-        add("blacksmith-sharpstone-30");
+    private static final Collection<String> SHARP_STONES = new HashSet<>() {{
+        add("blacksmith-sharpstone-i");
+        add("blacksmith-sharpstone-ii");
+        add("blacksmith-sharpstone-iii");
     }};
     private final HashMap<UUID, Integer> boostedPlayers;
 
