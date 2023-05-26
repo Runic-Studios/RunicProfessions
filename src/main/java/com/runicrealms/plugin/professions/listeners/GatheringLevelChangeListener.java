@@ -35,9 +35,25 @@ public class GatheringLevelChangeListener implements Listener {
      */
     private static void sendLevelUpMessage(Player player, GatheringSkill gatheringSkill, int gatheringLevel) {
         ChatUtils.sendCenteredMessage(player, "");
+        String currentUnlockedReagent = currentReagentUnlockMessage(gatheringSkill, gatheringLevel);
+        if (!currentUnlockedReagent.equalsIgnoreCase("")) {
+            ChatUtils.sendCenteredMessage(player, currentUnlockedReagent);
+        }
         ChatUtils.sendCenteredMessage(
                 player, nextReagentUnlockMessage(gatheringSkill, gatheringLevel, false).get(0));
         ChatUtils.sendCenteredMessage(player, "");
+    }
+
+    public static String currentReagentUnlockMessage(GatheringSkill gatheringSkill, int gatheringLevel) {
+        for (GatheringResource gatheringResource : GatheringResource.values()) {
+            if (gatheringResource.getGatheringSkill() != gatheringSkill) continue;
+            if (gatheringLevel == gatheringResource.getRequiredLevel()) {
+                return ChatColor.GREEN + String.valueOf(ChatColor.BOLD) + "You can now gather " +
+                        ChatColor.BOLD + RunicItemsAPI.generateItemFromTemplate(gatheringResource.getTemplateId()).getDisplayableItem().getDisplayName() +
+                        ChatColor.GREEN + ChatColor.BOLD + "!";
+            }
+        }
+        return "";
     }
 
     /**
@@ -54,7 +70,7 @@ public class GatheringLevelChangeListener implements Listener {
             if (gatheringLevel < gatheringResource.getRequiredLevel()) {
                 String result = ChatColor.YELLOW + "You have " + ChatColor.WHITE +
                         (gatheringResource.getRequiredLevel() - gatheringLevel) + ChatColor.YELLOW +
-                        " levels remaining until you can gather " +
+                        " level(s) left until you can gather " +
                         RunicItemsAPI.generateItemFromTemplate(gatheringResource.getTemplateId()).getDisplayableItem().getDisplayName() +
                         ChatColor.YELLOW + "!";
                 if (formatText) return ChatUtils.formattedText(result);
