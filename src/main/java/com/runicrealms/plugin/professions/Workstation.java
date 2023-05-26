@@ -192,7 +192,7 @@ public abstract class Workstation implements Listener {
     private String generateArmorItemLore(RunicItemArmor item) {
         String stats = "";
 
-        stats = stats.concat(ChatColor.RED + "" + item.getHealth() + "❤\n");
+        stats = stats.concat(ChatColor.RED + String.valueOf(item.getHealth()) + "❤\n");
         for (Stat stat : item.getStats().keySet()) {
             stats = stats.concat
                     (
@@ -271,7 +271,7 @@ public abstract class Workstation implements Listener {
         String stats = "";
 
         RunicItemStatRange range = item.getWeaponDamage();
-        stats = stats.concat(ChatColor.RED + "" + range.getMin() + "-" + range.getMax() + " DMG\n");
+        stats = stats.concat(ChatColor.RED + String.valueOf(range.getMin()) + "-" + range.getMax() + " DMG\n");
         for (Stat stat : item.getStats().keySet()) {
             stats = stats.concat(stat.getChatColor() + "+" + item.getStats().get(stat).getValue() + stat.getIcon() + "\n");
         }

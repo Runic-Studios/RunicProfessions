@@ -168,17 +168,13 @@ public enum GatheringResource {
      * @return a set of tools to check if they are holding
      */
     public static Set<GatheringTool> determineToolSet(GatheringResource gatheringResource) {
-        switch (gatheringResource.getGatheringSkill()) {
-            case FARMING:
-                return GatheringUtil.getHoes();
-            case FISHING:
-                return GatheringUtil.getRods();
-            case MINING:
-                return GatheringUtil.getPickaxes();
-            case WOODCUTTING:
-                return GatheringUtil.getAxes();
-        }
-        return null;
+        return switch (gatheringResource.getGatheringSkill()) {
+            case FARMING -> GatheringUtil.getHoes();
+            case FISHING -> GatheringUtil.getRods();
+            case MINING -> GatheringUtil.getPickaxes();
+            case WOODCUTTING -> GatheringUtil.getAxes();
+            default -> null;
+        };
     }
 
     public int getExperience() {

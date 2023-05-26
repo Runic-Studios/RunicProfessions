@@ -3,7 +3,9 @@ package com.runicrealms.plugin.professions.gathering;
 import com.runicrealms.plugin.RunicProfessions;
 import com.runicrealms.plugin.common.util.ColorUtil;
 import com.runicrealms.plugin.professions.Profession;
-import com.runicrealms.plugin.professions.crafting.ListenerResource;
+import com.runicrealms.plugin.professions.WorkstationType;
+import com.runicrealms.plugin.professions.config.WorkstationLoader;
+import com.runicrealms.plugin.professions.crafting.CraftedResource;
 import com.runicrealms.plugin.professions.model.GatheringData;
 import com.runicrealms.plugin.utilities.GUIUtil;
 import com.runicrealms.runicitems.RunicItemsAPI;
@@ -18,6 +20,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 
@@ -61,7 +64,7 @@ public class GatheringSkillGUI implements InventoryHolder {
         lore.add("");
         lore.add
                 (
-                        ChatColor.GRAY + "" + ChatColor.ITALIC + "Rewards " +
+                        ChatColor.GRAY + String.valueOf(ChatColor.ITALIC) + "Rewards " +
                                 ChatColor.WHITE + ChatColor.ITALIC + experience +
                                 ChatColor.GRAY + ChatColor.ITALIC + " experience");
         meta.setLore(lore);
@@ -69,10 +72,11 @@ public class GatheringSkillGUI implements InventoryHolder {
         return reagentWithLore;
     }
 
-    private void addCraftingResources(GatheringData gatheringData) {
-        ListenerResource[] craftedResources = ListenerResource.values();
-        Arrays.sort(craftedResources, Comparator.comparing(ListenerResource::getRequiredLevel)); // sort in ascending order of level
-        for (ListenerResource craftedResource : craftedResources) {
+    private void addCookingResources(GatheringData gatheringData) {
+        // Get a collection of crafted resources associated with this ui menu
+        Collection<CraftedResource> craftedResources = WorkstationLoader.getCraftedResources().get(WorkstationType.COOKING_FIRE);
+//        Arrays.sort(craftedResources, Comparator.comparing(ListenerResource::getRequiredLevel)); // sort in ascending order of level
+        for (CraftedResource craftedResource : craftedResources) {
             if (craftedResource.getProfession() != Profession.COOKING) continue;
             ItemStack itemStack = RunicItemsAPI.generateItemFromTemplate(craftedResource.getTemplateId()).generateGUIItem();
             this.inventory.setItem(this.inventory.firstEmpty(), reagentWithLore
@@ -132,7 +136,7 @@ public class GatheringSkillGUI implements InventoryHolder {
                 new String[]{}
         ));
         if (gatheringSkill == GatheringSkill.COOKING) {
-            addCraftingResources(gatheringData);
+            addCookingResources(gatheringData);
         } else {
             addGatheringResources(gatheringData);
         }

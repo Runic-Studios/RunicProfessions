@@ -64,7 +64,7 @@ public class CookingMenu extends Workstation {
                 event.setWillClose(true);
                 event.setWillDestroy(true);
 
-            } else if (event.getSlot() > 8) { // first row for ui
+            } else if (event.getSlot() > 8) { // First row reserved for navigation/info buttons
 
                 int multiplier = 1;
                 if (event.isRightClick()) multiplier = 5;
