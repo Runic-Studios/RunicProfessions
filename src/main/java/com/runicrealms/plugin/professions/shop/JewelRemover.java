@@ -2,6 +2,7 @@ package com.runicrealms.plugin.professions.shop;
 
 import com.runicrealms.plugin.RunicCore;
 import com.runicrealms.plugin.common.util.ColorUtil;
+import com.runicrealms.plugin.common.util.Pair;
 import com.runicrealms.plugin.item.shops.RunicShop;
 import com.runicrealms.plugin.utilities.GUIUtil;
 import com.runicrealms.runicitems.RunicItemsAPI;
@@ -23,7 +24,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -116,9 +116,8 @@ public class JewelRemover implements RunicShop {
         }
 
         if (placedValidItem) {
-            Map<String, Integer> requiredItems = new HashMap<>() {{
-                put("coin", PRICE);
-            }};
+            List<Pair<String, Integer>> requiredItems = new ArrayList<>();
+            requiredItems.add(Pair.pair("coin", PRICE));
             boolean result = RunicCore.getShopAPI().checkItemRequirement(player, requiredItems, "",
                     true);
             if (result) {
