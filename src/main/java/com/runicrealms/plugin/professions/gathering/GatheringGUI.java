@@ -33,8 +33,14 @@ public class GatheringGUI implements InventoryHolder {
     }
 
     private static String[] gatheringSkillDescription(GatheringData gatheringData, GatheringSkill gatheringSkill) {
-        String[] unlockMessageArray = GatheringLevelChangeListener.nextReagentUnlockMessage(gatheringSkill,
-                gatheringData.getGatheringLevel(gatheringSkill), true).toArray(new String[0]);
+        String[] unlockMessageArray;
+        if (gatheringSkill == GatheringSkill.COOKING) {
+            unlockMessageArray = GatheringLevelChangeListener.nextReagentUnlockMessageCooking
+                    (gatheringData.getGatheringLevel(gatheringSkill), true).toArray(new String[0]);
+        } else {
+            unlockMessageArray = GatheringLevelChangeListener.nextReagentUnlockMessage(gatheringSkill,
+                    gatheringData.getGatheringLevel(gatheringSkill), true).toArray(new String[0]);
+        }
         int level = gatheringData.getGatheringLevel(gatheringSkill);
 //        boolean isSpecialized = ProfessionsAPI.isSpecializedInGatheringSkill(gatheringData, gatheringSkill);
         boolean isSpecialized = false;

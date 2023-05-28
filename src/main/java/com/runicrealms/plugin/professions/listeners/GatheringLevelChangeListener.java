@@ -2,6 +2,9 @@ package com.runicrealms.plugin.professions.listeners;
 
 import com.runicrealms.plugin.RunicProfessions;
 import com.runicrealms.plugin.common.util.ChatUtils;
+import com.runicrealms.plugin.professions.WorkstationType;
+import com.runicrealms.plugin.professions.config.WorkstationLoader;
+import com.runicrealms.plugin.professions.crafting.CraftedResource;
 import com.runicrealms.plugin.professions.event.GatheringLevelChangeEvent;
 import com.runicrealms.plugin.professions.gathering.GatheringResource;
 import com.runicrealms.plugin.professions.gathering.GatheringSkill;
@@ -39,8 +42,13 @@ public class GatheringLevelChangeListener implements Listener {
         if (!currentUnlockedReagent.equalsIgnoreCase("")) {
             ChatUtils.sendCenteredMessage(player, currentUnlockedReagent);
         }
-        ChatUtils.sendCenteredMessage(
-                player, nextReagentUnlockMessage(gatheringSkill, gatheringLevel, false).get(0));
+        if (gatheringSkill == GatheringSkill.COOKING) {
+            ChatUtils.sendCenteredMessage(
+                    player, nextReagentUnlockMessageCooking(gatheringLevel, false).get(0));
+        } else {
+            ChatUtils.sendCenteredMessage(
+                    player, nextReagentUnlockMessage(gatheringSkill, gatheringLevel, false).get(0));
+        }
         ChatUtils.sendCenteredMessage(player, "");
     }
 
@@ -54,6 +62,23 @@ public class GatheringLevelChangeListener implements Listener {
             }
         }
         return "";
+    }
+
+    public static List<String> nextReagentUnlockMessageCooking(int gatheringLevel, boolean formatText) {
+        for (CraftedResource craftedResource : WorkstationLoader.getCraftedResources().get(WorkstationType.COOKING_FIRE)) {
+            if (gatheringLevel < craftedResource.getRequiredLevel()) {
+                String result = ChatColor.YELLOW + "You have " + ChatColor.WHITE +
+                        (craftedResource.getRequiredLevel() - gatheringLevel) + ChatColor.YELLOW +
+                        " level(s) left until you can cook " +
+                        RunicItemsAPI.generateItemFromTemplate(craftedResource.getTemplateId()).getDisplayableItem().getDisplayName() +
+                        ChatColor.YELLOW + "!";
+                if (formatText) return ChatUtils.formattedText(result);
+                return Collections.singletonList(result);
+            }
+        }
+        String noUnlocks = ChatColor.GREEN + "You have unlocked all reagents for this skill!";
+        if (formatText) return ChatUtils.formattedText(noUnlocks);
+        return Collections.singletonList(noUnlocks);
     }
 
     /**
