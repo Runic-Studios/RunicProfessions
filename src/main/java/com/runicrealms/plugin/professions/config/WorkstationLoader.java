@@ -1,7 +1,7 @@
 package com.runicrealms.plugin.professions.config;
 
-import com.runicrealms.plugin.RunicCore;
 import com.runicrealms.plugin.RunicProfessions;
+import com.runicrealms.plugin.common.RunicCommon;
 import com.runicrealms.plugin.professions.WorkstationType;
 import com.runicrealms.plugin.professions.crafting.CraftedResource;
 import com.runicrealms.plugin.professions.exception.WorkstationLoadException;
@@ -26,17 +26,17 @@ public class WorkstationLoader {
     static {
         CRAFTED_RESOURCES = new HashMap<>();
         MAX_PAGES = new HashMap<>();
-        File shopsFolder = RunicCore.getConfigAPI().getSubFolder(RunicProfessions.getInstance().getDataFolder(), "workstations");
+        File shopsFolder = RunicCommon.getConfigAPI().getSubFolder(RunicProfessions.getInstance().getDataFolder(), "workstations");
         for (File workstationFile : shopsFolder.listFiles()) {
             if (workstationFile.isDirectory()) continue; // ignore subdirectories
             try {
-                FileConfiguration fileConfig = RunicCore.getConfigAPI().getYamlConfigFromFile(workstationFile.getName(), shopsFolder);
+                FileConfiguration fileConfig = RunicCommon.getConfigAPI().getYamlConfigFromFile(workstationFile.getName(), shopsFolder);
                 WorkstationType workstationType = WorkstationType.getFromName(fileConfig.getString("workstation"));
                 int maxPages = fileConfig.getInt("maxPages");
                 MAX_PAGES.put(workstationType, maxPages);
                 List<CraftedResource> craftedResources = loadWorkstationContents
                         (
-                                RunicCore.getConfigAPI().getYamlConfigFromFile(workstationFile.getName(), shopsFolder),
+                                RunicCommon.getConfigAPI().getYamlConfigFromFile(workstationFile.getName(), shopsFolder),
                                 workstationType
                         );
                 CRAFTED_RESOURCES.put(workstationType, craftedResources);
