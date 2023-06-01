@@ -1,6 +1,7 @@
 package com.runicrealms.plugin.professions.crafting.cooking;
 
 import com.runicrealms.plugin.RunicProfessions;
+import com.runicrealms.plugin.common.util.GUIUtil;
 import com.runicrealms.plugin.item.GUIMenu.ItemGUI;
 import com.runicrealms.plugin.professions.Workstation;
 import com.runicrealms.plugin.professions.WorkstationType;
@@ -8,7 +9,6 @@ import com.runicrealms.plugin.professions.config.WorkstationLoader;
 import com.runicrealms.plugin.professions.crafting.CraftedResource;
 import com.runicrealms.plugin.professions.crafting.ListenerResource;
 import com.runicrealms.plugin.professions.utilities.ProfUtil;
-import com.runicrealms.plugin.utilities.GUIUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Particle;

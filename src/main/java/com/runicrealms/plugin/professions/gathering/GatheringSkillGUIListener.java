@@ -1,7 +1,7 @@
 package com.runicrealms.plugin.professions.gathering;
 
 import com.runicrealms.plugin.RunicProfessions;
-import com.runicrealms.plugin.utilities.GUIUtil;
+import com.runicrealms.plugin.common.util.GUIUtil;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;

@@ -7,7 +7,7 @@
 //import com.runicrealms.plugin.professions.Workstation;
 //import com.runicrealms.plugin.professions.config.WorkstationLoader;
 //import com.runicrealms.plugin.professions.crafting.CraftedResource;
-//import com.runicrealms.plugin.utilities.GUIUtil;
+//import com.runicrealms.plugin.common.util.GUIUtil;
 //import org.bukkit.Bukkit;
 //import org.bukkit.Material;
 //import org.bukkit.Particle;
