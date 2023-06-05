@@ -6,10 +6,11 @@ import com.runicrealms.plugin.common.util.ColorUtil;
 import com.runicrealms.plugin.item.GUIMenu.ItemGUI;
 import com.runicrealms.plugin.professions.config.WorkstationLoader;
 import com.runicrealms.plugin.professions.crafting.CraftedResource;
+import com.runicrealms.plugin.professions.event.RunicCraftingExpEvent;
+import com.runicrealms.plugin.professions.event.RunicGatheringExpEvent;
 import com.runicrealms.plugin.professions.gathering.GatheringSkill;
 import com.runicrealms.plugin.professions.listeners.WorkstationListener;
 import com.runicrealms.plugin.professions.model.GatheringData;
-import com.runicrealms.plugin.professions.utilities.ProfExpUtil;
 import com.runicrealms.plugin.rdb.RunicDatabase;
 import com.runicrealms.plugin.utilities.FloatingItemUtil;
 import com.runicrealms.runicitems.RunicItemsAPI;
@@ -25,6 +26,7 @@ import com.runicrealms.runicitems.item.stats.RunicItemStatRange;
 import com.runicrealms.runicitems.item.stats.RunicItemTag;
 import com.runicrealms.runicitems.util.DataUtil;
 import com.runicrealms.runicitems.util.ItemUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Color;
 import org.bukkit.Location;
@@ -462,9 +464,9 @@ public abstract class Workstation implements Listener {
                     player.sendMessage(ChatColor.GREEN + "Done!");
                     if (exp > 0) {
                         if (!isCooking)
-                            ProfExpUtil.giveCraftingExperience(player, exp * numOfItems);
+                            Bukkit.getPluginManager().callEvent(new RunicCraftingExpEvent(exp * numOfItems, true, player));
                         else
-                            ProfExpUtil.giveGatheringExperience(player, GatheringSkill.COOKING, exp * numOfItems);
+                            Bukkit.getPluginManager().callEvent(new RunicGatheringExpEvent(exp * numOfItems, true, player, GatheringSkill.COOKING));
                     }
                     produceResult(player, numOfItems, craftedResource);
                 } else {

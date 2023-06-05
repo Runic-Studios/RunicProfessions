@@ -7,8 +7,9 @@ import co.aikar.commands.annotation.Conditions;
 import co.aikar.commands.annotation.Subcommand;
 import co.aikar.commands.annotation.Syntax;
 import com.runicrealms.plugin.RunicProfessions;
+import com.runicrealms.plugin.professions.event.RunicCraftingExpEvent;
+import com.runicrealms.plugin.professions.event.RunicGatheringExpEvent;
 import com.runicrealms.plugin.professions.gathering.GatheringSkill;
-import com.runicrealms.plugin.professions.utilities.ProfExpUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -46,7 +47,9 @@ public class ProfGiveCMD extends BaseCommand {
         if (gatheringSkill == null) return;
         // skip all other calculations for quest exp
         int exp = Integer.parseInt(args[2]);
-        ProfExpUtil.giveGatheringExperience(player, gatheringSkill, exp);
+        Bukkit.getScheduler().runTask(RunicProfessions.getInstance(), () -> {
+            Bukkit.getPluginManager().callEvent(new RunicGatheringExpEvent(exp, true, player, gatheringSkill));
+        });
     }
 
     // profgive profexp [player] [amount]
@@ -63,6 +66,8 @@ public class ProfGiveCMD extends BaseCommand {
         Player player = Bukkit.getPlayer(args[0]);
         if (player == null) return;
         int exp = Integer.parseInt(args[1]);
-        ProfExpUtil.giveCraftingExperience(player, exp);
+        Bukkit.getScheduler().runTask(RunicProfessions.getInstance(), () -> {
+            Bukkit.getPluginManager().callEvent(new RunicCraftingExpEvent(exp, true, player));
+        });
     }
 }

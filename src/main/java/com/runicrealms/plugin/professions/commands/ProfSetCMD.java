@@ -9,6 +9,7 @@ import co.aikar.commands.annotation.Syntax;
 import com.runicrealms.plugin.RunicProfessions;
 import com.runicrealms.plugin.professions.Profession;
 import com.runicrealms.plugin.professions.event.GatheringLevelChangeEvent;
+import com.runicrealms.plugin.professions.event.RunicCraftingExpEvent;
 import com.runicrealms.plugin.professions.gathering.GatheringSkill;
 import com.runicrealms.plugin.professions.model.CraftingData;
 import com.runicrealms.plugin.professions.model.GatheringData;
@@ -135,6 +136,8 @@ public class ProfSetCMD extends BaseCommand {
         int slot = RunicDatabase.getAPI().getCharacterAPI().getCharacterSlot(player.getUniqueId());
         CraftingData craftingData = RunicProfessions.getDataAPI().loadCraftingData(player.getUniqueId(), slot);
         craftingData.setProfExp(0);
-        ProfExpUtil.giveCraftingExperience(player, exp);
+        Bukkit.getScheduler().runTask(RunicProfessions.getInstance(), () -> {
+            Bukkit.getPluginManager().callEvent(new RunicCraftingExpEvent(exp, false, player));
+        });
     }
 }

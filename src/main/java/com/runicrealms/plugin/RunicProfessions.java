@@ -25,6 +25,8 @@ import com.runicrealms.plugin.professions.listeners.HarvestingListener;
 import com.runicrealms.plugin.professions.listeners.PlayerMenuListener;
 import com.runicrealms.plugin.professions.listeners.ProfessionChangeListener;
 import com.runicrealms.plugin.professions.listeners.ProfessionLevelChangeListener;
+import com.runicrealms.plugin.professions.listeners.RunicCraftingExpListener;
+import com.runicrealms.plugin.professions.listeners.RunicGatheringExpListener;
 import com.runicrealms.plugin.professions.listeners.ScoreboardListener;
 import com.runicrealms.plugin.professions.listeners.StationClickListener;
 import com.runicrealms.plugin.professions.listeners.VanillaStationListener;
@@ -169,5 +171,7 @@ public final class RunicProfessions extends JavaPlugin {
         pluginManager.registerEvents(new ProfessionChangeListener(), this);
         pluginManager.registerEvents(new ScoreboardListener(), this);
         pluginManager.registerEvents(new JewelRemoverListener(), this);
+        pluginManager.registerEvents(new RunicCraftingExpListener(), this);
+        pluginManager.registerEvents(new RunicGatheringExpListener(), this);
     }
 }

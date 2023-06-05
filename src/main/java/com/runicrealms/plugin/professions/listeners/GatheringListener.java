@@ -4,7 +4,9 @@ import com.gmail.filoghost.holographicdisplays.api.Hologram;
 import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
 import com.runicrealms.plugin.RunicProfessions;
 import com.runicrealms.plugin.api.WeightedRandomBag;
+import com.runicrealms.plugin.common.util.ColorUtil;
 import com.runicrealms.plugin.professions.event.GatheringEvent;
+import com.runicrealms.plugin.professions.event.RunicGatheringExpEvent;
 import com.runicrealms.plugin.professions.gathering.GatheringResource;
 import com.runicrealms.plugin.professions.gathering.GatheringSkill;
 import com.runicrealms.plugin.professions.gathering.GatheringTool;
@@ -99,18 +101,28 @@ public class GatheringListener implements Listener {
     private void gatherMaterial(Player player, String templateId, GatheringTool gatheringTool, GatheringResource gatheringResource,
                                 Location location, Block block, Material reagentBlockType, double chance) {
         block.setType(gatheringResource.getPlaceholderBlockType());
-        if (location.clone().add(0, 1.5, 0).getBlock().getType() == Material.AIR) {
-            createHologram
+
+        RunicGatheringExpEvent event = new RunicGatheringExpEvent(gatheringResource.getExperience(), true, player, gatheringResource.getGatheringSkill());
+        Bukkit.getPluginManager().callEvent(event);
+
+        if (location.clone().add(0, 2, 0).getBlock().getType() == Material.AIR) {
+            Hologram hologram = createHologram
                     (
                             player,
                             location,
                             ChatColor.GREEN + "+ " + RunicItemsAPI.generateItemFromTemplate(templateId).getDisplayableItem().getDisplayName(),
-                            1.5f
+                            2f
                     );
+
+            ChatColor expColor = event.getAmountNoBonuses() == 0 ? ChatColor.RED : ChatColor.WHITE;
+            hologram.appendTextLine(ColorUtil.format("&7+ " + expColor + event.getAmountNoBonuses() + " &7exp"));
+            int boostBonus = event.getExpFromBonus(RunicGatheringExpEvent.BonusType.BOOST);
+            if (boostBonus != 0)
+                hologram.appendTextLine(ColorUtil.format("&7+ &d" + boostBonus + " &7boost exp"));
         }
         // give experience and resource
-        ProfExpUtil.giveGatheringExperience(player, gatheringResource.getGatheringSkill(), gatheringResource.getExperience());
         RunicItemsAPI.addItem(player.getInventory(), RunicItemsAPI.generateItemFromTemplate(templateId).generateItem(), player.getLocation());
+
         // gathering luck logic
         giveAdditionalResources(player, templateId, gatheringTool, gatheringTool.getBonusLootChance());
         // give the player a coin
@@ -134,17 +146,25 @@ public class GatheringListener implements Listener {
                                 Location location, Material fishItemToDisplay, double chance) {
         ItemStack fish = RunicItemsAPI.generateItemFromTemplate(templateId).generateItem();
         // Give the player experience the gathered item, drop on floor if inventory is full
+
+        // Grant experience, give fish
+        RunicGatheringExpEvent event = new RunicGatheringExpEvent(gatheringResource.getExperience(), true, player, gatheringResource.getGatheringSkill());
+        Bukkit.getPluginManager().callEvent(event);
         Hologram hologram = createHologram
                 (
                         player,
                         location,
                         ChatColor.GREEN + "+ " + RunicItemsAPI.generateItemFromTemplate(templateId).getDisplayableItem().getDisplayName(),
-                        1.5f
+                        2f
                 );
         // Spawn floating fish
         hologram.appendItemLine(new ItemStack(fishItemToDisplay));
-        // Grant experience, give fish
-        ProfExpUtil.giveGatheringExperience(player, gatheringResource.getGatheringSkill(), gatheringResource.getExperience());
+        ChatColor expColor = event.getAmountNoBonuses() == 0 ? ChatColor.RED : ChatColor.WHITE;
+        hologram.appendTextLine(ColorUtil.format("&7+ " + expColor + event.getAmountNoBonuses() + " &7exp"));
+        int boostBonus = event.getExpFromBonus(RunicGatheringExpEvent.BonusType.BOOST);
+        if (boostBonus != 0)
+            hologram.appendTextLine(ColorUtil.format("&7+ &d" + boostBonus + " &7boost exp"));
+
         RunicItemsAPI.addItem(player.getInventory(), fish, player.getLocation());
         // Gathering luck logic
         giveAdditionalResources(player, templateId, gatheringTool, gatheringTool.getBonusLootChance());
