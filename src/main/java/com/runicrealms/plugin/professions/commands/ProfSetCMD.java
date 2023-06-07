@@ -3,6 +3,7 @@ package com.runicrealms.plugin.professions.commands;
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.CommandAlias;
 import co.aikar.commands.annotation.CommandCompletion;
+import co.aikar.commands.annotation.CommandPermission;
 import co.aikar.commands.annotation.Conditions;
 import co.aikar.commands.annotation.Subcommand;
 import co.aikar.commands.annotation.Syntax;
@@ -26,6 +27,7 @@ import java.util.Set;
 import java.util.UUID;
 
 @CommandAlias("profset")
+@CommandPermission("runic.op")
 public class ProfSetCMD extends BaseCommand {
 
     public ProfSetCMD() {
