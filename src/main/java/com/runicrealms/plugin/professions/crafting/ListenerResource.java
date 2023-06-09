@@ -17,7 +17,7 @@ public enum ListenerResource {
      */
     AMBROSIA_STEW("ambrosia-stew", Profession.COOKING, new LinkedHashMap<>() {{
         put("ambrosia-root", 1);
-        put("uncooked-rabbit", 4);
+        put("rabbit", 4);
         put("birch-wood", 2);
     }});
 
