@@ -79,7 +79,7 @@ public class PotionListener implements Listener {
                 multiplier));
         int amount = multiplier > 0 ? 40 : 20;
         player.sendMessage(ColorUtil.format("&eYou've gained &f" + amount + "% " +
-                "&emining speed &f" + duration + " &eseconds!"));
+                "&emining speed for &f" + duration + " &eseconds!"));
 //        Bukkit.getScheduler().runTaskLaterAsynchronously(RunicProfessions.getInstance(), () -> {
 //            slayers.remove(player.getUniqueId());
 //            player.sendMessage(ChatColor.GRAY + "Your potion of slaying has expired.");
