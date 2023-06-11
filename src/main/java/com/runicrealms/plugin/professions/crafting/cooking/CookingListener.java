@@ -2,12 +2,8 @@ package com.runicrealms.plugin.professions.crafting.cooking;
 
 import com.runicrealms.plugin.RunicCore;
 import com.runicrealms.plugin.RunicProfessions;
-import com.runicrealms.runicitems.item.event.RunicItemGenericTriggerEvent;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -38,17 +34,17 @@ public class CookingListener implements Listener {
     /**
      * Controls custom food items
      */
-    @EventHandler
-    public void onCustomFoodEat(RunicItemGenericTriggerEvent event) {
-        Player player = event.getPlayer();
-        if (player.getHealth() == player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue()) {
-            player.sendMessage(ChatColor.GRAY + "You can't use this item at full health.");
-            return;
-        }
-        takeItem(player, event.getItemStack());
-        player.setFoodLevel(player.getFoodLevel() + 6);
-        healOverTime(player, CookingMenu.getAmbrosiaStewAmt(), CookingMenu.getStewDuration());
-    }
+//    @EventHandler
+//    public void onCustomFoodEat(RunicItemGenericTriggerEvent event) {
+//        Player player = event.getPlayer();
+//        if (player.getHealth() == player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue()) {
+//            player.sendMessage(ChatColor.GRAY + "You can't use this item at full health.");
+//            return;
+//        }
+//        takeItem(player, event.getItemStack());
+//        player.setFoodLevel(player.getFoodLevel() + 6);
+//        healOverTime(player, CookingMenu.getAmbrosiaStewAmt(), CookingMenu.getStewDuration());
+//    }
 
     /**
      * Removes consumed item from players hand or offhand
