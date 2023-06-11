@@ -15,7 +15,6 @@ public class ProfessionLevelChangeEvent extends Event {
     private final Profession profession;
     private final int oldLevel;
     private final int newLevel;
-    private final Jedis jedis;
 
     /**
      * Grab the new profession the player swapped to.
@@ -30,7 +29,6 @@ public class ProfessionLevelChangeEvent extends Event {
         this.profession = profession;
         this.oldLevel = oldLevel;
         this.newLevel = newLevel;
-        this.jedis = jedis;
     }
 
     public static HandlerList getHandlerList() {
@@ -41,10 +39,6 @@ public class ProfessionLevelChangeEvent extends Event {
     @Override
     public HandlerList getHandlers() {
         return handlers;
-    }
-
-    public Jedis getJedis() {
-        return jedis;
     }
 
     public int getNewLevel() {
