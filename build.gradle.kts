@@ -12,7 +12,6 @@ version = rrVersion
 
 dependencies {
     compileOnly(commonLibs.spigot)
-    compileOnly(commonLibs.craftbukkit)
     compileOnly(commonLibs.acf)
     compileOnly(commonLibs.taskchain)
     compileOnly(commonLibs.paper)

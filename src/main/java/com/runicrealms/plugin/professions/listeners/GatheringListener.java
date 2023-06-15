@@ -1,7 +1,5 @@
 package com.runicrealms.plugin.professions.listeners;
 
-import com.gmail.filoghost.holographicdisplays.api.Hologram;
-import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
 import com.runicrealms.plugin.RunicProfessions;
 import com.runicrealms.plugin.api.WeightedRandomBag;
 import com.runicrealms.plugin.common.util.ColorUtil;
@@ -15,6 +13,9 @@ import com.runicrealms.runicitems.RunicItemsAPI;
 import com.runicrealms.runicitems.item.RunicItem;
 import com.runicrealms.runicitems.item.RunicItemDynamic;
 import com.runicrealms.runicitems.util.CurrencyUtil;
+import me.filoghost.holographicdisplays.api.HolographicDisplaysAPI;
+import me.filoghost.holographicdisplays.api.hologram.Hologram;
+import me.filoghost.holographicdisplays.api.hologram.VisibilitySettings;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
@@ -49,10 +50,10 @@ public class GatheringListener implements Listener {
      * @return the hologram
      */
     private Hologram createHologram(Player player, Location location, String lineToDisplay, float height) {
-        Hologram hologram = HologramsAPI.createHologram(RunicProfessions.getInstance(), location.clone().add(0, height, 0));
-        hologram.getVisibilityManager().showTo(player);
-        hologram.getVisibilityManager().setVisibleByDefault(false);
-        hologram.appendTextLine(lineToDisplay);
+        Hologram hologram = HolographicDisplaysAPI.get(RunicProfessions.getInstance()).createHologram(location.clone().add(0, height, 0));
+        hologram.getVisibilitySettings().setIndividualVisibility(player, VisibilitySettings.Visibility.VISIBLE);
+        hologram.getVisibilitySettings().setGlobalVisibility(VisibilitySettings.Visibility.HIDDEN);
+        hologram.getLines().appendText(lineToDisplay);
         Bukkit.getScheduler().runTaskLater(RunicProfessions.getInstance(), hologram::delete, 40L); // 2s
         return hologram;
     }
@@ -115,10 +116,10 @@ public class GatheringListener implements Listener {
                     );
 
             ChatColor expColor = event.getAmountNoBonuses() == 0 ? ChatColor.RED : ChatColor.WHITE;
-            hologram.appendTextLine(ColorUtil.format("&7+ " + expColor + event.getAmountNoBonuses() + " &7exp"));
+            hologram.getLines().appendText(ColorUtil.format("&7+ " + expColor + event.getAmountNoBonuses() + " &7exp"));
             int boostBonus = event.getExpFromBonus(RunicGatheringExpEvent.BonusType.BOOST);
             if (boostBonus != 0)
-                hologram.appendTextLine(ColorUtil.format("&7+ &d" + boostBonus + " &7boost exp"));
+                hologram.getLines().appendText(ColorUtil.format("&7+ &d" + boostBonus + " &7boost exp"));
         }
         // give experience and resource
         RunicItemsAPI.addItem(player.getInventory(), RunicItemsAPI.generateItemFromTemplate(templateId).generateItem(), player.getLocation());
@@ -158,12 +159,12 @@ public class GatheringListener implements Listener {
                         2f
                 );
         // Spawn floating fish
-        hologram.appendItemLine(new ItemStack(fishItemToDisplay));
+        hologram.getLines().appendItem(new ItemStack(fishItemToDisplay));
         ChatColor expColor = event.getAmountNoBonuses() == 0 ? ChatColor.RED : ChatColor.WHITE;
-        hologram.appendTextLine(ColorUtil.format("&7+ " + expColor + event.getAmountNoBonuses() + " &7exp"));
+        hologram.getLines().appendText(ColorUtil.format("&7+ " + expColor + event.getAmountNoBonuses() + " &7exp"));
         int boostBonus = event.getExpFromBonus(RunicGatheringExpEvent.BonusType.BOOST);
         if (boostBonus != 0)
-            hologram.appendTextLine(ColorUtil.format("&7+ &d" + boostBonus + " &7boost exp"));
+            hologram.getLines().appendText(ColorUtil.format("&7+ &d" + boostBonus + " &7boost exp"));
 
         RunicItemsAPI.addItem(player.getInventory(), fish, player.getLocation());
         // Gathering luck logic

@@ -7,7 +7,7 @@ import com.runicrealms.plugin.professions.listeners.GatheringLevelChangeListener
 import com.runicrealms.plugin.professions.model.GatheringData;
 import com.runicrealms.plugin.professions.utilities.ProfExpUtil;
 import com.runicrealms.plugin.utilities.NumRounder;
-import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang3.ArrayUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;

@@ -4,8 +4,8 @@ import com.runicrealms.plugin.RunicProfessions;
 import com.runicrealms.plugin.events.MagicDamageEvent;
 import com.runicrealms.plugin.events.PhysicalDamageEvent;
 import com.runicrealms.plugin.professions.model.GatheringData;
-import io.lumine.xikage.mythicmobs.MythicMobs;
-import io.lumine.xikage.mythicmobs.mobs.ActiveMob;
+import io.lumine.mythic.bukkit.MythicBukkit;
+import io.lumine.mythic.core.mobs.ActiveMob;
 import org.bukkit.ChatColor;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -19,8 +19,8 @@ public class HarvestingListener implements Listener {
 
     @EventHandler
     public void onMythicMobHerbDeath(MagicDamageEvent e) {
-        if (!MythicMobs.inst().getMobManager().isActiveMob(e.getVictim().getUniqueId())) return;
-        ActiveMob activeMob = MythicMobs.inst().getAPIHelper().getMythicMobInstance(e.getVictim());
+        if (!MythicBukkit.inst().getMobManager().isActiveMob(e.getVictim().getUniqueId())) return;
+        ActiveMob activeMob = MythicBukkit.inst().getAPIHelper().getMythicMobInstance(e.getVictim());
         String faction = activeMob.getFaction();
         if (faction == null) return;
         if (!faction.equals(HERB_FACTION)) return;
@@ -30,8 +30,8 @@ public class HarvestingListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST) // fires first
     public void onMythicMobHerbDeath(PhysicalDamageEvent e) {
-        if (!MythicMobs.inst().getMobManager().isActiveMob(e.getVictim().getUniqueId())) return;
-        ActiveMob activeMob = MythicMobs.inst().getAPIHelper().getMythicMobInstance(e.getVictim());
+        if (!MythicBukkit.inst().getMobManager().isActiveMob(e.getVictim().getUniqueId())) return;
+        ActiveMob activeMob = MythicBukkit.inst().getAPIHelper().getMythicMobInstance(e.getVictim());
         String faction = activeMob.getFaction();
         if (faction == null) return;
         if (!faction.equals(HERB_FACTION)) return;
