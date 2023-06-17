@@ -1,12 +1,7 @@
 package com.runicrealms.plugin.professions.commands;
 
 import co.aikar.commands.BaseCommand;
-import co.aikar.commands.annotation.CommandAlias;
-import co.aikar.commands.annotation.CommandCompletion;
-import co.aikar.commands.annotation.CommandPermission;
-import co.aikar.commands.annotation.Conditions;
-import co.aikar.commands.annotation.Subcommand;
-import co.aikar.commands.annotation.Syntax;
+import co.aikar.commands.annotation.*;
 import com.runicrealms.plugin.RunicProfessions;
 import com.runicrealms.plugin.professions.event.RunicCraftingExpEvent;
 import com.runicrealms.plugin.professions.event.RunicGatheringExpEvent;
@@ -49,6 +44,7 @@ public class ProfGiveCMD extends BaseCommand {
         if (gatheringSkill == null) return;
         // skip all other calculations for quest exp
         int exp = Integer.parseInt(args[2]);
+        // TODO make custom resources fire GatheringEvent
         Bukkit.getScheduler().runTask(RunicProfessions.getInstance(), () -> {
             Bukkit.getPluginManager().callEvent(new RunicGatheringExpEvent(exp, true, player, gatheringSkill));
         });
