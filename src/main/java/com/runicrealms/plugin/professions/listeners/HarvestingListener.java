@@ -15,7 +15,7 @@ import org.bukkit.event.Listener;
 
 public class HarvestingListener implements Listener {
 
-    private static final String HERB_FACTION = "Herb";
+    public static final String HERB_FACTION = "Herb";
 
     @EventHandler
     public void onMythicMobHerbDeath(MagicDamageEvent e) {
