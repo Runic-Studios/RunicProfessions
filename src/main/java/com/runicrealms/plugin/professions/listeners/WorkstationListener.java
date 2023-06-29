@@ -3,6 +3,7 @@ package com.runicrealms.plugin.professions.listeners;
 import com.runicrealms.api.event.ChatChannelMessageEvent;
 import com.runicrealms.plugin.RunicProfessions;
 import com.runicrealms.plugin.professions.Profession;
+import com.runicrealms.plugin.professions.crafting.WoodworkingMenu;
 import com.runicrealms.plugin.professions.crafting.alchemist.CauldronMenu;
 import com.runicrealms.plugin.professions.crafting.blacksmith.AnvilMenu;
 import com.runicrealms.plugin.professions.crafting.blacksmith.FurnaceMenu;
@@ -84,9 +85,7 @@ public class WorkstationListener implements Listener {
                 || stationType.equals("cooking fire")
                 || stationType.equals("furnace")
                 || stationType.equals("gemcutting bench")
-                || stationType.equals("enchanting table")
-                || stationType.equals("hunting board")
-                || stationType.equals("shrine"))) {
+                || stationType.equals("woodworking table"))) {
             player.sendMessage(ChatColor.RED + "Please specify a correct input.");
             return;
         }
@@ -157,7 +156,7 @@ public class WorkstationListener implements Listener {
         stationConfig.set("Workstations.Locations." + nextID + ".y", blockLocation.getBlockY());
         stationConfig.set("Workstations.Locations." + nextID + ".z", blockLocation.getBlockZ());
         player.sendMessage(ChatColor.GREEN + "Workstation saved! Now please specify the type of this workstation:\n"
-                + "Anvil, cauldron, cooking fire, furnace, gemcutting bench, enchanting table, shrine, or hunting board?");
+                + "Anvil, cauldron, cooking fire, furnace, gemcutting bench, woodworking table?");
         chatters.put(player.getUniqueId(), blockLocation);
 
         // save data file
@@ -209,8 +208,8 @@ public class WorkstationListener implements Listener {
         }
 
         // check which stationType is being called
-        switch (stationType) {
-            case "anvil":
+        switch (stationType.toLowerCase()) {
+            case "anvil" -> {
                 if (profession == Profession.BLACKSMITH) {
                     player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_PLACE, 0.5f, 1.0f);
                     RunicProfessions.getAPI().setPlayerWorkstation(player, new AnvilMenu(player));
@@ -218,8 +217,8 @@ public class WorkstationListener implements Listener {
                     player.playSound(player.getLocation(), Sound.ENTITY_GENERIC_EXTINGUISH_FIRE, 0.5f, 1.0f);
                     player.sendMessage(ChatColor.RED + "A blacksmith would know how to use this.");
                 }
-                break;
-            case "cauldron":
+            }
+            case "cauldron" -> {
                 if (profession == Profession.ALCHEMIST) {
                     player.playSound(player.getLocation(), Sound.BLOCK_BREWING_STAND_BREW, 0.5f, 0.25f);
                     RunicProfessions.getAPI().setPlayerWorkstation(player, new CauldronMenu(player));
@@ -227,13 +226,13 @@ public class WorkstationListener implements Listener {
                     player.playSound(player.getLocation(), Sound.ENTITY_GENERIC_EXTINGUISH_FIRE, 0.5f, 1.0f);
                     player.sendMessage(ChatColor.RED + "An alchemist would know how to use this.");
                 }
-                break;
-            case "cooking fire":
+            }
+            case "cooking fire" -> {
                 player.playSound(player.getLocation(), Sound.BLOCK_FURNACE_FIRE_CRACKLE, 0.5f, 0.5f);
                 player.playSound(player.getLocation(), Sound.ENTITY_GENERIC_EXTINGUISH_FIRE, 0.5f, 1.5f);
                 RunicProfessions.getAPI().setPlayerWorkstation(player, new CookingMenu(player));
-                break;
-            case "furnace":
+            }
+            case "furnace" -> {
                 if (profession == Profession.BLACKSMITH) {
                     player.playSound(player.getLocation(), Sound.ENTITY_BLAZE_SHOOT, 0.5f, 0.5f);
                     player.playSound(player.getLocation(), Sound.ITEM_BUCKET_FILL_LAVA, 0.5f, 1.0f);
@@ -243,18 +242,8 @@ public class WorkstationListener implements Listener {
                     player.playSound(player.getLocation(), Sound.ENTITY_GENERIC_EXTINGUISH_FIRE, 0.5f, 1.0f);
                     player.sendMessage(ChatColor.RED + "A blacksmith would know how to use this.");
                 }
-                break;
-//            case "enchanting table":
-//            case "spinning wheel":
-//                if (profession == Profession.ENCHANTER) {
-//                    player.playSound(player.getLocation(), Sound.BLOCK_WET_GRASS_BREAK, 2.0f, 1.2f);
-//                    RunicProfessions.getProfManager().setPlayerWorkstation(player, new EnchantingTableMenu(player));
-//                } else {
-//                    player.playSound(player.getLocation(), Sound.ENTITY_GENERIC_EXTINGUISH_FIRE, 0.5f, 1.0f);
-//                    player.sendMessage(ChatColor.RED + "An enchanter would know how to use this.");
-//                }
-//                break;
-            case "gemcutting bench":
+            }
+            case "gemcutting bench" -> {
                 if (profession == Profession.JEWELER) {
                     player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 0.5f, 2.0f);
                     RunicProfessions.getAPI().setPlayerWorkstation(player, new JewelerMenu(player));
@@ -262,7 +251,12 @@ public class WorkstationListener implements Listener {
                     player.playSound(player.getLocation(), Sound.ENTITY_GENERIC_EXTINGUISH_FIRE, 0.5f, 1.0f);
                     player.sendMessage(ChatColor.RED + "A jeweler would know how to use this.");
                 }
-                break;
+            }
+            case "woodworking table" -> {
+                player.playSound(player.getLocation(), Sound.ITEM_ARMOR_EQUIP_LEATHER, 0.5f, 0.5f);
+                player.playSound(player.getLocation(), Sound.BLOCK_BAMBOO_WOOD_BREAK, 0.5f, 1.5f);
+                RunicProfessions.getAPI().setPlayerWorkstation(player, new WoodworkingMenu(player));
+            }
         }
 
         // add station location to the hashmap for item display purposes
