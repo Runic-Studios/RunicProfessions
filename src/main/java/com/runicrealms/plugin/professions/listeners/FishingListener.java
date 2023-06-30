@@ -3,7 +3,7 @@ package com.runicrealms.plugin.professions.listeners;
 import com.runicrealms.plugin.RunicCore;
 import com.runicrealms.plugin.RunicProfessions;
 import com.runicrealms.plugin.api.WeightedRandomBag;
-import com.runicrealms.plugin.professions.event.GatheringEvent;
+import com.runicrealms.plugin.professions.gathering.FishingSession;
 import com.runicrealms.plugin.professions.gathering.GatheringRegion;
 import com.runicrealms.plugin.professions.gathering.GatheringResource;
 import com.runicrealms.plugin.professions.gathering.GatheringTool;
@@ -137,21 +137,26 @@ public class FishingListener implements Listener {
         }
 
         event.getHook().remove();
-        GatheringEvent gatheringEvent = new GatheringEvent
-                (
-                        player,
-                        gatheringResource,
-                        gatheringTool.get(),
-                        heldItem,
-                        templateId,
-                        hookLoc,
-                        null,
-                        gatheringResource.getResourceBlockType(),
-                        chance,
-                        gatheringResource.getResourceBlockType()
-                );
-        Bukkit.getPluginManager().callEvent(gatheringEvent);
+
+        FishingSession fishingSession = new FishingSession(player, hookLoc);
+        fishingSession.startSession();
+
+//        GatheringEvent gatheringEvent = new GatheringEvent
+//                (
+//                        player,
+//                        gatheringResource,
+//                        gatheringTool.get(),
+//                        heldItem,
+//                        templateId,
+//                        hookLoc,
+//                        null,
+//                        gatheringResource.getResourceBlockType(),
+//                        chance,
+//                        gatheringResource.getResourceBlockType()
+//                );
+//        Bukkit.getPluginManager().callEvent(gatheringEvent);
     }
+
 
     /**
      * Prevent fish from spawning naturally.
@@ -179,6 +184,11 @@ public class FishingListener implements Listener {
         if (!canFish) {
             event.setCancelled(true);
             player.sendMessage(ChatColor.RED + "You can't fish here.");
+            return;
+        }
+        if (FishingSession.getFishers().containsKey(event.getPlayer().getUniqueId())) {
+            FishingSession fishingSession = FishingSession.getFishers().get(event.getPlayer().getUniqueId());
+            fishingSession.tightenLine();
         }
     }
 }
