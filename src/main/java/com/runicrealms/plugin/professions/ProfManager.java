@@ -10,19 +10,30 @@ import com.runicrealms.plugin.professions.gathering.GatheringSkill;
 import com.runicrealms.plugin.professions.gathering.GatheringSkillGUI;
 import com.runicrealms.plugin.professions.model.GatheringData;
 import com.runicrealms.runicrestart.event.ServerShutdownEvent;
+import me.filoghost.holographicdisplays.api.HolographicDisplaysAPI;
+import me.filoghost.holographicdisplays.api.hologram.Hologram;
+import me.filoghost.holographicdisplays.api.hologram.VisibilitySettings;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.CropState;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Particle;
+import org.bukkit.World;
 import org.bukkit.block.BlockState;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -30,13 +41,53 @@ public class ProfManager implements Listener, ProfessionsAPI {
     private final HashMap<Player, Workstation> workstations;
     private final ArrayList<Player> currentCrafters;
     private final ConcurrentHashMap<Location, Material> blocksToRestore;
+    private final HashMap<Location, String> storedStationLocations;
 
     public ProfManager() {
         this.workstations = new HashMap<>();
         currentCrafters = new ArrayList<>();
         blocksToRestore = new ConcurrentHashMap<>();
         this.startRegenTask();
+        // Load workstations
+        storedStationLocations = new HashMap<>();
+
+        // retrieve the data file
+        File workstations = new File(Bukkit.getServer().getPluginManager().getPlugin("RunicProfessions").getDataFolder(),
+                "workstations.yml");
+        FileConfiguration stationConfig = YamlConfiguration.loadConfiguration(workstations);
+        ConfigurationSection stationLocs = stationConfig.getConfigurationSection("Workstations.Locations");
+
+        if (stationLocs == null) return;
+
+        /*
+        Iterate through all workstations and add them to memory
+         */
+        for (String stationID : stationLocs.getKeys(false)) {
+            World savedWorld = Bukkit.getServer().getWorld(stationLocs.getString(stationID + ".world"));
+            double savedX = stationLocs.getDouble(stationID + ".x");
+            double savedY = stationLocs.getDouble(stationID + ".y");
+            double savedZ = stationLocs.getDouble(stationID + ".z");
+            Location stationLocation = new Location(savedWorld, savedX, savedY, savedZ);
+            String stationType = stationLocs.getString(stationID + ".type");
+            storedStationLocations.put(stationLocation, stationType);
+        }
+        loadWorkstationHolograms();
+        // Load event listeners
         RunicProfessions.getInstance().getServer().getPluginManager().registerEvents(this, RunicProfessions.getInstance());
+    }
+
+    private void loadWorkstationHolograms() {
+        for (Location location : storedStationLocations.keySet()) {
+            Hologram hologram = HolographicDisplaysAPI.get(RunicProfessions.getInstance()).createHologram(location.clone().add(0.5, 2, 0.5));
+            hologram.getVisibilitySettings().setGlobalVisibility(VisibilitySettings.Visibility.VISIBLE);
+            String typeName = storedStationLocations.get(location);
+            WorkstationType workstationType = WorkstationType.getFromName(typeName);
+            if (workstationType == null) {
+                workstationType = WorkstationType.ANVIL; // Default
+            }
+            hologram.getLines().appendText(ChatColor.YELLOW + String.valueOf(ChatColor.BOLD) + workstationType.getName());
+            hologram.getLines().appendText(ChatColor.GRAY + "Workstation");
+        }
     }
 
     @Override
@@ -47,22 +98,14 @@ public class ProfManager implements Listener, ProfessionsAPI {
     @Override
     public int determineCurrentGatheringLevel(UUID uuid, GatheringSkill gatheringSkill) {
         GatheringData gatheringData = RunicProfessions.getDataAPI().loadGatheringData(uuid);
-        switch (gatheringSkill) {
-            case COOKING:
-                return gatheringData.getCookingLevel();
-            case FARMING:
-                return gatheringData.getFarmingLevel();
-            case FISHING:
-                return gatheringData.getFishingLevel();
-            case HARVESTING:
-                return gatheringData.getHarvestingLevel();
-            case MINING:
-                return gatheringData.getMiningLevel();
-            case WOODCUTTING:
-                return gatheringData.getWoodcuttingLevel();
-            default:
-                return 0;
-        }
+        return switch (gatheringSkill) {
+            case COOKING -> gatheringData.getCookingLevel();
+            case FARMING -> gatheringData.getFarmingLevel();
+            case FISHING -> gatheringData.getFishingLevel();
+            case HARVESTING -> gatheringData.getHarvestingLevel();
+            case MINING -> gatheringData.getMiningLevel();
+            case WOODCUTTING -> gatheringData.getWoodcuttingLevel();
+        };
     }
 
     @Override
@@ -112,6 +155,45 @@ public class ProfManager implements Listener, ProfessionsAPI {
     @Override
     public void setPlayerWorkstation(Player player, Workstation station) {
         this.workstations.put(player, station);
+    }
+
+    @Override
+    public Map<Location, String> getStoredStationLocations() {
+        return storedStationLocations;
+    }
+
+    @Override
+    public void removeWorkstation(Location location) {
+        storedStationLocations.remove(location); // remove workstation from memory
+        try {
+            File workstations = new File(Bukkit.getServer().getPluginManager().getPlugin("RunicProfessions").getDataFolder(),
+                    "workstations.yml");
+            FileConfiguration stationConfig = YamlConfiguration.loadConfiguration(workstations);
+            ConfigurationSection stationLocs = stationConfig.getConfigurationSection("Workstations.Locations");
+
+            if (stationLocs == null) return;
+
+            /*
+            Iterate through all workstations and add them to memory
+             */
+            for (String stationID : stationLocs.getKeys(false)) {
+                World savedWorld = Bukkit.getServer().getWorld(stationLocs.getString(stationID + ".world"));
+                double savedX = stationLocs.getDouble(stationID + ".x");
+                double savedY = stationLocs.getDouble(stationID + ".y");
+                double savedZ = stationLocs.getDouble(stationID + ".z");
+                Location stationLocation = new Location(savedWorld, savedX, savedY, savedZ);
+                if (stationLocation.equals(location)) {
+                    stationLocs.set(stationID, null);
+                }
+            }
+
+            stationConfig.save(workstations);
+        } catch (NullPointerException e) {
+            Bukkit.getServer().getLogger().info(ChatColor.RED + "Error: there was an error removing workstation!");
+            e.printStackTrace();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @EventHandler

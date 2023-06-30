@@ -8,8 +8,9 @@ import co.aikar.taskchain.TaskChainFactory;
 import com.runicrealms.plugin.professions.ProfManager;
 import com.runicrealms.plugin.professions.api.DataAPI;
 import com.runicrealms.plugin.professions.api.ProfessionsAPI;
-import com.runicrealms.plugin.professions.commands.ProfGiveCMD;
-import com.runicrealms.plugin.professions.commands.ProfSetCMD;
+import com.runicrealms.plugin.professions.commands.admin.ProfGiveCMD;
+import com.runicrealms.plugin.professions.commands.admin.ProfSetCMD;
+import com.runicrealms.plugin.professions.commands.admin.WorkstationCMD;
 import com.runicrealms.plugin.professions.config.WorkstationLoader;
 import com.runicrealms.plugin.professions.crafting.alchemist.PotionListener;
 import com.runicrealms.plugin.professions.crafting.blacksmith.StoneListener;
@@ -148,6 +149,7 @@ public final class RunicProfessions extends JavaPlugin {
     private void registerCommands() {
         commandManager.registerCommand(new ProfGiveCMD());
         commandManager.registerCommand(new ProfSetCMD());
+        commandManager.registerCommand(new WorkstationCMD());
     }
 
     private void registerEvents() {

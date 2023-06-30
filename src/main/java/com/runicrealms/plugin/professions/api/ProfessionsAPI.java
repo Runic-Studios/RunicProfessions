@@ -9,6 +9,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -32,7 +33,7 @@ public interface ProfessionsAPI {
     int determineCurrentGatheringLevel(UUID uuid, GatheringSkill gatheringSkill);
 
     /**
-     * @return a list of blocks which have been mined and will be replenished
+     * @return a map of blocks which have been mined and will be replenished
      */
     ConcurrentHashMap<Location, Material> getBlocksToRestore();
 
@@ -111,4 +112,17 @@ public interface ProfessionsAPI {
      * @param station the workstation that they are in
      */
     void setPlayerWorkstation(Player player, Workstation station);
+
+    /**
+     * @return a map of in-memory workstation locations and their type
+     */
+    Map<Location, String> getStoredStationLocations();
+
+    /**
+     * Removes the workstation from memory and flat file storage
+     *
+     * @param location of the workstation to remove
+     */
+    void removeWorkstation(Location location);
+
 }

@@ -15,9 +15,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
-import org.bukkit.World;
 import org.bukkit.block.Block;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -37,32 +35,9 @@ public class WorkstationListener implements Listener {
 
     private static final HashMap<UUID, Location> CURRENT_WORKSTATION = new HashMap<>();
     private final HashMap<UUID, Location> chatters;
-    private final HashMap<Location, String> storedStationLocations;
 
     public WorkstationListener() {
         chatters = new HashMap<>();
-        storedStationLocations = new HashMap<>();
-
-        // retrieve the data file
-        File workstations = new File(Bukkit.getServer().getPluginManager().getPlugin("RunicProfessions").getDataFolder(),
-                "workstations.yml");
-        FileConfiguration stationConfig = YamlConfiguration.loadConfiguration(workstations);
-        ConfigurationSection stationLocs = stationConfig.getConfigurationSection("Workstations.Locations");
-
-        if (stationLocs == null) return;
-
-        /*
-        Iterate through all workstations and add them to memory
-         */
-        for (String stationID : stationLocs.getKeys(false)) {
-            World savedWorld = Bukkit.getServer().getWorld(stationLocs.getString(stationID + ".world"));
-            double savedX = stationLocs.getDouble(stationID + ".x");
-            double savedY = stationLocs.getDouble(stationID + ".y");
-            double savedZ = stationLocs.getDouble(stationID + ".z");
-            Location stationLocation = new Location(savedWorld, savedX, savedY, savedZ);
-            String stationType = stationLocs.getString(stationID + ".type");
-            storedStationLocations.put(stationLocation, stationType);
-        }
     }
 
     public static HashMap<UUID, Location> getCurrentWorkstation() {
@@ -104,7 +79,7 @@ public class WorkstationListener implements Listener {
         player.sendMessage(ChatColor.GREEN + "Workstation type set to: " + ChatColor.YELLOW + stationType);
 
         // add workstation to memory
-        storedStationLocations.put(chatters.get(player.getUniqueId()), stationType);
+        RunicProfessions.getAPI().getStoredStationLocations().put(chatters.get(player.getUniqueId()), stationType);
         chatters.remove(player.getUniqueId());
 
         // save data file
@@ -179,9 +154,9 @@ public class WorkstationListener implements Listener {
         Player player = event.getPlayer();
         Block block = event.getClickedBlock();
         Location blockLocation = block.getLocation();
-        if (storedStationLocations.containsKey(blockLocation)) {
+        if (RunicProfessions.getAPI().getStoredStationLocations().containsKey(blockLocation)) {
             event.setCancelled(true);
-            tryOpenGUI(player, block, storedStationLocations.get(blockLocation));
+            tryOpenGUI(player, block, RunicProfessions.getAPI().getStoredStationLocations().get(blockLocation));
         }
     }
 
