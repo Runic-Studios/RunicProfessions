@@ -6,7 +6,7 @@ package com.runicrealms.plugin.professions.utilities;
 public class ExperienceConverter {
 
     /**
-     * Uses a logarithmic function (log1p is log(x+1))
+     * Uses a natural logarithmic function (log1p is ln(x+1))
      *
      * @param gatheringExperience the amount of gathering experience
      * @param multiplier          an additional lever to affect the combat exp
