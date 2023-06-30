@@ -103,6 +103,7 @@ public class RunicGatheringExpEvent extends Event implements Cancellable {
     }
 
     public enum BonusType {
-        BOOST
+        BOOST,
+        OUTLAW
     }
 }
