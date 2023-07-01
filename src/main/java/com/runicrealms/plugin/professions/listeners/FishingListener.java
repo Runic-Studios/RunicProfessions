@@ -28,6 +28,7 @@ import org.bukkit.event.player.PlayerFishEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -51,6 +52,7 @@ public class FishingListener implements Listener {
             GatheringResource gatheringResource = GatheringResource.getFromTemplateId(string);
             if (gatheringResource == null) continue;
             int reqLevel = gatheringResource.getRequiredLevel();
+            // Skip fish that the user has not unlocked
             if (fishingLevel < reqLevel) continue;
             int weight = 100 + (10 * fishingLevel);
             oreDropTable.addEntry(gatheringResource, weight);
@@ -106,19 +108,17 @@ public class FishingListener implements Listener {
         // Ensure the player has reached the req level to obtain the fish
         GatheringData gatheringData = RunicProfessions.getDataAPI().loadGatheringData(player.getUniqueId());
         int fishingLevel = gatheringData.getFishingLevel();
-        GatheringResource gatheringResource = determineFishFromRegion(RunicCore.getRegionAPI().getRegionIds(hookLoc), fishingLevel);
-        int requiredLevel = gatheringResource.getRequiredLevel();
-        if (fishingLevel < requiredLevel) {
-            player.sendMessage(ChatColor.RED + "You are not skilled enough to catch this fish!");
-            return;
+        List<GatheringResource> gatheringResourceList = new ArrayList<>();
+        for (int i = 0; i < FishingSession.FISH_BUNDLE_NUMBER; i++) {
+            GatheringResource gatheringResource = determineFishFromRegion(RunicCore.getRegionAPI().getRegionIds(hookLoc), fishingLevel);
+            gatheringResourceList.add(gatheringResource);
         }
 
-        String templateId = gatheringResource.getTemplateId();
         ItemStack heldItem = player.getInventory().getItemInMainHand();
 
         // Verify the player is holding a tool
         if (player.getInventory().getItemInMainHand().getType() == Material.AIR) {
-            player.sendMessage(gatheringResource.getGatheringSkill().getNoToolMessage());
+            player.sendMessage(gatheringResourceList.get(0).getGatheringSkill().getNoToolMessage());
             return;
         }
 
@@ -130,7 +130,7 @@ public class FishingListener implements Listener {
                         tool -> tool.getRunicItemDynamic().getTemplateId().equals(templateIdHeldItem)
                 ).findFirst();
         if (gatheringTool.isEmpty()) {
-            player.sendMessage(gatheringResource.getGatheringSkill().getNoToolMessage());
+            player.sendMessage(gatheringResourceList.get(0).getGatheringSkill().getNoToolMessage());
             return;
         }
 
@@ -138,7 +138,7 @@ public class FishingListener implements Listener {
         event.getHook().remove();
 
         // Start the fishing session
-        FishingSession fishingSession = new FishingSession(player, hookLoc);
+        FishingSession fishingSession = new FishingSession(player, hookLoc, gatheringResourceList, gatheringTool.get(), heldItem);
         fishingSession.startSession();
     }
 

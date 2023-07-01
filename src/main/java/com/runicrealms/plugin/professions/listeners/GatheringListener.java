@@ -47,14 +47,15 @@ public class GatheringListener implements Listener {
      * @param location      of the hologram
      * @param lineToDisplay for the hologram's contents
      * @param height        of the hologram
+     * @param duration      of the hologram (in secs)
      * @return the hologram
      */
-    private Hologram createHologram(Player player, Location location, String lineToDisplay, float height) {
+    private Hologram createHologram(Player player, Location location, String lineToDisplay, float height, double duration) {
         Hologram hologram = HolographicDisplaysAPI.get(RunicProfessions.getInstance()).createHologram(location.clone().add(0, height, 0));
         hologram.getVisibilitySettings().setIndividualVisibility(player, VisibilitySettings.Visibility.VISIBLE);
         hologram.getVisibilitySettings().setGlobalVisibility(VisibilitySettings.Visibility.HIDDEN);
         hologram.getLines().appendText(lineToDisplay);
-        Bukkit.getScheduler().runTaskLater(RunicProfessions.getInstance(), hologram::delete, 40L); // 2s
+        Bukkit.getScheduler().runTaskLater(RunicProfessions.getInstance(), hologram::delete, (long) duration * 20);
         return hologram;
     }
 
@@ -112,7 +113,8 @@ public class GatheringListener implements Listener {
                             player,
                             location,
                             ChatColor.GREEN + "+ " + RunicItemsAPI.generateItemFromTemplate(templateId).getDisplayableItem().getDisplayName(),
-                            2f
+                            2f,
+                            2
                     );
 
             ChatColor expColor = event.getAmountNoBonuses() == 0 ? ChatColor.RED : ChatColor.WHITE;
@@ -156,7 +158,8 @@ public class GatheringListener implements Listener {
                         player,
                         location,
                         ChatColor.GREEN + "+ " + RunicItemsAPI.generateItemFromTemplate(templateId).getDisplayableItem().getDisplayName(),
-                        2f
+                        2f,
+                        1
                 );
         // Spawn floating fish
         hologram.getLines().appendItem(new ItemStack(fishItemToDisplay));
@@ -201,7 +204,7 @@ public class GatheringListener implements Listener {
     private void givePlayerCoin(Player player, Location location, double chance) {
         if (chance >= COIN_CHANCE) {
             player.getWorld().playSound(location, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 0.5f, 2.0f);
-            createHologram(player, location, ChatColor.GOLD + "+ Gold Coin", 1.25f);
+            createHologram(player, location, ChatColor.GOLD + "+ Gold Coin", 1.25f, 2);
             RunicItemsAPI.addItem(player.getInventory(), CurrencyUtil.goldCoin(), player.getLocation());
         }
     }

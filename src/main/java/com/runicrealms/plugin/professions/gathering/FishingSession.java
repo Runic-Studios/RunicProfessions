@@ -4,9 +4,11 @@ import com.runicrealms.plugin.RunicCore;
 import com.runicrealms.plugin.RunicProfessions;
 import com.runicrealms.plugin.loot.LootHolder;
 import com.runicrealms.plugin.loot.LootTable;
+import com.runicrealms.plugin.professions.event.GatheringEvent;
 import com.runicrealms.plugin.professions.model.GatheringData;
 import com.runicrealms.plugin.utilities.ActionBarUtil;
 import com.runicrealms.runicitems.RunicItemsAPI;
+import com.runicrealms.runicitems.item.RunicItemDynamic;
 import me.filoghost.holographicdisplays.api.HolographicDisplaysAPI;
 import me.filoghost.holographicdisplays.api.hologram.Hologram;
 import me.filoghost.holographicdisplays.api.hologram.VisibilitySettings;
@@ -19,6 +21,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
@@ -28,19 +31,27 @@ import java.util.concurrent.ThreadLocalRandom;
  * next 10s
  */
 public class FishingSession {
+    public static final int FISH_BUNDLE_NUMBER = 4; // How many fish per successful attempt
     private static final int SESSION_TIME = 10; // Seconds
+    private static final double RARE_TABLE_CHANCE = .05; // 5%
     private static final double SLACK_FAILURE_MAX = 0.95;
     private static final Map<UUID, FishingSession> FISHERS = new HashMap<>();
     private final Hologram hologram;
     private final Player player;
     private final Location location;
+    private final List<GatheringResource> fishBundle; // Reward for successful completion
+    private final GatheringTool gatheringTool;
+    private final ItemStack heldItem;
     private double slack;
     private BukkitRunnable sessionTimer;
     private int count;
 
-    public FishingSession(Player player, Location location) {
+    public FishingSession(Player player, Location location, List<GatheringResource> fishBundle, GatheringTool gatheringTool, ItemStack heldItem) {
         this.player = player;
         this.location = location;
+        this.fishBundle = fishBundle;
+        this.gatheringTool = gatheringTool;
+        this.heldItem = heldItem;
         this.slack = 0.05 + Math.random() * 0.1; // Start with some slack in the line
         this.count = 0;
         this.hologram = createHologram();
@@ -157,15 +168,15 @@ public class FishingSession {
 
     private void distributeReward() {
         double chance = ThreadLocalRandom.current().nextDouble();
-        Bukkit.broadcastMessage("chance is " + chance);
-        if (chance <= .9) { // .05
+        // Custom drop table
+        if (chance <= RARE_TABLE_CHANCE) {
             GatheringData gatheringData = RunicProfessions.getDataAPI().loadGatheringData(player.getUniqueId());
             int fishingLevel = gatheringData.getFishingLevel();
             LootTable fishingLootTable = RunicCore.getLootAPI().getLootTable("tier-1");
             int minLevelScriptItem = fishingLevel - 5;
             if (minLevelScriptItem < 0)
                 minLevelScriptItem = 0;
-            int maxLevelScriptItem = fishingLevel + 5;
+            int maxLevelScriptItem = fishingLevel;
             if (maxLevelScriptItem > 60)
                 maxLevelScriptItem = 60;
             FishingLootHolder fishingLootHolder = new FishingLootHolder(minLevelScriptItem, maxLevelScriptItem);
@@ -175,20 +186,43 @@ public class FishingSession {
             player.playSound(player.getLocation(), Sound.ENTITY_ITEM_PICKUP, 0.5f, 1.0f);
             player.sendMessage(ChatColor.GREEN + "Your line caught an item: " + loot.getItemMeta().getDisplayName() + ChatColor.GREEN + "!");
         }
-//        GatheringEvent gatheringEvent = new GatheringEvent
-//                (
-//                        player,
-//                        gatheringResource,
-//                        gatheringTool.get(),
-//                        heldItem,
-//                        templateId,
-//                        hookLoc,
-//                        null,
-//                        gatheringResource.getResourceBlockType(),
-//                        chance,
-//                        gatheringResource.getResourceBlockType()
-//                );
-//        Bukkit.getPluginManager().callEvent(gatheringEvent);
+        // Bundle of fish
+        distributeFishBundle();
+    }
+
+    private void distributeFishBundle() {
+        BukkitRunnable rewardTask = new BukkitRunnable() {
+            int rewardCount = 0;
+
+            @Override
+            public void run() {
+                // Stop the process early if the tool breaks
+                int durability = ((RunicItemDynamic) RunicItemsAPI.getRunicItemFromItemStack(heldItem)).getDynamicField();
+                if (durability < 1 || rewardCount >= FISH_BUNDLE_NUMBER) {
+                    this.cancel();
+                } else {
+                    GatheringResource gatheringResource = fishBundle.get(rewardCount);
+                    String templateId = gatheringResource.getTemplateId();
+                    GatheringEvent gatheringEvent = new GatheringEvent
+                            (
+                                    player,
+                                    gatheringResource,
+                                    gatheringTool,
+                                    heldItem,
+                                    templateId,
+                                    location,
+                                    null,
+                                    gatheringResource.getResourceBlockType(),
+                                    0,
+                                    gatheringResource.getResourceBlockType()
+                            );
+                    Bukkit.getPluginManager().callEvent(gatheringEvent);
+                    rewardCount++;
+                }
+            }
+        };
+
+        rewardTask.runTaskTimer(RunicProfessions.getInstance(), 0, 20L);
     }
 
     private void updateHologramColor() {
