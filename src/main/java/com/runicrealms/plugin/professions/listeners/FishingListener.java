@@ -105,7 +105,7 @@ public class FishingListener implements Listener {
         double chance = ThreadLocalRandom.current().nextDouble();
         Location hookLoc = event.getHook().getLocation();
 
-        // ensure the player has reached the req level to obtain the fish
+        // Ensure the player has reached the req level to obtain the fish
         GatheringData gatheringData = RunicProfessions.getDataAPI().loadGatheringData(player.getUniqueId());
         int fishingLevel = gatheringData.getFishingLevel();
         GatheringResource gatheringResource = determineFishFromRegion(RunicCore.getRegionAPI().getRegionIds(hookLoc), fishingLevel);
@@ -118,13 +118,13 @@ public class FishingListener implements Listener {
         String templateId = gatheringResource.getTemplateId();
         ItemStack heldItem = player.getInventory().getItemInMainHand();
 
-        // verify the player is holding a tool
+        // Verify the player is holding a tool
         if (player.getInventory().getItemInMainHand().getType() == Material.AIR) {
             player.sendMessage(gatheringResource.getGatheringSkill().getNoToolMessage());
             return;
         }
 
-        // verify held tool is a fishing rod
+        // Verify held tool is a fishing rod
         RunicItem runicItem = RunicItemsAPI.getRunicItemFromItemStack(heldItem);
         String templateIdHeldItem = runicItem.getTemplateId();
         Optional<GatheringTool> gatheringTool = GatheringUtil.getRods().stream().filter
@@ -136,27 +136,13 @@ public class FishingListener implements Listener {
             return;
         }
 
+        // Remove the hook entity
         event.getHook().remove();
 
+        // Start the fishing session
         FishingSession fishingSession = new FishingSession(player, hookLoc);
         fishingSession.startSession();
-
-//        GatheringEvent gatheringEvent = new GatheringEvent
-//                (
-//                        player,
-//                        gatheringResource,
-//                        gatheringTool.get(),
-//                        heldItem,
-//                        templateId,
-//                        hookLoc,
-//                        null,
-//                        gatheringResource.getResourceBlockType(),
-//                        chance,
-//                        gatheringResource.getResourceBlockType()
-//                );
-//        Bukkit.getPluginManager().callEvent(gatheringEvent);
     }
-
 
     /**
      * Prevent fish from spawning naturally.
@@ -189,6 +175,7 @@ public class FishingListener implements Listener {
         if (FishingSession.getFishers().containsKey(event.getPlayer().getUniqueId())) {
             FishingSession fishingSession = FishingSession.getFishers().get(event.getPlayer().getUniqueId());
             fishingSession.tightenLine();
+            event.setCancelled(true);
         }
     }
 }
