@@ -1,19 +1,27 @@
 package com.runicrealms.plugin.professions.gathering;
 
+import com.runicrealms.plugin.RunicCore;
 import com.runicrealms.plugin.RunicProfessions;
+import com.runicrealms.plugin.loot.LootHolder;
+import com.runicrealms.plugin.loot.LootTable;
+import com.runicrealms.plugin.professions.model.GatheringData;
 import com.runicrealms.plugin.utilities.ActionBarUtil;
+import com.runicrealms.runicitems.RunicItemsAPI;
 import me.filoghost.holographicdisplays.api.HolographicDisplaysAPI;
 import me.filoghost.holographicdisplays.api.hologram.Hologram;
 import me.filoghost.holographicdisplays.api.hologram.VisibilitySettings;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * Used when the player catches a fish to start a fishing session, where the player will need to reel it in over the
@@ -148,6 +156,25 @@ public class FishingSession {
     }
 
     private void distributeReward() {
+        double chance = ThreadLocalRandom.current().nextDouble();
+        Bukkit.broadcastMessage("chance is " + chance);
+        if (chance <= .9) { // .05
+            GatheringData gatheringData = RunicProfessions.getDataAPI().loadGatheringData(player.getUniqueId());
+            int fishingLevel = gatheringData.getFishingLevel();
+            LootTable fishingLootTable = RunicCore.getLootAPI().getLootTable("tier-1");
+            int minLevelScriptItem = fishingLevel - 5;
+            if (minLevelScriptItem < 0)
+                minLevelScriptItem = 0;
+            int maxLevelScriptItem = fishingLevel + 5;
+            if (maxLevelScriptItem > 60)
+                maxLevelScriptItem = 60;
+            FishingLootHolder fishingLootHolder = new FishingLootHolder(minLevelScriptItem, maxLevelScriptItem);
+            ItemStack loot = fishingLootTable.generateLoot(fishingLootHolder, player);
+            RunicItemsAPI.addItem(player.getInventory(), loot);
+            assert loot.getItemMeta() != null;
+            player.playSound(player.getLocation(), Sound.ENTITY_ITEM_PICKUP, 0.5f, 1.0f);
+            player.sendMessage(ChatColor.GREEN + "Your line caught an item: " + loot.getItemMeta().getDisplayName() + ChatColor.GREEN + "!");
+        }
 //        GatheringEvent gatheringEvent = new GatheringEvent
 //                (
 //                        player,
@@ -189,6 +216,27 @@ public class FishingSession {
     enum SessionResult {
         SUCCESS,
         FAILURE
+    }
+
+    static class FishingLootHolder implements LootHolder {
+
+        private final int minLevel;
+        private final int maxLevel;
+
+        public FishingLootHolder(int minLevel, int maxLevel) {
+            this.minLevel = minLevel;
+            this.maxLevel = maxLevel;
+        }
+
+        @Override
+        public int getItemMinLevel(Player player) {
+            return minLevel;
+        }
+
+        @Override
+        public int getItemMaxLevel(Player player) {
+            return maxLevel;
+        }
     }
 
 }

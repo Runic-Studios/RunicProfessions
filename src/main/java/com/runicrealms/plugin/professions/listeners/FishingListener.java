@@ -30,7 +30,6 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * Listener for Fishing (Gathering Profession)
@@ -102,7 +101,6 @@ public class FishingListener implements Listener {
         if (event.getCaught() != null) event.getCaught().remove();
         if (event.getState() != PlayerFishEvent.State.BITE) return;
         Player player = event.getPlayer();
-        double chance = ThreadLocalRandom.current().nextDouble();
         Location hookLoc = event.getHook().getLocation();
 
         // Ensure the player has reached the req level to obtain the fish
@@ -131,7 +129,7 @@ public class FishingListener implements Listener {
                 (
                         tool -> tool.getRunicItemDynamic().getTemplateId().equals(templateIdHeldItem)
                 ).findFirst();
-        if (!gatheringTool.isPresent()) {
+        if (gatheringTool.isEmpty()) {
             player.sendMessage(gatheringResource.getGatheringSkill().getNoToolMessage());
             return;
         }
