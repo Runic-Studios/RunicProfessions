@@ -18,6 +18,7 @@ import com.runicrealms.plugin.professions.crafting.cooking.CookingListener;
 import com.runicrealms.plugin.professions.crafting.enchanter.PowderListener;
 import com.runicrealms.plugin.professions.gathering.GatheringGUIListener;
 import com.runicrealms.plugin.professions.gathering.GatheringSkillGUIListener;
+import com.runicrealms.plugin.professions.gathering.mining.OreNodeManager;
 import com.runicrealms.plugin.professions.listeners.CropTrampleListener;
 import com.runicrealms.plugin.professions.listeners.FishingListener;
 import com.runicrealms.plugin.professions.listeners.GatheringLevelChangeListener;
@@ -50,6 +51,7 @@ public final class RunicProfessions extends JavaPlugin {
     private static DataAPI dataAPI;
     private static MongoTask mongoTask;
     private static PaperCommandManager commandManager;
+    private static OreNodeManager oreNodeManager;
 
     public static RunicProfessions getInstance() {
         return plugin;
@@ -71,25 +73,15 @@ public final class RunicProfessions extends JavaPlugin {
         return mongoTask;
     }
 
-    /**
-     * ?
-     *
-     * @param <T>
-     * @return
-     */
-    public static <T> TaskChain<T> newChain() {
-        return taskChainFactory.newChain();
+    public static OreNodeManager getOreNodeManager() {
+        return oreNodeManager;
     }
 
     /**
-     * ?
-     *
-     * @param name
-     * @param <T>
-     * @return
+     * @return a new TaskChain for thread context switching
      */
-    public static <T> TaskChain<T> newSharedChain(String name) {
-        return taskChainFactory.newSharedChain(name);
+    public static <T> TaskChain<T> newChain() {
+        return taskChainFactory.newChain();
     }
 
     /**
@@ -108,6 +100,7 @@ public final class RunicProfessions extends JavaPlugin {
         mongoTask = null;
         commandManager = null;
         taskChainFactory = null;
+        oreNodeManager = null;
     }
 
     @Override
@@ -118,6 +111,7 @@ public final class RunicProfessions extends JavaPlugin {
         dataAPI = new DataManager();
         mongoTask = new MongoTask();
         commandManager = new PaperCommandManager(this);
+        oreNodeManager = new OreNodeManager();
 
         new LootTableHelper().setupLootTables(); // update loot tables
         new ProfessionTutorHelper(); // initialize profession tutors

@@ -11,6 +11,9 @@ import com.runicrealms.plugin.RunicProfessions;
 import com.runicrealms.plugin.professions.event.RunicCraftingExpEvent;
 import com.runicrealms.plugin.professions.event.RunicGatheringExpEvent;
 import com.runicrealms.plugin.professions.gathering.GatheringSkill;
+import com.runicrealms.plugin.professions.gathering.mining.OreNode;
+import com.runicrealms.plugin.professions.gathering.mining.OreTier;
+import com.runicrealms.plugin.professions.gathering.mining.OreType;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -53,6 +56,14 @@ public class ProfGiveCMD extends BaseCommand {
         Bukkit.getScheduler().runTask(RunicProfessions.getInstance(), () -> {
             Bukkit.getPluginManager().callEvent(new RunicGatheringExpEvent(exp, true, player, gatheringSkill));
         });
+    }
+
+    @Subcommand("test")
+    @Conditions("is-console-or-op")
+    public void onCommandGatheringTest(Player player) {
+        OreNode oreNode = new OreNode(player.getLocation(), OreType.RUBY, OreTier.TWO);
+        oreNode.spawn();
+        RunicProfessions.getOreNodeManager().getOreNodes().add(oreNode);
     }
 
     // profgive profexp [player] [amount]

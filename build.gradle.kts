@@ -21,6 +21,7 @@ dependencies {
     compileOnly(commonLibs.mongodbdrivercore)
     compileOnly(commonLibs.mythicmobs)
     compileOnly(commonLibs.holographicdisplays)
+    compileOnly(commonLibs.modelengine)
     compileOnly(project(":Projects:Chat"))
     compileOnly(project(":Projects:Core"))
     compileOnly(project(":Projects:Items"))
