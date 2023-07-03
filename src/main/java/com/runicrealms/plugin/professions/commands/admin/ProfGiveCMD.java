@@ -59,9 +59,15 @@ public class ProfGiveCMD extends BaseCommand {
     }
 
     @Subcommand("test")
+    @Syntax("<type> <tier>")
     @Conditions("is-console-or-op")
-    public void onCommandGatheringTest(Player player) {
-        OreNode oreNode = new OreNode(player.getLocation(), OreType.RUBY, OreTier.TWO);
+    public void onCommandGatheringTest(Player player, String[] args) {
+        String type = args[0];
+        String tier = args[1];
+        OreType oreType = OreType.valueOf(type.toUpperCase());
+        OreTier oreTier = OreTier.valueOf(tier.toUpperCase());
+        Bukkit.broadcastMessage("ore tier is" + oreTier);
+        OreNode oreNode = new OreNode(player.getLocation(), oreType, oreTier);
         oreNode.spawn();
         RunicProfessions.getOreNodeManager().getOreNodes().add(oreNode);
     }
