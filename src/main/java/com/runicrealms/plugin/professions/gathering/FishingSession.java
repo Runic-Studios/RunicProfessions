@@ -129,7 +129,7 @@ public class FishingSession {
         ActionBarUtil.sendTimedMessage
                 (
                         player,
-                        ChatColor.GRAY + "You tighten the line!",
+                        ChatColor.YELLOW + "You tighten the line!",
                         3
                 );
     }
