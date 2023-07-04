@@ -398,34 +398,28 @@ public abstract class Workstation implements Listener {
         LinkedHashMap<ItemStack, Integer> reagents = craftedResource.getReagents();
         Material craftedItemType = RunicItemsAPI.generateItemFromTemplate(craftedResource.getTemplateId()).getDisplayableItem().getMaterial();
 
-        // grab the location of the anvil
+        // Grab the location of the anvil
         Location stationLoc = WorkstationListener.getCurrentWorkstation().get(player.getUniqueId());
 
-        // check that the player has reached the req. lv
+        // Check that the player has reached the req. lv
         if (currentLvl < reqLevel) {
             player.playSound(player.getLocation(), Sound.ENTITY_GENERIC_EXTINGUISH_FIRE, 0.5f, 1);
             player.sendMessage(ChatColor.RED + "You haven't learned to craft this yet!");
             return;
         }
 
-        // check that the player has the reagents
-        for (ItemStack itemStack : reagents.keySet()) {
-            int amt = reagents.get(itemStack) * numOfItems;
-            if (!RunicCore.getShopAPI().hasItem(player, itemStack, amt)) {
-                player.playSound(player.getLocation(), Sound.ENTITY_GENERIC_EXTINGUISH_FIRE, 0.5f, 1);
-                player.sendMessage(ChatColor.RED + "You don't have the items to craft this!");
-                return;
-            }
-        }
+        // Check that the player has the reagents
+        boolean hasReagents = checkReagents(player, reagents, numOfItems);
+        if (!hasReagents) return;
 
-        // check that the player has an open inventory space
+        // Check that the player has an open inventory space
         if (player.getInventory().firstEmpty() == -1 && craftedItemType.getMaxStackSize() == 1) {
             player.playSound(player.getLocation(), Sound.ENTITY_GENERIC_EXTINGUISH_FIRE, 0.5f, 1);
             player.sendMessage(ChatColor.RED + "You don't have any inventory space!");
             return;
         }
 
-        // check that the player has an open inventory space (if the item is stackable)
+        // Check that the player has an open inventory space (if the item is stackable)
         ItemStack[] inv = player.getInventory().getContents();
         if (player.getInventory().firstEmpty() == -1 && craftedItemType.getMaxStackSize() != 1) {
             for (int i = 0; i < inv.length; i++) {
@@ -439,19 +433,15 @@ public abstract class Workstation implements Listener {
             }
         }
 
-        // if player has everything, take player's items, display first reagent visually
-        // add player to currently crafting ArrayList
+        // If player has everything, display first reagent visually
+        // Add player to currently crafting ArrayList
         RunicProfessions.getAPI().getCurrentCrafters().add(player);
         player.sendMessage(ChatColor.GRAY + "Crafting...");
-        for (ItemStack itemStack : reagents.keySet()) {
-            int amt = reagents.get(itemStack) * numOfItems;
-            ItemUtils.takeItem(player, itemStack, amt);
-        }
 
-        // spawn item on workstation for visual
+        // Spawn item on workstation for visual
         FloatingItemUtil.spawnFloatingItem(player, stationLoc, craftedItemType, 4, durability);
 
-        // start the crafting process
+        // Start the crafting process
         new BukkitRunnable() {
             int count = 0;
 
@@ -459,7 +449,17 @@ public abstract class Workstation implements Listener {
             public void run() {
                 if (count > 3) {
                     this.cancel();
+                    // Unblock them from crafting
                     RunicProfessions.getAPI().getCurrentCrafters().remove(player);
+                    // Check reagents again
+                    boolean hasReagents = checkReagents(player, reagents, numOfItems);
+                    if (!hasReagents) return;
+                    // Take reagents
+                    for (ItemStack itemStack : reagents.keySet()) {
+                        int amt = reagents.get(itemStack) * numOfItems;
+                        ItemUtils.takeItem(player, itemStack, amt);
+                    }
+                    // Grant exp and produce result
                     player.playSound(player.getLocation(), soundDone, 0.5f, 1.0f);
                     player.sendMessage(ChatColor.GREEN + "Done!");
                     if (exp > 0) {
@@ -476,5 +476,25 @@ public abstract class Workstation implements Listener {
                 }
             }
         }.runTaskTimer(RunicProfessions.getInstance(), 0, 20);
+    }
+
+    /**
+     * Check if the player has all necessary crafting reagents
+     *
+     * @param player     who is crafting
+     * @param reagents   a map of the reagents and their required amounts
+     * @param numOfItems a multiplier for how many items to be crafted at once (1 or 5)
+     * @return true if they have all items, else false
+     */
+    private boolean checkReagents(Player player, LinkedHashMap<ItemStack, Integer> reagents, int numOfItems) {
+        for (ItemStack itemStack : reagents.keySet()) {
+            int amt = reagents.get(itemStack) * numOfItems;
+            if (!RunicCore.getShopAPI().hasItem(player, itemStack, amt)) {
+                player.playSound(player.getLocation(), Sound.ENTITY_GENERIC_EXTINGUISH_FIRE, 0.5f, 1);
+                player.sendMessage(ChatColor.RED + "You don't have the items to craft this!");
+                return false;
+            }
+        }
+        return true;
     }
 }

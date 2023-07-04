@@ -7,7 +7,8 @@ public enum WorkstationType {
     COOKING_FIRE("Cooking Fire", Profession.COOKING),
     FURNACE("Furnace", Profession.BLACKSMITH),
     GEMCUTTING_BENCH("Gemcutting Bench", Profession.JEWELER),
-    WOODWORKING_TABLE("Woodworking Table", Profession.NONE);
+    WOODWORKING_TABLE("Woodworking Table", Profession.NONE),
+    WOODWORKING_TABLE_TUTORIAL("Tutorial Woodworking Table", Profession.NONE);
 
     private final String name;
     private final Profession profession;

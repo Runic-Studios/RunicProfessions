@@ -4,6 +4,7 @@ import com.runicrealms.api.event.ChatChannelMessageEvent;
 import com.runicrealms.plugin.RunicProfessions;
 import com.runicrealms.plugin.professions.Profession;
 import com.runicrealms.plugin.professions.crafting.WoodworkingMenu;
+import com.runicrealms.plugin.professions.crafting.WoodworkingMenuTutorial;
 import com.runicrealms.plugin.professions.crafting.alchemist.CauldronMenu;
 import com.runicrealms.plugin.professions.crafting.blacksmith.AnvilMenu;
 import com.runicrealms.plugin.professions.crafting.blacksmith.FurnaceMenu;
@@ -60,7 +61,8 @@ public class WorkstationListener implements Listener {
                 || stationType.equals("cooking fire")
                 || stationType.equals("furnace")
                 || stationType.equals("gemcutting bench")
-                || stationType.equals("woodworking table"))) {
+                || stationType.equals("woodworking table")
+                || stationType.equals("tutorial woodworking table"))) {
             player.sendMessage(ChatColor.RED + "Please specify a correct input.");
             return;
         }
@@ -231,6 +233,11 @@ public class WorkstationListener implements Listener {
                 player.playSound(player.getLocation(), Sound.ITEM_ARMOR_EQUIP_LEATHER, 0.5f, 0.5f);
                 player.playSound(player.getLocation(), Sound.BLOCK_BAMBOO_WOOD_BREAK, 0.5f, 1.5f);
                 RunicProfessions.getAPI().setPlayerWorkstation(player, new WoodworkingMenu(player));
+            }
+            case "tutorial woodworking table" -> {
+                player.playSound(player.getLocation(), Sound.ITEM_ARMOR_EQUIP_LEATHER, 0.5f, 0.5f);
+                player.playSound(player.getLocation(), Sound.BLOCK_BAMBOO_WOOD_BREAK, 0.5f, 1.5f);
+                RunicProfessions.getAPI().setPlayerWorkstation(player, new WoodworkingMenuTutorial(player));
             }
         }
 
