@@ -19,9 +19,8 @@ import org.bukkit.inventory.ItemStack;
 
 public class JewelRemoverListener implements Listener {
 
-    @EventHandler(priority = EventPriority.LOWEST) // first
+    @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
     public void onNpcClick(NpcClickEvent event) {
-        if(event.isCancelled()) return;
         if (!JewelRemover.SCRAPPER_NPC_IDS.contains(event.getNpc().getId())) return;
         event.getPlayer().playSound(event.getPlayer().getLocation(), Sound.UI_BUTTON_CLICK, 0.5f, 1.0f);
         JewelRemover jewelRemover = new JewelRemover(event.getPlayer());

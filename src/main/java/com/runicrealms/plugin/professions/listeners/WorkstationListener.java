@@ -147,8 +147,8 @@ public class WorkstationListener implements Listener {
     /**
      * Checks for a workstation whenever a player interacts with a block
      */
-    @EventHandler(priority = EventPriority.LOWEST) // first
-    public void onOpenInventory(PlayerInteractEvent event) {
+    @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
+    public void onPlayerInteract(PlayerInteractEvent event) {
         if (event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
         if (event.getHand() != EquipmentSlot.HAND) return;
         if (!event.hasBlock()) return;
