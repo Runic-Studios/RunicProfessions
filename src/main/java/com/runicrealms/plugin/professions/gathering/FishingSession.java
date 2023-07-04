@@ -69,7 +69,7 @@ public class FishingSession {
 
         // Initialize hologram with 10 white pipe bars, center 2 are green
         String initialHologramText = ChatColor.GOLD + "[" + ChatColor.GRAY + "||||" + ChatColor.DARK_GREEN + "||" + ChatColor.GRAY + "||||" + ChatColor.GOLD + "]";
-        hologram.getLines().appendText(ChatColor.DARK_AQUA + "Time Remaining: " + ChatColor.WHITE + (10 - count) + ChatColor.DARK_AQUA + "s");
+        hologram.getLines().appendText(ChatColor.AQUA + "Time Remaining: " + ChatColor.WHITE + (10 - count) + ChatColor.AQUA + "s");
         hologram.getLines().appendText(initialHologramText);
         hologram.getLines().appendText(ChatColor.GOLD + String.valueOf(ChatColor.BOLD) + "RIGHT CLICK " + ChatColor.GRAY + " to tighten the line!");
 
@@ -93,7 +93,7 @@ public class FishingSession {
                     // Move the timer forward
                     count++;
                     hologram.getLines().remove(0);
-                    hologram.getLines().insertText(0, ChatColor.DARK_AQUA + "Time Remaining: " + ChatColor.WHITE + (10 - count) + ChatColor.DARK_AQUA + "s");
+                    hologram.getLines().insertText(0, ChatColor.AQUA + "Time Remaining: " + ChatColor.WHITE + (10 - count) + ChatColor.AQUA + "s");
                 }
 
                 if (count >= SESSION_TIME || slack < 0 || slack > SLACK_FAILURE_MAX) {
