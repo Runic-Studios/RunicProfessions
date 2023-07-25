@@ -181,6 +181,7 @@ public enum GatheringResource {
         return experience;
     }
 
+    @Nullable
     public GatheringRegion getGatheringRegion() {
         return gatheringRegion;
     }

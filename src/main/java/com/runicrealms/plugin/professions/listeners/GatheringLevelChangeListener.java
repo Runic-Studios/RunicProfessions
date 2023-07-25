@@ -90,18 +90,25 @@ public class GatheringLevelChangeListener implements Listener {
      * @return a list of strings (only contains 1 if it's not formatted) with reagent unlock info
      */
     public static List<String> nextReagentUnlockMessage(GatheringSkill gatheringSkill, int gatheringLevel, boolean formatText) {
+        GatheringResource next = null;
         for (GatheringResource gatheringResource : GatheringResource.values()) {
             if (gatheringResource.getGatheringSkill() != gatheringSkill) continue;
-            if (gatheringLevel < gatheringResource.getRequiredLevel()) {
-                String result = ChatColor.YELLOW + "You have " + ChatColor.WHITE +
-                        (gatheringResource.getRequiredLevel() - gatheringLevel) + ChatColor.YELLOW +
-                        " level(s) left until you can gather " +
-                        RunicItemsAPI.generateItemFromTemplate(gatheringResource.getTemplateId()).getDisplayableItem().getDisplayName() +
-                        ChatColor.YELLOW + "!";
-                if (formatText) return ChatUtils.formattedText(result);
-                return Collections.singletonList(result);
+            if (gatheringLevel < gatheringResource.getRequiredLevel() && (next == null || gatheringResource.getRequiredLevel() < next.getRequiredLevel())) {
+                next = gatheringResource;
             }
         }
+
+        if (next != null) {
+            String result = ChatColor.YELLOW + "You have " + ChatColor.WHITE +
+                    (next.getRequiredLevel() - gatheringLevel) + ChatColor.YELLOW +
+                    " level(s) left until you can gather " +
+                    RunicItemsAPI.generateItemFromTemplate(next.getTemplateId()).getDisplayableItem().getDisplayName() +
+                    ChatColor.YELLOW + "!";
+            if (formatText) return ChatUtils.formattedText(result);
+            return Collections.singletonList(result);
+        }
+
+
         String noUnlocks = ChatColor.GREEN + "You have unlocked all reagents for this skill!";
         if (formatText) return ChatUtils.formattedText(noUnlocks);
         return Collections.singletonList(noUnlocks);
