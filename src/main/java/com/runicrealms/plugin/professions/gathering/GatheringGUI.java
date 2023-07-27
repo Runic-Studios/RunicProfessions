@@ -1,11 +1,11 @@
 package com.runicrealms.plugin.professions.gathering;
 
-import com.runicrealms.plugin.RunicProfessions;
-import com.runicrealms.plugin.common.util.ColorUtil;
-import com.runicrealms.plugin.common.util.GUIUtil;
 import com.runicrealms.plugin.professions.listeners.GatheringLevelChangeListener;
 import com.runicrealms.plugin.professions.model.GatheringData;
 import com.runicrealms.plugin.professions.utilities.ProfExpUtil;
+import com.runicrealms.plugin.professions.RunicProfessions;
+import com.runicrealms.plugin.common.util.ColorUtil;
+import com.runicrealms.plugin.common.util.GUIUtil;
 import com.runicrealms.plugin.utilities.NumRounder;
 import org.apache.commons.lang3.ArrayUtils;
 import org.bukkit.Bukkit;

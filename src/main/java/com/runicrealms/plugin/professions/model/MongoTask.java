@@ -2,7 +2,7 @@ package com.runicrealms.plugin.professions.model;
 
 import co.aikar.taskchain.TaskChain;
 import com.mongodb.bulk.BulkWriteResult;
-import com.runicrealms.plugin.RunicProfessions;
+import com.runicrealms.plugin.professions.RunicProfessions;
 import com.runicrealms.plugin.rdb.RunicDatabase;
 import com.runicrealms.plugin.rdb.api.MongoTaskOperation;
 import com.runicrealms.plugin.rdb.api.WriteCallback;

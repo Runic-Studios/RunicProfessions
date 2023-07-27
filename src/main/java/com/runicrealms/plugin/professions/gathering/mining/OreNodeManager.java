@@ -1,8 +1,8 @@
 package com.runicrealms.plugin.professions.gathering.mining;
 
-import com.runicrealms.plugin.RunicProfessions;
+import com.runicrealms.plugin.professions.RunicProfessions;
 import com.runicrealms.plugin.rdb.event.CharacterLoadedEvent;
-import com.runicrealms.runicrestart.event.PreShutdownEvent;
+import com.runicrealms.plugin.runicrestart.event.PreShutdownEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.Particle;

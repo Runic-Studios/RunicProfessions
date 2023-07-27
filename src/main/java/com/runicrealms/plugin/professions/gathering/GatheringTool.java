@@ -2,7 +2,7 @@ package com.runicrealms.plugin.professions.gathering;
 
 import com.runicrealms.plugin.professions.utilities.GatheringUtil;
 import com.runicrealms.plugin.professions.utilities.ProfUtil;
-import com.runicrealms.runicitems.item.RunicItemDynamic;
+import com.runicrealms.plugin.runicitems.item.RunicItemDynamic;
 
 /**
  * A wrapper for gathering tools that provides some handy info

@@ -1,9 +1,9 @@
 package com.runicrealms.plugin.professions.api;
 
-import com.runicrealms.plugin.professions.Profession;
-import com.runicrealms.plugin.professions.Workstation;
 import com.runicrealms.plugin.professions.gathering.GatheringRegion;
 import com.runicrealms.plugin.professions.gathering.GatheringSkill;
+import com.runicrealms.plugin.professions.Profession;
+import com.runicrealms.plugin.professions.Workstation;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;

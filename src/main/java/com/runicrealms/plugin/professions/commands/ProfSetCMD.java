@@ -1,4 +1,4 @@
-package com.runicrealms.plugin.professions.commands.admin;
+package com.runicrealms.plugin.professions.commands;
 
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.CommandAlias;
@@ -7,14 +7,14 @@ import co.aikar.commands.annotation.CommandPermission;
 import co.aikar.commands.annotation.Conditions;
 import co.aikar.commands.annotation.Subcommand;
 import co.aikar.commands.annotation.Syntax;
-import com.runicrealms.plugin.RunicProfessions;
+import com.runicrealms.plugin.professions.model.CraftingData;
+import com.runicrealms.plugin.professions.utilities.ProfExpUtil;
+import com.runicrealms.plugin.professions.RunicProfessions;
 import com.runicrealms.plugin.professions.Profession;
 import com.runicrealms.plugin.professions.event.GatheringLevelChangeEvent;
 import com.runicrealms.plugin.professions.event.RunicCraftingExpEvent;
 import com.runicrealms.plugin.professions.gathering.GatheringSkill;
-import com.runicrealms.plugin.professions.model.CraftingData;
 import com.runicrealms.plugin.professions.model.GatheringData;
-import com.runicrealms.plugin.professions.utilities.ProfExpUtil;
 import com.runicrealms.plugin.rdb.RunicDatabase;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;

@@ -1,6 +1,6 @@
 package com.runicrealms.plugin.professions.listeners;
 
-import com.runicrealms.plugin.RunicProfessions;
+import com.runicrealms.plugin.professions.RunicProfessions;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.Sound;

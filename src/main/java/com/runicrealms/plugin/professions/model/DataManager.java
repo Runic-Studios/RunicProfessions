@@ -2,7 +2,7 @@ package com.runicrealms.plugin.professions.model;
 
 import co.aikar.taskchain.TaskChain;
 import co.aikar.taskchain.TaskChainAbortAction;
-import com.runicrealms.plugin.RunicProfessions;
+import com.runicrealms.plugin.professions.RunicProfessions;
 import com.runicrealms.plugin.professions.Profession;
 import com.runicrealms.plugin.professions.api.DataAPI;
 import com.runicrealms.plugin.rdb.RunicDatabase;

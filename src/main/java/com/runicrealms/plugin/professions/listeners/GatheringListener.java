@@ -1,18 +1,19 @@
 package com.runicrealms.plugin.professions.listeners;
 
-import com.runicrealms.plugin.RunicProfessions;
+import com.google.common.base.Preconditions;
 import com.runicrealms.plugin.api.WeightedRandomBag;
 import com.runicrealms.plugin.common.util.ColorUtil;
+import com.runicrealms.plugin.professions.utilities.ProfExpUtil;
+import com.runicrealms.plugin.professions.RunicProfessions;
 import com.runicrealms.plugin.professions.event.GatheringEvent;
 import com.runicrealms.plugin.professions.event.RunicGatheringExpEvent;
 import com.runicrealms.plugin.professions.gathering.GatheringResource;
 import com.runicrealms.plugin.professions.gathering.GatheringSkill;
 import com.runicrealms.plugin.professions.gathering.GatheringTool;
-import com.runicrealms.plugin.professions.utilities.ProfExpUtil;
-import com.runicrealms.runicitems.RunicItemsAPI;
-import com.runicrealms.runicitems.item.RunicItem;
-import com.runicrealms.runicitems.item.RunicItemDynamic;
-import com.runicrealms.runicitems.util.CurrencyUtil;
+import com.runicrealms.plugin.runicitems.RunicItemsAPI;
+import com.runicrealms.plugin.runicitems.item.RunicItem;
+import com.runicrealms.plugin.runicitems.item.RunicItemDynamic;
+import com.runicrealms.plugin.runicitems.util.CurrencyUtil;
 import me.filoghost.holographicdisplays.api.HolographicDisplaysAPI;
 import me.filoghost.holographicdisplays.api.hologram.Hologram;
 import me.filoghost.holographicdisplays.api.hologram.VisibilitySettings;
@@ -29,7 +30,12 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
@@ -43,6 +49,63 @@ public class GatheringListener implements Listener {
     private static final double COIN_CHANCE = .95;
 
     /**
+     * @param player         to show the hologram to
+     * @param location       of the hologram
+     * @param height         of the hologram
+     * @param duration       of the hologram (in secs)
+     * @param itemsToDisplay for the hologram's contents
+     * @return the hologram
+     */
+    private Hologram createHologram(@NotNull Player player, @NotNull Location location, double height, double duration, @NotNull List<RunicItem> itemsToDisplay) {
+        Hologram hologram = HolographicDisplaysAPI.get(RunicProfessions.getInstance()).createHologram(location.clone().add(0, height, 0));
+        hologram.getVisibilitySettings().setIndividualVisibility(player, VisibilitySettings.Visibility.VISIBLE);
+        hologram.getVisibilitySettings().setGlobalVisibility(VisibilitySettings.Visibility.HIDDEN);
+
+        Map<String, Integer> items = new HashMap<>();
+
+        for (RunicItem item : itemsToDisplay) {
+            Integer count = items.get(item.getTemplateId());
+
+            items.put(item.getTemplateId(), count != null ? count + 1 : 1);
+        }
+
+        for (RunicItem item : itemsToDisplay) {
+            Integer count = items.remove(item.getTemplateId());
+
+            if (count == null) {
+                continue;
+            }
+
+            hologram.getLines().appendItem(item.getDisplayableItem().generateItem(1));
+            hologram.getLines().appendText(ColorUtil.format("&a+" + count + " " + item.getDisplayableItem().getDisplayName()));
+        }
+
+        Bukkit.getScheduler().runTaskLater(RunicProfessions.getInstance(), hologram::delete, (long) duration * 20);
+        return hologram;
+    }
+
+    /**
+     * @param player         to show the hologram to
+     * @param location       of the hologram
+     * @param height         of the hologram
+     * @param duration       of the hologram (in secs)
+     * @param linesToDisplay for the hologram's contents
+     * @return the hologram
+     */
+    private Hologram createHologram(@NotNull Player player, @NotNull Location location, double height, double duration, @NotNull String... linesToDisplay) {
+        Hologram hologram = HolographicDisplaysAPI.get(RunicProfessions.getInstance()).createHologram(location.clone().add(0, height, 0));
+        hologram.getVisibilitySettings().setIndividualVisibility(player, VisibilitySettings.Visibility.VISIBLE);
+        hologram.getVisibilitySettings().setGlobalVisibility(VisibilitySettings.Visibility.HIDDEN);
+
+        for (String line : linesToDisplay) {
+            hologram.getLines().appendText(line);
+        }
+
+        Bukkit.getScheduler().runTaskLater(RunicProfessions.getInstance(), hologram::delete, (long) duration * 20);
+        return hologram;
+    }
+
+    /**
      * @param player        to show the hologram to
      * @param location      of the hologram
      * @param lineToDisplay for the hologram's contents
@@ -50,13 +113,8 @@ public class GatheringListener implements Listener {
      * @param duration      of the hologram (in secs)
      * @return the hologram
      */
-    private Hologram createHologram(Player player, Location location, String lineToDisplay, float height, double duration) {
-        Hologram hologram = HolographicDisplaysAPI.get(RunicProfessions.getInstance()).createHologram(location.clone().add(0, height, 0));
-        hologram.getVisibilitySettings().setIndividualVisibility(player, VisibilitySettings.Visibility.VISIBLE);
-        hologram.getVisibilitySettings().setGlobalVisibility(VisibilitySettings.Visibility.HIDDEN);
-        hologram.getLines().appendText(lineToDisplay);
-        Bukkit.getScheduler().runTaskLater(RunicProfessions.getInstance(), hologram::delete, (long) duration * 20);
-        return hologram;
+    private Hologram createHologram(@NotNull Player player, @NotNull Location location, @NotNull String lineToDisplay, float height, double duration) {
+        return createHologram(player, location, height, duration, lineToDisplay);
     }
 
     /**
@@ -92,16 +150,14 @@ public class GatheringListener implements Listener {
      * General function to handle gathering
      *
      * @param player            who gathered material
-     * @param templateId        the templateId of the gathered material (iron-ore)
      * @param gatheringTool     the tool used to gather material (for loot rates)
      * @param gatheringResource the resource which is to be gathered
      * @param location          the location of the block to replace
      * @param block             the block itself to replace
-     * @param reagentBlockType  the material of the resource (iron ore)
      * @param chance            the chance to gather the material
      */
-    private void gatherMaterial(Player player, String templateId, GatheringTool gatheringTool, GatheringResource gatheringResource,
-                                Location location, Block block, Material reagentBlockType, double chance) {
+    private void gatherMaterial(@NotNull Player player, @NotNull GatheringTool gatheringTool, @NotNull GatheringResource gatheringResource,
+                                @NotNull Location location, @NotNull Block block, double chance) {
         block.setType(gatheringResource.getPlaceholderBlockType());
 
         RunicGatheringExpEvent event = new RunicGatheringExpEvent(gatheringResource.getExperience(), true, player, gatheringResource.getGatheringSkill());
@@ -112,66 +168,77 @@ public class GatheringListener implements Listener {
                     (
                             player,
                             location,
-                            ChatColor.GREEN + "+ " + RunicItemsAPI.generateItemFromTemplate(templateId).getDisplayableItem().getDisplayName(),
+                            ChatColor.GREEN + "+ " + RunicItemsAPI.generateItemFromTemplate(gatheringResource.getTemplateId()).getDisplayableItem().getDisplayName(),
                             2f,
                             2
                     );
 
-            ChatColor expColor = event.getAmountNoBonuses() == 0 ? ChatColor.RED : ChatColor.WHITE;
-            hologram.getLines().appendText(ColorUtil.format("&7+ " + expColor + event.getAmountNoBonuses() + " &7exp"));
-            int boostBonus = event.getExpFromBonus(RunicGatheringExpEvent.BonusType.BOOST);
-            if (boostBonus != 0)
-                hologram.getLines().appendText(ColorUtil.format("&7+ &d" + boostBonus + " &7boost exp"));
+            if (!event.isCancelled()) {
+                ChatColor expColor = event.getAmountNoBonuses() == 0 ? ChatColor.RED : ChatColor.WHITE;
+                hologram.getLines().appendText(ColorUtil.format("&7+ " + expColor + event.getAmountNoBonuses() + " &7exp"));
+                int boostBonus = event.getExpFromBonus(RunicGatheringExpEvent.BonusType.BOOST);
+                if (boostBonus != 0)
+                    hologram.getLines().appendText(ColorUtil.format("&7+ &d" + boostBonus + " &7boost exp"));
+            }
         }
         // give experience and resource
-        RunicItemsAPI.addItem(player.getInventory(), RunicItemsAPI.generateItemFromTemplate(templateId).generateItem(), player.getLocation());
+        RunicItemsAPI.addItem(player.getInventory(), RunicItemsAPI.generateItemFromTemplate(gatheringResource.getTemplateId()).generateItem(), player.getLocation());
 
         // gathering luck logic
-        giveAdditionalResources(player, templateId, gatheringTool, gatheringTool.getBonusLootChance());
+        giveAdditionalResources(player, gatheringResource.getTemplateId(), gatheringTool, gatheringTool.getBonusLootChance());
         // give the player a coin
         givePlayerCoin(player, location, chance);
         // add block to respawn task
-        RunicProfessions.getAPI().getBlocksToRestore().put(block.getLocation(), reagentBlockType);
+        RunicProfessions.getAPI().getBlocksToRestore().put(block.getLocation(), gatheringResource.getResourceBlockType());
     }
 
     /**
      * Modified function to handle gathering for FISHING
      *
-     * @param player            who gathered material
-     * @param templateId        the templateId of the gathered material (iron-ore)
-     * @param gatheringTool     the tool used to gather material (for loot rates)
-     * @param gatheringResource the resource which is to be gathered
-     * @param location          the location of the block to replace
-     * @param fishItemToDisplay the floating item which will display
-     * @param chance            the chance to gather the material
+     * @param player             who gathered material
+     * @param gatheringTool      the tool used to gather material (for loot rates)
+     * @param gatheringResources the resources which are to be gathered
+     * @param location           the location of the block to replace
+     * @param chance             the chance to gather the material
      */
-    private void gatherMaterial(Player player, String templateId, GatheringTool gatheringTool, GatheringResource gatheringResource,
-                                Location location, Material fishItemToDisplay, double chance) {
-        ItemStack fish = RunicItemsAPI.generateItemFromTemplate(templateId).generateItem();
+    private void gatherMaterial(@NotNull Player player, @NotNull GatheringTool gatheringTool, @NotNull List<GatheringResource> gatheringResources,
+                                @NotNull Location location, double chance) {
+        //ItemStack fish = RunicItemsAPI.generateItemFromTemplate(templateId).generateItem();
         // Give the player experience the gathered item, drop on floor if inventory is full
+        List<RunicItem> fishes = new ArrayList<>();
+        for (GatheringResource resource : gatheringResources) {
+            fishes.add(RunicItemsAPI.generateItemFromTemplate(resource.getTemplateId()));
+        }
 
         // Grant experience, give fish
-        RunicGatheringExpEvent event = new RunicGatheringExpEvent(gatheringResource.getExperience(), true, player, gatheringResource.getGatheringSkill());
+        RunicGatheringExpEvent event = new RunicGatheringExpEvent(gatheringResources.stream().mapToInt(GatheringResource::getExperience).sum(), true, player, GatheringSkill.FISHING);
         Bukkit.getPluginManager().callEvent(event);
         Hologram hologram = createHologram
                 (
                         player,
                         location,
-                        ChatColor.GREEN + "+ " + RunicItemsAPI.generateItemFromTemplate(templateId).getDisplayableItem().getDisplayName(),
-                        2f,
-                        1
+                        0.5,
+                        2.5,
+                        fishes
                 );
-        // Spawn floating fish
-        hologram.getLines().appendItem(new ItemStack(fishItemToDisplay));
-        ChatColor expColor = event.getAmountNoBonuses() == 0 ? ChatColor.RED : ChatColor.WHITE;
-        hologram.getLines().appendText(ColorUtil.format("&7+ " + expColor + event.getAmountNoBonuses() + " &7exp"));
-        int boostBonus = event.getExpFromBonus(RunicGatheringExpEvent.BonusType.BOOST);
-        if (boostBonus != 0)
-            hologram.getLines().appendText(ColorUtil.format("&7+ &d" + boostBonus + " &7boost exp"));
 
-        RunicItemsAPI.addItem(player.getInventory(), fish, player.getLocation());
-        // Gathering luck logic
-        giveAdditionalResources(player, templateId, gatheringTool, gatheringTool.getBonusLootChance());
+        if (!event.isCancelled()) {
+            ChatColor expColor = event.getAmountNoBonuses() == 0 ? ChatColor.RED : ChatColor.WHITE;
+            hologram.getLines().appendText(ColorUtil.format("&7+ " + expColor + event.getAmountNoBonuses() + " &7exp"));
+        }
+
+        int boostBonus = event.getExpFromBonus(RunicGatheringExpEvent.BonusType.BOOST);
+        if (boostBonus != 0 && !event.isCancelled()) {
+            hologram.getLines().appendText(ColorUtil.format("&7+ &d" + boostBonus + " &7boost exp"));
+        }
+
+        for (RunicItem item : fishes) {
+            RunicItemsAPI.addItem(player.getInventory(), item.generateItem(), player.getLocation());
+
+            // Gathering luck logic
+            giveAdditionalResources(player, item.getTemplateId(), gatheringTool, gatheringTool.getBonusLootChance());
+        }
+
         // Give the player a coin
         givePlayerCoin(player, location, chance);
     }
@@ -229,48 +296,56 @@ public class GatheringListener implements Listener {
                     );
             return;
         }
-        // Validate resource level requirement has been met
-        int requiredGatheringLevel = event.getGatheringResource().getRequiredLevel();
-        if (currentGatheringLevel < requiredGatheringLevel) {
-            event.setCancelled(true);
-            event.getPlayer().playSound(event.getPlayer().getLocation(), Sound.ENTITY_GENERIC_EXTINGUISH_FIRE, 0.5f, 1.0f);
-            event.getPlayer().sendMessage
-                    (
-                            ChatColor.RED + "You must reach level " + requiredGatheringLevel + " " +
-                                    event.getGatheringResource().getGatheringSkill().getIdentifier() + " to gather this resource!"
-                    );
-            return;
+
+        for (GatheringResource resource : event.getGatheringResources()) {
+            // Validate resource level requirement has been met
+            int requiredGatheringLevel = resource.getRequiredLevel();
+            if (currentGatheringLevel < requiredGatheringLevel) {
+                event.setCancelled(true);
+                event.getPlayer().playSound(event.getPlayer().getLocation(), Sound.ENTITY_GENERIC_EXTINGUISH_FIRE, 0.5f, 1.0f);
+                event.getPlayer().sendMessage
+                        (
+                                ChatColor.RED + "You must reach level " + requiredGatheringLevel + " " +
+                                        resource.getGatheringSkill().getIdentifier() + " to gather this resource!"
+                        );
+                return;
+            }
         }
+
         // Reduce tool durability
         RunicItemDynamic runicItemDynamic = (RunicItemDynamic) RunicItemsAPI.getRunicItemFromItemStack(event.getItemStack());
-        reduceGatheringToolDurability(event.getPlayer(), runicItemDynamic, event.getItemStack());
+        reduceGatheringToolDurability(event.getPlayer(), runicItemDynamic, event.getItemStack(), event.getGatheringResources().size());
         if (event.getGatheringTool().getGatheringSkill() == GatheringSkill.FISHING) {
             gatherMaterial
                     (
                             event.getPlayer(),
-                            event.getTemplateIdOfResource(),
                             event.getGatheringTool(),
-                            event.getGatheringResource(),
+                            event.getGatheringResources(),
                             event.getLocation(),
-                            event.getReagentBlockType(),
                             event.getRoll()
                     );
-        } else {
-            if (event.getGatheringTool().getGatheringSkill() == GatheringSkill.MINING) {
-                event.setGatheringResource(determineMiningResource(event.getGatheringResource(), currentGatheringLevel));
-            }
-            gatherMaterial
-                    (
-                            event.getPlayer(),
-                            event.getGatheringResource().getTemplateId(),
-                            event.getGatheringTool(),
-                            event.getGatheringResource(),
-                            event.getLocation(),
-                            event.getBlock(),
-                            event.getReagentBlockType(),
-                            event.getRoll()
-                    );
+            return;
         }
+
+        if (event.getGatheringTool().getGatheringSkill() == GatheringSkill.MINING) {
+            GatheringResource resource = determineMiningResource(event.getGatheringResources().get(0), currentGatheringLevel);
+            event.getGatheringResources().clear();
+            event.getGatheringResources().add(resource);
+        }
+
+        if (event.getBlock() == null) {
+            throw new IllegalStateException("The block may not be null for mining gathering event!");
+        }
+
+        gatherMaterial
+                (
+                        event.getPlayer(),
+                        event.getGatheringTool(),
+                        event.getGatheringResources().get(0),
+                        event.getLocation(),
+                        event.getBlock(),
+                        event.getRoll()
+                );
     }
 
     @EventHandler(priority = EventPriority.NORMAL)
@@ -291,7 +366,6 @@ public class GatheringListener implements Listener {
         Location loc = block.getLocation().add(0.5, 0, 0.5);
 
         // ensure the proper type of block is being mined
-        String templateId = gatheringResource.getTemplateId();
         event.setCancelled(true);
         ItemStack heldItem = player.getInventory().getItemInMainHand();
 
@@ -310,7 +384,7 @@ public class GatheringListener implements Listener {
             return;
         }
         Optional<GatheringTool> gatheringTool = toolSet.stream().filter(tool -> tool.getRunicItemDynamic().getTemplateId().equals(templateIdHeldItem)).findFirst();
-        if (!gatheringTool.isPresent()) {
+        if (gatheringTool.isEmpty()) {
             player.sendMessage(gatheringResource.getGatheringSkill().getNoToolMessage());
             return;
         }
@@ -321,12 +395,9 @@ public class GatheringListener implements Listener {
                         gatheringResource,
                         gatheringTool.get(),
                         heldItem,
-                        templateId,
                         loc,
                         block,
-                        gatheringResource.getPlaceholderBlockType(),
-                        chance,
-                        gatheringResource.getResourceBlockType()
+                        chance
                 );
         Bukkit.getPluginManager().callEvent(gatheringEvent);
     }
@@ -336,18 +407,23 @@ public class GatheringListener implements Listener {
      *
      * @param player           who gathered material
      * @param runicItemDynamic the item to reduce the durability of
+     * @param amount           the amount it should be reduced by
      */
-    private void reduceGatheringToolDurability(Player player, RunicItemDynamic runicItemDynamic, ItemStack itemStack) {
+    private void reduceGatheringToolDurability(@NotNull Player player, @NotNull RunicItemDynamic runicItemDynamic, @NotNull ItemStack itemStack, int amount) {
+        Preconditions.checkArgument(amount > 0); //assert that amount must be greater than 0
+
         int durability = runicItemDynamic.getDynamicField();
-        int newDurability = durability - 1;
-        runicItemDynamic.setDynamicField(newDurability);
-        ItemStack newGatheringTool = runicItemDynamic.updateItemStack(itemStack);
+        int newDurability = durability - amount;
+
         if (newDurability <= 0) {
             player.getInventory().setItemInMainHand(null);
             player.playSound(player.getLocation(), Sound.ENTITY_ITEM_BREAK, 0.5f, 1.0f);
             player.sendMessage(ChatColor.RED + "Your gathering tool broke!");
-        } else {
-            player.getInventory().setItemInMainHand(newGatheringTool);
+            return;
         }
+
+        runicItemDynamic.setDynamicField(newDurability);
+        ItemStack newGatheringTool = runicItemDynamic.updateItemStack(itemStack);
+        player.getInventory().setItemInMainHand(newGatheringTool);
     }
 }

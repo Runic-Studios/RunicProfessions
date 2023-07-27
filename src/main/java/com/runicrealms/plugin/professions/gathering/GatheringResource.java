@@ -2,7 +2,7 @@ package com.runicrealms.plugin.professions.gathering;
 
 import com.runicrealms.plugin.professions.utilities.GatheringUtil;
 import com.runicrealms.plugin.professions.utilities.ProfUtil;
-import com.runicrealms.runicitems.RunicItemsAPI;
+import com.runicrealms.plugin.runicitems.RunicItemsAPI;
 import org.bukkit.Material;
 import org.jetbrains.annotations.Nullable;
 

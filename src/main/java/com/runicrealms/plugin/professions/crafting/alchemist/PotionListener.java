@@ -1,14 +1,14 @@
 package com.runicrealms.plugin.professions.crafting.alchemist;
 
 import com.runicrealms.plugin.RunicCore;
-import com.runicrealms.plugin.RunicProfessions;
+import com.runicrealms.plugin.professions.RunicProfessions;
 import com.runicrealms.plugin.common.util.ColorUtil;
 import com.runicrealms.plugin.events.MagicDamageEvent;
 import com.runicrealms.plugin.events.PhysicalDamageEvent;
-import com.runicrealms.runicitems.item.RunicItem;
-import com.runicrealms.runicitems.item.event.RunicItemGenericTriggerEvent;
-import com.runicrealms.runicitems.item.stats.RunicItemTag;
-import com.runicrealms.runicitems.util.ItemUtils;
+import com.runicrealms.plugin.runicitems.item.RunicItem;
+import com.runicrealms.plugin.runicitems.item.event.RunicItemGenericTriggerEvent;
+import com.runicrealms.plugin.runicitems.item.stats.RunicItemTag;
+import com.runicrealms.plugin.runicitems.util.ItemUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Particle;

@@ -5,5 +5,4 @@ public enum OreTier {
     TWO,
     THREE,
     FOUR
-
 }

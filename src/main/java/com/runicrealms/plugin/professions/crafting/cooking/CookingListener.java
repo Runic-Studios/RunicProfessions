@@ -1,7 +1,7 @@
 package com.runicrealms.plugin.professions.crafting.cooking;
 
 import com.runicrealms.plugin.RunicCore;
-import com.runicrealms.plugin.RunicProfessions;
+import com.runicrealms.plugin.professions.RunicProfessions;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;

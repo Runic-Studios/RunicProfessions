@@ -1,7 +1,7 @@
 package com.runicrealms.plugin.professions.utilities;
 
 import com.runicrealms.plugin.RunicCore;
-import com.runicrealms.plugin.RunicProfessions;
+import com.runicrealms.plugin.professions.RunicProfessions;
 import com.runicrealms.plugin.api.WeightedRandomBag;
 import com.runicrealms.plugin.item.lootchests.ChestItem;
 import org.bukkit.Bukkit;

@@ -1,14 +1,14 @@
 package com.runicrealms.plugin.professions.listeners;
 
-import com.runicrealms.api.event.ChatChannelMessageEvent;
-import com.runicrealms.plugin.RunicProfessions;
+import com.runicrealms.plugin.chat.api.event.ChatChannelMessageEvent;
+import com.runicrealms.plugin.professions.crafting.cooking.CookingMenu;
+import com.runicrealms.plugin.professions.RunicProfessions;
 import com.runicrealms.plugin.professions.Profession;
 import com.runicrealms.plugin.professions.crafting.WoodworkingMenu;
 import com.runicrealms.plugin.professions.crafting.WoodworkingMenuTutorial;
 import com.runicrealms.plugin.professions.crafting.alchemist.CauldronMenu;
 import com.runicrealms.plugin.professions.crafting.blacksmith.AnvilMenu;
 import com.runicrealms.plugin.professions.crafting.blacksmith.FurnaceMenu;
-import com.runicrealms.plugin.professions.crafting.cooking.CookingMenu;
 import com.runicrealms.plugin.professions.crafting.jeweler.JewelerMenu;
 import com.runicrealms.plugin.rdb.RunicDatabase;
 import org.bukkit.Bukkit;

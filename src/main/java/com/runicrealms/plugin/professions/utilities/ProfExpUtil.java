@@ -1,7 +1,7 @@
 package com.runicrealms.plugin.professions.utilities;
 
 import com.runicrealms.plugin.RunicCore;
-import com.runicrealms.plugin.RunicProfessions;
+import com.runicrealms.plugin.professions.RunicProfessions;
 import com.runicrealms.plugin.professions.Profession;
 import com.runicrealms.plugin.professions.event.GatheringLevelChangeEvent;
 import com.runicrealms.plugin.professions.event.ProfessionLevelChangeEvent;

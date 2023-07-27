@@ -1,10 +1,10 @@
 package com.runicrealms.plugin.professions.shop;
 
 import com.runicrealms.plugin.RunicCore;
-import com.runicrealms.plugin.api.NpcClickEvent;
+import com.runicrealms.plugin.npcs.api.NpcClickEvent;
 import com.runicrealms.plugin.common.util.GUIUtil;
 import com.runicrealms.plugin.item.shops.RunicShop;
-import com.runicrealms.runicitems.RunicItemsAPI;
+import com.runicrealms.plugin.runicitems.RunicItemsAPI;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Sound;

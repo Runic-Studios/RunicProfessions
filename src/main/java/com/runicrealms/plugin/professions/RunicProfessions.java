@@ -1,16 +1,15 @@
-package com.runicrealms.plugin;
+package com.runicrealms.plugin.professions;
 
 import co.aikar.commands.ConditionFailedException;
 import co.aikar.commands.PaperCommandManager;
 import co.aikar.taskchain.BukkitTaskChainFactory;
 import co.aikar.taskchain.TaskChain;
 import co.aikar.taskchain.TaskChainFactory;
-import com.runicrealms.plugin.professions.ProfManager;
 import com.runicrealms.plugin.professions.api.DataAPI;
 import com.runicrealms.plugin.professions.api.ProfessionsAPI;
-import com.runicrealms.plugin.professions.commands.admin.ProfGiveCMD;
-import com.runicrealms.plugin.professions.commands.admin.ProfSetCMD;
-import com.runicrealms.plugin.professions.commands.admin.WorkstationCMD;
+import com.runicrealms.plugin.professions.commands.ProfGiveCMD;
+import com.runicrealms.plugin.professions.commands.ProfSetCMD;
+import com.runicrealms.plugin.professions.commands.WorkstationCMD;
 import com.runicrealms.plugin.professions.config.WorkstationLoader;
 import com.runicrealms.plugin.professions.crafting.alchemist.PotionListener;
 import com.runicrealms.plugin.professions.crafting.blacksmith.StoneListener;

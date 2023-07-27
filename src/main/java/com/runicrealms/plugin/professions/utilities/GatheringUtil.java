@@ -1,8 +1,8 @@
 package com.runicrealms.plugin.professions.utilities;
 
 import com.runicrealms.plugin.professions.gathering.GatheringTool;
-import com.runicrealms.runicitems.RunicItemsAPI;
-import com.runicrealms.runicitems.item.RunicItemDynamic;
+import com.runicrealms.plugin.runicitems.RunicItemsAPI;
+import com.runicrealms.plugin.runicitems.item.RunicItemDynamic;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.HashSet;

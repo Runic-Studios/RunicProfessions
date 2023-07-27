@@ -1,6 +1,6 @@
 package com.runicrealms.plugin.professions.utilities;
 
-import com.runicrealms.runicitems.item.RunicItem;
+import com.runicrealms.plugin.runicitems.item.RunicItem;
 
 public class ProfUtil {
 

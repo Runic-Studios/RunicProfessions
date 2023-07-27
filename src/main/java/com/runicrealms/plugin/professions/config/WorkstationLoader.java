@@ -1,10 +1,10 @@
 package com.runicrealms.plugin.professions.config;
 
-import com.runicrealms.plugin.RunicProfessions;
-import com.runicrealms.plugin.common.RunicCommon;
 import com.runicrealms.plugin.professions.WorkstationType;
 import com.runicrealms.plugin.professions.crafting.CraftedResource;
 import com.runicrealms.plugin.professions.exception.WorkstationLoadException;
+import com.runicrealms.plugin.professions.RunicProfessions;
+import com.runicrealms.plugin.common.RunicCommon;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 

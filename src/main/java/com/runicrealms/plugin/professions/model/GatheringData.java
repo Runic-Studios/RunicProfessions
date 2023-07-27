@@ -1,7 +1,7 @@
 package com.runicrealms.plugin.professions.model;
 
-import com.runicrealms.plugin.professions.gathering.GatheringSkill;
 import com.runicrealms.plugin.professions.utilities.ProfExpUtil;
+import com.runicrealms.plugin.professions.gathering.GatheringSkill;
 import com.runicrealms.plugin.rdb.RunicDatabase;
 import com.runicrealms.plugin.rdb.model.SessionDataRedis;
 import redis.clients.jedis.Jedis;

@@ -1,6 +1,6 @@
 package com.runicrealms.plugin.professions.listeners;
 
-import com.runicrealms.plugin.RunicProfessions;
+import com.runicrealms.plugin.professions.RunicProfessions;
 import com.runicrealms.plugin.item.GUIMenu.ItemGUI;
 import com.runicrealms.plugin.item.GUIMenu.OptionClickEvent;
 import com.runicrealms.plugin.professions.Workstation;

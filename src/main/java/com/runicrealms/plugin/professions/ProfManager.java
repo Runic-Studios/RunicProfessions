@@ -1,15 +1,14 @@
 package com.runicrealms.plugin.professions;
 
 import com.runicrealms.plugin.RunicCore;
-import com.runicrealms.plugin.RunicProfessions;
 import com.runicrealms.plugin.professions.api.ProfessionsAPI;
-import com.runicrealms.plugin.professions.event.ProfessionChangeEvent;
 import com.runicrealms.plugin.professions.gathering.GatheringGUI;
 import com.runicrealms.plugin.professions.gathering.GatheringRegion;
 import com.runicrealms.plugin.professions.gathering.GatheringSkill;
 import com.runicrealms.plugin.professions.gathering.GatheringSkillGUI;
 import com.runicrealms.plugin.professions.model.GatheringData;
-import com.runicrealms.runicrestart.event.ServerShutdownEvent;
+import com.runicrealms.plugin.professions.event.ProfessionChangeEvent;
+import com.runicrealms.plugin.runicrestart.event.ServerShutdownEvent;
 import me.filoghost.holographicdisplays.api.HolographicDisplaysAPI;
 import me.filoghost.holographicdisplays.api.hologram.Hologram;
 import me.filoghost.holographicdisplays.api.hologram.VisibilitySettings;

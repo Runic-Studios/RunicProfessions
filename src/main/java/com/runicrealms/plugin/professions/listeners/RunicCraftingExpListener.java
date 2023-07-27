@@ -2,8 +2,8 @@ package com.runicrealms.plugin.professions.listeners;
 
 import com.runicrealms.plugin.RunicCore;
 import com.runicrealms.plugin.donor.boost.api.BoostExperienceType;
-import com.runicrealms.plugin.professions.event.RunicCraftingExpEvent;
 import com.runicrealms.plugin.professions.utilities.ProfExpUtil;
+import com.runicrealms.plugin.professions.event.RunicCraftingExpEvent;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;

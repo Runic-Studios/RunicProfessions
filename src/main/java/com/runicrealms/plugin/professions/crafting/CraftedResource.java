@@ -2,7 +2,7 @@ package com.runicrealms.plugin.professions.crafting;
 
 import com.runicrealms.plugin.professions.Profession;
 import com.runicrealms.plugin.professions.utilities.ProfUtil;
-import com.runicrealms.runicitems.RunicItemsAPI;
+import com.runicrealms.plugin.runicitems.RunicItemsAPI;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.LinkedHashMap;

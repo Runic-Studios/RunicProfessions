@@ -1,9 +1,9 @@
 package com.runicrealms.plugin.professions.crafting;
 
-import com.runicrealms.plugin.RunicProfessions;
+import com.runicrealms.plugin.professions.Workstation;
+import com.runicrealms.plugin.professions.RunicProfessions;
 import com.runicrealms.plugin.common.util.GUIUtil;
 import com.runicrealms.plugin.item.GUIMenu.ItemGUI;
-import com.runicrealms.plugin.professions.Workstation;
 import com.runicrealms.plugin.professions.WorkstationType;
 import com.runicrealms.plugin.professions.config.WorkstationLoader;
 import org.bukkit.Bukkit;

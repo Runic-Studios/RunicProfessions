@@ -1,10 +1,10 @@
 package com.runicrealms.plugin.professions.listeners;
 
 import com.runicrealms.plugin.RunicCore;
-import com.runicrealms.plugin.RunicProfessions;
+import com.runicrealms.plugin.professions.utilities.ProfExpUtil;
+import com.runicrealms.plugin.professions.RunicProfessions;
 import com.runicrealms.plugin.professions.event.ProfessionLevelChangeEvent;
 import com.runicrealms.plugin.professions.model.CraftingData;
-import com.runicrealms.plugin.professions.utilities.ProfExpUtil;
 import com.runicrealms.plugin.rdb.RunicDatabase;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;

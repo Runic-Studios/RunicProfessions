@@ -1,17 +1,13 @@
 package com.runicrealms.plugin.professions.listeners;
 
-import com.runicrealms.plugin.RunicCore;
-import com.runicrealms.plugin.RunicProfessions;
-import com.runicrealms.plugin.api.WeightedRandomBag;
+import com.runicrealms.plugin.professions.utilities.GatheringUtil;
+import com.runicrealms.plugin.professions.RunicProfessions;
 import com.runicrealms.plugin.professions.gathering.FishingSession;
 import com.runicrealms.plugin.professions.gathering.GatheringRegion;
-import com.runicrealms.plugin.professions.gathering.GatheringResource;
+import com.runicrealms.plugin.professions.gathering.GatheringSkill;
 import com.runicrealms.plugin.professions.gathering.GatheringTool;
-import com.runicrealms.plugin.professions.model.GatheringData;
-import com.runicrealms.plugin.professions.utilities.GatheringUtil;
-import com.runicrealms.runicitems.RunicItemsAPI;
-import com.runicrealms.runicitems.item.RunicItem;
-import org.bukkit.Bukkit;
+import com.runicrealms.plugin.runicitems.RunicItemsAPI;
+import com.runicrealms.plugin.runicitems.item.RunicItem;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -28,8 +24,6 @@ import org.bukkit.event.player.PlayerFishEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 /**
@@ -38,48 +32,6 @@ import java.util.Optional;
  * Checks name of WG region for "pond" to perform tasks
  */
 public class FishingListener implements Listener {
-
-    /**
-     * @param hotspotResources a string array of templateIDs for fish
-     * @param fishingLevel     of the player
-     * @return the selected fish from the drop table
-     */
-    private GatheringResource determineFish(String[] hotspotResources, int fishingLevel) {
-        WeightedRandomBag<GatheringResource> oreDropTable = new WeightedRandomBag<>();
-        oreDropTable.addEntry(GatheringResource.SALMON, 400);
-        oreDropTable.addEntry(GatheringResource.COD, 400);
-        for (String string : hotspotResources) {
-            GatheringResource gatheringResource = GatheringResource.getFromTemplateId(string);
-            if (gatheringResource == null) continue;
-            int reqLevel = gatheringResource.getRequiredLevel();
-            // Skip fish that the user has not unlocked
-            if (fishingLevel < reqLevel) continue;
-            int weight = 100 + (10 * fishingLevel);
-            oreDropTable.addEntry(gatheringResource, weight);
-        }
-        return oreDropTable.getRandom();
-    }
-
-    /**
-     * Determine the fish to give the player based on the region they are fishing in
-     *
-     * @param regionIds    the list of region ids the fishhook is standing in
-     * @param fishingLevel of the player
-     * @return the appropriate fish to gather
-     */
-    private GatheringResource determineFishFromRegion(List<String> regionIds, int fishingLevel) {
-        try {
-            Optional<String> fishingRegion = regionIds.stream().filter(region -> region.contains("pond")).findFirst();
-            if (fishingRegion.isPresent()) {
-                String fishingRegionName = fishingRegion.get();
-                String[] availableFish = fishingRegionName.split("/");
-                return determineFish(availableFish, fishingLevel);
-            }
-        } catch (Exception ex) {
-            Bukkit.getLogger().warning("Error: There was an error getting fish from roll!");
-        }
-        return GatheringResource.COD;
-    }
 
     /**
      * Handle logic for fishing
@@ -105,20 +57,11 @@ public class FishingListener implements Listener {
         Player player = event.getPlayer();
         Location hookLoc = event.getHook().getLocation();
 
-        // Ensure the player has reached the req level to obtain the fish
-        GatheringData gatheringData = RunicProfessions.getDataAPI().loadGatheringData(player.getUniqueId());
-        int fishingLevel = gatheringData.getFishingLevel();
-        List<GatheringResource> gatheringResourceList = new ArrayList<>();
-        for (int i = 0; i < FishingSession.FISH_BUNDLE_NUMBER; i++) {
-            GatheringResource gatheringResource = determineFishFromRegion(RunicCore.getRegionAPI().getRegionIds(hookLoc), fishingLevel);
-            gatheringResourceList.add(gatheringResource);
-        }
-
         ItemStack heldItem = player.getInventory().getItemInMainHand();
 
         // Verify the player is holding a tool
         if (player.getInventory().getItemInMainHand().getType() == Material.AIR) {
-            player.sendMessage(gatheringResourceList.get(0).getGatheringSkill().getNoToolMessage());
+            player.sendMessage(GatheringSkill.FISHING.getNoToolMessage());
             return;
         }
 
@@ -130,7 +73,7 @@ public class FishingListener implements Listener {
                         tool -> tool.getRunicItemDynamic().getTemplateId().equals(templateIdHeldItem)
                 ).findFirst();
         if (gatheringTool.isEmpty()) {
-            player.sendMessage(gatheringResourceList.get(0).getGatheringSkill().getNoToolMessage());
+            player.sendMessage(GatheringSkill.FISHING.getNoToolMessage());
             return;
         }
 
@@ -138,7 +81,7 @@ public class FishingListener implements Listener {
         event.getHook().remove();
 
         // Start the fishing session
-        FishingSession fishingSession = new FishingSession(player, hookLoc, gatheringResourceList, gatheringTool.get(), heldItem);
+        FishingSession fishingSession = new FishingSession(player, hookLoc, gatheringTool.get(), heldItem);
         fishingSession.startSession();
     }
 
