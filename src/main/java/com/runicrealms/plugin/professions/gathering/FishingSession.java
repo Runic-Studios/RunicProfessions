@@ -5,12 +5,12 @@ import com.runicrealms.plugin.api.WeightedRandomBag;
 import com.runicrealms.plugin.common.util.ColorUtil;
 import com.runicrealms.plugin.loot.LootHolder;
 import com.runicrealms.plugin.loot.LootTable;
-import com.runicrealms.plugin.professions.model.GatheringData;
-import com.runicrealms.plugin.utilities.ActionBarUtil;
 import com.runicrealms.plugin.professions.RunicProfessions;
 import com.runicrealms.plugin.professions.event.GatheringEvent;
+import com.runicrealms.plugin.professions.model.GatheringData;
 import com.runicrealms.plugin.runicitems.RunicItemsAPI;
 import com.runicrealms.plugin.runicitems.item.RunicItemDynamic;
+import com.runicrealms.plugin.utilities.ActionBarUtil;
 import me.filoghost.holographicdisplays.api.HolographicDisplaysAPI;
 import me.filoghost.holographicdisplays.api.hologram.Hologram;
 import me.filoghost.holographicdisplays.api.hologram.VisibilitySettings;
@@ -336,12 +336,12 @@ public class FishingSession {
         }
 
         @Override
-        public int getItemMinLevel(Player player) {
+        public int getItemMinLevel(@NotNull Player player) {
             return minLevel;
         }
 
         @Override
-        public int getItemMaxLevel(Player player) {
+        public int getItemMaxLevel(@NotNull Player player) {
             return maxLevel;
         }
     }
