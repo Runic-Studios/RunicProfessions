@@ -3,15 +3,14 @@ package com.runicrealms.plugin.professions;
 import com.runicrealms.plugin.RunicCore;
 import com.runicrealms.plugin.common.util.ColorUtil;
 import com.runicrealms.plugin.item.GUIMenu.ItemGUI;
+import com.runicrealms.plugin.professions.config.WorkstationLoader;
 import com.runicrealms.plugin.professions.crafting.CraftedResource;
+import com.runicrealms.plugin.professions.event.RunicCraftingExpEvent;
+import com.runicrealms.plugin.professions.event.RunicGatheringExpEvent;
 import com.runicrealms.plugin.professions.gathering.GatheringSkill;
 import com.runicrealms.plugin.professions.listeners.WorkstationListener;
 import com.runicrealms.plugin.professions.model.GatheringData;
-import com.runicrealms.plugin.professions.config.WorkstationLoader;
-import com.runicrealms.plugin.professions.event.RunicCraftingExpEvent;
-import com.runicrealms.plugin.professions.event.RunicGatheringExpEvent;
 import com.runicrealms.plugin.rdb.RunicDatabase;
-import com.runicrealms.plugin.utilities.FloatingItemUtil;
 import com.runicrealms.plugin.runicitems.RunicItemsAPI;
 import com.runicrealms.plugin.runicitems.Stat;
 import com.runicrealms.plugin.runicitems.item.RunicItem;
@@ -25,6 +24,9 @@ import com.runicrealms.plugin.runicitems.item.stats.RunicItemStatRange;
 import com.runicrealms.plugin.runicitems.item.stats.RunicItemTag;
 import com.runicrealms.plugin.runicitems.util.DataUtil;
 import com.runicrealms.plugin.runicitems.util.ItemUtils;
+import me.filoghost.holographicdisplays.api.HolographicDisplaysAPI;
+import me.filoghost.holographicdisplays.api.hologram.Hologram;
+import me.filoghost.holographicdisplays.api.hologram.VisibilitySettings;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Color;
@@ -37,6 +39,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.Damageable;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -438,7 +442,8 @@ public abstract class Workstation implements Listener {
         player.sendMessage(ChatColor.GRAY + "Crafting...");
 
         // Spawn item on workstation for visual
-        FloatingItemUtil.spawnFloatingItem(player, stationLoc, craftedItemType, 4, durability);
+        Hologram hologram = createHologram(player, stationLoc, craftedItemType, durability);
+        Bukkit.getScheduler().runTaskLater(RunicProfessions.getInstance(), hologram::delete, 4 * 20L);
 
         // Start the crafting process
         new BukkitRunnable() {
@@ -495,5 +500,19 @@ public abstract class Workstation implements Listener {
             }
         }
         return true;
+    }
+
+    private Hologram createHologram(Player player, Location location, Material material, int durability) {
+        // Create a hologram a block above the workstation
+        Hologram hologram = HolographicDisplaysAPI.get(RunicProfessions.getInstance()).createHologram(location.add(0, 0.65, 0));
+        hologram.getVisibilitySettings().setGlobalVisibility(VisibilitySettings.Visibility.HIDDEN);
+        hologram.getVisibilitySettings().setIndividualVisibility(player, VisibilitySettings.Visibility.VISIBLE);
+        ItemStack itemStack = new ItemStack(material);
+        ItemMeta itemMeta = itemStack.getItemMeta();
+        assert itemMeta != null;
+        ((Damageable) itemMeta).setDamage(durability);
+        itemStack.setItemMeta(itemMeta);
+        hologram.getLines().appendItem(itemStack);
+        return hologram;
     }
 }
