@@ -2,31 +2,29 @@ package com.runicrealms.plugin.professions;
 
 import com.runicrealms.plugin.RunicCore;
 import com.runicrealms.plugin.professions.api.ProfessionsAPI;
+import com.runicrealms.plugin.professions.event.ProfessionChangeEvent;
 import com.runicrealms.plugin.professions.gathering.GatheringGUI;
 import com.runicrealms.plugin.professions.gathering.GatheringRegion;
 import com.runicrealms.plugin.professions.gathering.GatheringSkill;
 import com.runicrealms.plugin.professions.gathering.GatheringSkillGUI;
 import com.runicrealms.plugin.professions.model.GatheringData;
-import com.runicrealms.plugin.professions.event.ProfessionChangeEvent;
 import com.runicrealms.plugin.runicrestart.event.ServerShutdownEvent;
 import me.filoghost.holographicdisplays.api.HolographicDisplaysAPI;
 import me.filoghost.holographicdisplays.api.hologram.Hologram;
 import me.filoghost.holographicdisplays.api.hologram.VisibilitySettings;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.CropState;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.World;
-import org.bukkit.block.BlockState;
+import org.bukkit.block.data.Ageable;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.File;
 import java.io.IOException;
@@ -46,7 +44,8 @@ public class ProfManager implements Listener, ProfessionsAPI {
         this.workstations = new HashMap<>();
         currentCrafters = new ArrayList<>();
         blocksToRestore = new ConcurrentHashMap<>();
-        this.startRegenTask();
+        Bukkit.getScheduler().runTaskTimer(RunicProfessions.getInstance(), this::regenGatheringNodes, 20, 600); //cannot set blocks async so must be sync
+
         // Load workstations
         storedStationLocations = new HashMap<>();
 
@@ -204,34 +203,19 @@ public class ProfManager implements Listener, ProfessionsAPI {
     /**
      * Grabs a list of locations and materials from memory, sets blocks to that material
      */
-    @SuppressWarnings("deprecation")
     private void regenGatheringNodes() {
         for (Location loc : blocksToRestore.keySet()) {
-            if (loc.getChunk().isLoaded()) {
-                Material type = blocksToRestore.get(loc);
-                loc.getBlock().setType(type);
-                if (type == Material.WHEAT || type == Material.CARROTS || type == Material.POTATOES) {
-                    BlockState state = loc.getBlock().getState();
-                    state.setRawData(CropState.RIPE.getData());
-                    state.update();
-                }
-                loc.getBlock().getWorld().spawnParticle(Particle.VILLAGER_HAPPY,
-                        loc.getBlock().getLocation().add(0.5, 0, 0.5), 25, 0.5, 0.5, 0.5, 0.01);
-                blocksToRestore.remove(loc);
-            }
-        }
-    }
+            Material type = blocksToRestore.get(loc);
+            loc.getBlock().setType(type);
 
-    /**
-     * Starts the repeating task to regenerate farms, ores, trees, every 30 seconds
-     * Cannot set blocks async, so MUST be sync
-     */
-    private void startRegenTask() {
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                regenGatheringNodes();
+            if (loc.getBlock().getBlockData() instanceof Ageable ageable) {
+                ageable.setAge(ageable.getMaximumAge());
+                loc.getBlock().setBlockData(ageable);
             }
-        }.runTaskTimer(RunicProfessions.getInstance(), 20, 600);
+
+            loc.getBlock().getWorld().spawnParticle(Particle.VILLAGER_HAPPY,
+                    loc.getBlock().getLocation().add(0.5, 0, 0.5), 25, 0.5, 0.5, 0.5, 0.01);
+            blocksToRestore.remove(loc);
+        }
     }
 }
