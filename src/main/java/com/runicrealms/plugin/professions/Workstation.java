@@ -5,6 +5,7 @@ import com.runicrealms.plugin.common.util.ColorUtil;
 import com.runicrealms.plugin.item.GUIMenu.ItemGUI;
 import com.runicrealms.plugin.professions.config.WorkstationLoader;
 import com.runicrealms.plugin.professions.crafting.CraftedResource;
+import com.runicrealms.plugin.professions.event.RunicCraftEvent;
 import com.runicrealms.plugin.professions.event.RunicCraftingExpEvent;
 import com.runicrealms.plugin.professions.event.RunicGatheringExpEvent;
 import com.runicrealms.plugin.professions.gathering.GatheringSkill;
@@ -42,13 +43,13 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.PotionMeta;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Basic workstation class with some handy methods
@@ -446,40 +447,46 @@ public abstract class Workstation implements Listener {
         Bukkit.getScheduler().runTaskLater(RunicProfessions.getInstance(), hologram::delete, 4 * 20L);
 
         // Start the crafting process
-        new BukkitRunnable() {
-            int count = 0;
+        AtomicInteger count = new AtomicInteger(0);
 
-            @Override
-            public void run() {
-                if (count > 3) {
-                    this.cancel();
-                    // Unblock them from crafting
-                    RunicProfessions.getAPI().getCurrentCrafters().remove(player);
-                    // Check reagents again
-                    boolean hasReagents = checkReagents(player, reagents, numOfItems);
-                    if (!hasReagents) return;
-                    // Take reagents
-                    for (ItemStack itemStack : reagents.keySet()) {
-                        int amt = reagents.get(itemStack) * numOfItems;
-                        ItemUtils.takeItem(player, itemStack, amt);
-                    }
-                    // Grant exp and produce result
-                    player.playSound(player.getLocation(), soundDone, 0.5f, 1.0f);
-                    player.sendMessage(ChatColor.GREEN + "Done!");
-                    if (exp > 0) {
-                        if (!isCooking)
-                            Bukkit.getPluginManager().callEvent(new RunicCraftingExpEvent(exp * numOfItems, true, player));
-                        else
-                            Bukkit.getPluginManager().callEvent(new RunicGatheringExpEvent(exp * numOfItems, true, player, GatheringSkill.COOKING));
-                    }
-                    produceResult(player, numOfItems, craftedResource);
-                } else {
-                    player.playSound(player.getLocation(), soundCraft, 0.5f, 2.0f);
-                    player.spawnParticle(particle, stationLoc, 5, 0.25, 0.25, 0.25, 0.01);
-                    count = count + 1;
+        Bukkit.getScheduler().runTaskTimer(RunicProfessions.getInstance(), task -> {
+            if (count.get() > 3) {
+                task.cancel();
+                // Unblock them from crafting
+                RunicProfessions.getAPI().getCurrentCrafters().remove(player);
+
+                RunicCraftEvent event = new RunicCraftEvent(player, craftedResource, numOfItems);
+                Bukkit.getPluginManager().callEvent(event);
+                if (event.isCancelled()) {
+                    return;
                 }
+
+                // Check reagents again
+                if (!checkReagents(player, reagents, event.getAmount())) {
+                    return;
+                }
+
+                // Take reagents
+                for (ItemStack itemStack : reagents.keySet()) {
+                    int amt = reagents.get(itemStack) * event.getAmount();
+                    ItemUtils.takeItem(player, itemStack, amt);
+                }
+                // Grant exp and produce result
+                player.playSound(player.getLocation(), soundDone, 0.5f, 1.0f);
+                player.sendMessage(ChatColor.GREEN + "Done!");
+                if (exp > 0) {
+                    if (!isCooking)
+                        Bukkit.getPluginManager().callEvent(new RunicCraftingExpEvent(exp * event.getAmount(), true, player));
+                    else
+                        Bukkit.getPluginManager().callEvent(new RunicGatheringExpEvent(exp * event.getAmount(), true, player, GatheringSkill.COOKING));
+                }
+                produceResult(player, event.getAmount(), craftedResource);
+            } else {
+                player.playSound(player.getLocation(), soundCraft, 0.5f, 2.0f);
+                player.spawnParticle(particle, stationLoc, 5, 0.25, 0.25, 0.25, 0.01);
+                count.set(count.get() + 1);
             }
-        }.runTaskTimer(RunicProfessions.getInstance(), 0, 20);
+        }, 0, 20);
     }
 
     /**
