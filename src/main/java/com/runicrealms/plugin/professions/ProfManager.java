@@ -1,6 +1,7 @@
 package com.runicrealms.plugin.professions;
 
 import com.runicrealms.plugin.RunicCore;
+import com.runicrealms.plugin.common.RunicCommon;
 import com.runicrealms.plugin.professions.api.ProfessionsAPI;
 import com.runicrealms.plugin.professions.event.ProfessionChangeEvent;
 import com.runicrealms.plugin.professions.gathering.GatheringGUI;
@@ -143,6 +144,7 @@ public class ProfManager implements Listener, ProfessionsAPI {
     @Override
     public void openGatheringGUI(Player player) {
         player.openInventory(new GatheringGUI(player).getInventory());
+        RunicCommon.getQuestsAPI().triggerQuest(false, player, "gathering-menu", null);
     }
 
     @Override
