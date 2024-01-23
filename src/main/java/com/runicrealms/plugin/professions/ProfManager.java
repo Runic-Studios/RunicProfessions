@@ -8,7 +8,7 @@ import com.runicrealms.plugin.professions.gathering.GatheringRegion;
 import com.runicrealms.plugin.professions.gathering.GatheringSkill;
 import com.runicrealms.plugin.professions.gathering.GatheringSkillGUI;
 import com.runicrealms.plugin.professions.model.GatheringData;
-import com.runicrealms.plugin.runicrestart.event.ServerShutdownEvent;
+import com.runicrealms.plugin.runicrestart.event.PreShutdownEvent;
 import me.filoghost.holographicdisplays.api.HolographicDisplaysAPI;
 import me.filoghost.holographicdisplays.api.hologram.Hologram;
 import me.filoghost.holographicdisplays.api.hologram.VisibilitySettings;
@@ -195,7 +195,7 @@ public class ProfManager implements Listener, ProfessionsAPI {
     }
 
     @EventHandler
-    public void onShutdown(ServerShutdownEvent event) {
+    public void onShutdown(PreShutdownEvent event) {
         regenGatheringNodes();
         RunicProfessions.getInstance().getLogger().info(" §cRunicProfessions has been disabled.");
     }
