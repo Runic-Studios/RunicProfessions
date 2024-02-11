@@ -8,7 +8,7 @@ import com.runicrealms.plugin.professions.event.GatheringEvent;
 import com.runicrealms.plugin.professions.model.GatheringData;
 import com.runicrealms.plugin.runicitems.RunicItemsAPI;
 import com.runicrealms.plugin.runicitems.item.RunicItemDynamic;
-import com.runicrealms.plugin.runicitems.loot.LootHolder;
+import com.runicrealms.plugin.runicitems.loot.GenericLootHolder;
 import com.runicrealms.plugin.runicitems.loot.LootTable;
 import com.runicrealms.plugin.utilities.ActionBarUtil;
 import me.filoghost.holographicdisplays.api.HolographicDisplaysAPI;
@@ -188,8 +188,8 @@ public class FishingSession {
             int maxLevelScriptItem = fishingLevel;
             if (maxLevelScriptItem > 60)
                 maxLevelScriptItem = 60;
-            FishingLootHolder fishingLootHolder = new FishingLootHolder(minLevelScriptItem, maxLevelScriptItem);
-            ItemStack loot = fishingLootTable.generateLoot(fishingLootHolder, this.player);
+            GenericLootHolder fishingLootHolder = new GenericLootHolder(minLevelScriptItem, maxLevelScriptItem);
+            ItemStack loot = fishingLootTable.generateLoot(fishingLootHolder);
             RunicItemsAPI.addItem(this.player.getInventory(), loot);
             assert loot.getItemMeta() != null;
             this.player.playSound(this.player.getLocation(), Sound.ENTITY_ITEM_PICKUP, 0.5f, 1.0f);
@@ -322,27 +322,6 @@ public class FishingSession {
                 // Define hologram text for slack >= 0.8
                 return DARK_RED;
             }
-        }
-    }
-
-    static class FishingLootHolder implements LootHolder {
-
-        private final int minLevel;
-        private final int maxLevel;
-
-        public FishingLootHolder(int minLevel, int maxLevel) {
-            this.minLevel = minLevel;
-            this.maxLevel = maxLevel;
-        }
-
-        @Override
-        public int getItemMinLevel(@NotNull Player player) {
-            return minLevel;
-        }
-
-        @Override
-        public int getItemMaxLevel(@NotNull Player player) {
-            return maxLevel;
         }
     }
 
