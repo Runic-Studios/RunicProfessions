@@ -36,7 +36,6 @@ import com.runicrealms.plugin.professions.model.DataManager;
 import com.runicrealms.plugin.professions.model.MongoTask;
 import com.runicrealms.plugin.professions.shop.JewelRemoverListener;
 import com.runicrealms.plugin.professions.shop.ProfessionTutorHelper;
-import com.runicrealms.plugin.professions.utilities.LootTableHelper;
 import org.bukkit.Bukkit;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
@@ -112,7 +111,6 @@ public final class RunicProfessions extends JavaPlugin {
         commandManager = new PaperCommandManager(this);
         oreNodeManager = new OreNodeManager();
 
-        new LootTableHelper().setupLootTables(); // update loot tables
         new ProfessionTutorHelper(); // initialize profession tutors
 
         this.registerCommandCompletions();
