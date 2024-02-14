@@ -17,7 +17,6 @@ import com.runicrealms.plugin.professions.crafting.cooking.CookingListener;
 import com.runicrealms.plugin.professions.crafting.enchanter.PowderListener;
 import com.runicrealms.plugin.professions.gathering.GatheringGUIListener;
 import com.runicrealms.plugin.professions.gathering.GatheringSkillGUIListener;
-import com.runicrealms.plugin.professions.gathering.mining.OreNodeManager;
 import com.runicrealms.plugin.professions.listeners.CropTrampleListener;
 import com.runicrealms.plugin.professions.listeners.FishingListener;
 import com.runicrealms.plugin.professions.listeners.GatheringLevelChangeListener;
@@ -49,7 +48,6 @@ public final class RunicProfessions extends JavaPlugin {
     private static DataAPI dataAPI;
     private static MongoTask mongoTask;
     private static PaperCommandManager commandManager;
-    private static OreNodeManager oreNodeManager;
 
     public static RunicProfessions getInstance() {
         return plugin;
@@ -69,10 +67,6 @@ public final class RunicProfessions extends JavaPlugin {
 
     public static MongoTask getMongoTask() {
         return mongoTask;
-    }
-
-    public static OreNodeManager getOreNodeManager() {
-        return oreNodeManager;
     }
 
     /**
@@ -98,7 +92,6 @@ public final class RunicProfessions extends JavaPlugin {
         mongoTask = null;
         commandManager = null;
         taskChainFactory = null;
-        oreNodeManager = null;
     }
 
     @Override
@@ -109,7 +102,6 @@ public final class RunicProfessions extends JavaPlugin {
         dataAPI = new DataManager();
         mongoTask = new MongoTask();
         commandManager = new PaperCommandManager(this);
-        oreNodeManager = new OreNodeManager();
 
         new ProfessionTutorHelper(); // initialize profession tutors
 

@@ -11,7 +11,6 @@ import com.runicrealms.plugin.professions.RunicProfessions;
 import com.runicrealms.plugin.professions.event.RunicCraftingExpEvent;
 import com.runicrealms.plugin.professions.event.RunicGatheringExpEvent;
 import com.runicrealms.plugin.professions.gathering.GatheringSkill;
-import com.runicrealms.plugin.professions.gathering.mining.OreNode;
 import com.runicrealms.plugin.professions.gathering.mining.OreTier;
 import com.runicrealms.plugin.professions.gathering.mining.OreType;
 import org.bukkit.Bukkit;
@@ -66,10 +65,10 @@ public class ProfGiveCMD extends BaseCommand {
         String tier = args[1];
         OreType oreType = OreType.valueOf(type.toUpperCase());
         OreTier oreTier = OreTier.valueOf(tier.toUpperCase());
-        Bukkit.broadcastMessage("ore tier is" + oreTier);
-        OreNode oreNode = new OreNode(player.getLocation(), oreType, oreTier);
-        oreNode.spawn();
-        RunicProfessions.getOreNodeManager().getOreNodes().add(oreNode);
+//        Bukkit.broadcastMessage("ore tier is" + oreTier);
+//        OreNode oreNode = new OreNode(player.getLocation(), oreType, oreTier);
+//        oreNode.spawn();
+//        RunicProfessions.getOreNodeManager().getOreNodes().add(oreNode);
     }
 
     // profgive profexp [player] [amount]
