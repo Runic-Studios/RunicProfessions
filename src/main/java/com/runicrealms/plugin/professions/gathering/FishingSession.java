@@ -140,6 +140,16 @@ public class FishingSession {
                 );
     }
 
+    public void forceStopSession() {
+        // Stop the bukkit task
+        this.sessionTimer.cancel();
+
+        // Remove the hologram
+        this.hologram.delete();
+
+        FISHERS.remove(this.player.getUniqueId());
+    }
+
     /**
      * @param sessionResult success or failure
      */

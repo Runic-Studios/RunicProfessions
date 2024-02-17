@@ -1,11 +1,11 @@
 package com.runicrealms.plugin.professions.listeners;
 
-import com.runicrealms.plugin.professions.utilities.GatheringUtil;
 import com.runicrealms.plugin.professions.RunicProfessions;
 import com.runicrealms.plugin.professions.gathering.FishingSession;
 import com.runicrealms.plugin.professions.gathering.GatheringRegion;
 import com.runicrealms.plugin.professions.gathering.GatheringSkill;
 import com.runicrealms.plugin.professions.gathering.GatheringTool;
+import com.runicrealms.plugin.professions.utilities.GatheringUtil;
 import com.runicrealms.plugin.runicitems.RunicItemsAPI;
 import com.runicrealms.plugin.runicitems.item.RunicItem;
 import org.bukkit.ChatColor;
@@ -20,9 +20,12 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.CreatureSpawnEvent;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerFishEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
 
@@ -37,7 +40,7 @@ public class FishingListener implements Listener {
      * Handle logic for fishing
      */
     @EventHandler
-    public void onFishCatch(PlayerFishEvent event) {
+    private void onFishCatch(PlayerFishEvent event) {
         // Set the time required to catch the fish
         FishHook fishHook = event.getHook();
         fishHook.setMinWaitTime(0); // in ticks (0s)
@@ -90,7 +93,7 @@ public class FishingListener implements Listener {
      * We'll spawn them in ponds as NPCs, but not out in the ocean.
      */
     @EventHandler
-    public void onFishSpawn(CreatureSpawnEvent event) {
+    private void onFishSpawn(CreatureSpawnEvent event) {
         Entity spawned = event.getEntity();
         if (event.getSpawnReason() == CreatureSpawnEvent.SpawnReason.CUSTOM) return;
         if (spawned instanceof Fish) event.setCancelled(true);
@@ -100,7 +103,7 @@ public class FishingListener implements Listener {
      * Prevents players from fishing outside of ponds
      */
     @EventHandler
-    public void onRodUse(PlayerInteractEvent event) {
+    private void onRodUse(PlayerInteractEvent event) {
         if (event.getAction() != Action.RIGHT_CLICK_AIR && event.getAction() != Action.RIGHT_CLICK_BLOCK)
             return;
         Player player = event.getPlayer();
@@ -118,5 +121,28 @@ public class FishingListener implements Listener {
             fishingSession.tightenLine();
             event.setCancelled(true);
         }
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    private void onPlayerItemHeld(PlayerItemHeldEvent event) {
+        this.stopSession(event.getPlayer());
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    private void onPlayerItemHeld(InventoryClickEvent event) {
+        if (!(event.getWhoClicked() instanceof Player player)) {
+            return;
+        }
+
+        this.stopSession(player);
+    }
+
+    private void stopSession(@NotNull Player player) {
+        FishingSession session = FishingSession.getFishers().get(player.getUniqueId());
+        if (session == null) {
+            return;
+        }
+
+        session.forceStopSession();
     }
 }
