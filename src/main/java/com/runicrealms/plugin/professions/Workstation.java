@@ -478,7 +478,7 @@ public abstract class Workstation implements Listener {
                     if (!isCooking)
                         Bukkit.getPluginManager().callEvent(new RunicCraftingExpEvent(exp * event.getAmount(), true, player));
                     else
-                        Bukkit.getPluginManager().callEvent(new RunicGatheringExpEvent(exp * event.getAmount(), true, player, GatheringSkill.COOKING));
+                        Bukkit.getPluginManager().callEvent(new RunicGatheringExpEvent(exp, true, player, GatheringSkill.COOKING, event.getAmount()));
                 }
                 produceResult(player, event.getAmount(), craftedResource);
             } else {

@@ -1,8 +1,8 @@
 package com.runicrealms.plugin.professions.utilities;
 
 import com.runicrealms.plugin.RunicCore;
-import com.runicrealms.plugin.professions.RunicProfessions;
 import com.runicrealms.plugin.professions.Profession;
+import com.runicrealms.plugin.professions.RunicProfessions;
 import com.runicrealms.plugin.professions.event.GatheringLevelChangeEvent;
 import com.runicrealms.plugin.professions.event.ProfessionLevelChangeEvent;
 import com.runicrealms.plugin.professions.gathering.GatheringSkill;
@@ -79,20 +79,20 @@ public class ProfExpUtil {
      * @param gatheringSkill in which to give experience
      * @param expGained      amount of experience gained
      */
-    public static void giveGatheringExperience(Player player, GatheringSkill gatheringSkill, int expGained) {
+    public static void giveGatheringExperience(Player player, GatheringSkill gatheringSkill, int expGained, int count) {
         Bukkit.getScheduler().runTaskAsynchronously(RunicProfessions.getInstance(), () -> {
             try (Jedis jedis = RunicDatabase.getAPI().getRedisAPI().getNewJedisResource()) {
                 GatheringData gatheringData = RunicProfessions.getDataAPI().loadGatheringData(player.getUniqueId());
                 int currentExp = gatheringData.getGatheringExp(gatheringSkill);
                 int currentLevel = ProfExpUtil.calculateProfessionLevel(currentExp);
                 int maxLevelForGatheringSkill = MAX_CAPPED_GATHERING_PROF_LEVEL;
-                int combatExp = ExperienceConverter.calculateCombatExperience(expGained, gatheringSkill.getCombatExpMultiplier());
+                int combatExp = ExperienceConverter.calculateCombatExperience(expGained, gatheringSkill.getCombatExpMultiplier(), count);
                 RunicCore.getCombatAPI().giveCombatExp(player, combatExp);
                 if (currentLevel >= maxLevelForGatheringSkill) {
                     ActionBarUtil.sendTimedMessage
                             (
                                     player,
-                                    ChatColor.GREEN + "+ " + ChatColor.WHITE + expGained + ChatColor.GREEN + " " +
+                                    ChatColor.GREEN + "+ " + ChatColor.WHITE + (expGained * count) + ChatColor.GREEN + " " +
                                             gatheringSkill.getFormattedIdentifier() + " exp " + ChatColor.GRAY + "(" +
                                             ChatColor.WHITE + "0" + ChatColor.GRAY + "/" +
                                             "0)" + ChatColor.YELLOW + " | " +
@@ -102,7 +102,7 @@ public class ProfExpUtil {
                             );
                     return;
                 }
-                gatheringData.setGatheringExp(gatheringSkill, currentExp + expGained);
+                gatheringData.setGatheringExp(gatheringSkill, currentExp + (expGained * count));
                 int newTotalExp = gatheringData.getGatheringExp(gatheringSkill);
                 int totalExpAtLevel = calculateTotalExperience(currentLevel);
                 int totalExpToLevel = calculateTotalExperience(currentLevel + 1);
@@ -110,7 +110,7 @@ public class ProfExpUtil {
                 ActionBarUtil.sendTimedMessage
                         (
                                 player,
-                                ChatColor.GREEN + "+ " + ChatColor.WHITE + expGained + ChatColor.GREEN + " " +
+                                ChatColor.GREEN + "+ " + ChatColor.WHITE + (expGained * count) + ChatColor.GREEN + " " +
                                         gatheringSkill.getFormattedIdentifier() + " exp " + ChatColor.GRAY + "(" +
                                         ChatColor.WHITE + (newTotalExp - totalExpAtLevel) + ChatColor.GRAY + "/" +
                                         (totalExpToLevel - totalExpAtLevel) + ")" +

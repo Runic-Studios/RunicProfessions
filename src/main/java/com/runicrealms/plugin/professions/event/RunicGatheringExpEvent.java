@@ -5,6 +5,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -23,6 +24,7 @@ public class RunicGatheringExpEvent extends Event implements Cancellable {
     private final GatheringSkill skill;
     private final Map<BonusType, Double> bonuses = new HashMap<>();
     private boolean isCancelled;
+    private int count;
 
     /**
      * Give a player experience through our custom calculators.
@@ -31,13 +33,19 @@ public class RunicGatheringExpEvent extends Event implements Cancellable {
      * @param applyBonuses whether this experience should be boosted by bonuses
      * @param player       to receive experience
      * @param skill        which gathering skill
+     * @param count        the amount of times this item has been gathered
      */
-    public RunicGatheringExpEvent(final int amount, boolean applyBonuses, Player player, GatheringSkill skill) {
+    public RunicGatheringExpEvent(int amount, boolean applyBonuses, @NotNull Player player, @NotNull GatheringSkill skill, int count) {
         this.amount = amount;
         this.applyBonuses = applyBonuses;
         this.player = player;
         this.skill = skill;
         this.isCancelled = false;
+        this.count = Math.max(count, 1);
+    }
+
+    public RunicGatheringExpEvent(int amount, boolean applyBonuses, @NotNull Player player, @NotNull GatheringSkill skill) {
+        this(amount, applyBonuses, player, skill, 1);
     }
 
     public static HandlerList getHandlerList() {
@@ -50,6 +58,10 @@ public class RunicGatheringExpEvent extends Event implements Cancellable {
 
     public int getAmountNoBonuses() {
         return amount;
+    }
+
+    public int getTotalAmount() {
+        return this.getFinalAmount() * this.count;
     }
 
     /**
@@ -69,7 +81,7 @@ public class RunicGatheringExpEvent extends Event implements Cancellable {
         return getFinalAmount(this.amount);
     }
 
-    public int getFinalAmount(int expAmount) {
+    private int getFinalAmount(int expAmount) {
         if (!applyBonuses) return expAmount;
         return (int) Math.round(expAmount * (1 + this.bonuses.values().stream().mapToDouble((bonus) -> bonus).sum()));
     }
@@ -100,6 +112,14 @@ public class RunicGatheringExpEvent extends Event implements Cancellable {
     @Override
     public void setCancelled(boolean arg0) {
         this.isCancelled = arg0;
+    }
+
+    public int getCount() {
+        return this.count;
+    }
+
+    public void setCount(int count) {
+        this.count = Math.max(count, 1);
     }
 
     public enum BonusType {
